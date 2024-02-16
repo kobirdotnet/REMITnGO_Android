@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context=".ui.document.DocumentsFragment">
+
+        <SearchView
+            android:id="@+id/documentsSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_search_view_background"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:gravity="center_vertical"
+            android:iconifiedByDefault="true"
+            android:queryHint="Search documents"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/txtDocuments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:padding="8dp"
+            android:text="Documents"
+            android:textColor="@color/black" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/txtDocuments">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/documentsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:listitem="@layout/item_documents" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/btnUploadDocuments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/blue"
+                android:drawableLeft="@drawable/upload_document"
+                android:focusableInTouchMode="false"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="Upload Documents"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:icon="@drawable/upload_document"
+                app:iconPadding="5dp"
+                app:iconTint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</layout>

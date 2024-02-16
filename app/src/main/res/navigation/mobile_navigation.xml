@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_main">
+
+    <fragment
+        android:id="@+id/nav_main"
+        android:name="com.bsel.remitngo.ui.main.MainFragment"
+        android:label="@string/menu_main"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_nav_main_to_nav_choose_recipient"
+            app:destination="@id/nav_choose_recipient" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_my_profile"
+        android:name="com.bsel.remitngo.ui.profile.MyProfileFragment"
+        android:label="@string/menu_my_profile"
+        tools:layout="@layout/fragment_my_profile">
+        <action
+            android:id="@+id/action_nav_my_profile_to_nav_personal_information"
+            app:destination="@id/nav_personal_information" />
+        <action
+            android:id="@+id/action_nav_my_profile_to_nav_search_address"
+            app:destination="@id/nav_search_address" />
+        <action
+            android:id="@+id/action_nav_my_profile_to_nav_email"
+            app:destination="@id/nav_email" />
+        <action
+            android:id="@+id/action_nav_my_profile_to_nav_change_password"
+            app:destination="@id/nav_change_password" />
+        <action
+            android:id="@+id/action_nav_my_profile_to_nav_mobile_number"
+            app:destination="@id/nav_mobile_number" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_payment"
+        android:name="com.bsel.remitngo.ui.payment.PaymentFragment"
+        android:label="@string/menu_payment"
+        tools:layout="@layout/fragment_payment">
+        <action
+            android:id="@+id/action_nav_payment_to_nav_card"
+            app:destination="@id/nav_card" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.bsel.remitngo.ui.settings.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/nav_support"
+        android:name="com.bsel.remitngo.ui.support.SupportFragment"
+        android:label="@string/menu_support"
+        tools:layout="@layout/fragment_support" />
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.bsel.remitngo.ui.about.AboutFragment"
+        android:label="@string/menu_about"
+        tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/nav_personal_information"
+        android:name="com.bsel.remitngo.ui.profile.personal_information.PersonalInformationFragment"
+        android:label="@string/menu_personal_information"
+        tools:layout="@layout/fragment_personal_information" />
+    <fragment
+        android:id="@+id/nav_search_address"
+        android:name="com.bsel.remitngo.ui.profile.address.SearchAddressFragment"
+        android:label="@string/menu_address"
+        tools:layout="@layout/fragment_search_address">
+        <action
+            android:id="@+id/action_nav_search_address_to_nav_save_address"
+            app:destination="@id/nav_save_address" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_email"
+        android:name="com.bsel.remitngo.ui.profile.email.EmailFragment"
+        android:label="@string/menu_email"
+        tools:layout="@layout/fragment_email" />
+    <fragment
+        android:id="@+id/nav_change_password"
+        android:name="com.bsel.remitngo.ui.profile.change_password.ChangePasswordFragment"
+        android:label="@string/menu_change_password"
+        tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/nav_mobile_number"
+        android:name="com.bsel.remitngo.ui.profile.mobile_number.MobileNumberFragment"
+        android:label="@string/menu_mobile_number"
+        tools:layout="@layout/fragment_mobile_number" />
+    <fragment
+        android:id="@+id/nav_card"
+        android:name="com.bsel.remitngo.ui.payment.card.CardFragment"
+        android:label="@string/menu_card"
+        tools:layout="@layout/fragment_card" />
+    <fragment
+        android:id="@+id/nav_save_address"
+        android:name="com.bsel.remitngo.ui.profile.address.SaveAddressFragment"
+        android:label="@string/menu_address"
+        tools:layout="@layout/fragment_save_address" />
+    <fragment
+        android:id="@+id/nav_choose_recipient"
+        android:name="com.bsel.remitngo.ui.main.choose_recipient.ChooseRecipientFragment"
+        android:label="@string/menu_choose_recipient"
+        tools:layout="@layout/fragment_choose_recipient">
+        <action
+            android:id="@+id/action_nav_choose_recipient_to_nav_recipient_details"
+            app:destination="@id/nav_recipient_details" />
+        <action
+            android:id="@+id/action_nav_choose_recipient_to_nav_confirm_transfer"
+            app:destination="@id/nav_confirm_transfer" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_recipient_details"
+        android:name="com.bsel.remitngo.ui.main.recipient_details.RecipientDetailsFragment"
+        android:label="@string/menu_recipient_details"
+        tools:layout="@layout/fragment_recipient_details">
+        <action
+            android:id="@+id/action_nav_recipient_details_to_nav_recipient_bank_details"
+            app:destination="@id/nav_recipient_bank_details" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_recipient_bank_details"
+        android:name="com.bsel.remitngo.ui.main.recipient_bank_details.RecipientBankDetailsFragment"
+        android:label="@string/menu_recipient_details"
+        tools:layout="@layout/fragment_recipient_bank_details">
+        <action
+            android:id="@+id/action_nav_recipient_bank_details_to_nav_confirm_transfer"
+            app:destination="@id/nav_confirm_transfer" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_confirm_transfer"
+        android:name="com.bsel.remitngo.ui.main.confirm_transfer.ConfirmTransferFragment"
+        android:label="@string/menu_confirm_transfer"
+        tools:layout="@layout/fragment_confirm_transfer">
+        <action
+            android:id="@+id/action_nav_confirm_transfer_to_nav_transaction"
+            app:destination="@id/nav_transaction" />
+        <action
+            android:id="@+id/action_nav_confirm_transfer_to_nav_complete_bank_transaction"
+            app:destination="@id/nav_complete_bank_transaction" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_transaction"
+        android:name="com.bsel.remitngo.ui.main.complete_card_transfer.TransactionFragment"
+        android:label="@string/menu_transaction"
+        tools:layout="@layout/fragment_transaction">
+        <action
+            android:id="@+id/action_nav_transaction_to_nav_complete_card_transaction"
+            app:destination="@id/nav_complete_card_transaction" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_complete_card_transaction"
+        android:name="com.bsel.remitngo.ui.main.complete_card_transfer.CompleteCardTransactionFragment"
+        android:label="@string/menu_transaction"
+        tools:layout="@layout/fragment_complete_card_transaction">
+        <action
+            android:id="@+id/action_nav_complete_card_transaction_to_nav_main"
+            app:destination="@id/nav_main" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_complete_bank_transaction"
+        android:name="com.bsel.remitngo.ui.main.complete_bank_transfer.CompleteBankTransactionFragment"
+        android:label="@string/menu_transaction"
+        tools:layout="@layout/fragment_complete_bank_transaction">
+        <action
+            android:id="@+id/action_nav_complete_bank_transaction_to_nav_main"
+            app:destination="@id/nav_main" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_documents"
+        android:name="com.bsel.remitngo.ui.document.DocumentsFragment"
+        android:label="@string/menu_documents"
+        tools:layout="@layout/fragment_documents">
+        <action
+            android:id="@+id/action_nav_documents_to_nav_upload_documents"
+            app:destination="@id/nav_upload_documents" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_upload_documents"
+        android:name="com.bsel.remitngo.ui.document.UploadDocumentsFragment"
+        android:label="@string/menu_documents"
+        tools:layout="@layout/fragment_upload_documents" />
+    <fragment
+        android:id="@+id/nav_transaction_history"
+        android:name="com.bsel.remitngo.ui.transaction_history.TransactionHistoryFragment"
+        android:label="@string/menu_transaction_history"
+        tools:layout="@layout/fragment_transaction_history" />
+    <fragment
+        android:id="@+id/nav_cancellation"
+        android:name="com.bsel.remitngo.ui.cancel_request.CancellationFragment"
+        android:label="@string/menu_cancel_request"
+        tools:layout="@layout/fragment_cancellation" >
+        <action
+            android:id="@+id/action_nav_cancellation_to_nav_cancel_request"
+            app:destination="@id/nav_cancel_request" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_cancel_request"
+        android:name="com.bsel.remitngo.ui.cancel_request.CancelRequestFragment"
+        android:label="@string/menu_cancel_request"
+        tools:layout="@layout/fragment_cancel_request" >
+        <action
+            android:id="@+id/action_nav_cancel_request_to_nav_generate_cancel_request"
+            app:destination="@id/nav_generate_cancel_request" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_generate_cancel_request"
+        android:name="com.bsel.remitngo.ui.cancel_request.GenerateCancelRequestFragment"
+        android:label="@string/menu_cancel_request"
+        tools:layout="@layout/fragment_generate_cancel_request" >
+        <action
+            android:id="@+id/action_nav_generate_cancel_request_to_nav_cancellation"
+            app:destination="@id/nav_cancellation" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_generate_query"
+        android:name="com.bsel.remitngo.ui.generate_query.GenerateQueryFragment"
+        android:label="@string/menu_generate_query"
+        tools:layout="@layout/fragment_generate_query" >
+        <action
+            android:id="@+id/action_nav_generate_query_to_nav_update_query"
+            app:destination="@id/nav_update_query" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_update_query"
+        android:name="com.bsel.remitngo.ui.generate_query.UpdateQueryFragment"
+        android:label="@string/menu_update_query"
+        tools:layout="@layout/fragment_update_query" />
+
+</navigation>

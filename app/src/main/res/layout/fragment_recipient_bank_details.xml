@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fillViewport="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:scrollbars="none"
+        tools:context=".ui.main.recipient_bank_details.RecipientBankDetailsFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/bankAccountLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/bank_account_name_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:hint="Account name"
+                        app:helperTextTextColor="@android:color/holo_red_dark">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/bank_account_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/grey"
+                            android:focusableInTouchMode="true"
+                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="textPersonName"
+                            android:lines="1"
+                            android:textColor="@color/black" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/bank_name_container"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:hint="Bank name"
+                        app:endIconTint="@color/blue"
+                        app:helperTextTextColor="@android:color/holo_red_dark">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/bank_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/grey"
+                            android:completionThreshold="1"
+                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="none"
+                            android:lines="1"
+                            android:textColor="@color/black" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/division_name_container"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:hint="Division"
+                        app:endIconTint="@color/blue"
+                        app:helperTextTextColor="@android:color/holo_red_dark">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/division_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/grey"
+                            android:completionThreshold="1"
+                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="none"
+                            android:lines="1"
+                            android:textColor="@color/black" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/branch_name_container"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:hint="Bank branch"
+                        app:endIconTint="@color/blue"
+                        app:helperTextTextColor="@android:color/holo_red_dark">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/branch_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/grey"
+                            android:completionThreshold="1"
+                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="none"
+                            android:lines="1"
+                            android:textColor="@color/black" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/bank_account_number_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:hint="Bank Account Number"
+                        app:helperTextTextColor="@android:color/holo_red_dark">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/bank_account_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/grey"
+                            android:focusableInTouchMode="true"
+                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:textColor="@color/black" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/confirm_bank_account_number_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:hint="Confirm Bank Account Number"
+                        app:helperTextTextColor="@android:color/holo_red_dark">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/confirm_bank_account_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/grey"
+                            android:focusableInTouchMode="true"
+                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:textColor="@color/black" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="bottom"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:gravity="center_vertical"
+                        android:text="@string/bank_transfer_txt"
+                        android:textColor="@color/blue" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBankSave"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:gravity="center"
+                        android:inputType="none"
+                        android:lines="1"
+                        android:text="Save"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bkashAccountLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/bkash_account_name_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:hint="Account name"
+                        app:helperTextTextColor="@android:color/holo_red_dark">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/bkash_account_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/grey"
+                            android:focusableInTouchMode="true"
+                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="textPersonName"
+                            android:lines="1"
+                            android:textColor="@color/black" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/phoneNumber_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:hint="Phone number"
+                        app:helperTextTextColor="@android:color/holo_red_dark">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/phoneNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/grey"
+                            android:drawableRight="@drawable/phone"
+                            android:focusableInTouchMode="true"
+                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="phone"
+                            android:lines="1"
+                            android:maxLength="11"
+                            android:textColor="@color/black" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="bottom"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:gravity="center_vertical"
+                        android:text="@string/bkash_transfer_txt"
+                        android:textColor="@color/blue" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBkashSave"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:gravity="center"
+                        android:inputType="none"
+                        android:lines="1"
+                        android:text="Save"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</layout>
