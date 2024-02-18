@@ -1,6 +1,6 @@
 package com.bsel.remitngo.presentation.di.registration
 
-import com.bsel.remitngo.presentation.registration.RegistrationActivity
+import com.bsel.remitngo.presentation.ui.registration.RegistrationActivity
 import dagger.Subcomponent
 
 @RegistrationScope

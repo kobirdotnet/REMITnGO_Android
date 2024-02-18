@@ -1,4 +1,4 @@
-package com.bsel.remitngo.ui
+package com.bsel.remitngo.presentation.ui.bio_metric
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,14 +7,16 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.bsel.remitngo.R
-import com.bsel.remitngo.databinding.ActivityLoginWithBioMetricBinding
-import com.bsel.remitngo.presentation.login.LoginActivity
+import com.bsel.remitngo.databinding.ActivityBioMetricBinding
+import com.bsel.remitngo.presentation.ui.login.LoginActivity
+import com.bsel.remitngo.presentation.ui.main.MainActivity
+import com.bsel.remitngo.ui.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.Executor
 
-class LoginWithBioMetricActivity : AppCompatActivity() {
+class BioMetricActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLoginWithBioMetricBinding
+    private lateinit var binding: ActivityBioMetricBinding
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -24,7 +26,7 @@ class LoginWithBioMetricActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login_with_bio_metric)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_bio_metric)
 
         preferenceManager = PreferenceManager(this)
 
@@ -55,7 +57,7 @@ class LoginWithBioMetricActivity : AppCompatActivity() {
 
                     preferenceManager.saveData("biometricValue", "true")
 
-                    val intent = Intent(this@LoginWithBioMetricActivity, MainActivity::class.java)
+                    val intent = Intent(this@BioMetricActivity, MainActivity::class.java)
                     startActivity(intent)
                 }
 
@@ -79,7 +81,7 @@ class LoginWithBioMetricActivity : AppCompatActivity() {
         }
 
         binding.cancelButton.setOnClickListener {
-            val intent = Intent(this@LoginWithBioMetricActivity, LoginActivity::class.java)
+            val intent = Intent(this@BioMetricActivity, LoginActivity::class.java)
             startActivity(intent)
         }
 

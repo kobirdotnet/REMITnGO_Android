@@ -11,6 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -65,10 +68,57 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMainBinding.bind(view)
 
-        pMode = "Card Payment"
-
         binding.collectionPointBankLayout.visibility = View.GONE
         binding.collectionPointWalletLayout.visibility = View.GONE
+
+        binding.orderModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            // checkedId is the RadioButton id that is checked
+            when (checkedId) {
+                R.id.bank_account -> {
+                    binding.collectionPointBankLayout.visibility = View.GONE
+                    binding.collectionPointBank.text = null
+                    binding.collectionPointWalletLayout.visibility = View.GONE
+                    binding.collectionPointWallet.text = null
+
+                    binding.selectedTransactionMode.text = "Bank Account"
+                }
+                R.id.instant_credit -> {
+                    binding.collectionPointBankLayout.visibility = View.GONE
+                    binding.collectionPointBank.text = null
+                    binding.collectionPointWalletLayout.visibility = View.GONE
+                    binding.collectionPointWallet.text = null
+
+                    binding.selectedTransactionMode.text = "Instant credit"
+                }
+                R.id.cash_pickup -> {
+                    binding.collectionPointBankLayout.visibility = View.VISIBLE
+                    binding.collectionPointWalletLayout.visibility = View.GONE
+                    binding.collectionPointWallet.text = null
+
+                    binding.selectedTransactionMode.text = "Cash pickup"
+                }
+                R.id.mobile_wallet -> {
+                    binding.collectionPointBankLayout.visibility = View.GONE
+                    binding.collectionPointBank.text = null
+                    binding.collectionPointWalletLayout.visibility = View.VISIBLE
+
+                    binding.selectedTransactionMode.text = "Mobile wallet"
+                }
+            }
+        }
+
+        pMode = "Card Payment"
+        binding.paymentModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            // checkedId is the RadioButton id that is checked
+            when (checkedId) {
+                R.id.bank_transfer -> {
+                    pMode = "Bank Transfer"
+                }
+                R.id.card_payment -> {
+                    pMode = "Card Payment"
+                }
+            }
+        }
 
         // Array of TransactionMode objects
         val transactionMode = arrayOf(

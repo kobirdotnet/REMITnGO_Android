@@ -11,7 +11,7 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:scrollbars="none"
-        tools:context=".ui.LoginWithBioMetricActivity">
+        tools:context=".presentation.ui.bio_metric.BioMetricActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_condensed_regular"
                         android:gravity="center"
-                        android:text="Welcome back! Please scan your fingerprint to access your account"
+                        android:text="Scan your fingerprint to access your account."
                         android:textColor="@color/white" />
 
                 </LinearLayout>

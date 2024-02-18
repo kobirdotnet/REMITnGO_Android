@@ -1,4 +1,4 @@
-package com.bsel.remitngo.ui
+package com.bsel.remitngo.presentation.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.bsel.remitngo.R
 import com.bsel.remitngo.databinding.ActivitySplashBinding
-import com.bsel.remitngo.presentation.login.LoginActivity
+import com.bsel.remitngo.presentation.ui.login.LoginActivity
 
 class SplashActivity : AppCompatActivity() {
 

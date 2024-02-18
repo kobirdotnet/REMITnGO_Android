@@ -1,4 +1,4 @@
-package com.bsel.remitngo.presentation.registration
+package com.bsel.remitngo.presentation.ui.registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

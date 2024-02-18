@@ -1,4 +1,4 @@
-package com.bsel.remitngo.presentation.registration
+package com.bsel.remitngo.presentation.ui.registration
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -11,24 +11,23 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.GenderAdapter
 import com.bsel.remitngo.bottom_sheet.ExistingCustomerBottomSheet
+import com.bsel.remitngo.data.model.registration.RegistrationItem
 import com.bsel.remitngo.databinding.ActivityRegistrationBinding
-import com.bsel.remitngo.model.GenderItem
 import com.bsel.remitngo.presentation.di.Injector
-import com.bsel.remitngo.presentation.di.core.DaggerAppComponent
-import com.bsel.remitngo.presentation.login.LoginActivity
+import com.bsel.remitngo.presentation.ui.main.MainActivity
 import java.util.*
 import javax.inject.Inject
 
 class RegistrationActivity : AppCompatActivity() {
 
     @Inject
+
     lateinit var registrationViewModelFactory: RegistrationViewModelFactory
     private lateinit var registrationViewModel: RegistrationViewModel
+
     private lateinit var binding: ActivityRegistrationBinding
 
     private val existingCustomerBottomSheet: ExistingCustomerBottomSheet by lazy { ExistingCustomerBottomSheet() }
@@ -39,34 +38,18 @@ class RegistrationActivity : AppCompatActivity() {
 
         (application as Injector).createRegistrationSubComponent().inject(this)
 
-        registrationViewModel = ViewModelProvider(this, registrationViewModelFactory)[RegistrationViewModel::class.java]
-
-        val responseLiveData = registrationViewModel.getRegistrationData()
-
-        responseLiveData.observe(this, Observer {
-            Log.i("MYTAG", it.toString())
-        })
-
-        responseLiveData.observe(this, Observer {
-            Log.i("MYTAG", it.toString())
-        })
-
-        responseLiveData.observe(this, Observer {
-            Log.i("MYTAG", it.toString())
-        })
-
-        responseLiveData.observe(this, Observer {
-            Log.i("MYTAG", it.toString())
-        })
+        registrationViewModel =
+            ViewModelProvider(this, registrationViewModelFactory)[RegistrationViewModel::class.java]
 
         firstNameFocusListener()
         lastNameFocusListener()
         dobFocusListener()
-        genderFocusListener()
         emailFocusListener()
         phoneFocusListener()
         passwordFocusListener()
         confirmPasswordFocusListener()
+
+        binding.btnSignUp.setOnClickListener { signUpForm() }
 
         binding.dobContainer.setEndIconOnClickListener {
             val calendar = Calendar.getInstance()
@@ -82,7 +65,7 @@ class RegistrationActivity : AppCompatActivity() {
                     selectedDate.set(selectedYear, selectedMonth, selectedDay)
                     if (!selectedDate.after(Calendar.getInstance())) {
                         val formattedDate =
-                            "%02d/%02d/%04d".format(selectedDay, selectedMonth + 1, selectedYear)
+                            "%04d-%02d-%02d".format(selectedYear, selectedMonth + 1, selectedDay)
                         binding.dob.setText(formattedDate)
                     }
                 }, defaultYear, currentMonth, currentDay
@@ -91,16 +74,6 @@ class RegistrationActivity : AppCompatActivity() {
             datePickerDialog.show()
         }
 
-        val gender = arrayOf(
-            GenderItem("Male"),
-            GenderItem("Female")
-        )
-        val genderAdapter =
-            GenderAdapter(this@RegistrationActivity, R.layout.gender_item, gender)
-        binding.gender.setAdapter(genderAdapter)
-
-        binding.btnSignUp.setOnClickListener { signUpForm() }
-
         binding.btnExistingCustomer.setOnClickListener {
             existingCustomerBottomSheet.show(
                 supportFragmentManager,
@@ -108,13 +81,27 @@ class RegistrationActivity : AppCompatActivity() {
             )
         }
 
+        observeRegistrationResult()
+
     }
+
+    private fun observeRegistrationResult() {
+        registrationViewModel.registrationResult.observe(this) { result ->
+            if (result != null) {
+                val intent = Intent(this@RegistrationActivity, MainActivity::class.java)
+                startActivity(intent)
+                Log.i("info", "Registration successful: $result")
+            } else {
+                Log.i("info", "Registration failed")
+            }
+        }
+    }
+
 
     private fun signUpForm() {
         binding.firstNameContainer.helperText = validFirstName()
         binding.lastNameContainer.helperText = validLastName()
         binding.dobContainer.helperText = validDob()
-        binding.genderContainer.helperText = validGender()
         binding.emailContainer.helperText = validEmail()
         binding.phoneNumberContainer.helperText = validPhone()
         binding.passwordContainer.helperText = validPassword()
@@ -123,13 +110,12 @@ class RegistrationActivity : AppCompatActivity() {
         val validFirstName = binding.firstNameContainer.helperText == null
         val validLastName = binding.lastNameContainer.helperText == null
         val validDob = binding.dobContainer.helperText == null
-        val validGender = binding.genderContainer.helperText == null
         val validEmail = binding.emailContainer.helperText == null
         val validPhone = binding.phoneNumberContainer.helperText == null
         val validPassword = binding.passwordContainer.helperText == null
         val validConfirmPassword = binding.confirmPasswordContainer.helperText == null
 
-        if (validFirstName && validLastName && validDob && validGender && validEmail && validPhone && validPassword && validConfirmPassword) {
+        if (validFirstName && validLastName && validDob && validEmail && validPhone && validPassword && validConfirmPassword) {
             submitSignUpForm()
         }
     }
@@ -138,15 +124,31 @@ class RegistrationActivity : AppCompatActivity() {
         val firstName = binding.firstName.text.toString()
         val lastName = binding.lastName.text.toString()
         val dob = binding.dob.text.toString()
-        val gender = binding.gender.text.toString()
         val email = binding.email.text.toString()
         val phoneNumber = binding.phoneNumber.text.toString()
         val password = binding.password.text.toString()
         val confirmPassword = binding.confirmPassword.text.toString()
-        val isOnline = "1"
+        val isOnline = 1
+        val refCode = "1"
 
-        val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
-        startActivity(intent)
+        val registrationItem = RegistrationItem(
+            dob = dob,
+            email = email,
+            firstname = firstName,
+            isOnlineCustomer = isOnline,
+            lastname = lastName,
+            middlename = "",
+            mobile = phoneNumber,
+            password = password,
+            rdoemail = true,
+            rdophone = true,
+            rdopost = true,
+            rdosms = true,
+            refCode = refCode
+        )
+
+        // Call the registration method in the ViewModel
+        registrationViewModel.registerUser(registrationItem)
 
     }
 
@@ -195,22 +197,6 @@ class RegistrationActivity : AppCompatActivity() {
         val dob = binding.dob.text.toString()
         if (dob.isEmpty()) {
             return "select date of birth"
-        }
-        return null
-    }
-
-    private fun genderFocusListener() {
-        binding.gender.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.genderContainer.helperText = validGender()
-            }
-        }
-    }
-
-    private fun validGender(): String? {
-        val gender = binding.gender.text.toString()
-        if (gender.isEmpty()) {
-            return "select gender"
         }
         return null
     }

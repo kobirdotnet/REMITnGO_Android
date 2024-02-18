@@ -1,4 +1,4 @@
-package com.bsel.remitngo.ui
+package com.bsel.remitngo.presentation.ui.main
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -24,7 +24,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottom_sheet.ChangePasswordBottomSheet
 import com.bsel.remitngo.databinding.ActivityMainBinding
-import com.bsel.remitngo.presentation.login.LoginActivity
+import com.bsel.remitngo.presentation.ui.login.LoginActivity
 import com.google.android.material.navigation.NavigationView
 
 

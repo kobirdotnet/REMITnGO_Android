@@ -1,33 +1,34 @@
-package com.bsel.remitngo.presentation.login
+package com.bsel.remitngo.presentation.ui.login
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottom_sheet.ForgotPasswordBottomSheet
+import com.bsel.remitngo.data.model.login.LoginItem
 import com.bsel.remitngo.databinding.ActivityLoginBinding
-import com.bsel.remitngo.presentation.registration.RegistrationActivity
-import com.bsel.remitngo.ui.MainActivity
+import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.registration.RegistrationActivity
+import com.bsel.remitngo.presentation.ui.main.MainActivity
+import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
+    @Inject
+
+    lateinit var loginViewModelFactory: LoginViewModelFactory
+    private lateinit var loginViewModel: LoginViewModel
 
     private lateinit var binding: ActivityLoginBinding
 
     private val forgotPasswordBottomSheet: ForgotPasswordBottomSheet by lazy { ForgotPasswordBottomSheet() }
-
-    private val CONTACTS_PERMISSION_CODE = 123
 
     private lateinit var changePassword: String
 
@@ -35,30 +36,43 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
-        changePassword = "null"
+        (application as Injector).createLoginSubComponent().inject(this)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkContactsPermission()
-        } else {
-            // Permissions are automatically granted on versions below Marshmallow
-            // Proceed with your logic here
-        }
+        loginViewModel =
+            ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
+
+        emailFocusListener()
+        passwordFocusListener()
+
+        binding.logIn.setOnClickListener { logInForm() }
 
         binding.btnForgotPassword.setOnClickListener {
             changePassword = "12345"
             forgotPasswordBottomSheet.show(supportFragmentManager, forgotPasswordBottomSheet.tag)
         }
 
-        binding.logIn.setOnClickListener { logInForm() }
-
         binding.signUp.setOnClickListener {
             val intent = Intent(this@LoginActivity, RegistrationActivity::class.java)
             startActivity(intent)
         }
 
-        emailFocusListener()
-        passwordFocusListener()
+        changePassword = "null"
 
+        observeLoginResult()
+
+    }
+
+    private fun observeLoginResult() {
+        loginViewModel.loginResult.observe(this) { result ->
+            if (result != null) {
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                intent.putExtra("changePassword", changePassword)
+                startActivity(intent)
+                Log.i("info", "Login successful: $result")
+            } else {
+                Log.i("info", "Login failed")
+            }
+        }
     }
 
     private fun logInForm() {
@@ -77,9 +91,15 @@ class LoginActivity : AppCompatActivity() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
 
-        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-        intent.putExtra("changePassword", changePassword)
-        startActivity(intent)
+        val loginItem = LoginItem(
+            channel = "1",
+            deviceId = "1",
+            password = password,
+            userId = email
+        )
+
+        // Call the login method in the ViewModel
+        loginViewModel.loginUser(loginItem)
 
     }
 
@@ -129,47 +149,6 @@ class LoginActivity : AppCompatActivity() {
             return "Must Contain 1 Special Character (@#\$%^&+=)"
         }
         return null
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun checkContactsPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permission has already been granted
-            // Proceed with your logic here
-        } else {
-            // Permission hasn't been granted
-            requestContactsPermission()
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun requestContactsPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.READ_CONTACTS),
-            CONTACTS_PERMISSION_CODE
-        )
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == CONTACTS_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
-                // Proceed with your logic here
-            } else {
-                // Permission denied
-                // Handle the denial or inform the user about the consequences
-            }
-        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {

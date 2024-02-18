@@ -1,4 +1,4 @@
-package com.bsel.remitngo.data.api_service
+package com.bsel.remitngo.data.api
 
 import android.util.Log
 import okhttp3.OkHttpClient

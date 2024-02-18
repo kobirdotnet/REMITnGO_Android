@@ -1,7 +1,7 @@
 package com.bsel.remitngo.presentation.di.registration
 
 import com.bsel.remitngo.domain.useCase.RegistrationUseCase
-import com.bsel.remitngo.presentation.registration.RegistrationViewModelFactory
+import com.bsel.remitngo.presentation.ui.registration.RegistrationViewModelFactory
 import dagger.Module
 import dagger.Provides
 

@@ -25,7 +25,8 @@ class ChooseRecipientFragment : Fragment() {
 
     private lateinit var binding: FragmentChooseRecipientBinding
 
-    private lateinit var contactsAdapter: ContactsAdapter
+//    private lateinit var contactsAdapter: ContactsAdapter
+
     private lateinit var recipientsAdapter: RecipientsAdapter
 
     private lateinit var pMode: String
@@ -42,9 +43,6 @@ class ChooseRecipientFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentChooseRecipientBinding.bind(view)
-
-        // Retrieve and display contacts
-        retrieveAndDisplayContacts()
 
         pMode = arguments?.getString("pMode").toString()
 
@@ -75,50 +73,9 @@ class ChooseRecipientFragment : Fragment() {
         recipientsAdapter.setList(recipientItems)
         recipientsAdapter.notifyDataSetChanged()
 
-    }
+        // Retrieve and display contacts
+//        retrieveAndDisplayContacts()
 
-    private fun retrieveAndDisplayContacts() {
-        try {
-            val contacts = getContacts()
-            if (!::contactsAdapter.isInitialized) {
-                binding.contactRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                contactsAdapter = ContactsAdapter(
-                    selectedItem = { selectedItem: ContactItem ->
-                        contactItem(selectedItem)
-                        binding.recipientSearch.setQuery("", false)
-                    }
-                )
-                binding.contactRecyclerView.adapter = contactsAdapter
-                contactsAdapter.setList(contacts)
-                contactsAdapter.notifyDataSetChanged()
-
-                binding.recipientSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        recipientsAdapter.filter(newText.orEmpty())
-                        contactsAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun contactItem(selectedItem: ContactItem) {
-        val bundle = Bundle().apply {
-            putString("pMode", pMode)
-        }
-        findNavController().navigate(
-            R.id.action_nav_choose_recipient_to_nav_recipient_details,
-            bundle
-        )
     }
 
     private fun recipientItem(selectedItem: RecipientItem) {
@@ -131,68 +88,112 @@ class ChooseRecipientFragment : Fragment() {
         )
     }
 
-    @SuppressLint("Range")
-    private fun getContacts(): List<ContactItem> {
-        val contactItems = mutableListOf<ContactItem>()
-
-        // Check and request permissions if needed
-
-        val contentResolver: ContentResolver = requireContext().contentResolver
-        val cursor: Cursor? = contentResolver.query(
-            ContactsContract.Contacts.CONTENT_URI,
-            null,
-            null,
-            null,
-            null
-        )
-
-        cursor?.use {
-            var counter = 0
-            while (it.moveToNext()) {
-                val contactId = it.getLong(it.getColumnIndex(ContactsContract.Contacts._ID))
-                val nameColumnIndex =
-                    it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
-
-                // Check if the name column is present and not null
-                if (nameColumnIndex != -1 && !it.isNull(nameColumnIndex)) {
-                    val name = it.getString(nameColumnIndex)
-                    val phoneNumber = getPhoneNumber(contactId)
-                    val firstLetter = name.takeUnless { it.isNullOrEmpty() }?.get(0).toString()
-
-                    contactItems.add(ContactItem(contactId, name, phoneNumber, firstLetter))
-
-                    // Increment the counter, and if it reaches 3, break the loop
-                    counter++
-                    if (counter == 5) {
-                        break
-                    }
-                }
-            }
-        }
-
-        cursor?.close()
-        return contactItems
-    }
-
-    @SuppressLint("Range")
-    private fun getPhoneNumber(contactId: Long): String {
-        val phoneNumberCursor: Cursor? =
-            requireContext().contentResolver.query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                null,
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                arrayOf(contactId.toString()),
-                null
-            )
-
-        phoneNumberCursor?.use {
-            if (it.moveToFirst()) {
-                return it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-            }
-        }
-
-        phoneNumberCursor?.close()
-        return ""
-    }
+//    private fun retrieveAndDisplayContacts() {
+//        try {
+//            val contacts = getContacts()
+//            if (!::contactsAdapter.isInitialized) {
+//                binding.contactRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+//                contactsAdapter = ContactsAdapter(
+//                    selectedItem = { selectedItem: ContactItem ->
+//                        contactItem(selectedItem)
+//                        binding.recipientSearch.setQuery("", false)
+//                    }
+//                )
+//                binding.contactRecyclerView.adapter = contactsAdapter
+//                contactsAdapter.setList(contacts)
+//                contactsAdapter.notifyDataSetChanged()
+//
+//                binding.recipientSearch.setOnQueryTextListener(object :
+//                    SearchView.OnQueryTextListener {
+//                    override fun onQueryTextSubmit(query: String?): Boolean {
+//                        return false
+//                    }
+//
+//                    override fun onQueryTextChange(newText: String?): Boolean {
+//                        recipientsAdapter.filter(newText.orEmpty())
+//                        contactsAdapter.filter(newText.orEmpty())
+//                        return true
+//                    }
+//                })
+//
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
+//
+//    private fun contactItem(selectedItem: ContactItem) {
+//        val bundle = Bundle().apply {
+//            putString("pMode", pMode)
+//        }
+//        findNavController().navigate(
+//            R.id.action_nav_choose_recipient_to_nav_recipient_details,
+//            bundle
+//        )
+//    }
+//
+//    @SuppressLint("Range")
+//    private fun getContacts(): List<ContactItem> {
+//        val contactItems = mutableListOf<ContactItem>()
+//
+//        // Check and request permissions if needed
+//
+//        val contentResolver: ContentResolver = requireContext().contentResolver
+//        val cursor: Cursor? = contentResolver.query(
+//            ContactsContract.Contacts.CONTENT_URI,
+//            null,
+//            null,
+//            null,
+//            null
+//        )
+//
+//        cursor?.use {
+//            var counter = 0
+//            while (it.moveToNext()) {
+//                val contactId = it.getLong(it.getColumnIndex(ContactsContract.Contacts._ID))
+//                val nameColumnIndex =
+//                    it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
+//
+//                // Check if the name column is present and not null
+//                if (nameColumnIndex != -1 && !it.isNull(nameColumnIndex)) {
+//                    val name = it.getString(nameColumnIndex)
+//                    val phoneNumber = getPhoneNumber(contactId)
+//                    val firstLetter = name.takeUnless { it.isNullOrEmpty() }?.get(0).toString()
+//
+//                    contactItems.add(ContactItem(contactId, name, phoneNumber, firstLetter))
+//
+//                    // Increment the counter, and if it reaches 3, break the loop
+//                    counter++
+//                    if (counter == 5) {
+//                        break
+//                    }
+//                }
+//            }
+//        }
+//
+//        cursor?.close()
+//        return contactItems
+//    }
+//
+//    @SuppressLint("Range")
+//    private fun getPhoneNumber(contactId: Long): String {
+//        val phoneNumberCursor: Cursor? =
+//            requireContext().contentResolver.query(
+//                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+//                null,
+//                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+//                arrayOf(contactId.toString()),
+//                null
+//            )
+//
+//        phoneNumberCursor?.use {
+//            if (it.moveToFirst()) {
+//                return it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+//            }
+//        }
+//
+//        phoneNumberCursor?.close()
+//        return ""
+//    }
 
 }
