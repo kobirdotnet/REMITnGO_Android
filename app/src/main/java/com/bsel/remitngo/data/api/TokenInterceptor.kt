@@ -4,10 +4,10 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 
-class TokenInterceptor(private val getToken: () -> String?) : Interceptor {
+class TokenInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest: Request = chain.request()
-        val token = getToken()?.let { it }
+        val token = TokenManager.getToken()
 
         val modifiedRequest: Request = if (token != null) {
             originalRequest.newBuilder()
@@ -18,5 +18,4 @@ class TokenInterceptor(private val getToken: () -> String?) : Interceptor {
         }
         return chain.proceed(modifiedRequest)
     }
-
 }

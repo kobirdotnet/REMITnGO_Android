@@ -10,7 +10,7 @@ import com.bsel.remitngo.R
 import com.bsel.remitngo.databinding.ActivityBioMetricBinding
 import com.bsel.remitngo.presentation.ui.login.LoginActivity
 import com.bsel.remitngo.presentation.ui.main.MainActivity
-import com.bsel.remitngo.ui.PreferenceManager
+import com.bsel.remitngo.data.api.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.Executor
 

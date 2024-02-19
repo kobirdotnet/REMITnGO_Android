@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.databinding.FragmentSettingsBinding
-import com.bsel.remitngo.ui.PreferenceManager
+import com.bsel.remitngo.data.api.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.Executor
 

@@ -29,9 +29,10 @@ class ChooseRecipientFragment : Fragment() {
 
     private lateinit var recipientsAdapter: RecipientsAdapter
 
-    private lateinit var pMode: String
-
     private lateinit var recipientItems: List<RecipientItem>
+
+    private lateinit var orderType: String
+    private lateinit var paymentType: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,11 +45,13 @@ class ChooseRecipientFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentChooseRecipientBinding.bind(view)
 
-        pMode = arguments?.getString("pMode").toString()
+        orderType = arguments?.getString("orderType").toString()
+        paymentType = arguments?.getString("paymentType").toString()
 
         binding.addRecipient.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("pMode", pMode)
+                putString("orderType", orderType)
+                putString("paymentType", paymentType)
             }
             findNavController().navigate(
                 R.id.action_nav_choose_recipient_to_nav_recipient_details,
@@ -80,7 +83,8 @@ class ChooseRecipientFragment : Fragment() {
 
     private fun recipientItem(selectedItem: RecipientItem) {
         val bundle = Bundle().apply {
-            putString("pMode", pMode)
+            putString("orderType", orderType)
+            putString("paymentType", paymentType)
         }
         findNavController().navigate(
             R.id.action_nav_choose_recipient_to_nav_confirm_transfer,

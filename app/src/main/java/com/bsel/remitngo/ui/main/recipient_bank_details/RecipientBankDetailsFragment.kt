@@ -26,9 +26,8 @@ class RecipientBankDetailsFragment : Fragment(), OnBankItemSelectedListener {
 
     private val bankBranchBottomSheet: BankBranchBottomSheet by lazy { BankBranchBottomSheet() }
 
-    private lateinit var otMode: String
-
-    private lateinit var pMode: String
+    private lateinit var orderType: String
+    private lateinit var paymentType: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,19 +47,18 @@ class RecipientBankDetailsFragment : Fragment(), OnBankItemSelectedListener {
         bankAccountNumberFocusListener()
         confirmBankAccountNumberFocusListener()
 
-        bkashAccountNameFocusListener()
+        walletAccountNameFocusListener()
         phoneNumberFocusListener()
 
-        pMode = arguments?.getString("pMode").toString()
+        orderType = arguments?.getString("orderType").toString()
+        paymentType = arguments?.getString("paymentType").toString()
 
-        otMode = arguments?.getString("otMode").toString()
-
-        if (otMode == "Bank Account") {
-            binding.bankAccountLayout.visibility = View.VISIBLE
-            binding.bkashAccountLayout.visibility = View.GONE
-        } else if (otMode == "bKash") {
+        if (orderType=="1"){
             binding.bankAccountLayout.visibility = View.GONE
-            binding.bkashAccountLayout.visibility = View.VISIBLE
+            binding.walletAccountLayout.visibility = View.VISIBLE
+        }else{
+            binding.bankAccountLayout.visibility = View.VISIBLE
+            binding.walletAccountLayout.visibility = View.GONE
         }
 
         binding.bankName.setOnClickListener {
@@ -80,7 +78,7 @@ class RecipientBankDetailsFragment : Fragment(), OnBankItemSelectedListener {
 
         binding.btnBankSave.setOnClickListener { bankAccountForm() }
 
-        binding.btnBkashSave.setOnClickListener { bKashAccountForm() }
+        binding.btnWalletSave.setOnClickListener { walletAccountForm() }
 
     }
 
@@ -126,7 +124,8 @@ class RecipientBankDetailsFragment : Fragment(), OnBankItemSelectedListener {
         val confirmBankAccountNumber = binding.confirmBankAccountNumber.text.toString()
 
         val bundle = Bundle().apply {
-            putString("pMode", pMode)
+            putString("orderType", orderType)
+            putString("paymentType", paymentType)
         }
         findNavController().navigate(
             R.id.action_nav_recipient_bank_details_to_nav_confirm_transfer,
@@ -134,24 +133,25 @@ class RecipientBankDetailsFragment : Fragment(), OnBankItemSelectedListener {
         )
     }
 
-    private fun bKashAccountForm() {
-        binding.bkashAccountNameContainer.helperText = validBkashAccountName()
+    private fun walletAccountForm() {
+        binding.walletAccountNameContainer.helperText = validWalletAccountName()
         binding.phoneNumberContainer.helperText = validPhoneNumber()
 
-        val validBkashAccountName = binding.bkashAccountNameContainer.helperText == null
+        val validWalletAccountName = binding.walletAccountNameContainer.helperText == null
         val validPhoneNumber = binding.phoneNumberContainer.helperText == null
 
-        if (validBkashAccountName && validPhoneNumber) {
-            submitBkashAccountForm()
+        if (validWalletAccountName && validPhoneNumber) {
+            submitWalletAccountForm()
         }
     }
 
-    private fun submitBkashAccountForm() {
-        val bkashAccountName = binding.bkashAccountName.text.toString()
+    private fun submitWalletAccountForm() {
+        val walletAccountName = binding.walletAccountName.text.toString()
         val phoneNumber = binding.phoneNumber.text.toString()
 
         val bundle = Bundle().apply {
-            putString("pMode", pMode)
+            putString("orderType", orderType)
+            putString("paymentType", paymentType)
         }
         findNavController().navigate(
             R.id.action_nav_recipient_bank_details_to_nav_confirm_transfer,
@@ -257,18 +257,18 @@ class RecipientBankDetailsFragment : Fragment(), OnBankItemSelectedListener {
         return null
     }
 
-    private fun bkashAccountNameFocusListener() {
-        binding.bkashAccountName.setOnFocusChangeListener { _, focused ->
+    private fun walletAccountNameFocusListener() {
+        binding.walletAccountName.setOnFocusChangeListener { _, focused ->
             if (!focused) {
-                binding.bkashAccountNameContainer.helperText = validBkashAccountName()
+                binding.walletAccountNameContainer.helperText = validWalletAccountName()
             }
         }
     }
 
-    private fun validBkashAccountName(): String? {
-        val bkashAccountName = binding.bkashAccountName.text.toString()
-        if (bkashAccountName.isEmpty()) {
-            return "enter bKash account name"
+    private fun validWalletAccountName(): String? {
+        val walletAccountName = binding.walletAccountName.text.toString()
+        if (walletAccountName.isEmpty()) {
+            return "enter wallet account name"
         }
         return null
     }

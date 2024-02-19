@@ -34,7 +34,8 @@ class ConfirmTransferFragment : Fragment() {
 
     private lateinit var binding: FragmentConfirmTransferBinding
 
-    private lateinit var pMode: String
+    private lateinit var orderType: String
+    private lateinit var paymentType: String
 
     lateinit var dialogHandler: AlertDialogHandler
     lateinit var error: GenesisError
@@ -50,18 +51,18 @@ class ConfirmTransferFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentConfirmTransferBinding.bind(view)
 
+        orderType = arguments?.getString("orderType").toString()
+        paymentType = arguments?.getString("paymentType").toString()
+
         binding.btnSend.setOnClickListener {
-            pMode = arguments?.getString("pMode").toString()
-            if (pMode == "Card Payment") {
+            if (paymentType == "Card Payment") {
                 cardPayment()
-//                findNavController().navigate(R.id.action_nav_confirm_transfer_to_nav_transaction)
-            } else if (pMode == "Bank Transfer") {
+            } else if (paymentType == "Bank Transfer") {
                 findNavController().navigate(R.id.action_nav_confirm_transfer_to_nav_complete_bank_transaction)
             }
         }
 
     }
-
     private fun cardPayment() {
 
         // Generate unique Id
@@ -102,7 +103,8 @@ class ConfirmTransferFragment : Fragment() {
             "alalkodu@gmail.com",
             "07893986598",
             billingAddress,
-            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
+//            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
+            "https://rnguat.bracsaajanexchange.com/api/Payment/EmerchantNotification",
             transactionTypes
         )
         // Set return URLs after a delay of 30 seconds

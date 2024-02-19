@@ -31,8 +31,8 @@
     <string name="menu_sign_up">Sign Up</string>
     <string name="term_and_condition">By signing up you agree to our Tams of use Privacy Policy and to rectify receiving communications from BRAC Saajan regarding your transactions, new offers, products or services.</string>
     <string name="recipient_name_as_bank">Recipient name should be legal name, as registered with bank.</string>
-    <string name="recipient_name_as_bkash">Recipient name should be legal name, as registered with bKash mobile money service.</string>
-    <string name="bank_transfer_txt">Please double check the bank account number, as we may not be able to refund the transfer once it has been sent.</string>
-    <string name="bkash_transfer_txt">Please double check the recipient information as we may not be able to refund the transfer once it has been sent.</string>
+    <string name="recipient_name_as_wallet">Recipient name should be legal name, as registered with wallet service.</string>
+    <string name="bank_transfer_txt">Please double check the account information, as we may not be able to refund the transfer once it has been sent.</string>
+    <string name="wallet_transfer_txt">Please double check the account information, as we may not be able to refund the transfer once it has been sent.</string>
 
 </resources>

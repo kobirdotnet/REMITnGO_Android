@@ -1,8 +1,11 @@
 package com.bsel.remitngo.presentation.ui.login
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.util.Patterns
 import android.view.MotionEvent
@@ -13,6 +16,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottom_sheet.ForgotPasswordBottomSheet
+import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.api.TokenManager
 import com.bsel.remitngo.data.model.login.LoginItem
 import com.bsel.remitngo.databinding.ActivityLoginBinding
 import com.bsel.remitngo.presentation.di.Injector
@@ -22,7 +27,6 @@ import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
     @Inject
-
     lateinit var loginViewModelFactory: LoginViewModelFactory
     private lateinit var loginViewModel: LoginViewModel
 
@@ -32,9 +36,15 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var changePassword: String
 
+    private lateinit var deviceId: String
+
+    private lateinit var preferenceManager: PreferenceManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+
+        preferenceManager = PreferenceManager(this@LoginActivity)
 
         (application as Injector).createLoginSubComponent().inject(this)
 
@@ -60,19 +70,45 @@ class LoginActivity : AppCompatActivity() {
 
         observeLoginResult()
 
+        deviceId = getDeviceId(applicationContext)
     }
 
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(this) { result ->
             if (result != null) {
+
+                for (data in result.data!!) {
+                    Log.i("info", "First Name: ${data.firstName}")
+                    Log.i("info", "Last Name: ${data.lastName}")
+                    Log.i("info", "Email: ${data.email}")
+                    preferenceManager.saveData("personId", data.personId.toString())
+                }
+                TokenManager.setToken(result.token)
+
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 intent.putExtra("changePassword", changePassword)
                 startActivity(intent)
-                Log.i("info", "Login successful: $result")
             } else {
                 Log.i("info", "Login failed")
             }
         }
+    }
+
+    fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
     }
 
     private fun logInForm() {
@@ -90,10 +126,11 @@ class LoginActivity : AppCompatActivity() {
     private fun submitLogInForm() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
+        val channel = "Apps"
 
         val loginItem = LoginItem(
-            channel = "1",
-            deviceId = "1",
+            channel = channel,
+            deviceId = deviceId,
             password = password,
             userId = email
         )

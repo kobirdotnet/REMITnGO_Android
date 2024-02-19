@@ -55,7 +55,8 @@ class MainFragment : Fragment() {
     private var exchangeRate: Double = 150.55
     private val decimalFormat = DecimalFormat("#.##")
 
-    private lateinit var pMode: String
+    private lateinit var orderType: String
+    private lateinit var paymentType: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,6 +72,7 @@ class MainFragment : Fragment() {
         binding.collectionPointBankLayout.visibility = View.GONE
         binding.collectionPointWalletLayout.visibility = View.GONE
 
+        orderType = "3"
         binding.orderModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             // checkedId is the RadioButton id that is checked
             when (checkedId) {
@@ -81,6 +83,7 @@ class MainFragment : Fragment() {
                     binding.collectionPointWallet.text = null
 
                     binding.selectedTransactionMode.text = "Bank Account"
+                    orderType = "3"
                 }
                 R.id.instant_credit -> {
                     binding.collectionPointBankLayout.visibility = View.GONE
@@ -89,6 +92,7 @@ class MainFragment : Fragment() {
                     binding.collectionPointWallet.text = null
 
                     binding.selectedTransactionMode.text = "Instant credit"
+                    orderType = "5"
                 }
                 R.id.cash_pickup -> {
                     binding.collectionPointBankLayout.visibility = View.VISIBLE
@@ -96,6 +100,7 @@ class MainFragment : Fragment() {
                     binding.collectionPointWallet.text = null
 
                     binding.selectedTransactionMode.text = "Cash pickup"
+                    orderType = "2"
                 }
                 R.id.mobile_wallet -> {
                     binding.collectionPointBankLayout.visibility = View.GONE
@@ -103,19 +108,20 @@ class MainFragment : Fragment() {
                     binding.collectionPointWalletLayout.visibility = View.VISIBLE
 
                     binding.selectedTransactionMode.text = "Mobile wallet"
+                    orderType = "1"
                 }
             }
         }
 
-        pMode = "Card Payment"
+        paymentType = "Card Payment"
         binding.paymentModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             // checkedId is the RadioButton id that is checked
             when (checkedId) {
                 R.id.bank_transfer -> {
-                    pMode = "Bank Transfer"
+                    paymentType = "Bank Transfer"
                 }
                 R.id.card_payment -> {
-                    pMode = "Card Payment"
+                    paymentType = "Card Payment"
                 }
             }
         }
@@ -177,7 +183,8 @@ class MainFragment : Fragment() {
 
         // Array of CollectionPoint objects
         val collectionPointWallet = arrayOf(
-            CollectionPointWallet("bKash")
+            CollectionPointWallet("bKash"),
+            CollectionPointWallet("Nagad")
         )
         // Set up the adapter for AutoCompleteTextView
         val collectionPointWalletAdapter =
@@ -195,7 +202,7 @@ class MainFragment : Fragment() {
         binding.paymentMode.setAdapter(paymentModeAdapter)
         binding.paymentMode.setOnItemClickListener { _, _, position, _ ->
             val paymentMode = paymentModeAdapter.getItem(position)
-            pMode = paymentMode?.name.toString()
+            paymentType = paymentMode?.name.toString()
         }
 
         //exchangeRate
@@ -240,7 +247,8 @@ class MainFragment : Fragment() {
 
         binding.btnContinue.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("pMode", pMode)
+                putString("paymentType", paymentType)
+                putString("orderType",orderType)
             }
             findNavController().navigate(
                 R.id.action_nav_main_to_nav_choose_recipient,

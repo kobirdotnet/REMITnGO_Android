@@ -1,5 +1,7 @@
 package com.bsel.remitngo.data.api
 
+import com.bsel.remitngo.data.model.beneficiary.AddBeneficiaryItem
+import com.bsel.remitngo.data.model.beneficiary.AddBeneficiaryResponseItem
 import com.bsel.remitngo.data.model.login.LoginItem
 import com.bsel.remitngo.data.model.login.LoginResponseItem
 import com.bsel.remitngo.data.model.registration.RegistrationItem
@@ -14,6 +16,9 @@ interface REMITnGoService {
 
     @POST("api/Home/Login")
     suspend fun loginUser(@Body loginItem: LoginItem): Response<LoginResponseItem>
+
+    @POST("api/Beneficiary/AddBeneficiary")
+    suspend fun addBeneficiary(@Body addBeneficiaryItem: AddBeneficiaryItem): Response<AddBeneficiaryResponseItem>
 
 }
 

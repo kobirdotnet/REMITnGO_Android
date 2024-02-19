@@ -1,4 +1,4 @@
-package com.bsel.remitngo.ui
+package com.bsel.remitngo.data.api
 
 import android.content.Context
 import android.content.SharedPreferences

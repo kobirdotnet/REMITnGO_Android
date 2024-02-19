@@ -1,6 +1,7 @@
 package com.bsel.remitngo.presentation.di.core
 
 import com.bsel.remitngo.data.api.REMITnGoService
+import com.bsel.remitngo.data.api.TokenInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -8,17 +9,24 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-
 @Module
 class NetModule(private val baseUrl: String) {
+
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideTokenInterceptor(): TokenInterceptor {
+        return TokenInterceptor()
+    }
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(tokenInterceptor: TokenInterceptor): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
+            .addInterceptor(tokenInterceptor)
             .build()
     }
 

@@ -1,7 +1,9 @@
 package com.bsel.remitngo.presentation.di.core
 
+import com.bsel.remitngo.domain.repository.BeneficiaryRepository
 import com.bsel.remitngo.domain.repository.LoginRepository
 import com.bsel.remitngo.domain.repository.RegistrationRepository
+import com.bsel.remitngo.domain.useCase.BeneficiaryUseCase
 import com.bsel.remitngo.domain.useCase.LoginUseCase
 import com.bsel.remitngo.domain.useCase.RegistrationUseCase
 import dagger.Module
@@ -17,6 +19,11 @@ class UseCaseModule {
     @Provides
     fun provideLoginUseCase(loginRepository: LoginRepository): LoginUseCase {
         return LoginUseCase(loginRepository)
+    }
+
+    @Provides
+    fun provideBeneficiaryUseCase(beneficiaryRepository: BeneficiaryRepository): BeneficiaryUseCase {
+        return BeneficiaryUseCase(beneficiaryRepository)
     }
 
 }
