@@ -1,11 +1,14 @@
 package com.bsel.remitngo.presentation.di.core
 
+import com.bsel.remitngo.data.repository.bank.BankRepositoryImpl
+import com.bsel.remitngo.data.repository.bank.dataSource.BankRemoteDataSource
 import com.bsel.remitngo.data.repository.beneficiary.BeneficiaryRepositoryImpl
 import com.bsel.remitngo.data.repository.beneficiary.dataSource.BeneficiaryRemoteDataSource
 import com.bsel.remitngo.data.repository.login.LoginRepositoryImpl
 import com.bsel.remitngo.data.repository.login.dataSource.LoginRemoteDataSource
 import com.bsel.remitngo.data.repository.registration.RegistrationRepositoryImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
+import com.bsel.remitngo.domain.repository.BankRepository
 import com.bsel.remitngo.domain.repository.BeneficiaryRepository
 import com.bsel.remitngo.domain.repository.LoginRepository
 import com.bsel.remitngo.domain.repository.RegistrationRepository
@@ -31,6 +34,12 @@ class RepositoryModule {
     @Provides
     fun provideBeneficiaryRepository(beneficiaryRemoteDataSource: BeneficiaryRemoteDataSource): BeneficiaryRepository {
         return BeneficiaryRepositoryImpl(beneficiaryRemoteDataSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBankRepository(bankRemoteDataSource: BankRemoteDataSource): BankRepository {
+        return BankRepositoryImpl(bankRemoteDataSource)
     }
 
 }

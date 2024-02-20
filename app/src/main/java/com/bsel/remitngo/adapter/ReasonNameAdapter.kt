@@ -6,15 +6,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.reason.ReasonData
+import com.bsel.remitngo.data.model.reason.ReasonItem
 import com.bsel.remitngo.databinding.ItemReasonBinding
-import com.bsel.remitngo.model.ReasonItem
 
 class ReasonNameAdapter(
-    private val selectedItem: (ReasonItem) -> Unit
+    private val selectedItem: (ReasonData) -> Unit
 ) : RecyclerView.Adapter<ReasonNameViewHolder>() {
 
-    private val reasonItemList = ArrayList<ReasonItem>()
-    private var filteredReasonItemList = ArrayList<ReasonItem>()
+    private val reasonItemList = ArrayList<ReasonData>()
+    private var filteredReasonItemList = ArrayList<ReasonData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReasonNameViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +35,7 @@ class ReasonNameAdapter(
         holder.bind(filteredReasonItemList[position], selectedItem)
     }
 
-    fun setList(reasonItem: List<ReasonItem>) {
+    fun setList(reasonItem: List<ReasonData>) {
         reasonItemList.clear()
         reasonItemList.addAll(reasonItem)
         filter("")
@@ -43,7 +44,7 @@ class ReasonNameAdapter(
     fun filter(query: String) {
         filteredReasonItemList.clear()
         for (reasonItem in reasonItemList) {
-            if (reasonItem.reasonName!!.contains(query, ignoreCase = true)) {
+            if (reasonItem.name!!.contains(query, ignoreCase = true)) {
                 filteredReasonItemList.add(reasonItem)
             }
         }
@@ -55,10 +56,10 @@ class ReasonNameAdapter(
 class ReasonNameViewHolder(val binding: ItemReasonBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        reasonItem: ReasonItem,
-        selectedItem: (ReasonItem) -> Unit
+        reasonItem: ReasonData,
+        selectedItem: (ReasonData) -> Unit
     ) {
-        binding.reasonName.text = reasonItem.reasonName
+        binding.reasonName.text = reasonItem.name
         binding.itemReasonLayout.setOnClickListener {
             selectedItem(reasonItem)
         }

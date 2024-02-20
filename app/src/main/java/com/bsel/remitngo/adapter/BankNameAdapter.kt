@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.bank.BankData
 import com.bsel.remitngo.databinding.ItemBankBinding
-import com.bsel.remitngo.model.BankItem
 
 class BankNameAdapter(
-    private val selectedItem: (BankItem) -> Unit
+    private val selectedItem: (BankData) -> Unit
 ) : RecyclerView.Adapter<BankNameViewHolder>() {
 
-    private val bankItemList = ArrayList<BankItem>()
-    private var filteredBankItemList = ArrayList<BankItem>()
+    private val bankItemList = ArrayList<BankData>()
+    private var filteredBankItemList = ArrayList<BankData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BankNameViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +34,7 @@ class BankNameAdapter(
         holder.bind(filteredBankItemList[position], selectedItem)
     }
 
-    fun setList(bankItem: List<BankItem>) {
+    fun setList(bankItem: List<BankData>) {
         bankItemList.clear()
         bankItemList.addAll(bankItem)
         filter("")
@@ -43,7 +43,7 @@ class BankNameAdapter(
     fun filter(query: String) {
         filteredBankItemList.clear()
         for (bankItem in bankItemList) {
-            if (bankItem.bankName!!.contains(query, ignoreCase = true)) {
+            if (bankItem.name!!.contains(query, ignoreCase = true)) {
                 filteredBankItemList.add(bankItem)
             }
         }
@@ -55,11 +55,10 @@ class BankNameAdapter(
 class BankNameViewHolder(val binding: ItemBankBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        bankItem: BankItem,
-        selectedItem: (BankItem) -> Unit
+        bankItem: BankData,
+        selectedItem: (BankData) -> Unit
     ) {
-        binding.bankName.text = bankItem.bankName
-        binding.bankFlag.setImageResource(bankItem.flagDrawable)
+        binding.bankName.text = bankItem.name
         binding.itemBankLayout.setOnClickListener {
             selectedItem(bankItem)
         }

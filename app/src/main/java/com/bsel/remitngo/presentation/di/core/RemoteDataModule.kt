@@ -1,6 +1,8 @@
 package com.bsel.remitngo.presentation.di.core
 
 import com.bsel.remitngo.data.api.REMITnGoService
+import com.bsel.remitngo.data.repository.bank.dataSource.BankRemoteDataSource
+import com.bsel.remitngo.data.repository.bank.dataSourceImpl.BankRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.beneficiary.dataSource.BeneficiaryRemoteDataSource
 import com.bsel.remitngo.data.repository.beneficiary.dataSourceImpl.BeneficiaryRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.login.dataSource.LoginRemoteDataSource
@@ -29,6 +31,12 @@ class RemoteDataModule {
     @Provides
     fun provideBeneficiaryRemoteDataSource(remitNgoService: REMITnGoService): BeneficiaryRemoteDataSource {
         return BeneficiaryRemoteDataSourceImpl(remitNgoService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBankRemoteDataSource(remitNgoService: REMITnGoService): BankRemoteDataSource {
+        return BankRemoteDataSourceImpl(remitNgoService)
     }
 
 }

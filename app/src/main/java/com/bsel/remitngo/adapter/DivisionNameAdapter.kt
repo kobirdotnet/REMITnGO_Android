@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.division.DivisionData
 import com.bsel.remitngo.databinding.ItemDivisionBinding
-import com.bsel.remitngo.model.DivisionItem
 
 class DivisionNameAdapter(
-    private val selectedItem: (DivisionItem) -> Unit
+    private val selectedItem: (DivisionData) -> Unit
 ) : RecyclerView.Adapter<DivisionNameViewHolder>() {
 
-    private val divisionItemList = ArrayList<DivisionItem>()
-    private var filteredDivisionItemList = ArrayList<DivisionItem>()
+    private val divisionItemList = ArrayList<DivisionData>()
+    private var filteredDivisionItemList = ArrayList<DivisionData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DivisionNameViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +34,7 @@ class DivisionNameAdapter(
         holder.bind(filteredDivisionItemList[position], selectedItem)
     }
 
-    fun setList(divisionItem: List<DivisionItem>) {
+    fun setList(divisionItem: List<DivisionData>) {
         divisionItemList.clear()
         divisionItemList.addAll(divisionItem)
         filter("")
@@ -43,7 +43,7 @@ class DivisionNameAdapter(
     fun filter(query: String) {
         filteredDivisionItemList.clear()
         for (divisionItem in divisionItemList) {
-            if (divisionItem.divisionName!!.contains(query, ignoreCase = true)) {
+            if (divisionItem.name!!.contains(query, ignoreCase = true)) {
                 filteredDivisionItemList.add(divisionItem)
             }
         }
@@ -55,10 +55,10 @@ class DivisionNameAdapter(
 class DivisionNameViewHolder(val binding: ItemDivisionBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        divisionItem: DivisionItem,
-        selectedItem: (DivisionItem) -> Unit
+        divisionItem: DivisionData,
+        selectedItem: (DivisionData) -> Unit
     ) {
-        binding.divisionName.text = divisionItem.divisionName
+        binding.divisionName.text = divisionItem.name
         binding.itemDivisionLayout.setOnClickListener {
             selectedItem(divisionItem)
         }

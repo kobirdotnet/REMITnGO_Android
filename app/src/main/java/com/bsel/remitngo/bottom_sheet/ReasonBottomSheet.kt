@@ -1,32 +1,46 @@
 package com.bsel.remitngo.bottom_sheet
 
 import android.app.Dialog
+import android.content.Context
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.ReasonNameAdapter
+import com.bsel.remitngo.data.model.reason.ReasonData
+import com.bsel.remitngo.data.model.reason.ReasonItem
 import com.bsel.remitngo.databinding.ReasonNameLayoutBinding
-import com.bsel.remitngo.interfaceses.OnRecipientItemSelectedListener
-import com.bsel.remitngo.model.ReasonItem
+import com.bsel.remitngo.interfaceses.OnBeneficiarySelectedListener
+import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModel
+import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import javax.inject.Inject
 
 class ReasonBottomSheet : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var beneficiaryViewModelFactory: BeneficiaryViewModelFactory
+    private lateinit var beneficiaryViewModel: BeneficiaryViewModel
 
-    var itemSelectedListener: OnRecipientItemSelectedListener? = null
+    var itemSelectedListener: OnBeneficiarySelectedListener? = null
 
     private lateinit var reasonNameBehavior: BottomSheetBehavior<*>
 
     private lateinit var binding: ReasonNameLayoutBinding
 
     private lateinit var reasonNameAdapter: ReasonNameAdapter
+
+    private lateinit var deviceId: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -56,44 +70,83 @@ class ReasonBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
-        val reasonItems = arrayOf(
-            ReasonItem("Family Support"),
-            ReasonItem("Education"),
-            ReasonItem("Donation")
-        )
+        (requireActivity().application as Injector).createBeneficiarySubComponent().inject(this)
 
-        binding.reasonRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        reasonNameAdapter = ReasonNameAdapter(
-            selectedItem = { selectedItem: ReasonItem ->
-                reasonItem(selectedItem)
-                binding.reasonSearch.setQuery("", false)
-            }
-        )
-        binding.reasonRecyclerView.adapter = reasonNameAdapter
-        reasonNameAdapter.setList(reasonItems.asList())
-        reasonNameAdapter.notifyDataSetChanged()
-
-        binding.reasonSearch.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                reasonNameAdapter.filter(newText.orEmpty())
-                return true
-            }
-        })
+        beneficiaryViewModel =
+            ViewModelProvider(this, beneficiaryViewModelFactory)[BeneficiaryViewModel::class.java]
 
         binding.cancelButton.setOnClickListener { dismiss() }
+
+        observeReasonResult()
+
+        deviceId = getDeviceId(requireContext())
+
+        val reasonItem = ReasonItem(
+            deviceId = deviceId,
+            dropdownId = 27,
+            param1 = 0,
+            param2 = 0
+        )
+        beneficiaryViewModel.reason(reasonItem)
 
         return bottomSheet
     }
 
-    private fun reasonItem(selectedItem: ReasonItem) {
-        Log.i("info", "selectedItem: $selectedItem")
+    private fun observeReasonResult() {
+        beneficiaryViewModel.reasonResult.observe(this) { result ->
+            if (result != null) {
+                for (data in result.data!!) {
+                    binding.reasonRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    reasonNameAdapter = ReasonNameAdapter(
+                        selectedItem = { selectedItem: ReasonData ->
+                            reasonItem(selectedItem)
+                            binding.reasonSearch.setQuery("", false)
+                        }
+                    )
+                    binding.reasonRecyclerView.adapter = reasonNameAdapter
+                    reasonNameAdapter.setList(result.data as List<ReasonData>)
+                    reasonNameAdapter.notifyDataSetChanged()
+
+                    binding.reasonSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
+
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            reasonNameAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+
+            } else {
+                Log.i("info", "reason failed")
+            }
+        }
+    }
+
+    private fun reasonItem(selectedItem: ReasonData) {
         itemSelectedListener?.onReasonItemSelected(selectedItem)
         dismiss()
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
     }
 
     override fun onStart() {

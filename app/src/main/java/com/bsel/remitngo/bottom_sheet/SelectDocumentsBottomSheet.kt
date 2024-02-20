@@ -1,19 +1,12 @@
 package com.bsel.remitngo.bottom_sheet
 
 import android.app.Dialog
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.BankNameAdapter
-import com.bsel.remitngo.databinding.BankNameLayoutBinding
 import com.bsel.remitngo.databinding.SelectDocumentsLayoutBinding
-import com.bsel.remitngo.model.BankItem
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

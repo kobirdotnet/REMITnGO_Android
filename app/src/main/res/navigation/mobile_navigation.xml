@@ -112,18 +112,18 @@
     </fragment>
     <fragment
         android:id="@+id/nav_recipient_details"
-        android:name="com.bsel.remitngo.presentation.ui.beneficiary.RecipientDetailsFragment"
+        android:name="com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryFragment"
         android:label="@string/menu_recipient_details"
-        tools:layout="@layout/fragment_recipient_details">
+        tools:layout="@layout/fragment_beneficiary">
         <action
             android:id="@+id/action_nav_recipient_details_to_nav_recipient_bank_details"
             app:destination="@id/nav_recipient_bank_details" />
     </fragment>
     <fragment
         android:id="@+id/nav_recipient_bank_details"
-        android:name="com.bsel.remitngo.ui.main.recipient_bank_details.RecipientBankDetailsFragment"
+        android:name="com.bsel.remitngo.presentation.ui.bank.BankFragment"
         android:label="@string/menu_recipient_details"
-        tools:layout="@layout/fragment_recipient_bank_details">
+        tools:layout="@layout/fragment_bank">
         <action
             android:id="@+id/action_nav_recipient_bank_details_to_nav_confirm_transfer"
             app:destination="@id/nav_confirm_transfer" />

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.model.GenderItem
+import com.bsel.remitngo.data.model.gender.GenderItem
 
 class GenderAdapter(context: Context, resource: Int, genderItems: Array<GenderItem>) :
     ArrayAdapter<GenderItem>(context, resource, genderItems) {

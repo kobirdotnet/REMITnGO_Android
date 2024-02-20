@@ -6,15 +6,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.relation.RelationData
+import com.bsel.remitngo.data.model.relation.RelationItem
 import com.bsel.remitngo.databinding.ItemRelationBinding
-import com.bsel.remitngo.model.RelationItem
 
 class RelationNameAdapter(
-    private val selectedItem: (RelationItem) -> Unit
+    private val selectedItem: (RelationData) -> Unit
 ) : RecyclerView.Adapter<RelationNameViewHolder>() {
 
-    private val relationItemList = ArrayList<RelationItem>()
-    private var filteredRelationItemList = ArrayList<RelationItem>()
+    private val relationItemList = ArrayList<RelationData>()
+    private var filteredRelationItemList = ArrayList<RelationData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RelationNameViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +35,7 @@ class RelationNameAdapter(
         holder.bind(filteredRelationItemList[position], selectedItem)
     }
 
-    fun setList(relationItem: List<RelationItem>) {
+    fun setList(relationItem: List<RelationData>) {
         relationItemList.clear()
         relationItemList.addAll(relationItem)
         filter("")
@@ -43,7 +44,7 @@ class RelationNameAdapter(
     fun filter(query: String) {
         filteredRelationItemList.clear()
         for (relationItem in relationItemList) {
-            if (relationItem.relationName!!.contains(query, ignoreCase = true)) {
+            if (relationItem.name!!.contains(query, ignoreCase = true)) {
                 filteredRelationItemList.add(relationItem)
             }
         }
@@ -55,10 +56,10 @@ class RelationNameAdapter(
 class RelationNameViewHolder(val binding: ItemRelationBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        relationItem: RelationItem,
-        selectedItem: (RelationItem) -> Unit
+        relationItem: RelationData,
+        selectedItem: (RelationData) -> Unit
     ) {
-        binding.relationName.text = relationItem.relationName
+        binding.relationName.text = relationItem.name
         binding.itemRelationLayout.setOnClickListener {
             selectedItem(relationItem)
         }

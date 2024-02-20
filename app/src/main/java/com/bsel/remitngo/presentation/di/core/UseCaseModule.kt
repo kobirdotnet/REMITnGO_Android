@@ -1,8 +1,10 @@
 package com.bsel.remitngo.presentation.di.core
 
+import com.bsel.remitngo.domain.repository.BankRepository
 import com.bsel.remitngo.domain.repository.BeneficiaryRepository
 import com.bsel.remitngo.domain.repository.LoginRepository
 import com.bsel.remitngo.domain.repository.RegistrationRepository
+import com.bsel.remitngo.domain.useCase.BankUseCase
 import com.bsel.remitngo.domain.useCase.BeneficiaryUseCase
 import com.bsel.remitngo.domain.useCase.LoginUseCase
 import com.bsel.remitngo.domain.useCase.RegistrationUseCase
@@ -24,6 +26,11 @@ class UseCaseModule {
     @Provides
     fun provideBeneficiaryUseCase(beneficiaryRepository: BeneficiaryRepository): BeneficiaryUseCase {
         return BeneficiaryUseCase(beneficiaryRepository)
+    }
+
+    @Provides
+    fun provideBankUseCase(bankRepository: BankRepository): BankUseCase {
+        return BankUseCase(bankRepository)
     }
 
 }

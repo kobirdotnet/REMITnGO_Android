@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.GenderAdapter
 import com.bsel.remitngo.bottom_sheet.*
+import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.databinding.FragmentPersonalInformationBinding
 import com.bsel.remitngo.interfaceses.OnPersonalInfoItemSelectedListener
 import com.bsel.remitngo.model.*
@@ -24,6 +25,8 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
     private val annualIncomeBottomSheet: AnnualIncomeBottomSheet by lazy { AnnualIncomeBottomSheet() }
     private val nationalityBottomSheet: NationalityBottomSheet by lazy { NationalityBottomSheet() }
 
+    private lateinit var genderId: String
+    private lateinit var gender: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,13 +71,22 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
             datePickerDialog.show()
         }
 
-        val gender = arrayOf(
+        val genderItem = arrayOf(
             GenderItem("Male"),
             GenderItem("Female")
         )
         val genderAdapter =
-            GenderAdapter(requireContext(), R.layout.gender_item, gender)
+            GenderAdapter(requireContext(), R.layout.gender_item, genderItem)
         binding.gender.setAdapter(genderAdapter)
+        binding.gender.setOnItemClickListener { _, _, position, _ ->
+            val genderType = genderAdapter.getItem(position)
+            gender = genderType?.gender.toString()
+            if (gender == "Male") {
+                genderId = "1"
+            } else if (gender == "Female") {
+                genderId = "2"
+            }
+        }
 
         binding.occupationType.setOnClickListener {
             occupationTypeBottomSheet.itemSelectedListener = this

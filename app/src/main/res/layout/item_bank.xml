@@ -16,7 +16,8 @@
             android:id="@+id/bank_flag"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@drawable/ab_bank" />
+            android:src="@drawable/ab_bank"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/bank_name"
@@ -24,7 +25,6 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="center_vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:text="AB Bank"
             android:textColor="@color/black" />
 

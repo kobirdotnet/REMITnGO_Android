@@ -1,24 +1,15 @@
 package com.bsel.remitngo.ui.main.choose_recipient
 
-import android.annotation.SuppressLint
-import android.content.ContentResolver
-import android.database.Cursor
 import android.os.Bundle
-import android.provider.ContactsContract
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.ContactsAdapter
 import com.bsel.remitngo.adapter.RecipientsAdapter
 import com.bsel.remitngo.databinding.FragmentChooseRecipientBinding
-import com.bsel.remitngo.model.BankItem
-import com.bsel.remitngo.model.ContactItem
 import com.bsel.remitngo.model.RecipientItem
 
 class ChooseRecipientFragment : Fragment() {

@@ -44,6 +44,9 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
+        binding.email.setText("alalkodu@gmail.com")
+        binding.password.setText("Normal@222")
+
         preferenceManager = PreferenceManager(this@LoginActivity)
 
         (application as Injector).createLoginSubComponent().inject(this)
@@ -76,25 +79,26 @@ class LoginActivity : AppCompatActivity() {
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(this) { result ->
             if (result != null) {
-
                 for (data in result.data!!) {
-                    Log.i("info", "First Name: ${data.firstName}")
-                    Log.i("info", "Last Name: ${data.lastName}")
-                    Log.i("info", "Email: ${data.email}")
                     preferenceManager.saveData("personId", data.personId.toString())
+                    preferenceManager.saveData("firstName", data.firstName.toString())
+                    preferenceManager.saveData("lastName", data.lastName.toString())
+                    preferenceManager.saveData("email", data.email.toString())
+                    preferenceManager.saveData("mobile", data.mobile.toString())
                 }
                 TokenManager.setToken(result.token)
 
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 intent.putExtra("changePassword", changePassword)
                 startActivity(intent)
+
             } else {
                 Log.i("info", "Login failed")
             }
         }
     }
 
-    fun getDeviceId(context: Context): String {
+    private fun getDeviceId(context: Context): String {
         val deviceId: String
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

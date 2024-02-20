@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.model.GenderItem
 import com.bsel.remitngo.model.StatusItem
 
 class StatusAdapter(context: Context, resource: Int, statusItems: Array<StatusItem>) :

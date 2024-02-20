@@ -1,32 +1,46 @@
 package com.bsel.remitngo.bottom_sheet
 
 import android.app.Dialog
+import android.content.Context
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BankNameAdapter
+import com.bsel.remitngo.data.model.bank.BankData
+import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.databinding.BankNameLayoutBinding
-import com.bsel.remitngo.interfaceses.OnBankItemSelectedListener
-import com.bsel.remitngo.model.BankItem
+import com.bsel.remitngo.interfaceses.OnBankSelectedListener
+import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.bank.BankViewModel
+import com.bsel.remitngo.presentation.ui.bank.BankViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import javax.inject.Inject
 
 class BankBottomSheet : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var bankViewModelFactory: BankViewModelFactory
+    private lateinit var bankViewModel: BankViewModel
 
-    var itemSelectedListener: OnBankItemSelectedListener? = null
+    var itemSelectedListener: OnBankSelectedListener? = null
 
     private lateinit var bankNameBehavior: BottomSheetBehavior<*>
 
     private lateinit var binding: BankNameLayoutBinding
 
     private lateinit var bankNameAdapter: BankNameAdapter
+
+    private lateinit var deviceId: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -39,7 +53,8 @@ class BankBottomSheet : BottomSheetDialogFragment() {
 
         binding.extraSpace.minimumHeight = (Resources.getSystem().displayMetrics.heightPixels)
 
-        bankNameBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bankNameBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(@NonNull view: View, i: Int) {
                 when (i) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
@@ -55,61 +70,80 @@ class BankBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
-        val bankItems = arrayOf(
-            BankItem(R.drawable.ab_bank, "AB Bank Ltd."),
-            BankItem(R.drawable.agrani_bank, "Agrani Bank Ltd."),
-            BankItem(R.drawable.al_arafah_islami_bank, "Al-Arafah Islami Bank Ltd."),
-            BankItem(R.drawable.bangladesh_bank, "Bangladesh Bank Ltd."),
-            BankItem(R.drawable.bangladesh_krishi, "Bangladesh Krishi Bank Ltd."),
-            BankItem(R.drawable.brac_bank, "BRAC Bank Ltd."),
-            BankItem(R.drawable.dhaka_bank, "Dhaka Bank Ltd."),
-            BankItem(R.drawable.dutch_bangla_bank, "Dutch-Bangla Bank Ltd."),
-            BankItem(R.drawable.eastern_bank, "Eastern Bank Ltd."),
-            BankItem(R.drawable.ific_bank, "IFIC Bank Ltd."),
-            BankItem(R.drawable.islami_bank_bangladesh, "Islami Bank Bangladesh Ltd."),
-            BankItem(R.drawable.jamuna_bank, "Jamuna Bank Ltd."),
-            BankItem(R.drawable.janata_bank, "Janata Bank Ltd."),
-            BankItem(R.drawable.mutual_trust_bank, "Mutual Trust Bank Ltd."),
-            BankItem(R.drawable.mercantile_bank, "Mercantile Bank Ltd."),
-            BankItem(R.drawable.one_bank, "One Bank Ltd."),
-            BankItem(R.drawable.prime_bank, "Prime Bank Ltd."),
-            BankItem(R.drawable.pubali_bank, "Pubali Bank Ltd.")
-        )
+        (requireActivity().application as Injector).createBankSubComponent().inject(this)
 
-        binding.bankRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        bankNameAdapter = BankNameAdapter(
-            selectedItem = { selectedItem: BankItem ->
-                bankItem(selectedItem)
-                binding.bankSearch.setQuery("", false)
-            }
-        )
-        binding.bankRecyclerView.adapter = bankNameAdapter
-        bankNameAdapter.setList(bankItems.asList())
-        bankNameAdapter.notifyDataSetChanged()
-
-        binding.bankSearch.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                bankNameAdapter.filter(newText.orEmpty())
-                return true
-            }
-        })
+        bankViewModel =
+            ViewModelProvider(this, bankViewModelFactory)[BankViewModel::class.java]
 
         binding.cancelButton.setOnClickListener { dismiss() }
+
+        observeBankResult()
+
+        deviceId = getDeviceId(requireContext())
+
+        val bankItem = BankItem(
+            deviceId = deviceId,
+            dropdownId = 5,
+            param1 = 1,
+            param2 = 0
+        )
+        bankViewModel.bank(bankItem)
 
         return bottomSheet
     }
 
-    private fun bankItem(selectedItem: BankItem) {
-        Log.i("info", "selectedItem: $selectedItem")
+    private fun observeBankResult() {
+        bankViewModel.bankResult.observe(this) { result ->
+            if (result != null) {
+                binding.bankRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                bankNameAdapter = BankNameAdapter(
+                    selectedItem = { selectedItem: BankData ->
+                        bankItem(selectedItem)
+                        binding.bankSearch.setQuery("", false)
+                    }
+                )
+                binding.bankRecyclerView.adapter = bankNameAdapter
+                bankNameAdapter.setList(result.data as List<BankData>)
+                bankNameAdapter.notifyDataSetChanged()
+
+                binding.bankSearch.setOnQueryTextListener(object :
+                    SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        bankNameAdapter.filter(newText.orEmpty())
+                        return true
+                    }
+                })
+
+            } else {
+                Log.i("info", "bank failed")
+            }
+        }
+    }
+
+    private fun bankItem(selectedItem: BankData) {
         itemSelectedListener?.onBankItemSelected(selectedItem)
         dismiss()
     }
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
+    }
     override fun onStart() {
         super.onStart()
         bankNameBehavior.state = BottomSheetBehavior.STATE_EXPANDED

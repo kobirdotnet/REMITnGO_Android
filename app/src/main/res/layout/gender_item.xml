@@ -19,7 +19,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/roboto_condensed_regular"
             android:maxLines="1"
-            android:text="man"
+            android:text="Male"
             android:textColor="@color/black" />
 
     </LinearLayout>

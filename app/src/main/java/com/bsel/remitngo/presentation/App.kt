@@ -3,6 +3,7 @@ package com.bsel.remitngo.presentation
 import android.app.Application
 import com.bsel.remitngo.BuildConfig
 import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.di.bank.BankSubComponent
 import com.bsel.remitngo.presentation.di.beneficiary.BeneficiarySubComponent
 import com.bsel.remitngo.presentation.di.core.*
 import com.bsel.remitngo.presentation.di.login.LoginSubComponent
@@ -30,4 +31,9 @@ class App : Application(), Injector {
     override fun createBeneficiarySubComponent(): BeneficiarySubComponent {
         return appComponent.beneficiarySubComponent().create()
     }
+
+    override fun createBankSubComponent(): BankSubComponent {
+        return appComponent.bankSubComponent().create()
+    }
+
 }
