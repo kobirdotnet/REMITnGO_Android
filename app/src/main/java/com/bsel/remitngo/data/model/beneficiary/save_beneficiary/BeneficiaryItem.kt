@@ -1,4 +1,4 @@
-package com.bsel.remitngo.data.model.beneficiary
+package com.bsel.remitngo.data.model.beneficiary.save_beneficiary
 
 
 import com.google.gson.annotations.SerializedName

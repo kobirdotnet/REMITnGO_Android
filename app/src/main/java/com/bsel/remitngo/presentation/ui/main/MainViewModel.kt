@@ -1,4 +1,4 @@
-package com.bsel.remitngo.ui.main
+package com.bsel.remitngo.presentation.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

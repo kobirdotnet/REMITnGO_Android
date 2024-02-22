@@ -1,84 +1,141 @@
-package com.bsel.remitngo.ui.main.choose_recipient
+package com.bsel.remitngo.presentation.ui.beneficiary
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.RecipientsAdapter
-import com.bsel.remitngo.databinding.FragmentChooseRecipientBinding
-import com.bsel.remitngo.model.RecipientItem
+import com.bsel.remitngo.adapter.BeneficiaryAdapter
+import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryData
+import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryItem
+import com.bsel.remitngo.databinding.FragmentChooseBeneficiaryBinding
+import com.bsel.remitngo.presentation.di.Injector
+import javax.inject.Inject
 
-class ChooseRecipientFragment : Fragment() {
+class ChooseBeneficiaryFragment : Fragment() {
+    @Inject
+    lateinit var beneficiaryViewModelFactory: BeneficiaryViewModelFactory
+    private lateinit var beneficiaryViewModel: BeneficiaryViewModel
 
-    private lateinit var binding: FragmentChooseRecipientBinding
+    private lateinit var binding: FragmentChooseBeneficiaryBinding
+
+    private lateinit var preferenceManager: PreferenceManager
 
 //    private lateinit var contactsAdapter: ContactsAdapter
 
-    private lateinit var recipientsAdapter: RecipientsAdapter
-
-    private lateinit var recipientItems: List<RecipientItem>
+    private lateinit var beneficiaryAdapter: BeneficiaryAdapter
 
     private lateinit var orderType: String
     private lateinit var paymentType: String
+
+    private lateinit var deviceId: String
+    private lateinit var personId: String
+    private var countryId: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_choose_recipient, container, false)
+        return inflater.inflate(R.layout.fragment_choose_beneficiary, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentChooseRecipientBinding.bind(view)
+        binding = FragmentChooseBeneficiaryBinding.bind(view)
+
+        (requireActivity().application as Injector).createBeneficiarySubComponent().inject(this)
+
+        preferenceManager = PreferenceManager(requireContext())
+        personId = preferenceManager.loadData("personId").toString()
+        deviceId = getDeviceId(requireContext())
+
+        beneficiaryViewModel =
+            ViewModelProvider(this, beneficiaryViewModelFactory)[BeneficiaryViewModel::class.java]
 
         orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
-
-        binding.addRecipient.setOnClickListener {
+        binding.btnBeneficiary.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("orderType", orderType)
                 putString("paymentType", paymentType)
             }
             findNavController().navigate(
-                R.id.action_nav_choose_recipient_to_nav_recipient_details,
+                R.id.action_nav_choose_beneficiary_to_nav_save_beneficiary,
                 bundle
             )
         }
 
-        recipientItems = arrayOf(
-            RecipientItem(0, "KOBIRUL ISLAM", "0123456789", "M"),
-            RecipientItem(1, "ABDUL BARI", "0123456789", "A"),
-            RecipientItem(2, "ZUBAIR ALAM", "0123456789", "Z")
-        ).toList()
-
-        binding.recipientRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recipientsAdapter = RecipientsAdapter(
-            selectedItem = { selectedItem: RecipientItem ->
-                recipientItem(selectedItem)
-                binding.recipientSearch.setQuery("", false)
-            }
-        )
-        binding.recipientRecyclerView.adapter = recipientsAdapter
-        recipientsAdapter.setList(recipientItems)
-        recipientsAdapter.notifyDataSetChanged()
-
         // Retrieve and display contacts
 //        retrieveAndDisplayContacts()
+        countryId = 1
+        val getBeneficiaryItem = GetBeneficiaryItem(
+            deviceId = deviceId,
+            personId = personId.toInt(),
+            orderType = orderType.toInt(),
+            countryId = countryId
+        )
+        // Call the login method in the ViewModel
+        beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)
 
+        observeGetBeneficiaryResult()
     }
 
-    private fun recipientItem(selectedItem: RecipientItem) {
+    private fun observeGetBeneficiaryResult() {
+        beneficiaryViewModel.getBeneficiaryResult.observe(this) { result ->
+            if (result!!.data != null) {
+                binding.beneficiaryRecyclerView.layoutManager =
+                    LinearLayoutManager(requireActivity())
+                beneficiaryAdapter = BeneficiaryAdapter(
+                    selectedItem = { selectedItem: GetBeneficiaryData ->
+                        recipientItem(selectedItem)
+                        binding.beneficiarySearch.setQuery("", false)
+                    }
+                )
+                binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
+                beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
+                beneficiaryAdapter.notifyDataSetChanged()
+                Log.i("info", "get beneficiary successful: $result")
+            } else {
+                Log.i("info", "get beneficiary failed")
+            }
+        }
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
+    }
+
+    private fun recipientItem(selectedItem: GetBeneficiaryData) {
         val bundle = Bundle().apply {
+            putString("cusBankInfoId", selectedItem.id.toString())
+            putString("recipientName", selectedItem.name.toString())
             putString("orderType", orderType)
             putString("paymentType", paymentType)
         }
         findNavController().navigate(
-            R.id.action_nav_choose_recipient_to_nav_confirm_transfer,
+            R.id.action_nav_choose_beneficiary_to_nav_choose_bank,
             bundle
         )
     }

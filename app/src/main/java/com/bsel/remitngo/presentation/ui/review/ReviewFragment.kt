@@ -1,4 +1,4 @@
-package com.bsel.remitngo.ui.main.confirm_transfer
+package com.bsel.remitngo.presentation.ui.review
 
 import android.os.Bundle
 import android.os.Handler
@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.databinding.FragmentConfirmTransferBinding
+import com.bsel.remitngo.databinding.FragmentReviewBinding
 import com.emerchantpay.gateway.genesisandroid.api.constants.*
 import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringCategory
 import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringType
@@ -30,9 +30,9 @@ import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ConfirmTransferFragment : Fragment() {
+class ReviewFragment : Fragment() {
 
-    private lateinit var binding: FragmentConfirmTransferBinding
+    private lateinit var binding: FragmentReviewBinding
 
     private lateinit var orderType: String
     private lateinit var paymentType: String
@@ -44,12 +44,12 @@ class ConfirmTransferFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_confirm_transfer, container, false)
+        return inflater.inflate(R.layout.fragment_review, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentConfirmTransferBinding.bind(view)
+        binding = FragmentReviewBinding.bind(view)
 
         orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
@@ -58,7 +58,7 @@ class ConfirmTransferFragment : Fragment() {
             if (paymentType == "Card Payment") {
                 cardPayment()
             } else if (paymentType == "Bank Transfer") {
-                findNavController().navigate(R.id.action_nav_confirm_transfer_to_nav_complete_bank_transaction)
+                findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
             }
         }
 
@@ -113,7 +113,7 @@ class ConfirmTransferFragment : Fragment() {
             paymentRequest.setReturnFailureUrl("https://uat2.remitngo.com/Emerchantpay/WPFFailureURL.aspx")
             paymentRequest.setReturnCancelUrl("https://uat2.remitngo.com/Emerchantpay/WPFCancelURL.aspx")
         }, 1000)
-        findNavController().navigate(R.id.action_nav_confirm_transfer_to_nav_transaction)
+        findNavController().navigate(R.id.action_nav_review_to_nav_transaction)
 
         // Show WebView
 //        val webView = WebView(requireContext())

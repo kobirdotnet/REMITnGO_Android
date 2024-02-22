@@ -94,7 +94,7 @@ class ReasonBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeReasonResult() {
         beneficiaryViewModel.reasonResult.observe(this) { result ->
-            if (result != null) {
+            if (result!!.data != null) {
                 for (data in result.data!!) {
                     binding.reasonRecyclerView.layoutManager =
                         LinearLayoutManager(requireActivity())

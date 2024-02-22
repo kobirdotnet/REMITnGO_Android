@@ -3,6 +3,10 @@ package com.bsel.remitngo.data.repository.bank.dataSourceImpl
 import com.bsel.remitngo.data.api.REMITnGoService
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.data.model.bank.BankResponseItem
+import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankItem
+import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankResponseItem
+import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
+import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankResponseItem
 import com.bsel.remitngo.data.model.branch.BranchItem
 import com.bsel.remitngo.data.model.branch.BranchResponseItem
 import com.bsel.remitngo.data.model.district.DistrictItem
@@ -14,6 +18,13 @@ import retrofit2.Response
 
 class BankRemoteDataSourceImpl(private val remitNgoService: REMITnGoService) :
     BankRemoteDataSource {
+
+    override suspend fun getBank(getBankItem: GetBankItem): Response<GetBankResponseItem> {
+        return remitNgoService.getBank(getBankItem)
+    }
+    override suspend fun saveBank(saveBankItem: SaveBankItem): Response<SaveBankResponseItem> {
+        return remitNgoService.saveBank(saveBankItem)
+    }
 
     override suspend fun bank(bankItem: BankItem): Response<BankResponseItem> {
         return remitNgoService.bank(bankItem)

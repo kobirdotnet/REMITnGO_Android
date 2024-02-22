@@ -41,6 +41,8 @@ class BankBottomSheet : BottomSheetDialogFragment() {
     private lateinit var bankNameAdapter: BankNameAdapter
 
     private lateinit var deviceId: String
+    private var dropdownId: Int = 0
+    private var countryId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -80,11 +82,13 @@ class BankBottomSheet : BottomSheetDialogFragment() {
         observeBankResult()
 
         deviceId = getDeviceId(requireContext())
+        dropdownId = 5
+        countryId = 1
 
         val bankItem = BankItem(
             deviceId = deviceId,
-            dropdownId = 5,
-            param1 = 1,
+            dropdownId = dropdownId,
+            param1 = countryId,
             param2 = 0
         )
         bankViewModel.bank(bankItem)
@@ -94,7 +98,7 @@ class BankBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeBankResult() {
         bankViewModel.bankResult.observe(this) { result ->
-            if (result != null) {
+            if (result!!.data != null) {
                 binding.bankRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
                 bankNameAdapter = BankNameAdapter(
                     selectedItem = { selectedItem: BankData ->
@@ -128,6 +132,7 @@ class BankBottomSheet : BottomSheetDialogFragment() {
         itemSelectedListener?.onBankItemSelected(selectedItem)
         dismiss()
     }
+
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 
@@ -144,6 +149,7 @@ class BankBottomSheet : BottomSheetDialogFragment() {
 
         return deviceId
     }
+
     override fun onStart() {
         super.onStart()
         bankNameBehavior.state = BottomSheetBehavior.STATE_EXPANDED

@@ -1,15 +1,15 @@
-package com.bsel.remitngo.data.model.beneficiary
+package com.bsel.remitngo.data.model.beneficiary.get_beneficiary
 
 
 import com.google.gson.annotations.SerializedName
 
-data class BeneficiaryResponseItem(
+data class GetBeneficiaryResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: String?,
+    val `data`: List<GetBeneficiaryData?>?,
     @SerializedName("Message")
     val message: String?,
     @SerializedName("Token")
-    val token: String?
+    val token: Any?
 )

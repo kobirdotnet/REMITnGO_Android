@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/item_recipient_layout"
+        android:id="@+id/item_beneficiary_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -15,7 +15,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/firstLetterBackground"
@@ -39,11 +40,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/recipientName"
+                android:id="@+id/beneficiaryName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_condensed_regular"
@@ -51,7 +51,7 @@
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/recipientAccount"
+                android:id="@+id/beneficiaryPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_condensed_regular"

@@ -5,12 +5,14 @@ import com.bsel.remitngo.bottom_sheet.BranchBottomSheet
 import com.bsel.remitngo.bottom_sheet.DistrictBottomSheet
 import com.bsel.remitngo.bottom_sheet.DivisionBottomSheet
 import com.bsel.remitngo.presentation.ui.bank.BankFragment
+import com.bsel.remitngo.presentation.ui.bank.ChooseBankFragment
 import dagger.Subcomponent
 
 @BankScope
 @Subcomponent(modules = [BankModule::class])
 interface BankSubComponent {
 
+    fun inject(chooseBankFragment: ChooseBankFragment)
     fun inject(bankFragment: BankFragment)
 
     fun inject(bankBottomSheet: BankBottomSheet)

@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BranchNameAdapter
+import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.branch.BranchData
 import com.bsel.remitngo.data.model.branch.BranchItem
 import com.bsel.remitngo.databinding.BranchNameLayoutBinding
@@ -40,7 +41,13 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var branchNameAdapter: BranchNameAdapter
 
+    private lateinit var preferenceManager: PreferenceManager
+
     private lateinit var deviceId: String
+    private var bankId: Int = 0
+    private var countryId: Int = 0
+    private var divisionId: Int = 0
+    private var districtId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -70,6 +77,11 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
+        preferenceManager = PreferenceManager(requireContext())
+        bankId = preferenceManager.loadData("bankId")!!.toInt()
+        divisionId = preferenceManager.loadData("divisionId")!!.toInt()
+        districtId = preferenceManager.loadData("districtId")!!.toInt()
+
         (requireActivity().application as Injector).createBankSubComponent().inject(this)
 
         bankViewModel =
@@ -80,22 +92,23 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
         observeBranchResult()
 
         deviceId = getDeviceId(requireContext())
-
+        countryId = 1
         val branchItem = BranchItem(
             deviceId = deviceId,
-            bankId = 26,
-            toCountryId = 1,
-            divisionId = 2,
-            districtId = 59
+            bankId = bankId,
+            toCountryId = countryId,
+            divisionId = divisionId,
+            districtId = districtId
 
         )
         bankViewModel.branch(branchItem)
 
         return bottomSheet
     }
+
     private fun observeBranchResult() {
         bankViewModel.branchResult.observe(this) { result ->
-            if (result != null) {
+            if (result!!.data != null) {
                 binding.branchRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
                 branchNameAdapter = BranchNameAdapter(
                     selectedItem = { selectedItem: BranchData ->
@@ -124,10 +137,12 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
             }
         }
     }
+
     private fun branchItem(selectedItem: BranchData) {
         itemSelectedListener?.onBranchItemSelected(selectedItem)
         dismiss()
     }
+
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 
@@ -144,6 +159,7 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
 
         return deviceId
     }
+
     override fun onStart() {
         super.onStart()
         bankBranchNameBehavior.state = BottomSheetBehavior.STATE_EXPANDED

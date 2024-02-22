@@ -10,7 +10,7 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:scrollbars="none"
-        tools:context=".ui.main.confirm_transfer.ConfirmTransferFragment">
+        tools:context=".presentation.ui.review.ReviewFragment">
 
         <LinearLayout
             android:layout_width="match_parent"

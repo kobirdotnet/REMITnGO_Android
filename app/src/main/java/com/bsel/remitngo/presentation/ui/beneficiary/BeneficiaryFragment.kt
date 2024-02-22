@@ -18,7 +18,8 @@ import com.bsel.remitngo.adapter.GenderAdapter
 import com.bsel.remitngo.bottom_sheet.ReasonBottomSheet
 import com.bsel.remitngo.bottom_sheet.RelationBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.beneficiary.BeneficiaryItem
+import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryItem
+import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.reason.ReasonData
 import com.bsel.remitngo.data.model.relation.RelationData
@@ -76,7 +77,7 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         beneficiaryViewModel =
             ViewModelProvider(this, beneficiaryViewModelFactory)[BeneficiaryViewModel::class.java]
 
-//        chooseOrderTypeFocusListener()
+        //chooseOrderTypeFocusListener()
         recipientNameFocusListener()
         phoneNumberFocusListener()
         genderFocusListener()
@@ -146,28 +147,40 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
             }
         }
 
-        observeBeneficiaryResult()
-
+        recipientName = binding.recipientName.text.toString()
+        observeSaveBeneficiaryResult()
     }
 
-    private fun observeBeneficiaryResult() {
+    private fun observeSaveBeneficiaryResult() {
         beneficiaryViewModel.beneficiaryResult.observe(this) { result ->
-            if (result != null) {
-                val bundle = Bundle().apply {
-                    putString("recipientName", recipientName)
-                    putString("orderType", orderType)
-                    putString("paymentType", paymentType)
+            if (result?.data != null) {
+                val cusBankInfoId = extractData(result.data)
+                if (cusBankInfoId != null) {
+                    val bundle = Bundle().apply {
+                        putString("cusBankInfoId", cusBankInfoId)
+                        putString("recipientName", recipientName)
+                        putString("orderType", orderType)
+                        putString("paymentType", paymentType)
+                    }
+                    findNavController().navigate(
+                        R.id.action_nav_save_beneficiary_to_nav_save_bank,
+                        bundle
+                    )
+                    Log.i("info", "save beneficiary successful: $result")
+                } else {
+                    Log.i("info", "failed to extract data")
                 }
-                findNavController().navigate(
-                    R.id.action_nav_recipient_details_to_nav_recipient_bank_details,
-                    bundle
-                )
-                Log.i("info", "Add beneficiary successful: $result")
             } else {
-                Log.i("info", "Add beneficiary failed")
+                Log.i("info", "save beneficiary failed")
             }
         }
     }
+
+    private fun extractData(data: String): String? {
+        val parts = data.split("*")
+        return if (parts.size >= 2) parts[1] else null
+    }
+
 
     private fun getDeviceId(context: Context): String {
         val deviceId: String

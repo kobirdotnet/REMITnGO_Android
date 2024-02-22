@@ -18,6 +18,7 @@
     <string name="menu_mobile_number">Mobile Number</string>
     <string name="menu_card">Debit Card</string>
     <string name="menu_choose_recipient">Choose Recipient</string>
+    <string name="menu_choose_bank">Choose Bank</string>
     <string name="menu_recipient_details">Recipient Details</string>
     <string name="menu_confirm_transfer">Confirm Transfer</string>
     <string name="menu_transaction">Transaction</string>

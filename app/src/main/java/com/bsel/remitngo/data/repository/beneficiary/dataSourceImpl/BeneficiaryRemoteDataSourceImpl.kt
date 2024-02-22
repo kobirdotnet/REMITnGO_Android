@@ -1,8 +1,10 @@
 package com.bsel.remitngo.data.repository.beneficiary.dataSourceImpl
 
 import com.bsel.remitngo.data.api.REMITnGoService
-import com.bsel.remitngo.data.model.beneficiary.BeneficiaryItem
-import com.bsel.remitngo.data.model.beneficiary.BeneficiaryResponseItem
+import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryItem
+import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryResponseItem
+import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
+import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryResponseItem
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.gender.GenderResponseItem
 import com.bsel.remitngo.data.model.reason.ReasonItem
@@ -14,6 +16,10 @@ import retrofit2.Response
 
 class BeneficiaryRemoteDataSourceImpl(private val remitNgoService: REMITnGoService) :
     BeneficiaryRemoteDataSource {
+
+    override suspend fun getBeneficiary(getBeneficiaryItem: GetBeneficiaryItem): Response<GetBeneficiaryResponseItem> {
+        return remitNgoService.getBeneficiary(getBeneficiaryItem)
+    }
 
     override suspend fun beneficiary(beneficiaryItem: BeneficiaryItem): Response<BeneficiaryResponseItem> {
         return remitNgoService.beneficiary(beneficiaryItem)

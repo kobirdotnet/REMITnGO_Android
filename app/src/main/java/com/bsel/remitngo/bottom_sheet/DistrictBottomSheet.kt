@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.DistrictNameAdapter
+import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.district.DistrictData
 import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.databinding.DistrictNameLayoutBinding
@@ -40,7 +41,11 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var districtNameAdapter: DistrictNameAdapter
 
+    private lateinit var preferenceManager: PreferenceManager
+
     private lateinit var deviceId: String
+    private var dropdownId: Int = 0
+    private var divisionId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -70,6 +75,9 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
+        preferenceManager = PreferenceManager(requireContext())
+        divisionId = preferenceManager.loadData("divisionId")!!.toInt()
+
         (requireActivity().application as Injector).createBankSubComponent().inject(this)
 
         bankViewModel =
@@ -80,11 +88,12 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
         observeDistrictResult()
 
         deviceId = getDeviceId(requireContext())
+        dropdownId = 2
 
         val districtItem = DistrictItem(
             deviceId = deviceId,
-            dropdownId = 3,
-            param1 = 1,
+            dropdownId = dropdownId,
+            param1 = divisionId,
             param2 = 0
         )
         bankViewModel.district(districtItem)
@@ -94,7 +103,7 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeDistrictResult() {
         bankViewModel.districtResult.observe(this) { result ->
-            if (result != null) {
+            if (result!!.data != null) {
                 binding.districtRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
                 districtNameAdapter = DistrictNameAdapter(
                     selectedItem = { selectedItem: DistrictData ->

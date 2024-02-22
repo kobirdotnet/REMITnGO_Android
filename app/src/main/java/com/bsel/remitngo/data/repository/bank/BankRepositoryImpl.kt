@@ -3,6 +3,10 @@ package com.bsel.remitngo.data.repository.bank
 import android.util.Log
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.data.model.bank.BankResponseItem
+import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankItem
+import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankResponseItem
+import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
+import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankResponseItem
 import com.bsel.remitngo.data.model.branch.BranchItem
 import com.bsel.remitngo.data.model.branch.BranchResponseItem
 import com.bsel.remitngo.data.model.district.DistrictItem
@@ -14,6 +18,39 @@ import com.bsel.remitngo.domain.repository.BankRepository
 
 class BankRepositoryImpl(private val bankRemoteDataSource: BankRemoteDataSource) :
     BankRepository {
+
+    override suspend fun getBank(getBankItem: GetBankItem): GetBankResponseItem? {
+        return try {
+            val response = bankRemoteDataSource.getBank(getBankItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to get bank: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error get bank: ${exception.message}", exception)
+            null
+        }
+    }
+    override suspend fun saveBank(saveBankItem: SaveBankItem): SaveBankResponseItem? {
+        return try {
+            val response = bankRemoteDataSource.saveBank(saveBankItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to save bank: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error save bank: ${exception.message}", exception)
+            null
+        }
+    }
 
     override suspend fun bank(bankItem: BankItem): BankResponseItem? {
         return try {

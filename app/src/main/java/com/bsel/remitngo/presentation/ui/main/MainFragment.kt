@@ -1,19 +1,13 @@
-package com.bsel.remitngo.ui.main
+package com.bsel.remitngo.presentation.ui.main
 
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -29,23 +23,9 @@ import com.bsel.remitngo.model.CollectionPointBank
 import com.bsel.remitngo.model.PaymentMode
 import com.bsel.remitngo.model.TransactionMode
 import com.emerchantpay.gateway.genesisandroid.api.constants.*
-import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringCategory
-import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringType
 import com.emerchantpay.gateway.genesisandroid.api.interfaces.financial.threedsv2.definitions.*
-import com.emerchantpay.gateway.genesisandroid.api.internal.Genesis
-import com.emerchantpay.gateway.genesisandroid.api.internal.request.PaymentRequest
-import com.emerchantpay.gateway.genesisandroid.api.internal.request.TransactionTypesRequest
 import com.emerchantpay.gateway.genesisandroid.api.models.*
-import com.emerchantpay.gateway.genesisandroid.api.models.Currency
-import com.emerchantpay.gateway.genesisandroid.api.models.threedsv2.ThreeDsV2CardHolderAccountParams
-import com.emerchantpay.gateway.genesisandroid.api.models.threedsv2.ThreeDsV2MerchantRiskParams
-import com.emerchantpay.gateway.genesisandroid.api.models.threedsv2.ThreeDsV2Params
-import com.emerchantpay.gateway.genesisandroid.api.models.threedsv2.ThreeDsV2RecurringParams
-import com.emerchantpay.gateway.genesisandroid.api.ui.AlertDialogHandler
-import com.emerchantpay.gateway.genesisandroid.api.util.Configuration
-import java.math.BigDecimal
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 class MainFragment : Fragment() {
@@ -251,7 +231,7 @@ class MainFragment : Fragment() {
                 putString("orderType",orderType)
             }
             findNavController().navigate(
-                R.id.action_nav_main_to_nav_choose_recipient,
+                R.id.action_nav_main_to_nav_choose_beneficiary,
                 bundle
             )
         }

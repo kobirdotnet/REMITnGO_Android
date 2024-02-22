@@ -66,7 +66,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_transaction_history,
                 R.id.nav_cancellation,
                 R.id.nav_generate_query,
-                R.id.nav_choose_recipient,
                 R.id.nav_payment,
                 R.id.nav_settings,
                 R.id.nav_support,
@@ -149,10 +148,6 @@ class MainActivity : AppCompatActivity() {
         }
         generateQuery.setOnClickListener {
             navController.navigate(R.id.nav_generate_query)
-            drawerLayout.close()
-        }
-        beneficiary.setOnClickListener {
-            navController.navigate(R.id.nav_choose_recipient)
             drawerLayout.close()
         }
         settings.setOnClickListener {

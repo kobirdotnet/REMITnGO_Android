@@ -41,6 +41,8 @@ class DivisionBottomSheet : BottomSheetDialogFragment() {
     private lateinit var divisionNameAdapter: DivisionNameAdapter
 
     private lateinit var deviceId: String
+    private var dropdownId: Int = 0
+    private var countryId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -80,11 +82,13 @@ class DivisionBottomSheet : BottomSheetDialogFragment() {
         observeDivisionResult()
 
         deviceId = getDeviceId(requireContext())
+        dropdownId = 2
+        countryId = 1
 
         val divisionItem = DivisionItem(
             deviceId = deviceId,
-            dropdownId = 2,
-            param1 = 1,
+            dropdownId = dropdownId,
+            param1 = countryId,
             param2 = 0
         )
         bankViewModel.division(divisionItem)
@@ -94,7 +98,7 @@ class DivisionBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeDivisionResult() {
         bankViewModel.divisionResult.observe(this) { result ->
-            if (result != null) {
+            if (result!!.data != null) {
                 binding.divisionRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
                 divisionNameAdapter = DivisionNameAdapter(
                     selectedItem = { selectedItem: DivisionData ->

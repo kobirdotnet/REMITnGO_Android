@@ -14,7 +14,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottom_sheet.*
+import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.bank.BankData
+import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
 import com.bsel.remitngo.data.model.branch.BranchData
 import com.bsel.remitngo.data.model.district.DistrictData
 import com.bsel.remitngo.data.model.division.DivisionData
@@ -31,6 +33,8 @@ class BankFragment : Fragment(), OnBankSelectedListener {
 
     private lateinit var binding: FragmentBankBinding
 
+    private lateinit var preferenceManager: PreferenceManager
+
     private val bankBottomSheet: BankBottomSheet by lazy { BankBottomSheet() }
 
     private val divisionBottomSheet: DivisionBottomSheet by lazy { DivisionBottomSheet() }
@@ -39,10 +43,13 @@ class BankFragment : Fragment(), OnBankSelectedListener {
 
     private val bankBranchBottomSheet: BranchBottomSheet by lazy { BranchBottomSheet() }
 
+    private var id: Int = 0
+    private var isVersion113: Int = 0
     var ipAddress: String? = null
     private lateinit var deviceId: String
     private lateinit var orderType: String
     private lateinit var paymentType: String
+    private lateinit var cusBankInfoId: String
     private lateinit var recipientName: String
     private lateinit var bankId: String
     private lateinit var divisionId: String
@@ -59,6 +66,8 @@ class BankFragment : Fragment(), OnBankSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBankBinding.bind(view)
+
+        preferenceManager = PreferenceManager(requireContext())
 
         (requireActivity().application as Injector).createBankSubComponent().inject(this)
 
@@ -78,16 +87,17 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         walletAccountNameFocusListener()
         phoneNumberFocusListener()
 
+        cusBankInfoId = arguments?.getString("cusBankInfoId").toString()
         orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
         recipientName = arguments?.getString("recipientName").toString()
         binding.bankAccountName.setText(recipientName)
         binding.walletAccountName.setText(recipientName)
 
-        if (orderType=="1"){
+        if (orderType == "1") {
             binding.bankAccountLayout.visibility = View.GONE
             binding.walletAccountLayout.visibility = View.VISIBLE
-        }else{
+        } else {
             binding.bankAccountLayout.visibility = View.VISIBLE
             binding.walletAccountLayout.visibility = View.GONE
         }
@@ -103,25 +113,29 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         }
 
         binding.districtName.setOnClickListener {
-            districtBottomSheet.itemSelectedListener = this
-            districtBottomSheet.show(childFragmentManager, districtBottomSheet.tag)
+            if (::divisionId.isInitialized && !divisionId.isNullOrEmpty()) {
+                districtBottomSheet.itemSelectedListener = this
+                districtBottomSheet.show(childFragmentManager, districtBottomSheet.tag)
+            }
         }
 
         binding.branchName.setOnClickListener {
-            bankBranchBottomSheet.itemSelectedListener = this
-            bankBranchBottomSheet.show(childFragmentManager, bankBranchBottomSheet.tag)
+            if (::districtId.isInitialized && !districtId.isNullOrEmpty()) {
+                bankBranchBottomSheet.itemSelectedListener = this
+                bankBranchBottomSheet.show(childFragmentManager, bankBranchBottomSheet.tag)
+            }
         }
 
         binding.btnBankSave.setOnClickListener { bankAccountForm() }
 
         binding.btnWalletSave.setOnClickListener { walletAccountForm() }
 
-        observeBankResult()
+        observeSaveBankResult()
 
     }
 
-    private fun observeBankResult() {
-        bankViewModel.bankResult.observe(this) { result ->
+    private fun observeSaveBankResult() {
+        bankViewModel.saveBankResult.observe(this) { result ->
             if (result != null) {
                 val bundle = Bundle().apply {
                     putString("recipientName", recipientName)
@@ -129,12 +143,12 @@ class BankFragment : Fragment(), OnBankSelectedListener {
                     putString("paymentType", paymentType)
                 }
                 findNavController().navigate(
-                    R.id.action_nav_recipient_bank_details_to_nav_confirm_transfer,
+                    R.id.action_nav_save_bank_to_nav_review,
                     bundle
                 )
-                Log.i("info", "Add bank successful: $result")
+                Log.i("info", "save bank successful: $result")
             } else {
-                Log.i("info", "Add bank failed")
+                Log.i("info", "save bank failed")
             }
         }
     }
@@ -174,16 +188,19 @@ class BankFragment : Fragment(), OnBankSelectedListener {
     override fun onBankItemSelected(selectedItem: BankData) {
         binding.bankName.setText(selectedItem.name)
         bankId = selectedItem.id.toString()
+        preferenceManager.saveData("bankId", bankId)
     }
 
     override fun onDivisionItemSelected(selectedItem: DivisionData) {
         binding.divisionName.setText(selectedItem.name)
         divisionId = selectedItem.id.toString()
+        preferenceManager.saveData("divisionId", divisionId)
     }
 
     override fun onDistrictItemSelected(selectedItem: DistrictData) {
         binding.districtName.setText(selectedItem.name)
         districtId = selectedItem.id.toString()
+        preferenceManager.saveData("districtId", districtId)
     }
 
     override fun onBranchItemSelected(selectedItem: BranchData) {
@@ -220,7 +237,24 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val bankAccountNumber = binding.bankAccountNumber.text.toString()
         val confirmBankAccountNumber = binding.confirmBankAccountNumber.text.toString()
 
-
+        id = 0
+        isVersion113 = 0
+        val saveBankItem = SaveBankItem(
+            id = id,
+            deviceId = deviceId,
+            userIPAddress = ipAddress.toString(),
+            orderType = orderType.toInt(),
+            cusBankInfoID = cusBankInfoId.toInt(),
+            accountName = bankAccountName,
+            bankID = bankId.toInt(),
+            branchID = branchId.toInt(),
+            accountNo = bankAccountNumber,
+            isVersion113 = isVersion113,
+            accountType = 0,
+            active = true
+        )
+        // Call the login method in the ViewModel
+        bankViewModel.saveBank(saveBankItem)
     }
 
     private fun walletAccountForm() {
@@ -240,11 +274,12 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val phoneNumber = binding.phoneNumber.text.toString()
 
         val bundle = Bundle().apply {
+            putString("recipientName", recipientName)
             putString("orderType", orderType)
             putString("paymentType", paymentType)
         }
         findNavController().navigate(
-            R.id.action_nav_recipient_bank_details_to_nav_confirm_transfer,
+            R.id.action_nav_save_bank_to_nav_review,
             bundle
         )
     }

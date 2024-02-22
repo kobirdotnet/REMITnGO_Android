@@ -12,11 +12,9 @@ import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.RelationNameAdapter
-import com.bsel.remitngo.data.model.beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.relation.RelationData
 import com.bsel.remitngo.data.model.relation.RelationItem
 import com.bsel.remitngo.databinding.RelationNameLayoutBinding
@@ -96,7 +94,7 @@ class RelationBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeRelationResult() {
         beneficiaryViewModel.relationResult.observe(this) { result ->
-            if (result != null) {
+            if (result!!.data != null) {
                 binding.relationRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
                 relationNameAdapter = RelationNameAdapter(
                     selectedItem = { selectedItem: RelationData ->
