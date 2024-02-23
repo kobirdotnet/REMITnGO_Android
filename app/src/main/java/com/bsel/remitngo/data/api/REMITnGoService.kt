@@ -12,6 +12,8 @@ import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryResponseItem
 import com.bsel.remitngo.data.model.branch.BranchItem
 import com.bsel.remitngo.data.model.branch.BranchResponseItem
+import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
+import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.data.model.district.DistrictResponseItem
 import com.bsel.remitngo.data.model.division.DivisionItem
@@ -20,6 +22,8 @@ import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.gender.GenderResponseItem
 import com.bsel.remitngo.data.model.login.LoginItem
 import com.bsel.remitngo.data.model.login.LoginResponseItem
+import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
+import com.bsel.remitngo.data.model.paying_agent.PayingAgentResponseItem
 import com.bsel.remitngo.data.model.reason.ReasonItem
 import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.registration.RegistrationItem
@@ -69,6 +73,12 @@ interface REMITnGoService {
 
     @POST("api/General/LoadBranch")
     suspend fun branch(@Body branchItem: BranchItem): Response<BranchResponseItem>
+
+    @POST("api/General/LoadPayingAgent")
+    suspend fun payingAgent(@Body payingAgentItem: PayingAgentItem): Response<PayingAgentResponseItem>
+
+    @POST("api/Transaction/CalculateRate")
+    suspend fun calculateRate(@Body calculateRateItem: CalculateRateItem): Response<CalculateRateResponseItem>
 
 }
 

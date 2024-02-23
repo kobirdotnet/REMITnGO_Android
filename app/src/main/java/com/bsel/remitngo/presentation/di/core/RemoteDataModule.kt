@@ -5,6 +5,8 @@ import com.bsel.remitngo.data.repository.bank.dataSource.BankRemoteDataSource
 import com.bsel.remitngo.data.repository.bank.dataSourceImpl.BankRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.beneficiary.dataSource.BeneficiaryRemoteDataSource
 import com.bsel.remitngo.data.repository.beneficiary.dataSourceImpl.BeneficiaryRemoteDataSourceImpl
+import com.bsel.remitngo.data.repository.calculation.dataSource.CalculationRemoteDataSource
+import com.bsel.remitngo.data.repository.calculation.dataSourceImpl.CalculationRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.login.dataSource.LoginRemoteDataSource
 import com.bsel.remitngo.data.repository.login.dataSourceImpl.LoginRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
@@ -37,6 +39,12 @@ class RemoteDataModule {
     @Provides
     fun provideBankRemoteDataSource(remitNgoService: REMITnGoService): BankRemoteDataSource {
         return BankRemoteDataSourceImpl(remitNgoService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCalculationRemoteDataSource(remitNgoService: REMITnGoService): CalculationRemoteDataSource {
+        return CalculationRemoteDataSourceImpl(remitNgoService)
     }
 
 }

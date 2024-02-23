@@ -1,13 +1,7 @@
 package com.bsel.remitngo.presentation.di.core
 
-import com.bsel.remitngo.domain.repository.BankRepository
-import com.bsel.remitngo.domain.repository.BeneficiaryRepository
-import com.bsel.remitngo.domain.repository.LoginRepository
-import com.bsel.remitngo.domain.repository.RegistrationRepository
-import com.bsel.remitngo.domain.useCase.BankUseCase
-import com.bsel.remitngo.domain.useCase.BeneficiaryUseCase
-import com.bsel.remitngo.domain.useCase.LoginUseCase
-import com.bsel.remitngo.domain.useCase.RegistrationUseCase
+import com.bsel.remitngo.domain.repository.*
+import com.bsel.remitngo.domain.useCase.*
 import dagger.Module
 import dagger.Provides
 
@@ -31,6 +25,11 @@ class UseCaseModule {
     @Provides
     fun provideBankUseCase(bankRepository: BankRepository): BankUseCase {
         return BankUseCase(bankRepository)
+    }
+
+    @Provides
+    fun provideCalculationUseCase(calculationRepository: CalculationRepository): CalculationUseCase {
+        return CalculationUseCase(calculationRepository)
     }
 
 }

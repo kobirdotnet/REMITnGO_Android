@@ -2,6 +2,7 @@ package com.bsel.remitngo.presentation.di.core
 
 import com.bsel.remitngo.presentation.di.bank.BankSubComponent
 import com.bsel.remitngo.presentation.di.beneficiary.BeneficiarySubComponent
+import com.bsel.remitngo.presentation.di.calculation.CalculationSubComponent
 import com.bsel.remitngo.presentation.di.login.LoginSubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
 import dagger.Component
@@ -22,4 +23,5 @@ interface AppComponent {
     fun loginSubComponent(): LoginSubComponent.Factory
     fun beneficiarySubComponent(): BeneficiarySubComponent.Factory
     fun bankSubComponent(): BankSubComponent.Factory
+    fun calculationSubComponent(): CalculationSubComponent.Factory
 }
