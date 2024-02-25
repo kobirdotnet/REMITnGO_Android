@@ -55,9 +55,9 @@ class ReviewFragment : Fragment() {
         paymentType = arguments?.getString("paymentType").toString()
 
         binding.btnSend.setOnClickListener {
-            if (paymentType == "Card Payment") {
+            if (paymentType == "4") {
                 cardPayment()
-            } else if (paymentType == "Bank Transfer") {
+            } else if (paymentType == "3") {
                 findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
             }
         }
