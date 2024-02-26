@@ -37,6 +37,19 @@ class ChooseBeneficiaryFragment : Fragment() {
     private lateinit var orderType: String
     private lateinit var paymentType: String
 
+    private lateinit var send_amount: String
+    private lateinit var receive_amount: String
+
+    private lateinit var bankId: String
+    private lateinit var bankName: String
+
+    private lateinit var payingAgentId: String
+    private lateinit var payingAgentName: String
+
+    private lateinit var exchangeRate: String
+    private lateinit var bankCommission: String
+    private lateinit var cardCommission: String
+
     private lateinit var deviceId: String
     private lateinit var personId: String
     private var countryId: Int = 0
@@ -63,10 +76,37 @@ class ChooseBeneficiaryFragment : Fragment() {
 
         orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
+
+        send_amount = arguments?.getString("send_amount").toString()
+        receive_amount = arguments?.getString("receive_amount").toString()
+
+        bankId = arguments?.getString("bankId").toString()
+        bankName = arguments?.getString("bankName").toString()
+
+        payingAgentId = arguments?.getString("payingAgentId").toString()
+        payingAgentName = arguments?.getString("payingAgentName").toString()
+
+        exchangeRate = arguments?.getString("exchangeRate").toString()
+        bankCommission = arguments?.getString("bankCommission").toString()
+        cardCommission = arguments?.getString("cardCommission").toString()
+
         binding.btnBeneficiary.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("orderType", orderType)
                 putString("paymentType", paymentType)
+
+                putString("send_amount", send_amount)
+                putString("receive_amount", receive_amount)
+
+                putString("bankId", bankId)
+                putString("bankName", bankName)
+
+                putString("payingAgentId", payingAgentId)
+                putString("payingAgentName", payingAgentName)
+
+                putString("exchangeRate", exchangeRate.toString())
+                putString("bankCommission", bankCommission.toString())
+                putString("cardCommission", cardCommission.toString())
             }
             findNavController().navigate(
                 R.id.action_nav_choose_beneficiary_to_nav_save_beneficiary,
@@ -75,7 +115,8 @@ class ChooseBeneficiaryFragment : Fragment() {
         }
 
         // Retrieve and display contacts
-//        retrieveAndDisplayContacts()
+        //retrieveAndDisplayContacts()
+
         countryId = 1
         val getBeneficiaryItem = GetBeneficiaryItem(
             deviceId = deviceId,
@@ -83,7 +124,6 @@ class ChooseBeneficiaryFragment : Fragment() {
             orderType = orderType.toInt(),
             countryId = countryId
         )
-        // Call the login method in the ViewModel
         beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)
 
         observeGetBeneficiaryResult()
@@ -109,7 +149,34 @@ class ChooseBeneficiaryFragment : Fragment() {
             }
         }
     }
+    private fun recipientItem(selectedItem: GetBeneficiaryData) {
+        val bundle = Bundle().apply {
+            putString("orderType", orderType)
+            putString("paymentType", paymentType)
 
+            putString("send_amount", send_amount)
+            putString("receive_amount", receive_amount)
+
+            putString("bankId", bankId)
+            putString("bankName", bankName)
+
+            putString("payingAgentId", payingAgentId)
+            putString("payingAgentName", payingAgentName)
+
+            putString("exchangeRate", exchangeRate.toString())
+            putString("bankCommission", bankCommission.toString())
+            putString("cardCommission", cardCommission.toString())
+
+            putString("cusBankInfoId", selectedItem.id.toString())
+            putString("recipientName", selectedItem.name.toString())
+            putString("recipientMobile", selectedItem.mobile.toString())
+            putString("recipientAddress", selectedItem.address.toString())
+        }
+        findNavController().navigate(
+            R.id.action_nav_choose_beneficiary_to_nav_choose_bank,
+            bundle
+        )
+    }
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 
@@ -125,19 +192,6 @@ class ChooseBeneficiaryFragment : Fragment() {
         }
 
         return deviceId
-    }
-
-    private fun recipientItem(selectedItem: GetBeneficiaryData) {
-        val bundle = Bundle().apply {
-            putString("cusBankInfoId", selectedItem.id.toString())
-            putString("recipientName", selectedItem.name.toString())
-            putString("orderType", orderType)
-            putString("paymentType", paymentType)
-        }
-        findNavController().navigate(
-            R.id.action_nav_choose_beneficiary_to_nav_choose_bank,
-            bundle
-        )
     }
 
 //    private fun retrieveAndDisplayContacts() {

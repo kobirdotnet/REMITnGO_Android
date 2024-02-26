@@ -28,7 +28,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Personal Information"
                 android:textColor="@color/black" />
@@ -56,7 +56,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Name"
                     android:textColor="@color/black" />
@@ -64,7 +64,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Mohammad Kobirul Islam"
                     android:textColor="@color/text_color" />
@@ -72,7 +72,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Gender"
                     android:textColor="@color/black" />
@@ -80,7 +80,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Male"
                     android:textColor="@color/text_color" />
@@ -88,7 +88,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Date of birth"
                     android:textColor="@color/black" />
@@ -96,7 +96,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="20/10/1998"
                     android:textColor="@color/text_color" />
@@ -104,7 +104,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Occupation"
                     android:textColor="@color/black" />
@@ -112,7 +112,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Financial manager and directors"
                     android:textColor="@color/text_color" />
@@ -120,7 +120,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Annual Income"
                     android:textColor="@color/black" />
@@ -128,7 +128,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="50k - 75k"
                     android:textColor="@color/text_color" />
@@ -136,7 +136,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Nationality"
                     android:textColor="@color/black" />
@@ -144,7 +144,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Bangladeshi"
                     android:textColor="@color/text_color" />
@@ -155,7 +155,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center"
                 android:paddingLeft="16dp"
                 android:text="Edit"
@@ -199,7 +199,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Address"
                     android:textColor="@color/black" />
@@ -207,7 +207,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Prime Minister &amp; First Lord Of The Treasury, 10 Downing Street, London SW1A 2AA, UK"
                     android:textColor="@color/text_color" />
@@ -217,7 +217,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center"
                 android:paddingLeft="16dp"
                 android:text="Edit"
@@ -238,7 +238,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Account Information"
                 android:textColor="@color/black" />
@@ -266,7 +266,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Email Address"
                     android:textColor="@color/black" />
@@ -274,7 +274,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="bracsaajanmac@gmail.com"
                     android:textColor="@color/text_color" />
@@ -284,7 +284,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center"
                 android:paddingLeft="16dp"
                 android:text="Edit"
@@ -328,7 +328,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Mobile Number"
                     android:textColor="@color/black" />
@@ -336,7 +336,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="+44 7893 932428"
                     android:textColor="@color/text_color" />
@@ -346,7 +346,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center"
                 android:paddingLeft="16dp"
                 android:text="Edit"
@@ -390,7 +390,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Change Password"
                     android:textColor="@color/black" />
@@ -401,7 +401,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center"
                 android:paddingLeft="16dp"
                 android:text="Edit"

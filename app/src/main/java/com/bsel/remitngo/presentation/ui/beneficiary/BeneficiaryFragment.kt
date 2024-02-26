@@ -18,7 +18,6 @@ import com.bsel.remitngo.adapter.GenderAdapter
 import com.bsel.remitngo.bottom_sheet.ReasonBottomSheet
 import com.bsel.remitngo.bottom_sheet.RelationBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryItem
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.reason.ReasonData
@@ -45,6 +44,19 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 
     private lateinit var orderType: String
     private lateinit var paymentType: String
+
+    private lateinit var send_amount: String
+    private lateinit var receive_amount: String
+
+    private lateinit var bankId: String
+    private lateinit var bankName: String
+
+    private lateinit var payingAgentId: String
+    private lateinit var payingAgentName: String
+
+    private lateinit var exchangeRate: String
+    private lateinit var bankCommission: String
+    private lateinit var cardCommission: String
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
@@ -77,7 +89,6 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         beneficiaryViewModel =
             ViewModelProvider(this, beneficiaryViewModelFactory)[BeneficiaryViewModel::class.java]
 
-        //chooseOrderTypeFocusListener()
         recipientNameFocusListener()
         phoneNumberFocusListener()
         genderFocusListener()
@@ -88,6 +99,19 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 
         orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
+
+        send_amount = arguments?.getString("send_amount").toString()
+        receive_amount = arguments?.getString("receive_amount").toString()
+
+        bankId = arguments?.getString("bankId").toString()
+        bankName = arguments?.getString("bankName").toString()
+
+        payingAgentId = arguments?.getString("payingAgentId").toString()
+        payingAgentName = arguments?.getString("payingAgentName").toString()
+
+        exchangeRate = arguments?.getString("exchangeRate").toString()
+        bankCommission = arguments?.getString("bankCommission").toString()
+        cardCommission = arguments?.getString("cardCommission").toString()
 
         if (orderType == "1") {
             binding.recipientBankStatus.visibility = View.GONE
@@ -157,10 +181,26 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
                 val cusBankInfoId = extractData(result.data)
                 if (cusBankInfoId != null) {
                     val bundle = Bundle().apply {
-                        putString("cusBankInfoId", cusBankInfoId)
-                        putString("recipientName", recipientName)
                         putString("orderType", orderType)
                         putString("paymentType", paymentType)
+
+                        putString("send_amount", send_amount)
+                        putString("receive_amount", receive_amount)
+
+                        putString("bankId", bankId)
+                        putString("bankName", bankName)
+
+                        putString("payingAgentId", payingAgentId)
+                        putString("payingAgentName", payingAgentName)
+
+                        putString("exchangeRate", exchangeRate.toString())
+                        putString("bankCommission", bankCommission.toString())
+                        putString("cardCommission", cardCommission.toString())
+
+                        putString("cusBankInfoId", cusBankInfoId)
+                        putString("recipientName", recipientName)
+                        putString("recipientMobile", binding.phoneNumber.toString())
+                        putString("recipientAddress", binding.address.toString())
                     }
                     findNavController().navigate(
                         R.id.action_nav_save_beneficiary_to_nav_save_bank,
@@ -180,7 +220,6 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         val parts = data.split("*")
         return if (parts.size >= 2) parts[1] else null
     }
-
 
     private fun getDeviceId(context: Context): String {
         val deviceId: String
@@ -290,23 +329,6 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         beneficiaryViewModel.beneficiary(beneficiaryItem)
 
     }
-
-    //Form validation
-//    private fun chooseOrderTypeFocusListener() {
-//        binding.chooseOrderType.setOnFocusChangeListener { _, focused ->
-//            if (!focused) {
-//                binding.chooseOrderTypeContainer.helperText = validChooseOrderType()
-//            }
-//        }
-//    }
-
-//    private fun validChooseOrderType(): String? {
-//        val chooseOrderType = binding.chooseOrderType.text.toString()
-//        if (chooseOrderType.isEmpty()) {
-//            return "select order type"
-//        }
-//        return null
-//    }
 
     private fun recipientNameFocusListener() {
         binding.recipientName.setOnFocusChangeListener { _, focused ->

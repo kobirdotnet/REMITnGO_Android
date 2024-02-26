@@ -28,7 +28,7 @@
                 android:id="@+id/documentsName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_bold"
+                android:fontFamily="@font/roboto_bold"
                 android:text="Documents name"
                 android:textColor="@color/black" />
 
@@ -36,7 +36,7 @@
                 android:id="@+id/expire_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:text="expire date"
                 android:textColor="@color/black" />
 

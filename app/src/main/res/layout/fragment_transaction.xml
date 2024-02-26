@@ -86,7 +86,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:padding="@dimen/activity_horizontal_margin"
                     android:text="Your Transfer ID #155542224362462645 We'll Send You a Notification as soon as it goes though"
@@ -98,7 +98,7 @@
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
                     android:lines="1"

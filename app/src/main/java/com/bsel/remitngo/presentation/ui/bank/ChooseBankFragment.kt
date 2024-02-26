@@ -37,8 +37,24 @@ class ChooseBankFragment : Fragment() {
 
     private lateinit var orderType: String
     private lateinit var paymentType: String
+
+    private lateinit var send_amount: String
+    private lateinit var receive_amount: String
+
+    private lateinit var bankId: String
+    private lateinit var bankName: String
+
+    private lateinit var payingAgentId: String
+    private lateinit var payingAgentName: String
+
+    private lateinit var exchangeRate: String
+    private lateinit var bankCommission: String
+    private lateinit var cardCommission: String
+
     private lateinit var cusBankInfoId: String
     private lateinit var recipientName: String
+    private lateinit var recipientMobile: String
+    private lateinit var recipientAddress: String
 
     private lateinit var deviceId: String
     private lateinit var personId: String
@@ -65,14 +81,47 @@ class ChooseBankFragment : Fragment() {
 
         orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
+
+        send_amount = arguments?.getString("send_amount").toString()
+        receive_amount = arguments?.getString("receive_amount").toString()
+
+        bankId = arguments?.getString("bankId").toString()
+        bankName = arguments?.getString("bankName").toString()
+
+        payingAgentId = arguments?.getString("payingAgentId").toString()
+        payingAgentName = arguments?.getString("payingAgentName").toString()
+
+        exchangeRate = arguments?.getString("exchangeRate").toString()
+        bankCommission = arguments?.getString("bankCommission").toString()
+        cardCommission = arguments?.getString("cardCommission").toString()
+
         cusBankInfoId = arguments?.getString("cusBankInfoId").toString()
         recipientName = arguments?.getString("recipientName").toString()
+        recipientMobile = arguments?.getString("recipientMobile").toString()
+        recipientAddress = arguments?.getString("recipientAddress").toString()
+
         binding.btnBank.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("orderType", orderType)
                 putString("paymentType", paymentType)
+
+                putString("send_amount", send_amount)
+                putString("receive_amount", receive_amount)
+
+                putString("bankId", bankId)
+                putString("bankName", bankName)
+
+                putString("payingAgentId", payingAgentId)
+                putString("payingAgentName", payingAgentName)
+
+                putString("exchangeRate", exchangeRate.toString())
+                putString("bankCommission", bankCommission.toString())
+                putString("cardCommission", cardCommission.toString())
+
                 putString("cusBankInfoId", cusBankInfoId)
                 putString("recipientName", recipientName)
+                putString("recipientMobile", recipientMobile)
+                putString("recipientAddress", recipientAddress)
             }
             findNavController().navigate(
                 R.id.action_nav_choose_bank_to_nav_save_bank,
@@ -130,12 +179,29 @@ class ChooseBankFragment : Fragment() {
 
     private fun bankItem(selectedItem: GetBankData) {
         val bundle = Bundle().apply {
-            putString("accountNo", selectedItem.accountNo.toString())
-            putString("bankName", selectedItem.bankName.toString())
             putString("orderType", orderType)
             putString("paymentType", paymentType)
+
             putString("cusBankInfoId", cusBankInfoId)
             putString("recipientName", recipientName)
+            putString("recipientMobile", recipientMobile)
+            putString("recipientAddress", recipientAddress)
+
+            putString("bankId", selectedItem.bankId.toString())
+            putString("bankName", selectedItem.bankName.toString())
+
+            putString("accountNo", selectedItem.accountNo.toString())
+            putString("branchId", selectedItem.branchId.toString())
+
+            putString("send_amount", send_amount)
+            putString("receive_amount", receive_amount)
+
+            putString("payingAgentId", payingAgentId)
+            putString("payingAgentName", payingAgentName)
+
+            putString("exchangeRate", exchangeRate.toString())
+            putString("bankCommission", bankCommission.toString())
+            putString("cardCommission", cardCommission.toString())
         }
         findNavController().navigate(
             R.id.action_nav_choose_bank_to_nav_review,

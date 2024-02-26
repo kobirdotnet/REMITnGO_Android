@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:ellipsize="end"
-            android:fontFamily="@font/roboto_condensed_regular"
+            android:fontFamily="@font/roboto_regular"
             android:maxLines="1"
             android:text="Bangladesh"
             android:textColor="@color/black" />

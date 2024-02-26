@@ -29,7 +29,7 @@
                     android:id="@+id/firstLetterName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="A"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
@@ -46,7 +46,7 @@
                 android:id="@+id/bankName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:text="BRAC Bank"
                 android:textColor="@color/black" />
 
@@ -54,7 +54,7 @@
                 android:id="@+id/bankAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:text="123456789(BRAC Bank(Dhaka))"
                 android:textColor="@color/text_color" />
         </LinearLayout>

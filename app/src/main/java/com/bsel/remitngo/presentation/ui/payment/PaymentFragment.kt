@@ -1,16 +1,27 @@
-package com.bsel.remitngo.presentation.ui.review
+package com.bsel.remitngo.presentation.ui.payment
 
+import android.content.Context
+import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.databinding.FragmentReviewBinding
+import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
+import com.bsel.remitngo.data.model.payment.PaymentItem
+import com.bsel.remitngo.databinding.FragmentPaymentBinding
+import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.bank.BankViewModel
+import com.bsel.remitngo.presentation.ui.bank.BankViewModelFactory
 import com.emerchantpay.gateway.genesisandroid.api.constants.*
 import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringCategory
 import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringType
@@ -29,40 +40,199 @@ import com.emerchantpay.gateway.genesisandroid.api.util.Configuration
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class ReviewFragment : Fragment() {
+class PaymentFragment : Fragment() {
+    @Inject
+    lateinit var paymentViewModelFactory: PaymentViewModelFactory
+    private lateinit var paymentViewModel: PaymentViewModel
 
-    private lateinit var binding: FragmentReviewBinding
+    private lateinit var binding: FragmentPaymentBinding
+
+    private lateinit var preferenceManager: PreferenceManager
+
+    lateinit var dialogHandler: AlertDialogHandler
+    lateinit var error: GenesisError
+
+    var ipAddress: String? = null
+    private lateinit var deviceId: String
 
     private lateinit var orderType: String
     private lateinit var paymentType: String
 
-    lateinit var dialogHandler: AlertDialogHandler
-    lateinit var error: GenesisError
+    private lateinit var personId: String
+    private lateinit var firstName: String
+    private lateinit var lastName: String
+    private lateinit var customerEmail: String
+    private lateinit var customerMobile: String
+    private lateinit var customerdateOfBirth: String
+    private lateinit var cusBankInfoId: String
+    private lateinit var recipientName: String
+    private lateinit var recipientMobile: String
+    private lateinit var recipientAddress: String
+
+    private lateinit var bankId: String
+    private lateinit var bankName: String
+
+    private lateinit var accountNo: String
+    private lateinit var branchId: String
+
+    private lateinit var send_amount: String
+    private lateinit var receive_amount: String
+
+    private lateinit var payingAgentId: String
+    private lateinit var payingAgentName: String
+
+    private lateinit var exchangeRate: String
+    private lateinit var bankCommission: String
+    private lateinit var cardCommission: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_review, container, false)
+        return inflater.inflate(R.layout.fragment_payment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentReviewBinding.bind(view)
+        binding = FragmentPaymentBinding.bind(view)
+
+        (requireActivity().application as Injector).createPaymentSubComponent().inject(this)
+
+        paymentViewModel =
+            ViewModelProvider(this, paymentViewModelFactory)[PaymentViewModel::class.java]
+
+        preferenceManager = PreferenceManager(requireContext())
+
+        personId = preferenceManager.loadData("personId").toString()
+        firstName = preferenceManager.loadData("firstName").toString()
+        lastName = preferenceManager.loadData("lastName").toString()
+        customerEmail = preferenceManager.loadData("email").toString()
+        customerMobile = preferenceManager.loadData("mobile").toString()
+        customerdateOfBirth = preferenceManager.loadData("dob").toString()
+
+        deviceId = getDeviceId(requireContext())
+        ipAddress = getIPAddress(requireContext())
 
         orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
 
+        cusBankInfoId = arguments?.getString("cusBankInfoId").toString()
+        recipientName = arguments?.getString("recipientName").toString()
+        recipientMobile = arguments?.getString("recipientMobile").toString()
+        recipientAddress = arguments?.getString("recipientAddress").toString()
+
+        bankId = arguments?.getString("bankId").toString()
+        bankName = arguments?.getString("bankName").toString()
+
+        accountNo = arguments?.getString("accountNo").toString()
+        branchId = arguments?.getString("branchId").toString()
+
+        send_amount = arguments?.getString("send_amount").toString()
+        receive_amount = arguments?.getString("receive_amount").toString()
+
+        payingAgentId = arguments?.getString("payingAgentId").toString()
+        payingAgentName = arguments?.getString("payingAgentName").toString()
+
+        exchangeRate = arguments?.getString("exchangeRate").toString()
+        bankCommission = arguments?.getString("bankCommission").toString()
+        cardCommission = arguments?.getString("cardCommission").toString()
+
         binding.btnSend.setOnClickListener {
-            if (paymentType == "4") {
-                cardPayment()
-            } else if (paymentType == "3") {
-                findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
-            }
+            val paymentItem = PaymentItem(
+                deviceId = deviceId,
+                userIPAddress = ipAddress,
+                personID = personId,
+                customerName = "$firstName $lastName",
+                customerEmail = customerEmail,
+                customerMobile = customerMobile,
+                customerdateOfBirth = customerdateOfBirth,
+                fromCountryID = "4",
+                fromCurrencyID = "96",
+                fromCurrencyCode = "GBP",
+                benPersonID = cusBankInfoId,
+                beneficiaryName = recipientName,
+                beneficaryEmail = "",
+                beneficarymobile = recipientMobile,
+                beneficaryAddress = recipientAddress,
+                bankId = bankId,
+                bankName = bankName,
+                accountNo = accountNo,
+                benBranchId = branchId,
+                collectionBankID = payingAgentId,
+                collectionBankName = payingAgentName,
+                sendAmount = send_amount,
+                receivableAmount = receive_amount,
+                rate = exchangeRate,
+                commission = cardCommission,
+                total = receive_amount,
+                toCountryID = "1",
+                toCurrencyID = "6",
+                toCurrencyCode = "BDT",
+                orderTypeID = orderType,
+                paymentMode = paymentType,
+                purposeOfTransferId = "",
+                sourceOfFundId = "",
+                isMobileTransfer = true,
+                isiOS = false,
+                latitude = "",
+                longitude = ""
+            )
+            paymentViewModel.payment(paymentItem)
         }
 
+        observePaymentResult()
+
     }
+
+    private fun observePaymentResult() {
+        paymentViewModel.paymentResult.observe(this) { result ->
+            if (result!!.data != null) {
+                if (paymentType == "4") {
+                    cardPayment()
+                } else if (paymentType == "3") {
+                    findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
+                }
+                Log.i("info", "payment successful: $result")
+            } else {
+                Log.i("info", "payment failed")
+            }
+        }
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
+    }
+
+    private fun getIPAddress(context: Context): String? {
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiInfo = wifiManager.connectionInfo
+        val ipAddress = wifiInfo.ipAddress
+        return String.format(
+            Locale.getDefault(),
+            "%d.%d.%d.%d",
+            ipAddress and 0xff,
+            ipAddress shr 8 and 0xff,
+            ipAddress shr 16 and 0xff,
+            ipAddress shr 24 and 0xff
+        )
+    }
+
     private fun cardPayment() {
 
         // Generate unique Id
@@ -103,8 +273,8 @@ class ReviewFragment : Fragment() {
             "alalkodu@gmail.com",
             "07893986598",
             billingAddress,
-//            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
-            "https://rnguat.bracsaajanexchange.com/api/Payment/EmerchantNotification",
+            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
+//            "https://rnguat.bracsaajanexchange.com/api/Payment/EmerchantNotification",
             transactionTypes
         )
         // Set return URLs after a delay of 30 seconds
@@ -230,7 +400,7 @@ class ReviewFragment : Fragment() {
                 )
                 dialogHandler.show()
 
-            }else if (response!!.isSuccess!!){
+            } else if (response!!.isSuccess!!) {
                 val consumerId = response.consumerId.toString()
                 Log.i("info", "consumerId: $consumerId")
             }

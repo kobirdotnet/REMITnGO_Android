@@ -22,6 +22,221 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/grey"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:weightSum="7">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/bangladesh" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="Bangladesh"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:text="GBP 1"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/equal" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="left"
+                        android:text="BDT "
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/exchangeRate"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="left"
+                        android:hint="150.00"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/arrow_drop_down" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:weightSum="5">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="left"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/england" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_regular"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="GBP"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/send_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="true"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="left"
+                        android:inputType="numberDecimal"
+                        android:text="0.0"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/sync" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="right"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_regular"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="BDT"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/bangladesh" />
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/receive_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="true"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:inputType="numberDecimal"
+                        android:text="0.0"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
@@ -31,7 +246,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Order Type"
                     android:textColor="@color/black" />
@@ -63,7 +278,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="4dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Bank Account" />
 
@@ -74,7 +289,7 @@
                         android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Instant credit" />
 
@@ -85,7 +300,7 @@
                         android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Cash pickup" />
 
@@ -95,7 +310,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Mobile wallet" />
                 </RadioGroup>
@@ -181,7 +396,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Payment Type"
                     android:textColor="@color/black" />
@@ -213,7 +428,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="4dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Card Payment" />
 
@@ -223,7 +438,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Bank Transfer" />
                 </RadioGroup>
@@ -233,248 +448,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/grey"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
-                    android:gravity="center_vertical"
-                    android:text="Exchange rates"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
-
-                <TextView
-                    android:id="@+id/selectedOrderType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
-                    android:gravity="center_vertical"
-                    android:hint="selected order type"
-                    android:textColor="@color/black"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="5">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:gravity="right"
-                        android:text="GBP 1"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@drawable/equal" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:gravity="left"
-                        android:text="BDT "
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/exchangeRate"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:gravity="left"
-                        android:hint="150.00"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:weightSum="5">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:gravity="left"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:src="@drawable/england" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_condensed_regular"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="GBP"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
-
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/send_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusableInTouchMode="true"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:gravity="left"
-                        android:text="0.0"
-                        android:inputType="numberDecimal"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/sync" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:gravity="right"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_condensed_regular"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="BDT"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
-
-                        <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:src="@drawable/bangladesh" />
-
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/receive_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusableInTouchMode="true"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:gravity="right"
-                        android:text="0.0"
-                        android:inputType="numberDecimal"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:gravity="bottom"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnContinue"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:fontFamily="@font/roboto_condensed_regular"
-                    android:gravity="center"
-                    android:inputType="none"
-                    android:lines="1"
-                    android:text="Continue"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/extraPercentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:focusableInTouchMode="false"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
                     android:lines="1"
@@ -487,11 +472,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnContinue"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center"
+                    android:inputType="none"
+                    android:lines="1"
+                    android:text="NEXT"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:visibility="gone">
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/addPromoCode"
@@ -499,7 +507,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/promo"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:text="ADD PROMO CODE"
                     android:textColor="@color/blue" />
@@ -511,13 +519,12 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:visibility="gone">
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:padding="8dp"
                     android:text="Sending money to Bangladesh is easy"
@@ -526,7 +533,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -600,7 +607,7 @@
                             android:layout_width="0dp"
                             android:layout_height="45dp"
                             android:layout_weight="1.5"
-                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
                             android:padding="8dp"
                             android:text="and 53 more banks"
@@ -620,7 +627,7 @@
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/blue"
                             android:focusableInTouchMode="false"
-                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
                             android:inputType="none"
                             android:lines="1"

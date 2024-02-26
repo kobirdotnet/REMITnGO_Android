@@ -15,7 +15,7 @@
             android:id="@+id/message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_condensed_regular"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
             android:text="Message..."
             android:textColor="@color/black" />
@@ -28,7 +28,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Posted By : "
                 android:textColor="@color/black" />
@@ -37,7 +37,7 @@
                 android:id="@+id/posted_by"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Jubair Alom"
                 android:textColor="@color/black" />
@@ -47,7 +47,7 @@
             android:id="@+id/posted_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_condensed_regular"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
             android:text="28/08/2024 11:30 AM"
             android:textColor="@color/black" />

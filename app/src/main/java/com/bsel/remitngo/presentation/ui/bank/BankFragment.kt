@@ -45,13 +45,31 @@ class BankFragment : Fragment(), OnBankSelectedListener {
 
     private var id: Int = 0
     private var isVersion113: Int = 0
+
     var ipAddress: String? = null
     private lateinit var deviceId: String
+
     private lateinit var orderType: String
     private lateinit var paymentType: String
+
+    private lateinit var send_amount: String
+    private lateinit var receive_amount: String
+
+    private lateinit var bankId: String
+    private lateinit var bankName: String
+
+    private lateinit var payingAgentId: String
+    private lateinit var payingAgentName: String
+
+    private lateinit var exchangeRate: String
+    private lateinit var bankCommission: String
+    private lateinit var cardCommission: String
+
     private lateinit var cusBankInfoId: String
     private lateinit var recipientName: String
-    private lateinit var bankId: String
+    private lateinit var recipientMobile: String
+    private lateinit var recipientAddress: String
+
     private lateinit var divisionId: String
     private lateinit var districtId: String
     private lateinit var branchId: String
@@ -87,10 +105,27 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         walletAccountNameFocusListener()
         phoneNumberFocusListener()
 
-        cusBankInfoId = arguments?.getString("cusBankInfoId").toString()
         orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
+
+        send_amount = arguments?.getString("send_amount").toString()
+        receive_amount = arguments?.getString("receive_amount").toString()
+
+        bankId = arguments?.getString("bankId").toString()
+        bankName = arguments?.getString("bankName").toString()
+
+        payingAgentId = arguments?.getString("payingAgentId").toString()
+        payingAgentName = arguments?.getString("payingAgentName").toString()
+
+        exchangeRate = arguments?.getString("exchangeRate").toString()
+        bankCommission = arguments?.getString("bankCommission").toString()
+        cardCommission = arguments?.getString("cardCommission").toString()
+
+        cusBankInfoId = arguments?.getString("cusBankInfoId").toString()
         recipientName = arguments?.getString("recipientName").toString()
+        recipientMobile = arguments?.getString("recipientMobile").toString()
+        recipientAddress = arguments?.getString("recipientAddress").toString()
+
         binding.bankAccountName.setText(recipientName)
         binding.walletAccountName.setText(recipientName)
 
@@ -138,9 +173,29 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         bankViewModel.saveBankResult.observe(this) { result ->
             if (result != null) {
                 val bundle = Bundle().apply {
-                    putString("recipientName", recipientName)
                     putString("orderType", orderType)
                     putString("paymentType", paymentType)
+
+                    putString("cusBankInfoId", cusBankInfoId)
+                    putString("recipientName", recipientName)
+                    putString("recipientMobile", recipientMobile)
+                    putString("recipientAddress", recipientAddress)
+
+                    putString("bankId", bankId)
+                    putString("bankName", binding.bankName.toString())
+
+                    putString("accountNo", binding.bankAccountNumber.toString())
+                    putString("branchId", branchId)
+
+                    putString("send_amount", send_amount)
+                    putString("receive_amount", receive_amount)
+
+                    putString("payingAgentId", payingAgentId)
+                    putString("payingAgentName", payingAgentName)
+
+                    putString("exchangeRate", exchangeRate.toString())
+                    putString("bankCommission", bankCommission.toString())
+                    putString("cardCommission", cardCommission.toString())
                 }
                 findNavController().navigate(
                     R.id.action_nav_save_bank_to_nav_review,
@@ -274,9 +329,13 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val phoneNumber = binding.phoneNumber.text.toString()
 
         val bundle = Bundle().apply {
-            putString("recipientName", recipientName)
             putString("orderType", orderType)
             putString("paymentType", paymentType)
+
+            putString("cusBankInfoId", cusBankInfoId)
+            putString("recipientName", recipientName)
+            putString("recipientMobile", recipientMobile)
+            putString("recipientAddress", recipientAddress)
         }
         findNavController().navigate(
             R.id.action_nav_save_bank_to_nav_review,

@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_search_view_background"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:iconifiedByDefault="true"
                 android:queryHint="Search for Occupation Type"

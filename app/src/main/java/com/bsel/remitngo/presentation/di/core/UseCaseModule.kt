@@ -31,5 +31,9 @@ class UseCaseModule {
     fun provideCalculationUseCase(calculationRepository: CalculationRepository): CalculationUseCase {
         return CalculationUseCase(calculationRepository)
     }
+    @Provides
+    fun providePaymentUseCase(paymentRepository: PaymentRepository): PaymentUseCase {
+        return PaymentUseCase(paymentRepository)
+    }
 
 }

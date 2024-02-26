@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:fontFamily="@font/roboto_condensed_regular"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
             android:hint="kobirdotnet@gmail.com"
             android:textColor="@color/white" />
@@ -59,7 +59,7 @@
             android:id="@+id/customerPhoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_condensed_regular"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
             android:hint="+8801535111573"
             android:textColor="@color/white" />
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:fontFamily="@font/roboto_condensed_regular"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
             android:text="Share your unique id with your friends and families and get discount."
             android:textColor="@color/blue" />
@@ -90,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:fontFamily="@font/roboto_condensed_regular"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
             android:text="You will receive GBP 5.00 and your friend will receive GBP 5.00 on their first transfer.Minimum send requirements and conditions apply."
             android:textColor="@color/blue"
@@ -106,7 +106,7 @@
                 android:id="@+id/referralCodeTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Your Unique ID: "
                 android:textColor="@color/black" />
@@ -173,7 +173,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="My Profile"
                 android:textColor="@color/black" />
@@ -181,7 +181,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Manage your profile information"
                 android:textColor="@color/text_color" />
@@ -215,7 +215,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Beneficiary"
                 android:textColor="@color/black" />
@@ -223,7 +223,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Manage your beneficiaries"
                 android:textColor="@color/text_color" />
@@ -256,7 +256,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="KYC Documents"
                 android:textColor="@color/black" />
@@ -264,7 +264,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Manage your documents"
                 android:textColor="@color/text_color" />
@@ -297,7 +297,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Transaction"
                 android:textColor="@color/black" />
@@ -305,7 +305,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Manage your transactions"
                 android:textColor="@color/text_color" />
@@ -338,7 +338,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Cancel request"
                 android:textColor="@color/black" />
@@ -346,7 +346,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Manage your cancel request"
                 android:textColor="@color/text_color" />
@@ -379,7 +379,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Generate query"
                 android:textColor="@color/black" />
@@ -387,7 +387,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Manage your query"
                 android:textColor="@color/text_color" />
@@ -420,7 +420,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Settings"
                 android:textColor="@color/black" />
@@ -428,7 +428,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Device settings and security"
                 android:textColor="@color/text_color" />
@@ -461,7 +461,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Support"
                 android:textColor="@color/black" />
@@ -469,7 +469,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Contact our team"
                 android:textColor="@color/text_color" />
@@ -502,7 +502,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Log out"
                 android:textColor="@color/red" />
@@ -510,7 +510,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="Log out of REMITnGO"
                 android:textColor="@color/text_color" />

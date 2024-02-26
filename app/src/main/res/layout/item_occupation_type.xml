@@ -16,7 +16,7 @@
             android:id="@+id/occupation_type"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fontFamily="@font/roboto_condensed_regular"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
             android:text="Occupation Type"
             android:textColor="@color/black" />

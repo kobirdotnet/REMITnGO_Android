@@ -4,6 +4,7 @@ import com.bsel.remitngo.presentation.di.bank.BankSubComponent
 import com.bsel.remitngo.presentation.di.beneficiary.BeneficiarySubComponent
 import com.bsel.remitngo.presentation.di.calculation.CalculationSubComponent
 import com.bsel.remitngo.presentation.di.login.LoginSubComponent
+import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
 import dagger.Component
 import javax.inject.Singleton
@@ -24,4 +25,5 @@ interface AppComponent {
     fun beneficiarySubComponent(): BeneficiarySubComponent.Factory
     fun bankSubComponent(): BankSubComponent.Factory
     fun calculationSubComponent(): CalculationSubComponent.Factory
+    fun paymentSubComponent(): PaymentSubComponent.Factory
 }

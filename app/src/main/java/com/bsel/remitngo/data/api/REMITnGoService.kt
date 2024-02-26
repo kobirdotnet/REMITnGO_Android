@@ -24,6 +24,8 @@ import com.bsel.remitngo.data.model.login.LoginItem
 import com.bsel.remitngo.data.model.login.LoginResponseItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentResponseItem
+import com.bsel.remitngo.data.model.payment.PaymentItem
+import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.reason.ReasonItem
 import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.registration.RegistrationItem
@@ -79,6 +81,9 @@ interface REMITnGoService {
 
     @POST("api/Transaction/CalculateRate")
     suspend fun calculateRate(@Body calculateRateItem: CalculateRateItem): Response<CalculateRateResponseItem>
+
+    @POST("api/Transaction/Payment")
+    suspend fun payment(@Body paymentItem: PaymentItem): Response<PaymentResponseItem>
 
 }
 

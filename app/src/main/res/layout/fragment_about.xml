@@ -30,7 +30,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Know more about REMITnGO"
                     android:textColor="@color/black" />
@@ -72,7 +72,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="User Agreement"
                         android:textColor="@color/black" />
@@ -80,7 +80,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Terms and conditions for using REMITnGO"
                         android:textColor="@color/text_color" />
@@ -123,7 +123,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Privacy Policy"
                         android:textColor="@color/black" />
@@ -131,7 +131,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="View our privacy policy"
                         android:textColor="@color/text_color" />
@@ -174,7 +174,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Third Party Notices"
                         android:textColor="@color/black" />
@@ -182,7 +182,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Notices for third party software used by REMITnGO"
                         android:textColor="@color/text_color" />
@@ -225,7 +225,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Company Registration"
                         android:textColor="@color/black" />
@@ -233,7 +233,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="REMITnGO business registration information"
                         android:textColor="@color/text_color" />
@@ -276,7 +276,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Regulatory Information"
                         android:textColor="@color/black" />
@@ -284,7 +284,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Licensing information from our regulators"
                         android:textColor="@color/text_color" />
@@ -327,7 +327,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="Referral Program"
                         android:textColor="@color/black" />
@@ -335,7 +335,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="View the conditions for our referral program"
                         android:textColor="@color/text_color" />
@@ -378,7 +378,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="App Version"
                         android:textColor="@color/black" />
@@ -386,7 +386,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:text="1.1.0"
                         android:textColor="@color/text_color" />
@@ -423,7 +423,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:src="@drawable/img_2" />
 

@@ -8,6 +8,8 @@ import com.bsel.remitngo.data.repository.calculation.CalculationRepositoryImpl
 import com.bsel.remitngo.data.repository.calculation.dataSource.CalculationRemoteDataSource
 import com.bsel.remitngo.data.repository.login.LoginRepositoryImpl
 import com.bsel.remitngo.data.repository.login.dataSource.LoginRemoteDataSource
+import com.bsel.remitngo.data.repository.payment.PaymentRepositoryImpl
+import com.bsel.remitngo.data.repository.payment.dataSource.PaymentRemoteDataSource
 import com.bsel.remitngo.data.repository.registration.RegistrationRepositoryImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
 import com.bsel.remitngo.domain.repository.*
@@ -45,6 +47,11 @@ class RepositoryModule {
     @Provides
     fun provideCalculationRepository(calculationRemoteDataSource: CalculationRemoteDataSource): CalculationRepository {
         return CalculationRepositoryImpl(calculationRemoteDataSource)
+    }
+    @Singleton
+    @Provides
+    fun providePaymentRepository(paymentRemoteDataSource: PaymentRemoteDataSource): PaymentRepository {
+        return PaymentRepositoryImpl(paymentRemoteDataSource)
     }
 
 }

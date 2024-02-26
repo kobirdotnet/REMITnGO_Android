@@ -23,7 +23,7 @@
             android:id="@+id/bank_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fontFamily="@font/roboto_condensed_regular"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
             android:text="AB Bank"
             android:textColor="@color/black" />

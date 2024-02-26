@@ -58,9 +58,9 @@
     </fragment>
     <fragment
         android:id="@+id/nav_review"
-        android:name="com.bsel.remitngo.presentation.ui.review.ReviewFragment"
+        android:name="com.bsel.remitngo.presentation.ui.payment.PaymentFragment"
         android:label="@string/menu_confirm_transfer"
-        tools:layout="@layout/fragment_review">
+        tools:layout="@layout/fragment_payment">
         <action
             android:id="@+id/action_nav_review_to_nav_complete_bank_transaction"
             app:destination="@id/nav_complete_bank_transaction" />

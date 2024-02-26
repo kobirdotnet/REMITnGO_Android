@@ -29,7 +29,7 @@
                     android:id="@+id/transactionCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Transaction Code : "
                     android:textColor="@color/black" />
@@ -38,7 +38,7 @@
                     android:id="@+id/status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Status : "
                     android:textColor="@color/black" />
@@ -47,7 +47,7 @@
                     android:id="@+id/sendAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Send Amount : "
                     android:textColor="@color/black" />
@@ -56,7 +56,7 @@
                     android:id="@+id/cancellationReason"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Cancellation Reason : "
                     android:textColor="@color/black" />
@@ -73,7 +73,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
                     android:text="21000004519755B"
                     android:textColor="@color/black" />
@@ -81,7 +81,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
                     android:text="Active"
                     android:textColor="@color/black" />
@@ -89,7 +89,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
                     android:text="BDT 50408.50"
                     android:textColor="@color/black" />
@@ -97,7 +97,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
                     android:text="address not fount"
                     android:textColor="@color/black" />
