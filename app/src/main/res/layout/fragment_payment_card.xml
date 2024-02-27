@@ -10,7 +10,7 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:scrollbars="none"
-        tools:context=".ui.main.complete_card_transfer.CompleteCardTransactionFragment">
+        tools:context=".presentation.ui.payment.PaymentCardFragment">
 
         <LinearLayout
             android:layout_width="match_parent"

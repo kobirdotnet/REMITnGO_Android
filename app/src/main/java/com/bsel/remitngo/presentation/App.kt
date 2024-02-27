@@ -9,6 +9,7 @@ import com.bsel.remitngo.presentation.di.calculation.CalculationSubComponent
 import com.bsel.remitngo.presentation.di.core.*
 import com.bsel.remitngo.presentation.di.login.LoginSubComponent
 import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
+import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
 
 class App : Application(), Injector {
@@ -43,6 +44,9 @@ class App : Application(), Injector {
     }
     override fun createPaymentSubComponent(): PaymentSubComponent {
         return appComponent.paymentSubComponent().create()
+    }
+    override fun createProfileSubComponent(): ProfileSubComponent {
+        return appComponent.profileSubComponent().create()
     }
 
 }

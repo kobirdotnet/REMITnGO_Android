@@ -8,7 +8,7 @@
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:scrollbars="none"
-    tools:context=".ui.profile.MyProfileFragment">
+    tools:context=".presentation.ui.profile.ProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,11 +62,11 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="Mohammad Kobirul Islam"
                     android:textColor="@color/text_color" />
 
                 <TextView
@@ -78,11 +78,11 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="Male"
                     android:textColor="@color/text_color" />
 
                 <TextView
@@ -94,11 +94,11 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/dob"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="20/10/1998"
                     android:textColor="@color/text_color" />
 
                 <TextView
@@ -110,11 +110,11 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/occupation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="Financial manager and directors"
                     android:textColor="@color/text_color" />
 
                 <TextView
@@ -126,11 +126,11 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/annualIncome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="50k - 75k"
                     android:textColor="@color/text_color" />
 
                 <TextView
@@ -142,11 +142,11 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/nationality"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="Bangladeshi"
                     android:textColor="@color/text_color" />
 
             </LinearLayout>
@@ -205,6 +205,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/userAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
@@ -272,6 +273,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/emailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
@@ -334,6 +336,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/phoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"

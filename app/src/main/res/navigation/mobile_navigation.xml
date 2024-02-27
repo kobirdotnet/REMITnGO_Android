@@ -65,8 +65,8 @@
             android:id="@+id/action_nav_review_to_nav_complete_bank_transaction"
             app:destination="@id/nav_complete_bank_transaction" />
         <action
-            android:id="@+id/action_nav_review_to_nav_transaction"
-            app:destination="@id/nav_transaction" />
+            android:id="@+id/action_nav_review_to_nav_complete_card_transaction"
+            app:destination="@id/nav_complete_card_transaction" />
     </fragment>
     <fragment
         android:id="@+id/nav_complete_bank_transaction"
@@ -78,19 +78,10 @@
             app:destination="@id/nav_main" />
     </fragment>
     <fragment
-        android:id="@+id/nav_transaction"
-        android:name="com.bsel.remitngo.ui.main.complete_card_transfer.TransactionFragment"
-        android:label="@string/menu_transaction"
-        tools:layout="@layout/fragment_transaction">
-        <action
-            android:id="@+id/action_nav_transaction_to_nav_complete_card_transaction"
-            app:destination="@id/nav_complete_card_transaction" />
-    </fragment>
-    <fragment
         android:id="@+id/nav_complete_card_transaction"
-        android:name="com.bsel.remitngo.ui.main.complete_card_transfer.CompleteCardTransactionFragment"
+        android:name="com.bsel.remitngo.presentation.ui.payment.PaymentCardFragment"
         android:label="@string/menu_transaction"
-        tools:layout="@layout/fragment_complete_card_transaction">
+        tools:layout="@layout/fragment_payment_card">
         <action
             android:id="@+id/action_nav_complete_card_transaction_to_nav_main"
             app:destination="@id/nav_main" />
@@ -98,9 +89,9 @@
 
     <fragment
         android:id="@+id/nav_my_profile"
-        android:name="com.bsel.remitngo.ui.profile.MyProfileFragment"
+        android:name="com.bsel.remitngo.presentation.ui.profile.ProfileFragment"
         android:label="@string/menu_my_profile"
-        tools:layout="@layout/fragment_my_profile">
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_nav_my_profile_to_nav_personal_information"
             app:destination="@id/nav_personal_information" />
@@ -116,15 +107,6 @@
         <action
             android:id="@+id/action_nav_my_profile_to_nav_mobile_number"
             app:destination="@id/nav_mobile_number" />
-    </fragment>
-    <fragment
-        android:id="@+id/nav_payment"
-        android:name="com.bsel.remitngo.ui.payment.PaymentFragment"
-        android:label="@string/menu_payment"
-        tools:layout="@layout/fragment_payment">
-        <action
-            android:id="@+id/action_nav_payment_to_nav_card"
-            app:destination="@id/nav_card" />
     </fragment>
     <fragment
         android:id="@+id/nav_settings"
@@ -170,11 +152,6 @@
         android:name="com.bsel.remitngo.ui.profile.mobile_number.MobileNumberFragment"
         android:label="@string/menu_mobile_number"
         tools:layout="@layout/fragment_mobile_number" />
-    <fragment
-        android:id="@+id/nav_card"
-        android:name="com.bsel.remitngo.ui.payment.card.CardFragment"
-        android:label="@string/menu_card"
-        tools:layout="@layout/fragment_card" />
     <fragment
         android:id="@+id/nav_save_address"
         android:name="com.bsel.remitngo.ui.profile.address.SaveAddressFragment"

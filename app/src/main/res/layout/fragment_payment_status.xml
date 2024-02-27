@@ -2,49 +2,48 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:fillViewport="true"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:scrollbars="none"
-        tools:context=".ui.main.complete_card_transfer.TransactionFragment">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="7">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin">
 
                 <TextView
+                    android:id="@+id/recipient_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_condensed_bold"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:padding="@dimen/activity_horizontal_margin"
                     android:text="Your transfer to Mohammad Ameerul Islam is processing !"
                     android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/timerTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:gravity="center"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:textColor="@color/yellow"
                     android:textSize="18sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -56,16 +55,17 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_condensed_bold"
                     android:gravity="center"
-                    android:text="BDT"
+                    android:text="Total Amount is"
                     android:textColor="@color/black"
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/receive_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_condensed_bold"
                     android:gravity="center"
-                    android:text="14,000.00"
+                    android:text="BDT 14,000.00"
                     android:textColor="@color/black"
                     android:textSize="36sp" />
 
@@ -73,10 +73,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:gravity="bottom"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
@@ -84,32 +83,27 @@
                 android:paddingBottom="@dimen/activity_vertical_margin">
 
                 <TextView
+                    android:id="@+id/transactionCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:padding="@dimen/activity_horizontal_margin"
-                    android:text="Your Transfer ID #155542224362462645 We'll Send You a Notification as soon as it goes though"
+                    android:text="Your Transfer ID #155542224362462645"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnOk"
-                    style="@style/Widget.MaterialComponents.Button"
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
-                    android:inputType="none"
-                    android:lines="1"
-                    android:text="Ok"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:text="We'll Send You a Notification as soon as it goes though"
+                    android:textColor="@color/blue"
                     android:textSize="18sp" />
 
             </LinearLayout>
 
         </LinearLayout>
-
-    </ScrollView>
 </layout>

@@ -26,6 +26,19 @@ import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
+import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.profile.ProfileItem
+import com.bsel.remitngo.data.model.profile.ProfileResponseItem
+import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
+import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeResponseItem
+import com.bsel.remitngo.data.model.profile.nationality.NationalityItem
+import com.bsel.remitngo.data.model.profile.nationality.NationalityResponseItem
+import com.bsel.remitngo.data.model.profile.occupation.OccupationItem
+import com.bsel.remitngo.data.model.profile.occupation.OccupationResponseItem
+import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeItem
+import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeResponseItem
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
 import com.bsel.remitngo.data.model.reason.ReasonItem
 import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.registration.RegistrationItem
@@ -34,7 +47,9 @@ import com.bsel.remitngo.data.model.relation.RelationItem
 import com.bsel.remitngo.data.model.relation.RelationResponseItem
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface REMITnGoService {
     @POST("api/Home/Registration")
@@ -42,6 +57,9 @@ interface REMITnGoService {
 
     @POST("api/Home/Login")
     suspend fun loginUser(@Body loginItem: LoginItem): Response<LoginResponseItem>
+
+    @POST("api/General/GetProfileInfo")
+    suspend fun profile(@Body profileItem: ProfileItem): Response<ProfileResponseItem>
 
     @POST("api/Beneficiary/BenificiaryListWithBankDetails")
     suspend fun getBeneficiary(@Body getBeneficiaryItem: GetBeneficiaryItem): Response<GetBeneficiaryResponseItem>
@@ -84,6 +102,23 @@ interface REMITnGoService {
 
     @POST("api/Transaction/Payment")
     suspend fun payment(@Body paymentItem: PaymentItem): Response<PaymentResponseItem>
+
+    @GET("api/Payment/GetPaymentStatusByTransactioncode/{transactionCode}")
+    suspend fun paymentStatus(@Path("transactionCode") transactionCode: String): Response<PaymentStatusResponse>
+
+    @POST("api/General/LoadAnnualNetIncome")
+    suspend fun annualIncome(@Body annualIncomeItem: AnnualIncomeItem): Response<AnnualIncomeResponseItem>
+    @POST("api/General/LoadSourceOfIncome")
+    suspend fun sourceOfIncome(@Body sourceOfIncomeItem: SourceOfIncomeItem): Response<SourceOfIncomeResponseItem>
+
+    @POST("api/General/Dropdown")
+    suspend fun occupationType(@Body occupationTypeItem: OccupationTypeItem): Response<OccupationTypeResponseItem>
+
+    @POST("api/General/Dropdown")
+    suspend fun occupation(@Body occupationItem: OccupationItem): Response<OccupationResponseItem>
+
+    @POST("api/General/Dropdown")
+    suspend fun nationality(@Body nationalityItem: NationalityItem): Response<NationalityResponseItem>
 
 }
 

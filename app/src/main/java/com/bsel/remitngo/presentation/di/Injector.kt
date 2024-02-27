@@ -5,6 +5,7 @@ import com.bsel.remitngo.presentation.di.beneficiary.BeneficiarySubComponent
 import com.bsel.remitngo.presentation.di.calculation.CalculationSubComponent
 import com.bsel.remitngo.presentation.di.login.LoginSubComponent
 import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
+import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
 
 interface Injector {
@@ -14,4 +15,5 @@ interface Injector {
     fun createBankSubComponent(): BankSubComponent
     fun createCalculationSubComponent(): CalculationSubComponent
     fun createPaymentSubComponent(): PaymentSubComponent
+    fun createProfileSubComponent(): ProfileSubComponent
 }

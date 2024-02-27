@@ -1,16 +1,16 @@
 package com.bsel.remitngo.presentation.ui.payment
 
+import android.app.Dialog
 import android.content.Context
 import android.net.wifi.WifiManager
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -87,6 +87,8 @@ class PaymentFragment : Fragment() {
     private lateinit var bankCommission: String
     private lateinit var cardCommission: String
 
+    private lateinit var transactionCode: String
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -139,6 +141,19 @@ class PaymentFragment : Fragment() {
         bankCommission = arguments?.getString("bankCommission").toString()
         cardCommission = arguments?.getString("cardCommission").toString()
 
+        binding.sendAmount.setText("GBP $send_amount").toString()
+        binding.transferFee.setText("GBP $cardCommission").toString()
+        binding.totalSend.setText("GBP $send_amount").toString()
+        binding.exchangeRate.setText("BDT $exchangeRate").toString()
+        binding.receiveAmount.setText("BDT $receive_amount").toString()
+
+        binding.bankAccountName.setText("$recipientName").toString()
+        binding.bankAccountNumber.setText("$bankName").toString()
+
+        binding.recipientName.setText("$recipientName").toString()
+        binding.bankName.setText("$bankName").toString()
+        binding.accountNo.setText("$accountNo").toString()
+
         binding.btnSend.setOnClickListener {
             val paymentItem = PaymentItem(
                 deviceId = deviceId,
@@ -172,25 +187,26 @@ class PaymentFragment : Fragment() {
                 toCurrencyCode = "BDT",
                 orderTypeID = orderType,
                 paymentMode = paymentType,
-                purposeOfTransferId = "",
-                sourceOfFundId = "",
+                purposeOfTransferId = "0",
+                sourceOfFundId = "0",
                 isMobileTransfer = true,
                 isiOS = false,
                 latitude = "",
                 longitude = ""
             )
             paymentViewModel.payment(paymentItem)
-        }
 
-        observePaymentResult()
+            observePaymentResult()
+        }
 
     }
 
     private fun observePaymentResult() {
         paymentViewModel.paymentResult.observe(this) { result ->
             if (result!!.data != null) {
+                transactionCode = result.data.toString()
                 if (paymentType == "4") {
-                    cardPayment()
+                    cardPayment(transactionCode)
                 } else if (paymentType == "3") {
                     findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
                 }
@@ -201,39 +217,7 @@ class PaymentFragment : Fragment() {
         }
     }
 
-    private fun getDeviceId(context: Context): String {
-        val deviceId: String
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            deviceId =
-                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-        } else {
-            @Suppress("DEPRECATION")
-            deviceId = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
-        }
-
-        return deviceId
-    }
-
-    private fun getIPAddress(context: Context): String? {
-        val wifiManager =
-            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        val wifiInfo = wifiManager.connectionInfo
-        val ipAddress = wifiInfo.ipAddress
-        return String.format(
-            Locale.getDefault(),
-            "%d.%d.%d.%d",
-            ipAddress and 0xff,
-            ipAddress shr 8 and 0xff,
-            ipAddress shr 16 and 0xff,
-            ipAddress shr 24 and 0xff
-        )
-    }
-
-    private fun cardPayment() {
+    private fun cardPayment(transactionCode: String) {
 
         // Generate unique Id
         val uniqueId = UUID.randomUUID().toString()
@@ -267,38 +251,33 @@ class PaymentFragment : Fragment() {
         // Init WPF API request
         val paymentRequest = PaymentRequest(
             requireContext(),
-            uniqueId,
+            transactionCode,
             BigDecimal("100"),
             Currency.GBP,
             "alalkodu@gmail.com",
             "07893986598",
             billingAddress,
-            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
+//            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
+            "https://emptest.remitngo.com/EmerchantNotification/EmerchantNotification",
 //            "https://rnguat.bracsaajanexchange.com/api/Payment/EmerchantNotification",
             transactionTypes
         )
+
         // Set return URLs after a delay of 30 seconds
         Handler(Looper.getMainLooper()).postDelayed({
             paymentRequest.setReturnSuccessUrl("https://uat2.remitngo.com/Emerchantpay/WPFSuccessURL.aspx")
             paymentRequest.setReturnFailureUrl("https://uat2.remitngo.com/Emerchantpay/WPFFailureURL.aspx")
             paymentRequest.setReturnCancelUrl("https://uat2.remitngo.com/Emerchantpay/WPFCancelURL.aspx")
-        }, 1000)
-        findNavController().navigate(R.id.action_nav_review_to_nav_transaction)
 
-        // Show WebView
-//        val webView = WebView(requireContext())
-//        webView.loadUrl("https://uat2.remitngo.com/Emerchantpay/WPFSuccessURL.aspx") // Load any of the URLs
-//
-//        val dialog = AlertDialog.Builder(context)
-//            .setView(webView)
-//            .create()
-//
-//        dialog.show()
+            val bundle = Bundle().apply {
+                putString("transactionCode", transactionCode)
+            }
+            findNavController().navigate(
+                R.id.action_nav_review_to_nav_complete_card_transaction,
+                bundle
+            )
 
-        // Dismiss WebView after 30 seconds
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            dialog.dismiss()
-//        }, 30000)
+        }, 60000)
 
         paymentRequest.setUsage("Test Staging")
         paymentRequest.setDescription("Test payment gateway")
@@ -403,6 +382,46 @@ class PaymentFragment : Fragment() {
             } else if (response!!.isSuccess!!) {
                 val consumerId = response.consumerId.toString()
                 Log.i("info", "consumerId: $consumerId")
+
+                Handler(Looper.getMainLooper()).postDelayed({
+
+                    val timerDuration = 60 * 1000
+
+                    val dialog = Dialog(requireContext())
+                    dialog.setContentView(R.layout.fragment_payment_status)
+                    dialog.setCancelable(false)
+                    dialog.window?.setLayout(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT
+                    )
+
+                    val receiveName = dialog.findViewById<TextView>(R.id.recipient_name)
+                    val receiveAmount = dialog.findViewById<TextView>(R.id.receive_amount)
+                    val transactionId = dialog.findViewById<TextView>(R.id.transactionCode)
+                    val timer = dialog.findViewById<TextView>(R.id.timerTxt)
+
+                    receiveName.text = "Your transfer to $recipientName is processing !"
+                    receiveAmount.text = "BDT $receive_amount"
+                    transactionId.text = "Your Transfer ID $transactionCode"
+                    dialog.show()
+
+                    object : CountDownTimer(timerDuration.toLong(), 1000) {
+                        override fun onTick(millisUntilFinished: Long) {
+                            val secondsRemaining = millisUntilFinished / 1000
+                            val minutes = secondsRemaining / 60
+                            val seconds = secondsRemaining % 60
+                            timer.text = String.format("%02d:%02d", minutes, seconds)
+                        }
+                        override fun onFinish() {
+                            dialog.dismiss()
+                        }
+                    }.start()
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        dialog.dismiss()
+                    }, 30000)
+                }, 30000)
+
             }
         }
 
@@ -422,6 +441,38 @@ class PaymentFragment : Fragment() {
             dialogHandler.show()
         }
 
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
+    }
+
+    private fun getIPAddress(context: Context): String? {
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiInfo = wifiManager.connectionInfo
+        val ipAddress = wifiInfo.ipAddress
+        return String.format(
+            Locale.getDefault(),
+            "%d.%d.%d.%d",
+            ipAddress and 0xff,
+            ipAddress shr 8 and 0xff,
+            ipAddress shr 16 and 0xff,
+            ipAddress shr 24 and 0xff
+        )
     }
 
 }

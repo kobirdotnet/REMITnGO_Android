@@ -45,12 +45,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_regular"
+                        android:fontFamily="@font/roboto_bold"
                         android:gravity="center"
                         android:padding="8dp"
                         android:text="Bangladesh"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
 
@@ -66,11 +65,10 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:fontFamily="@font/roboto_regular"
+                        android:fontFamily="@font/roboto_bold"
                         android:gravity="right"
                         android:text="GBP 1"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textColor="@color/black" />
 
                     <ImageView
                         android:layout_width="0dp"
@@ -81,22 +79,20 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:fontFamily="@font/roboto_regular"
+                        android:fontFamily="@font/roboto_bold"
                         android:gravity="left"
                         android:text="BDT "
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:id="@+id/exchangeRate"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:fontFamily="@font/roboto_regular"
+                        android:fontFamily="@font/roboto_bold"
                         android:gravity="left"
                         android:hint="150.00"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout

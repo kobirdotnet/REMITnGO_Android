@@ -11,6 +11,8 @@ import com.bsel.remitngo.data.repository.login.dataSource.LoginRemoteDataSource
 import com.bsel.remitngo.data.repository.login.dataSourceImpl.LoginRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.payment.dataSource.PaymentRemoteDataSource
 import com.bsel.remitngo.data.repository.payment.dataSourceImpl.PaymentRemoteDataSourceImpl
+import com.bsel.remitngo.data.repository.profile.dataSource.ProfileRemoteDataSource
+import com.bsel.remitngo.data.repository.profile.dataSourceImpl.ProfileRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
 import com.bsel.remitngo.data.repository.registration.dataSourceImpl.RegistrationRemoteDataSourceImpl
 import dagger.Module
@@ -52,6 +54,11 @@ class RemoteDataModule {
     @Provides
     fun providePaymentRemoteDataSource(remitNgoService: REMITnGoService): PaymentRemoteDataSource {
         return PaymentRemoteDataSourceImpl(remitNgoService)
+    }
+    @Singleton
+    @Provides
+    fun provideProfileRemoteDataSource(remitNgoService: REMITnGoService): ProfileRemoteDataSource {
+        return ProfileRemoteDataSourceImpl(remitNgoService)
     }
 
 }
