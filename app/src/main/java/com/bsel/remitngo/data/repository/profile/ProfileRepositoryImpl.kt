@@ -5,14 +5,24 @@ import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeResponseItem
+import com.bsel.remitngo.data.model.profile.city.CityItem
+import com.bsel.remitngo.data.model.profile.city.CityResponseItem
+import com.bsel.remitngo.data.model.profile.county.CountyItem
+import com.bsel.remitngo.data.model.profile.county.CountyResponseItem
 import com.bsel.remitngo.data.model.profile.nationality.NationalityItem
 import com.bsel.remitngo.data.model.profile.nationality.NationalityResponseItem
 import com.bsel.remitngo.data.model.profile.occupation.OccupationItem
 import com.bsel.remitngo.data.model.profile.occupation.OccupationResponseItem
 import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeItem
 import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeResponseItem
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeItem
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeResponseItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
+import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
+import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionResponseItem
+import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
+import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileResponseItem
 import com.bsel.remitngo.data.repository.profile.dataSource.ProfileRemoteDataSource
 import com.bsel.remitngo.domain.repository.ProfileRepository
 
@@ -32,6 +42,91 @@ class ProfileRepositoryImpl(private val profileRemoteDataSource: ProfileRemoteDa
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error Profile: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun updateProfile(updateProfileItem: UpdateProfileItem): UpdateProfileResponseItem? {
+        return try {
+            val response = profileRemoteDataSource.updateProfile(updateProfileItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to update profile: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error update profile: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun postCode(postCodeItem: PostCodeItem): PostCodeResponseItem? {
+        return try {
+            val response = profileRemoteDataSource.postCode(postCodeItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to postCode: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error postCode: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun ukDivision(ukDivisionItem: UkDivisionItem): UkDivisionResponseItem? {
+        return try {
+            val response = profileRemoteDataSource.ukDivision(ukDivisionItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to ukDivision: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error ukDivision: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun county(countyItem: CountyItem): CountyResponseItem? {
+        return try {
+            val response = profileRemoteDataSource.county(countyItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to county: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error county: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun city(cityItem: CityItem): CityResponseItem? {
+        return try {
+            val response = profileRemoteDataSource.city(cityItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to city: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error city: ${exception.message}", exception)
             null
         }
     }

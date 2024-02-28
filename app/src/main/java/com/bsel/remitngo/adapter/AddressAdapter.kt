@@ -6,15 +6,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeData
 import com.bsel.remitngo.databinding.ItemAddressBinding
 import com.bsel.remitngo.model.AddressItem
 
 class AddressAdapter(
-    private val selectedItem: (AddressItem) -> Unit
+    private val selectedItem: (PostCodeData) -> Unit
 ) : RecyclerView.Adapter<AddressViewHolder>() {
 
-    private val addressItemList = ArrayList<AddressItem>()
-    private var filteredAddressItemList = ArrayList<AddressItem>()
+    private val addressItemList = ArrayList<PostCodeData>()
+    private var filteredAddressItemList = ArrayList<PostCodeData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +35,7 @@ class AddressAdapter(
         holder.bind(filteredAddressItemList[position], selectedItem)
     }
 
-    fun setList(addressItem: List<AddressItem>) {
+    fun setList(addressItem: List<PostCodeData>) {
         addressItemList.clear()
         addressItemList.addAll(addressItem)
         filter("")
@@ -43,7 +44,7 @@ class AddressAdapter(
     fun filter(query: String) {
         filteredAddressItemList.clear()
         for (addressItem in addressItemList) {
-            if (addressItem.addressName!!.contains(query, ignoreCase = true)) {
+            if (addressItem.ukAddress!!.contains(query, ignoreCase = true)) {
                 filteredAddressItemList.add(addressItem)
             }
         }
@@ -55,10 +56,10 @@ class AddressAdapter(
 class AddressViewHolder(val binding: ItemAddressBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        addressItem: AddressItem,
-        selectedItem: (AddressItem) -> Unit
+        addressItem: PostCodeData,
+        selectedItem: (PostCodeData) -> Unit
     ) {
-        binding.addressName.text = addressItem.addressName
+        binding.addressName.text = addressItem.ukAddress
         binding.itemAddressLayout.setOnClickListener {
             selectedItem(addressItem)
         }

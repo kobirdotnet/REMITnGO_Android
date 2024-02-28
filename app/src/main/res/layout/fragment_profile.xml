@@ -210,7 +210,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="Prime Minister &amp; First Lord Of The Treasury, 10 Downing Street, London SW1A 2AA, UK"
                     android:textColor="@color/text_color" />
             </LinearLayout>
 
@@ -278,7 +277,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="bracsaajanmac@gmail.com"
                     android:textColor="@color/text_color" />
             </LinearLayout>
 
@@ -341,7 +339,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="+44 7893 932428"
                     android:textColor="@color/text_color" />
             </LinearLayout>
 

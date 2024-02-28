@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeData
 import com.bsel.remitngo.databinding.ItemAnnualIncomeBinding
-import com.bsel.remitngo.model.AnnualIncome
 
 class AnnualIncomeAdapter(
-    private val selectedItem: (AnnualIncome) -> Unit
+    private val selectedItem: (AnnualIncomeData) -> Unit
 ) : RecyclerView.Adapter<AnnualIncomeViewHolder>() {
 
-    private val annualIncomeList = ArrayList<AnnualIncome>()
-    private var filteredAnnualIncomeList = ArrayList<AnnualIncome>()
+    private val annualIncomeList = ArrayList<AnnualIncomeData>()
+    private var filteredAnnualIncomeList = ArrayList<AnnualIncomeData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, view: Int): AnnualIncomeViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +34,7 @@ class AnnualIncomeAdapter(
         holder.bind(filteredAnnualIncomeList[position], selectedItem)
     }
 
-    fun setList(annualIncome: List<AnnualIncome>) {
+    fun setList(annualIncome: List<AnnualIncomeData>) {
         annualIncomeList.clear()
         annualIncomeList.addAll(annualIncome)
         filter("")
@@ -43,7 +43,7 @@ class AnnualIncomeAdapter(
     fun filter(query: String) {
         filteredAnnualIncomeList.clear()
         for (annualIncome in annualIncomeList) {
-            if (annualIncome.annualIncomeName!!.contains(query, ignoreCase = true)) {
+            if (annualIncome.name!!.contains(query, ignoreCase = true)) {
                 filteredAnnualIncomeList.add(annualIncome)
             }
         }
@@ -55,10 +55,10 @@ class AnnualIncomeAdapter(
 class AnnualIncomeViewHolder(val binding: ItemAnnualIncomeBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        annualIncome: AnnualIncome,
-        selectedItem: (AnnualIncome) -> Unit
+        annualIncome: AnnualIncomeData,
+        selectedItem: (AnnualIncomeData) -> Unit
     ) {
-        binding.annualIncome.text = annualIncome.annualIncomeName
+        binding.annualIncome.text = annualIncome.name
         binding.itemAnnualIncomeLayout.setOnClickListener {
             selectedItem(annualIncome)
         }

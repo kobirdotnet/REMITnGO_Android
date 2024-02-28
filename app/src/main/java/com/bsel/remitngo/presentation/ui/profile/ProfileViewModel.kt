@@ -8,14 +8,24 @@ import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeResponseItem
+import com.bsel.remitngo.data.model.profile.city.CityItem
+import com.bsel.remitngo.data.model.profile.city.CityResponseItem
+import com.bsel.remitngo.data.model.profile.county.CountyItem
+import com.bsel.remitngo.data.model.profile.county.CountyResponseItem
 import com.bsel.remitngo.data.model.profile.nationality.NationalityItem
 import com.bsel.remitngo.data.model.profile.nationality.NationalityResponseItem
 import com.bsel.remitngo.data.model.profile.occupation.OccupationItem
 import com.bsel.remitngo.data.model.profile.occupation.OccupationResponseItem
 import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeItem
 import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeResponseItem
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeItem
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeResponseItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
+import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
+import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionResponseItem
+import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
+import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileResponseItem
 import com.bsel.remitngo.domain.useCase.ProfileUseCase
 import kotlinx.coroutines.launch
 
@@ -28,6 +38,56 @@ class ProfileViewModel(private val profileUseCase: ProfileUseCase) : ViewModel()
         viewModelScope.launch {
             val result = profileUseCase.execute(profileItem)
             _profileResult.value = result
+        }
+    }
+
+    private val _updateProfileResult = MutableLiveData<UpdateProfileResponseItem?>()
+    val updateProfileResult: LiveData<UpdateProfileResponseItem?> = _updateProfileResult
+
+    fun updateProfile(updateProfileItem: UpdateProfileItem) {
+        viewModelScope.launch {
+            val result = profileUseCase.execute(updateProfileItem)
+            _updateProfileResult.value = result
+        }
+    }
+
+    private val _postCodeResult = MutableLiveData<PostCodeResponseItem?>()
+    val postCodeResult: LiveData<PostCodeResponseItem?> = _postCodeResult
+
+    fun postCode(postCodeItem: PostCodeItem) {
+        viewModelScope.launch {
+            val result = profileUseCase.execute(postCodeItem)
+            _postCodeResult.value = result
+        }
+    }
+
+    private val _ukDivisionResult = MutableLiveData<UkDivisionResponseItem?>()
+    val ukDivisionResult: LiveData<UkDivisionResponseItem?> = _ukDivisionResult
+
+    fun ukDivision(ukDivisionItem: UkDivisionItem) {
+        viewModelScope.launch {
+            val result = profileUseCase.execute(ukDivisionItem)
+            _ukDivisionResult.value = result
+        }
+    }
+
+    private val _countyResult = MutableLiveData<CountyResponseItem?>()
+    val countyResult: LiveData<CountyResponseItem?> = _countyResult
+
+    fun county(countyItem: CountyItem) {
+        viewModelScope.launch {
+            val result = profileUseCase.execute(countyItem)
+            _countyResult.value = result
+        }
+    }
+
+    private val _cityResult = MutableLiveData<CityResponseItem?>()
+    val cityResult: LiveData<CityResponseItem?> = _cityResult
+
+    fun city(cityItem: CityItem) {
+        viewModelScope.launch {
+            val result = profileUseCase.execute(cityItem)
+            _cityResult.value = result
         }
     }
 

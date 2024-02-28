@@ -79,8 +79,6 @@ class BankBottomSheet : BottomSheetDialogFragment() {
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
-        observeBankResult()
-
         deviceId = getDeviceId(requireContext())
         dropdownId = 5
         countryId = 1
@@ -92,6 +90,7 @@ class BankBottomSheet : BottomSheetDialogFragment() {
             param2 = 0
         )
         bankViewModel.bank(bankItem)
+        observeBankResult()
 
         return bottomSheet
     }
@@ -121,7 +120,6 @@ class BankBottomSheet : BottomSheetDialogFragment() {
                         return true
                     }
                 })
-
             } else {
                 Log.i("info", "bank failed")
             }

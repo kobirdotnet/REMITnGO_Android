@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.profile.nationality.NationalityData
 import com.bsel.remitngo.databinding.ItemNationalityBinding
-import com.bsel.remitngo.model.Nationality
 
 class NationalityAdapter(
-    private val selectedItem: (Nationality) -> Unit
+    private val selectedItem: (NationalityData) -> Unit
 ) : RecyclerView.Adapter<NationalityViewHolder>() {
 
-    private val nationalityList = ArrayList<Nationality>()
-    private var filteredNationalityList = ArrayList<Nationality>()
+    private val nationalityList = ArrayList<NationalityData>()
+    private var filteredNationalityList = ArrayList<NationalityData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, view: Int): NationalityViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +34,7 @@ class NationalityAdapter(
         holder.bind(filteredNationalityList[position], selectedItem)
     }
 
-    fun setList(nationality: List<Nationality>) {
+    fun setList(nationality: List<NationalityData>) {
         nationalityList.clear()
         nationalityList.addAll(nationality)
         filter("")
@@ -43,7 +43,7 @@ class NationalityAdapter(
     fun filter(query: String) {
         filteredNationalityList.clear()
         for (nationality in nationalityList) {
-            if (nationality.nationalityName!!.contains(query, ignoreCase = true)) {
+            if (nationality.name!!.contains(query, ignoreCase = true)) {
                 filteredNationalityList.add(nationality)
             }
         }
@@ -55,10 +55,10 @@ class NationalityAdapter(
 class NationalityViewHolder(val binding: ItemNationalityBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        nationality: Nationality,
-        selectedItem: (Nationality) -> Unit
+        nationality: NationalityData,
+        selectedItem: (NationalityData) -> Unit
     ) {
-        binding.nationality.text = nationality.nationalityName
+        binding.nationality.text = nationality.name
         binding.itemNationalityLayout.setOnClickListener {
             selectedItem(nationality)
         }

@@ -31,14 +31,24 @@ import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeResponseItem
+import com.bsel.remitngo.data.model.profile.city.CityItem
+import com.bsel.remitngo.data.model.profile.city.CityResponseItem
+import com.bsel.remitngo.data.model.profile.county.CountyItem
+import com.bsel.remitngo.data.model.profile.county.CountyResponseItem
 import com.bsel.remitngo.data.model.profile.nationality.NationalityItem
 import com.bsel.remitngo.data.model.profile.nationality.NationalityResponseItem
 import com.bsel.remitngo.data.model.profile.occupation.OccupationItem
 import com.bsel.remitngo.data.model.profile.occupation.OccupationResponseItem
 import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeItem
 import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeResponseItem
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeItem
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeResponseItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
+import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
+import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionResponseItem
+import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
+import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileResponseItem
 import com.bsel.remitngo.data.model.reason.ReasonItem
 import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.registration.RegistrationItem
@@ -60,6 +70,21 @@ interface REMITnGoService {
 
     @POST("api/General/GetProfileInfo")
     suspend fun profile(@Body profileItem: ProfileItem): Response<ProfileResponseItem>
+
+    @POST("api/General/UpdateProfileInfo")
+    suspend fun updateProfile(@Body updateProfileItem: UpdateProfileItem): Response<UpdateProfileResponseItem>
+
+    @POST("api/General/GetUKAddressByPostCode")
+    suspend fun postCode(@Body postCodeItem: PostCodeItem): Response<PostCodeResponseItem>
+
+    @POST("api/General/Dropdown")
+    suspend fun ukDivision(@Body ukDivisionItem: UkDivisionItem): Response<UkDivisionResponseItem>
+
+    @POST("api/General/Dropdown")
+    suspend fun county(@Body countyItem: CountyItem): Response<CountyResponseItem>
+
+    @POST("api/General/Dropdown")
+    suspend fun city(@Body cityItem: CityItem): Response<CityResponseItem>
 
     @POST("api/Beneficiary/BenificiaryListWithBankDetails")
     suspend fun getBeneficiary(@Body getBeneficiaryItem: GetBeneficiaryItem): Response<GetBeneficiaryResponseItem>
@@ -108,6 +133,7 @@ interface REMITnGoService {
 
     @POST("api/General/LoadAnnualNetIncome")
     suspend fun annualIncome(@Body annualIncomeItem: AnnualIncomeItem): Response<AnnualIncomeResponseItem>
+
     @POST("api/General/LoadSourceOfIncome")
     suspend fun sourceOfIncome(@Body sourceOfIncomeItem: SourceOfIncomeItem): Response<SourceOfIncomeResponseItem>
 

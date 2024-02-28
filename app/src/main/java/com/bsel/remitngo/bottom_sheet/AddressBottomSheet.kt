@@ -1,24 +1,36 @@
 package com.bsel.remitngo.bottom_sheet
 
 import android.app.Dialog
+import android.content.Context
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.AddressAdapter
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeData
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeItem
 import com.bsel.remitngo.databinding.AddressLayoutBinding
 import com.bsel.remitngo.interfaceses.OnAddressItemSelectedListener
-import com.bsel.remitngo.model.AddressItem
+import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
+import com.bsel.remitngo.presentation.ui.profile.ProfileViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import javax.inject.Inject
 
 class AddressBottomSheet : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var profileViewModelFactory: ProfileViewModelFactory
+    private lateinit var profileViewModel: ProfileViewModel
 
     var itemSelectedListener: OnAddressItemSelectedListener? = null
 
@@ -27,6 +39,10 @@ class AddressBottomSheet : BottomSheetDialogFragment() {
     private lateinit var binding: AddressLayoutBinding
 
     private lateinit var addressAdapter: AddressAdapter
+
+    private lateinit var deviceId: String
+
+    private var selectedPostCode: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -56,47 +72,80 @@ class AddressBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
-        val addressItems = arrayOf(
-            AddressItem("England"),
-            AddressItem("British Isles"),
-            AddressItem("Channel Islands"),
-            AddressItem("Northern Ireland"),
-            AddressItem("Scotland"),
-            AddressItem("Wales")
-        )
+        (requireActivity().application as Injector).createProfileSubComponent().inject(this)
 
-        binding.addressRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        addressAdapter = AddressAdapter(
-            selectedItem = { selectedItem: AddressItem ->
-                addressItem(selectedItem)
-                binding.addressSearch.setQuery("", false)
-            }
-        )
-        binding.addressRecyclerView.adapter = addressAdapter
-        addressAdapter.setList(addressItems.asList())
-        addressAdapter.notifyDataSetChanged()
-
-        binding.addressSearch.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                addressAdapter.filter(newText.orEmpty())
-                return true
-            }
-        })
+        profileViewModel =
+            ViewModelProvider(this, profileViewModelFactory)[ProfileViewModel::class.java]
 
         binding.cancelButton.setOnClickListener { dismiss() }
+
+        deviceId = getDeviceId(requireContext())
+        val postCodeItem = PostCodeItem(
+            deviceId = deviceId,
+            params1 = 0,
+            params2 = selectedPostCode
+        )
+        profileViewModel.postCode(postCodeItem)
+        observePostCodeResult()
 
         return bottomSheet
     }
 
-    private fun addressItem(selectedItem: AddressItem) {
-        Log.i("info", "selectedItem: $selectedItem")
+    fun setSelectedPostCode(postcode: String) {
+        selectedPostCode = postcode
+    }
+
+    private fun observePostCodeResult() {
+        profileViewModel.postCodeResult.observe(this) { result ->
+            if (result!!.data != null) {
+                binding.addressRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                addressAdapter = AddressAdapter(
+                    selectedItem = { selectedItem: PostCodeData ->
+                        address(selectedItem)
+                        binding.addressSearch.setQuery("", false)
+                    }
+                )
+                binding.addressRecyclerView.adapter = addressAdapter
+                addressAdapter.setList(result.data as List<PostCodeData>)
+                addressAdapter.notifyDataSetChanged()
+
+                binding.addressSearch.setOnQueryTextListener(object :
+                    SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        addressAdapter.filter(newText.orEmpty())
+                        return true
+                    }
+                })
+            } else {
+                Log.i("info", "nationality failed")
+            }
+        }
+    }
+
+    private fun address(selectedItem: PostCodeData) {
         itemSelectedListener?.onAddressItemSelected(selectedItem)
         dismiss()
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
     }
 
     override fun onStart() {

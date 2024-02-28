@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeData
 import com.bsel.remitngo.databinding.ItemOccupationTypeBinding
-import com.bsel.remitngo.model.OccupationType
 
 class OccupationTypeAdapter(
-    private val selectedItem: (OccupationType) -> Unit
+    private val selectedItem: (OccupationTypeData) -> Unit
 ) : RecyclerView.Adapter<OccupationTypeViewHolder>() {
 
-    private val occupationTypeList = ArrayList<OccupationType>()
-    private var filteredOccupationTypeList = ArrayList<OccupationType>()
+    private val occupationTypeList = ArrayList<OccupationTypeData>()
+    private var filteredOccupationTypeList = ArrayList<OccupationTypeData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OccupationTypeViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +34,7 @@ class OccupationTypeAdapter(
         holder.bind(filteredOccupationTypeList[position], selectedItem)
     }
 
-    fun setList(occupationType: List<OccupationType>) {
+    fun setList(occupationType: List<OccupationTypeData>) {
         occupationTypeList.clear()
         occupationTypeList.addAll(occupationType)
         filter("")
@@ -43,7 +43,7 @@ class OccupationTypeAdapter(
     fun filter(query: String) {
         filteredOccupationTypeList.clear()
         for (occupationType in occupationTypeList) {
-            if (occupationType.occupationTypeName!!.contains(query, ignoreCase = true)) {
+            if (occupationType.name!!.contains(query, ignoreCase = true)) {
                 filteredOccupationTypeList.add(occupationType)
             }
         }
@@ -55,10 +55,10 @@ class OccupationTypeAdapter(
 class OccupationTypeViewHolder(val binding: ItemOccupationTypeBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        occupationType: OccupationType,
-        selectedItem: (OccupationType) -> Unit
+        occupationType: OccupationTypeData,
+        selectedItem: (OccupationTypeData) -> Unit
     ) {
-        binding.occupationType.text = occupationType.occupationTypeName
+        binding.occupationType.text = occupationType.name
         binding.itemOccupationTypeLayout.setOnClickListener {
             selectedItem(occupationType)
         }

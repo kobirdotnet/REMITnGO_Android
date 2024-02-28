@@ -40,8 +40,6 @@ class ProfileFragment : Fragment() {
 
     private lateinit var preferenceManager: PreferenceManager
 
-    private var sourceOfIncomeList = ArrayList<SourceOfIncomeData>()
-
     var ipAddress: String? = null
     private lateinit var deviceId: String
     private lateinit var personId: String
@@ -49,12 +47,27 @@ class ProfileFragment : Fragment() {
     private lateinit var firstName: String
     private lateinit var lastName: String
 
-    private lateinit var gender: String
+    private lateinit var genderId: String
     private lateinit var dateOfBirth: String
 
+    private lateinit var occupationTypeId: String
+    private lateinit var occupationType: String
+
+    private lateinit var occupationId: String
     private lateinit var occupation: String
+
+    private lateinit var sourceOfIncomeId: String
+    private lateinit var sourceOfIncome: String
+
+    private lateinit var annualIncomeId: String
     private lateinit var annualIncome: String
+
+    private lateinit var nationalityId: String
     private lateinit var nationality: String
+
+    private lateinit var address: String
+    private lateinit var email: String
+    private lateinit var mobile: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,48 +92,6 @@ class ProfileFragment : Fragment() {
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        binding.personalInformation.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_nav_my_profile_to_nav_personal_information
-            )
-        }
-
-        binding.address.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_nav_my_profile_to_nav_search_address
-            )
-        }
-
-        binding.accountInformation.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_nav_my_profile_to_nav_email
-            )
-        }
-
-        binding.changePassword.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_nav_my_profile_to_nav_change_password
-            )
-        }
-
-        binding.mobileNumber.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_nav_my_profile_to_nav_mobile_number
-            )
-        }
-
-        val sourceOfIncomeItem = SourceOfIncomeItem(
-            deviceId = deviceId
-        )
-        profileViewModel.sourceOfIncome(sourceOfIncomeItem)
-        observeSourceOfIncomeResult()
-
-        val annualIncomeItem = AnnualIncomeItem(
-            deviceId = deviceId
-        )
-        profileViewModel.annualIncome(annualIncomeItem)
-        observeAnnualIncomeResult()
-
         val occupationTypeItem = OccupationTypeItem(
             deviceId = deviceId,
             dropdownId = 106,
@@ -139,6 +110,18 @@ class ProfileFragment : Fragment() {
         profileViewModel.occupation(occupationItem)
         observeOccupationResult()
 
+        val sourceOfIncomeItem = SourceOfIncomeItem(
+            deviceId = deviceId
+        )
+        profileViewModel.sourceOfIncome(sourceOfIncomeItem)
+        observeSourceOfIncomeResult()
+
+        val annualIncomeItem = AnnualIncomeItem(
+            deviceId = deviceId
+        )
+        profileViewModel.annualIncome(annualIncomeItem)
+        observeAnnualIncomeResult()
+
         val nationalityItem = NationalityItem(
             deviceId = deviceId,
             dropdownId = 122,
@@ -155,42 +138,61 @@ class ProfileFragment : Fragment() {
         profileViewModel.profile(profileItem)
         observeProfileResult()
 
-    }
+        binding.personalInformation.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("firstName", firstName)
+                putString("lastName", lastName)
 
-    private fun observeAnnualIncomeResult() {
-        profileViewModel.annualIncomeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                Log.i("info", "annualIncome successful: $result")
-                for (annualIncomeData in result.data!!) {
-                    Log.i("info", "annualIncomeData: $annualIncomeData")
-                    if (annualIncome == annualIncomeData!!.id.toString()) {
-                        binding.annualIncome.text = annualIncomeData!!.name.toString()
-                    }
-                }
-            } else {
-                Log.i("info", "annualIncome failed")
+                putString("genderId", genderId)
+                putString("dateOfBirth", binding.dob.text.toString())
+
+                putString("occupationTypeId", occupationTypeId)
+                putString("occupationId", occupationId)
+                putString("sourceOfIncomeId", sourceOfIncomeId)
+
+                putString("annualIncomeId", annualIncomeId)
+
+                putString("nationalityId", nationalityId)
             }
+            findNavController().navigate(
+                R.id.action_nav_my_profile_to_nav_personal_information,
+                bundle
+            )
         }
-    }
-    private fun observeSourceOfIncomeResult() {
-        profileViewModel.sourceOfIncomeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                Log.i("info", "sourceOfIncome successful: $result")
-                for (sourceOfIncomeData in result.data!!) {
-                    Log.i("info", "sourceOfIncomeData: $sourceOfIncomeData")
-                }
-            } else {
-                Log.i("info", "sourceOfIncome failed")
-            }
+
+        binding.address.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_nav_my_profile_to_nav_save_address
+            )
         }
+
+        binding.accountInformation.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_nav_my_profile_to_nav_email
+            )
+        }
+
+        binding.mobileNumber.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_nav_my_profile_to_nav_mobile_number
+            )
+        }
+
+        binding.changePassword.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_nav_my_profile_to_nav_change_password
+            )
+        }
+
     }
 
     private fun observeOccupationTypeResult() {
         profileViewModel.occupationTypeResult.observe(this) { result ->
             if (result!!.data != null) {
-                Log.i("info", "occupationType successful: $result")
                 for (occupationTypeData in result.data!!) {
-                    Log.i("info", "occupationTypeData: $occupationTypeData")
+                    if (::occupationTypeId.isInitialized && occupationTypeId == occupationTypeData!!.id.toString()) {
+                        occupationType = occupationTypeData!!.name.toString()
+                    }
                 }
             } else {
                 Log.i("info", "occupationType failed")
@@ -201,12 +203,10 @@ class ProfileFragment : Fragment() {
     private fun observeOccupationResult() {
         profileViewModel.occupationResult.observe(this) { result ->
             if (result!!.data != null) {
-                Log.i("info", "occupation successful: $result")
                 for (occupationData in result.data!!) {
-                    Log.i("info", "occupationData: $occupationData")
-
-                    if (occupation == occupationData!!.id.toString()) {
-                        binding.occupation.text = occupationData!!.name.toString()
+                    if (::occupationId.isInitialized && occupationId == occupationData!!.id.toString()) {
+                        occupation = occupationData!!.name.toString()
+                        binding.occupation.text = "$occupation"
                     }
                 }
             } else {
@@ -214,15 +214,43 @@ class ProfileFragment : Fragment() {
             }
         }
     }
+
+    private fun observeSourceOfIncomeResult() {
+        profileViewModel.sourceOfIncomeResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (sourceOfIncomeData in result.data!!) {
+                    if (::sourceOfIncomeId.isInitialized && sourceOfIncomeId == sourceOfIncomeData!!.id.toString()) {
+                        sourceOfIncome = sourceOfIncomeData!!.name.toString()
+                    }
+                }
+            } else {
+                Log.i("info", "sourceOfIncome failed")
+            }
+        }
+    }
+
+    private fun observeAnnualIncomeResult() {
+        profileViewModel.annualIncomeResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (annualIncomeData in result.data!!) {
+                    if (::annualIncomeId.isInitialized && annualIncomeId == annualIncomeData!!.id.toString()) {
+                        annualIncome = annualIncomeData!!.name.toString()
+                        binding.annualIncome.text = "$annualIncome"
+                    }
+                }
+            } else {
+                Log.i("info", "annualIncome failed")
+            }
+        }
+    }
+
     private fun observeNationalityResult() {
         profileViewModel.nationalityResult.observe(this) { result ->
             if (result!!.data != null) {
-                Log.i("info", "nationality successful: $result")
                 for (nationalityData in result.data!!) {
-                    Log.i("info", "nationalityData: $nationalityData")
-
-                    if (nationality == nationalityData!!.id.toString()) {
-                        binding.nationality.text = nationalityData!!.name.toString()
+                    if (::nationalityId.isInitialized && nationalityId == nationalityData!!.id.toString()) {
+                        nationality = nationalityData!!.name.toString()
+                        binding.nationality.text = "$nationality"
                     }
                 }
             } else {
@@ -235,16 +263,15 @@ class ProfileFragment : Fragment() {
     private fun observeProfileResult() {
         profileViewModel.profileResult.observe(this) { result ->
             if (result!!.data != null) {
-                Log.i("info", "profile successful: $result")
                 for (data in result.data!!) {
                     firstName = data!!.firstName.toString()
                     lastName = data!!.lastName.toString()
                     binding.name.text = "$firstName $lastName"
 
-                    gender = data!!.gender.toString()
-                    if (gender == "1") {
+                    genderId = data!!.gender.toString()
+                    if (genderId == "1") {
                         binding.gender.text = "Male"
-                    } else if (gender == "2") {
+                    } else if (genderId == "2") {
                         binding.gender.text = "Female"
                     }
 
@@ -255,11 +282,24 @@ class ProfileFragment : Fragment() {
                     val dob = date.format(DateTimeFormatter.ISO_DATE)
                     binding.dob.text = "$dob"
 
-                    occupation = data!!.occupationCode.toString()
+                    occupationTypeId = data!!.occupationTypeId.toString()
 
-                    annualIncome = data!!.annualNetIncomeId.toString()
+                    occupationId = data!!.occupationCode.toString()
 
-                    nationality = data!!.nationality.toString()
+                    sourceOfIncomeId = data!!.sourceOfIncomeId.toString()
+
+                    annualIncomeId = data!!.annualNetIncomeId.toString()
+
+                    nationalityId = data!!.nationality.toString()
+
+                    address = data!!.address.toString()
+                    binding.userAddress.text = "$address"
+
+                    email = data!!.email.toString()
+                    binding.emailAddress.text = "$email"
+
+                    mobile = data!!.mobile.toString()
+                    binding.phoneNumber.text = "$mobile"
                 }
             } else {
                 Log.i("info", "profile failed")

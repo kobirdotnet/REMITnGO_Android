@@ -259,7 +259,6 @@ class PaymentFragment : Fragment() {
             billingAddress,
 //            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
             "https://emptest.remitngo.com/EmerchantNotification/EmerchantNotification",
-//            "https://rnguat.bracsaajanexchange.com/api/Payment/EmerchantNotification",
             transactionTypes
         )
 

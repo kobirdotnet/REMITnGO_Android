@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
 import com.bsel.remitngo.databinding.ItemSourceOfIncomeBinding
-import com.bsel.remitngo.model.SourceOfIncome
 
 class SourceOfIncomeAdapter(
-    private val selectedItem: (SourceOfIncome) -> Unit
+    private val selectedItem: (SourceOfIncomeData) -> Unit
 ) : RecyclerView.Adapter<SourceOfIncomeViewHolder>() {
 
-    private val sourceOfIncomeList = ArrayList<SourceOfIncome>()
-    private var filteredSourceOfIncomeList = ArrayList<SourceOfIncome>()
+    private val sourceOfIncomeList = ArrayList<SourceOfIncomeData>()
+    private var filteredSourceOfIncomeList = ArrayList<SourceOfIncomeData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, view: Int): SourceOfIncomeViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +34,7 @@ class SourceOfIncomeAdapter(
         holder.bind(filteredSourceOfIncomeList[position], selectedItem)
     }
 
-    fun setList(sourceOfIncome: List<SourceOfIncome>) {
+    fun setList(sourceOfIncome: List<SourceOfIncomeData>) {
         sourceOfIncomeList.clear()
         sourceOfIncomeList.addAll(sourceOfIncome)
         filter("")
@@ -43,7 +43,7 @@ class SourceOfIncomeAdapter(
     fun filter(query: String) {
         filteredSourceOfIncomeList.clear()
         for (sourceOfIncome in sourceOfIncomeList) {
-            if (sourceOfIncome.sourceOfIncomeName!!.contains(query, ignoreCase = true)) {
+            if (sourceOfIncome.name!!.contains(query, ignoreCase = true)) {
                 filteredSourceOfIncomeList.add(sourceOfIncome)
             }
         }
@@ -55,10 +55,10 @@ class SourceOfIncomeAdapter(
 class SourceOfIncomeViewHolder(val binding: ItemSourceOfIncomeBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        sourceOfIncome: SourceOfIncome,
-        selectedItem: (SourceOfIncome) -> Unit
+        sourceOfIncome: SourceOfIncomeData,
+        selectedItem: (SourceOfIncomeData) -> Unit
     ) {
-        binding.sourceOfIncome.text = sourceOfIncome.sourceOfIncomeName
+        binding.sourceOfIncome.text = sourceOfIncome.name
         binding.itemSourceOfIncomeLayout.setOnClickListener {
             selectedItem(sourceOfIncome)
         }

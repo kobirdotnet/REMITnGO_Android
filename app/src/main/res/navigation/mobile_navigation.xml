@@ -96,9 +96,6 @@
             android:id="@+id/action_nav_my_profile_to_nav_personal_information"
             app:destination="@id/nav_personal_information" />
         <action
-            android:id="@+id/action_nav_my_profile_to_nav_search_address"
-            app:destination="@id/nav_search_address" />
-        <action
             android:id="@+id/action_nav_my_profile_to_nav_email"
             app:destination="@id/nav_email" />
         <action
@@ -107,6 +104,9 @@
         <action
             android:id="@+id/action_nav_my_profile_to_nav_mobile_number"
             app:destination="@id/nav_mobile_number" />
+        <action
+            android:id="@+id/action_nav_my_profile_to_nav_save_address"
+            app:destination="@id/nav_save_address" />
     </fragment>
     <fragment
         android:id="@+id/nav_settings"
@@ -125,18 +125,9 @@
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/nav_personal_information"
-        android:name="com.bsel.remitngo.ui.profile.personal_information.PersonalInformationFragment"
+        android:name="com.bsel.remitngo.presentation.ui.profile.personal_information.PersonalInformationFragment"
         android:label="@string/menu_personal_information"
         tools:layout="@layout/fragment_personal_information" />
-    <fragment
-        android:id="@+id/nav_search_address"
-        android:name="com.bsel.remitngo.ui.profile.address.SearchAddressFragment"
-        android:label="@string/menu_address"
-        tools:layout="@layout/fragment_search_address">
-        <action
-            android:id="@+id/action_nav_search_address_to_nav_save_address"
-            app:destination="@id/nav_save_address" />
-    </fragment>
     <fragment
         android:id="@+id/nav_email"
         android:name="com.bsel.remitngo.ui.profile.email.EmailFragment"
@@ -154,7 +145,7 @@
         tools:layout="@layout/fragment_mobile_number" />
     <fragment
         android:id="@+id/nav_save_address"
-        android:name="com.bsel.remitngo.ui.profile.address.SaveAddressFragment"
+        android:name="com.bsel.remitngo.presentation.ui.profile.address.SaveAddressFragment"
         android:label="@string/menu_address"
         tools:layout="@layout/fragment_save_address" />
     <fragment
