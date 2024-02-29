@@ -16,14 +16,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
+import com.bsel.remitngo.data.model.profile.city.CityItem
+import com.bsel.remitngo.data.model.profile.county.CountyItem
 import com.bsel.remitngo.data.model.profile.nationality.NationalityItem
 import com.bsel.remitngo.data.model.profile.occupation.OccupationItem
 import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeItem
-import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
+import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
 import com.bsel.remitngo.databinding.FragmentProfileBinding
 import com.bsel.remitngo.presentation.di.Injector
 import java.time.LocalDateTime
@@ -65,8 +66,21 @@ class ProfileFragment : Fragment() {
     private lateinit var nationalityId: String
     private lateinit var nationality: String
 
+    private lateinit var postCode: String
     private lateinit var address: String
+
+    private lateinit var ukDivisionId: String
+    private lateinit var ukDivision: String
+
+    private lateinit var countyId: String
+    private lateinit var county: String
+
+    private lateinit var cityId: String
+    private lateinit var city: String
+
     private lateinit var email: String
+
+    private var isMobileOTPValidate: Boolean = true
     private lateinit var mobile: String
 
     override fun onCreateView(
@@ -131,6 +145,37 @@ class ProfileFragment : Fragment() {
         profileViewModel.nationality(nationalityItem)
         observeNationalityResult()
 
+        val ukDivisionItem = UkDivisionItem(
+            deviceId = deviceId,
+            dropdownId = 2,
+            param1 = 4,
+            param2 = 0
+        )
+        profileViewModel.ukDivision(ukDivisionItem)
+        observeUkDivisionResult()
+
+        if (::ukDivisionId.isInitialized) {
+            val countyItem = CountyItem(
+                deviceId = deviceId,
+                dropdownId = 3,
+                param1 = ukDivisionId!!.toInt(),
+                param2 = 0
+            )
+            profileViewModel.county(countyItem)
+            observeCountyResult()
+        }
+
+        if (::countyId.isInitialized) {
+            val cityItem = CityItem(
+                deviceId = deviceId,
+                dropdownId = 4,
+                param1 = countyId!!.toInt(),
+                param2 = 0
+            )
+            profileViewModel.city(cityItem)
+            observeCityResult()
+        }
+
         val profileItem = ProfileItem(
             deviceId = deviceId,
             personId = personId.toInt()
@@ -161,20 +206,16 @@ class ProfileFragment : Fragment() {
         }
 
         binding.address.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("postCode", postCode)
+                putString("address", address)
+                putString("ukDivisionId", ukDivisionId)
+                putString("countyId", countyId)
+                putString("cityId", cityId)
+            }
             findNavController().navigate(
-                R.id.action_nav_my_profile_to_nav_save_address
-            )
-        }
-
-        binding.accountInformation.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_nav_my_profile_to_nav_email
-            )
-        }
-
-        binding.mobileNumber.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_nav_my_profile_to_nav_mobile_number
+                R.id.action_nav_my_profile_to_nav_save_address,
+                bundle
             )
         }
 
@@ -259,6 +300,48 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun observeUkDivisionResult() {
+        profileViewModel.ukDivisionResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (ukDivisionData in result.data!!) {
+                    if (::ukDivisionId.isInitialized && ukDivisionId == ukDivisionData!!.id.toString()) {
+                        ukDivision = ukDivisionData!!.name.toString()
+                    }
+                }
+            } else {
+                Log.i("info", "division failed")
+            }
+        }
+    }
+
+    private fun observeCountyResult() {
+        profileViewModel.countyResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (countyData in result.data!!) {
+                    if (::countyId.isInitialized && countyId == countyData!!.id.toString()) {
+                        county = countyData!!.name.toString()
+                    }
+                }
+            } else {
+                Log.i("info", "division failed")
+            }
+        }
+    }
+
+    private fun observeCityResult() {
+        profileViewModel.cityResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (cityData in result.data!!) {
+                    if (::cityId.isInitialized && cityId == cityData!!.id.toString()) {
+                        city = cityData!!.name.toString()
+                    }
+                }
+            } else {
+                Log.i("info", "division failed")
+            }
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeProfileResult() {
         profileViewModel.profileResult.observe(this) { result ->
@@ -292,14 +375,37 @@ class ProfileFragment : Fragment() {
 
                     nationalityId = data!!.nationality.toString()
 
+                    postCode = data!!.postCode.toString()
+
                     address = data!!.address.toString()
                     binding.userAddress.text = "$address"
+
+                    ukDivisionId = data!!.divisionId.toString()
+
+                    countyId = data!!.districtId.toString()
+
+                    cityId = data!!.thanaId.toString()
 
                     email = data!!.email.toString()
                     binding.emailAddress.text = "$email"
 
+                    isMobileOTPValidate = data!!.isMobileOTPValidate!!
                     mobile = data!!.mobile.toString()
                     binding.phoneNumber.text = "$mobile"
+                    if (!isMobileOTPValidate) {
+                        binding.mobileEdit.visibility = View.VISIBLE
+                        binding.mobileNumber.setOnClickListener {
+                            val bundle = Bundle().apply {
+                                putString("mobile", mobile)
+                            }
+                            findNavController().navigate(
+                                R.id.action_nav_my_profile_to_nav_mobile_number,
+                                bundle
+                            )
+                        }
+                    } else {
+                        binding.mobileEdit.visibility = View.GONE
+                    }
                 }
             } else {
                 Log.i("info", "profile failed")
@@ -328,7 +434,6 @@ class ProfileFragment : Fragment() {
                 Settings.Secure.ANDROID_ID
             )
         }
-
         return deviceId
     }
 

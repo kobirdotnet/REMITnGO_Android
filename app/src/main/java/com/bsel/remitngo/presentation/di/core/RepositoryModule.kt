@@ -6,6 +6,8 @@ import com.bsel.remitngo.data.repository.beneficiary.BeneficiaryRepositoryImpl
 import com.bsel.remitngo.data.repository.beneficiary.dataSource.BeneficiaryRemoteDataSource
 import com.bsel.remitngo.data.repository.calculation.CalculationRepositoryImpl
 import com.bsel.remitngo.data.repository.calculation.dataSource.CalculationRemoteDataSource
+import com.bsel.remitngo.data.repository.document.DocumentRepositoryImpl
+import com.bsel.remitngo.data.repository.document.dataSource.DocumentRemoteDataSource
 import com.bsel.remitngo.data.repository.login.LoginRepositoryImpl
 import com.bsel.remitngo.data.repository.login.dataSource.LoginRemoteDataSource
 import com.bsel.remitngo.data.repository.payment.PaymentRepositoryImpl
@@ -59,6 +61,12 @@ class RepositoryModule {
     @Provides
     fun provideProfileRepository(profileRemoteDataSource: ProfileRemoteDataSource): ProfileRepository {
         return ProfileRepositoryImpl(profileRemoteDataSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDocumentRepository(documentRemoteDataSource: DocumentRemoteDataSource): DocumentRepository {
+        return DocumentRepositoryImpl(documentRemoteDataSource)
     }
 
 }

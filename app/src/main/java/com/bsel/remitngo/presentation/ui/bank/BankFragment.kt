@@ -85,15 +85,14 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBankBinding.bind(view)
 
-        preferenceManager = PreferenceManager(requireContext())
-
         (requireActivity().application as Injector).createBankSubComponent().inject(this)
-
-        deviceId = getDeviceId(requireContext())
-        ipAddress = getIPAddress(requireContext())
 
         bankViewModel =
             ViewModelProvider(this, bankViewModelFactory)[BankViewModel::class.java]
+
+        preferenceManager = PreferenceManager(requireContext())
+        deviceId = getDeviceId(requireContext())
+        ipAddress = getIPAddress(requireContext())
 
         bankAccountNameFocusListener()
         bankNameFocusListener()

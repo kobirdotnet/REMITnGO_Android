@@ -122,7 +122,7 @@ class UkDivisionBottomSheet : BottomSheetDialogFragment() {
                     }
                 })
             } else {
-                Log.i("info", "nationality failed")
+                Log.i("info", "division failed")
             }
         }
     }

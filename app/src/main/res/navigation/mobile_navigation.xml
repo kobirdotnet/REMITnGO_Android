@@ -96,9 +96,6 @@
             android:id="@+id/action_nav_my_profile_to_nav_personal_information"
             app:destination="@id/nav_personal_information" />
         <action
-            android:id="@+id/action_nav_my_profile_to_nav_email"
-            app:destination="@id/nav_email" />
-        <action
             android:id="@+id/action_nav_my_profile_to_nav_change_password"
             app:destination="@id/nav_change_password" />
         <action
@@ -129,18 +126,13 @@
         android:label="@string/menu_personal_information"
         tools:layout="@layout/fragment_personal_information" />
     <fragment
-        android:id="@+id/nav_email"
-        android:name="com.bsel.remitngo.ui.profile.email.EmailFragment"
-        android:label="@string/menu_email"
-        tools:layout="@layout/fragment_email" />
-    <fragment
         android:id="@+id/nav_change_password"
         android:name="com.bsel.remitngo.ui.profile.change_password.ChangePasswordFragment"
         android:label="@string/menu_change_password"
         tools:layout="@layout/fragment_change_password" />
     <fragment
         android:id="@+id/nav_mobile_number"
-        android:name="com.bsel.remitngo.ui.profile.mobile_number.MobileNumberFragment"
+        android:name="com.bsel.remitngo.presentation.ui.profile.mobile.MobileNumberFragment"
         android:label="@string/menu_mobile_number"
         tools:layout="@layout/fragment_mobile_number" />
     <fragment
@@ -150,18 +142,18 @@
         tools:layout="@layout/fragment_save_address" />
     <fragment
         android:id="@+id/nav_documents"
-        android:name="com.bsel.remitngo.ui.document.DocumentsFragment"
+        android:name="com.bsel.remitngo.presentation.ui.document.DocumentFragment"
         android:label="@string/menu_documents"
-        tools:layout="@layout/fragment_documents">
+        tools:layout="@layout/fragment_document">
         <action
             android:id="@+id/action_nav_documents_to_nav_upload_documents"
             app:destination="@id/nav_upload_documents" />
     </fragment>
     <fragment
         android:id="@+id/nav_upload_documents"
-        android:name="com.bsel.remitngo.ui.document.UploadDocumentsFragment"
+        android:name="com.bsel.remitngo.presentation.ui.document.UploadDocumentFragment"
         android:label="@string/menu_documents"
-        tools:layout="@layout/fragment_upload_documents" />
+        tools:layout="@layout/fragment_upload_document" />
     <fragment
         android:id="@+id/nav_transaction_history"
         android:name="com.bsel.remitngo.ui.transaction_history.TransactionHistoryFragment"

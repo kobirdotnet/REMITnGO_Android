@@ -22,9 +22,12 @@ import com.bsel.remitngo.bottom_sheet.CountyBottomSheet
 import com.bsel.remitngo.bottom_sheet.UkDivisionBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.profile.city.CityData
+import com.bsel.remitngo.data.model.profile.city.CityItem
 import com.bsel.remitngo.data.model.profile.county.CountyData
+import com.bsel.remitngo.data.model.profile.county.CountyItem
 import com.bsel.remitngo.data.model.profile.postCode.PostCodeData
 import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionData
+import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
 import com.bsel.remitngo.databinding.FragmentSaveAddressBinding
 import com.bsel.remitngo.interfaceses.OnAddressItemSelectedListener
@@ -53,9 +56,17 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
     private lateinit var deviceId: String
     private lateinit var personId: String
 
-    private lateinit var divisionId: String
+    private lateinit var postCode: String
+    private lateinit var address: String
+
+    private lateinit var ukDivisionId: String
+    private lateinit var ukDivision: String
+
     private lateinit var countyId: String
+    private lateinit var county: String
+
     private lateinit var cityId: String
+    private lateinit var city: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,12 +84,6 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         profileViewModel =
             ViewModelProvider(this, profileViewModelFactory)[ProfileViewModel::class.java]
 
-        preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
-
-        deviceId = getDeviceId(requireContext())
-        ipAddress = getIPAddress(requireContext())
-
         countryFocusListener()
         postCodeFocusListener()
         addressFocusListener()
@@ -86,21 +91,38 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         countyFocusListener()
         cityFocusListener()
 
+        preferenceManager = PreferenceManager(requireContext())
+        personId = preferenceManager.loadData("personId").toString()
+
+        deviceId = getDeviceId(requireContext())
+        ipAddress = getIPAddress(requireContext())
+
+        postCode = arguments?.getString("postCode").toString()
+        binding.postCode.setText(postCode)
+
+        address = arguments?.getString("address").toString()
+        binding.address.setText(address)
+
+        ukDivisionId = arguments?.getString("ukDivisionId").toString()
+        countyId = arguments?.getString("countyId").toString()
+        cityId = arguments?.getString("cityId").toString()
+
         binding.btnSearch.setOnClickListener { postCodeForm() }
+
         binding.division.setOnClickListener {
             ukDivisionBottomSheet.setSelectedUkDivision("4")
             ukDivisionBottomSheet.itemSelectedListener = this
             ukDivisionBottomSheet.show(childFragmentManager, ukDivisionBottomSheet.tag)
         }
         binding.county.setOnClickListener {
-            if (::divisionId.isInitialized){
-                countyBottomSheet.setSelectedCounty(divisionId)
+            if (::ukDivisionId.isInitialized) {
+                countyBottomSheet.setSelectedCounty(ukDivisionId)
                 countyBottomSheet.itemSelectedListener = this
                 countyBottomSheet.show(childFragmentManager, countyBottomSheet.tag)
             }
         }
         binding.city.setOnClickListener {
-            if (::countyId.isInitialized){
+            if (::countyId.isInitialized) {
                 cityBottomSheet.setSelectedCity(countyId)
                 cityBottomSheet.itemSelectedListener = this
                 cityBottomSheet.show(childFragmentManager, cityBottomSheet.tag)
@@ -109,8 +131,84 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
 
         binding.btnSave.setOnClickListener { addressForm() }
 
+        val ukDivisionItem = UkDivisionItem(
+            deviceId = deviceId,
+            dropdownId = 2,
+            param1 = 4,
+            param2 = 0
+        )
+        profileViewModel.ukDivision(ukDivisionItem)
+        observeUkDivisionResult()
+
+        if (::ukDivisionId.isInitialized) {
+            val countyItem = CountyItem(
+                deviceId = deviceId,
+                dropdownId = 3,
+                param1 = ukDivisionId!!.toInt(),
+                param2 = 0
+            )
+            profileViewModel.county(countyItem)
+            observeCountyResult()
+        }
+
+        if (::countyId.isInitialized) {
+            val cityItem = CityItem(
+                deviceId = deviceId,
+                dropdownId = 4,
+                param1 = countyId!!.toInt(),
+                param2 = 0
+            )
+            profileViewModel.city(cityItem)
+            observeCityResult()
+        }
+
         observeUpdateProfileResult()
 
+    }
+
+    private fun observeUkDivisionResult() {
+        profileViewModel.ukDivisionResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (ukDivisionData in result.data!!) {
+                    if (::ukDivisionId.isInitialized && ukDivisionId == ukDivisionData!!.id.toString()) {
+                        ukDivision = ukDivisionData!!.name.toString()
+                        binding.division.setText(ukDivision)
+                    }
+                }
+            } else {
+                Log.i("info", "division failed")
+            }
+        }
+    }
+
+    private fun observeCountyResult() {
+        profileViewModel.countyResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (countyData in result.data!!) {
+                    if (::countyId.isInitialized && countyId == countyData!!.id.toString()) {
+                        county = countyData!!.name.toString()
+                        binding.county.setText(county)
+                    }
+                }
+            } else {
+                Log.i("info", "division failed")
+            }
+        }
+    }
+
+    private fun observeCityResult() {
+        profileViewModel.cityResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (cityData in result.data!!) {
+                    if (::cityId.isInitialized && cityId == cityData!!.id.toString()) {
+                        city = cityData!!.name.toString()
+                        binding.city.setText(city)
+                    }
+                }
+            } else {
+                Log.i("info", "division failed")
+            }
+        }
     }
 
     private fun observeUpdateProfileResult() {
@@ -154,18 +252,18 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         val updateProfileItem = UpdateProfileItem(
             deviceId = deviceId,
             personId = personId.toInt(),
-            updateType = 3,
+            updateType = 2,
             firstname = "",
             lastname = "",
             mobile = "",
             email = "",
-            dob = "",
+            dob = "1999-03-02",
             gender = 0,
             nationality = 0,
             occupationTypeId = 0,
             occupationCode = 0,
             postcode = postCode,
-            divisionId = divisionId.toInt(),
+            divisionId = ukDivisionId.toInt(),
             districtId = countyId.toInt(),
             thanaId = cityId.toInt(),
             buildingno = "",
@@ -200,17 +298,17 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
 
     override fun onUkDivisionItemSelected(selectedItem: UkDivisionData) {
         binding.division.setText(selectedItem.name)
-        divisionId=selectedItem.id.toString()
+        ukDivisionId = selectedItem.id.toString()
     }
 
     override fun onCountyItemSelected(selectedItem: CountyData) {
         binding.county.setText(selectedItem.name)
-        countyId=selectedItem.id.toString()
+        countyId = selectedItem.id.toString()
     }
 
     override fun onCityItemSelected(selectedItem: CityData) {
         binding.city.setText(selectedItem.name)
-        cityId=selectedItem.id.toString()
+        cityId = selectedItem.id.toString()
     }
 
     //Form validation
@@ -309,6 +407,7 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         }
         return null
     }
+
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 

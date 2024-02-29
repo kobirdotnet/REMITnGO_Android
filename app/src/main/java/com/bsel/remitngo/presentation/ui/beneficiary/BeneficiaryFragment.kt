@@ -60,7 +60,9 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
+
     private lateinit var personId: String
+
     private lateinit var genderId: String
     private lateinit var gender: String
     private lateinit var relationId: String

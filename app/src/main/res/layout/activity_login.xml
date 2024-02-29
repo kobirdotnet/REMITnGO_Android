@@ -84,7 +84,7 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="textEmailAddress"
-                            android:lines="1"
+                            
                             android:textColor="@color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -121,7 +121,7 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="textPassword"
-                            android:lines="1"
+                            
                             android:maxLength="16"
                             android:textColor="@color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -146,7 +146,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="top"
                         android:inputType="none"
-                        android:lines="1"
+                        
                         android:text="Forgot password?"
                         android:textAllCaps="false"
                         android:textColor="@color/blue" />
@@ -172,7 +172,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:inputType="none"
-                        android:lines="1"
+                        
                         android:text="Login"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
@@ -188,7 +188,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:inputType="none"
-                        android:lines="1"
+                        
                         android:text="Registration"
                         android:textAllCaps="false"
                         android:textColor="@color/blue" />
@@ -228,7 +228,7 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
-                            android:lines="1"
+                            
                             android:text="Continue with google"
                             android:textAllCaps="false"
                             android:textColor="@color/blue" />

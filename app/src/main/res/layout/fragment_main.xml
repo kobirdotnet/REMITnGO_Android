@@ -458,7 +458,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
-                    android:lines="1"
+                    
                     android:text="Recipients get an extra 2.5% on their transfer!"
                     android:textColor="@color/text_color"
                     android:textSize="13sp" />
@@ -481,7 +481,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
-                    android:lines="1"
+                    
                     android:text="NEXT"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
@@ -626,7 +626,7 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
                             android:inputType="none"
-                            android:lines="1"
+                            
                             android:text="Learn more"
                             android:textColor="@color/blue" />
 

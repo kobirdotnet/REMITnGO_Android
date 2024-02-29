@@ -11,7 +11,7 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:scrollbars="none"
-        tools:context=".ui.profile.mobile_number.MobileNumberFragment">
+        tools:context=".presentation.ui.profile.mobile.MobileNumberFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +48,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="text"
-                        android:lines="1"
+
                         android:text="United Kingdom"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -87,7 +87,6 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="text"
-                        android:lines="1"
                         android:text="+44"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -114,8 +113,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="phone"
-                        android:lines="1"
-                        android:maxLength="11"
+                        android:maxLength="10"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -160,7 +158,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
-                    android:lines="1"
+
                     android:text="Save"
                     android:textAllCaps="false"
                     android:textColor="@color/white"

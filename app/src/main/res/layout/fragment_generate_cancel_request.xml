@@ -48,7 +48,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
-                        android:lines="1"
+                        
                         android:text="21000004519755B"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -83,7 +83,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
-                        android:lines="1"
+                        
                         android:text="28/09/2023 11:23 PM"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -118,7 +118,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
-                        android:lines="1"
+                        
                         android:text="Bank Deposit"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -153,7 +153,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
-                        android:lines="1"
+                        
                         android:text="JUBAYER AHMED"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -189,7 +189,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
-                        android:lines="1"
+                        
                         android:text="BDT 50408.50"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -227,7 +227,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
-                        android:lines="1"
+                        
                         android:textColor="@color/black" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -288,7 +288,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
-                    android:lines="1"
+                    
                     android:text="Submit"
                     android:textAllCaps="false"
                     android:textColor="@color/white"

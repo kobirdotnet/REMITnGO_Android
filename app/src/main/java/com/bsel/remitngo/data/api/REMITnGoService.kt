@@ -18,6 +18,10 @@ import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.data.model.district.DistrictResponseItem
 import com.bsel.remitngo.data.model.division.DivisionItem
 import com.bsel.remitngo.data.model.division.DivisionResponseItem
+import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryItem
+import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryResponseItem
+import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeItem
+import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeResponseItem
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.gender.GenderResponseItem
 import com.bsel.remitngo.data.model.login.LoginItem
@@ -145,6 +149,12 @@ interface REMITnGoService {
 
     @POST("api/General/Dropdown")
     suspend fun nationality(@Body nationalityItem: NationalityItem): Response<NationalityResponseItem>
+
+    @POST("api/General/Dropdown")
+    suspend fun documentCategory(@Body documentCategoryItem: DocumentCategoryItem): Response<DocumentCategoryResponseItem>
+
+    @POST("api/General/LoadDocumentTypeByCategoryId")
+    suspend fun documentType(@Body documentTypeItem: DocumentTypeItem): Response<DocumentTypeResponseItem>
 
 }
 

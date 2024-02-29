@@ -246,7 +246,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/accountInformation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -288,7 +287,8 @@
                 android:gravity="center"
                 android:paddingLeft="16dp"
                 android:text="Edit"
-                android:textColor="@color/blue" />
+                android:textColor="@color/blue"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -343,6 +343,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/mobileEdit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

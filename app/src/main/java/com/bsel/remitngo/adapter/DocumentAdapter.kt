@@ -1,50 +1,46 @@
 package com.bsel.remitngo.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.databinding.ItemDocumentBinding
-import com.bsel.remitngo.model.Document
+import com.bsel.remitngo.databinding.ItemDocumentsBinding
+import com.bsel.remitngo.model.DocumentsItem
 
 class DocumentAdapter(
-    private val selectedItem: (Document) -> Unit
-) : RecyclerView.Adapter<DocumentViewHolder>() {
+    private val selectedItem: (DocumentsItem) -> Unit
+) : RecyclerView.Adapter<DocumentsViewHolder>() {
 
-    private val documentList = ArrayList<Document>()
-    private var filteredDocumentList = ArrayList<Document>()
+    private val documentsList = ArrayList<DocumentsItem>()
+    private var filteredDocumentsList = ArrayList<DocumentsItem>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DocumentViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DocumentsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val binding: ItemDocumentBinding =
-            DataBindingUtil.inflate(layoutInflater, R.layout.item_document, parent, false)
-        return DocumentViewHolder(binding)
+        val binding: ItemDocumentsBinding =
+            DataBindingUtil.inflate(layoutInflater, R.layout.item_documents, parent, false)
+        return DocumentsViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        return filteredDocumentList.size
+        return filteredDocumentsList.size
     }
 
-    override fun onBindViewHolder(
-        holder: DocumentViewHolder,
-        @SuppressLint("RecyclerView") position: Int
-    ) {
-        holder.bind(filteredDocumentList[position], selectedItem)
+    override fun onBindViewHolder(holder: DocumentsViewHolder, position: Int) {
+        holder.bind(filteredDocumentsList[position], selectedItem)
     }
 
-    fun setList(document: List<Document>) {
-        documentList.clear()
-        documentList.addAll(document)
+    fun setList(documentsItem: List<DocumentsItem>) {
+        documentsList.clear()
+        documentsList.addAll(documentsItem)
         filter("")
     }
 
     fun filter(query: String) {
-        filteredDocumentList.clear()
-        for (document in documentList) {
-            if (document.documentName!!.contains(query, ignoreCase = true)) {
-                filteredDocumentList.add(document)
+        filteredDocumentsList.clear()
+        for (documents in documentsList) {
+            if (documents.documentsName!!.contains(query, ignoreCase = true)) {
+                filteredDocumentsList.add(documents)
             }
         }
         notifyDataSetChanged()
@@ -52,15 +48,16 @@ class DocumentAdapter(
 
 }
 
-class DocumentViewHolder(val binding: ItemDocumentBinding) :
+class DocumentsViewHolder(val binding: ItemDocumentsBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        document: Document,
-        selectedItem: (Document) -> Unit
+        documentsItem: DocumentsItem,
+        selectedItem: (DocumentsItem) -> Unit
     ) {
-        binding.documentName.text = document.documentName
-        binding.itemDocumentLayout.setOnClickListener {
-            selectedItem(document)
+        binding.documentsName.text = documentsItem.documentsName
+        binding.itemDocumentsLayout.setOnClickListener {
+            selectedItem(documentsItem)
         }
     }
+
 }

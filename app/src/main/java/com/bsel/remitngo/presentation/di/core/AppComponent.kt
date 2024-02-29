@@ -3,6 +3,7 @@ package com.bsel.remitngo.presentation.di.core
 import com.bsel.remitngo.presentation.di.bank.BankSubComponent
 import com.bsel.remitngo.presentation.di.beneficiary.BeneficiarySubComponent
 import com.bsel.remitngo.presentation.di.calculation.CalculationSubComponent
+import com.bsel.remitngo.presentation.di.document.DocumentSubComponent
 import com.bsel.remitngo.presentation.di.login.LoginSubComponent
 import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
@@ -28,4 +29,5 @@ interface AppComponent {
     fun calculationSubComponent(): CalculationSubComponent.Factory
     fun paymentSubComponent(): PaymentSubComponent.Factory
     fun profileSubComponent(): ProfileSubComponent.Factory
+    fun documentSubComponent(): DocumentSubComponent.Factory
 }

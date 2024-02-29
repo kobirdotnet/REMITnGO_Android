@@ -39,5 +39,9 @@ class UseCaseModule {
     fun provideProfileUseCase(profileRepository: ProfileRepository): ProfileUseCase {
         return ProfileUseCase(profileRepository)
     }
+    @Provides
+    fun provideDocumentUseCase(documentRepository: DocumentRepository): DocumentUseCase {
+        return DocumentUseCase(documentRepository)
+    }
 
 }
