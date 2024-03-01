@@ -135,11 +135,6 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
 
     }
 
-    private fun documentFile(selectedFileUri: Uri?) {
-        itemSelectedListener?.onDocumentFileItemSelected(selectedFileUri)
-        dismiss()
-    }
-
     private fun convertBitmapToContentUri(bitmap: Bitmap): Uri? {
         val imagesFolder = File(requireContext().cacheDir, "images")
         imagesFolder.mkdirs()
@@ -152,12 +147,17 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
         return try {
             FileProvider.getUriForFile(
                 requireContext(),
-                "com.example.remit_n_go.fileprovider",
+                "com.bsel.remitngo.fileprovider",
                 imageFile
             )
         } catch (e: IllegalArgumentException) {
             null
         }
+    }
+
+    private fun documentFile(selectedFileUri: Uri?) {
+        itemSelectedListener?.onDocumentFileItemSelected(selectedFileUri)
+        dismiss()
     }
 
     override fun onStart() {

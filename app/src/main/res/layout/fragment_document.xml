@@ -15,7 +15,7 @@
         tools:context=".presentation.ui.document.DocumentFragment">
 
         <SearchView
-            android:id="@+id/documentsSearch"
+            android:id="@+id/documentSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_search_view_background"
@@ -26,28 +26,28 @@
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/txtDocuments"
+            android:id="@+id/txtDocument"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_regular"
             android:padding="8dp"
-            android:text="Documents"
+            android:text="Document"
             android:textColor="@color/black" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toBottomOf="@id/txtDocuments">
+            app:layout_constraintTop_toBottomOf="@id/txtDocument">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/documentsRecyclerView"
+                android:id="@+id/documentRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/item_documents" />
+                tools:listitem="@layout/item_document" />
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/btnUploadDocuments"
+                android:id="@+id/btnUploadDocument"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -55,7 +55,7 @@
                 android:drawableLeft="@drawable/upload_document"
                 android:focusableInTouchMode="false"
                 android:fontFamily="@font/roboto_regular"
-                android:text="Upload Documents"
+                android:text="Upload Document"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 app:icon="@drawable/upload_document"

@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/item_documents_layout"
+        android:id="@+id/item_document_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -25,11 +25,11 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/documentsName"
+                android:id="@+id/documentName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Documents name"
+                android:text="Document name"
                 android:textColor="@color/black" />
 
             <TextView

@@ -1,6 +1,8 @@
 package com.bsel.remitngo.data.repository.document
 
 import android.util.Log
+import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
+import com.bsel.remitngo.data.model.document.getDocument.GetDocumentResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeItem
@@ -41,6 +43,23 @@ class DocumentRepositoryImpl(private val documentRemoteDataSource: DocumentRemot
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error documentType: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun getDocument(getDocumentItem: GetDocumentItem): GetDocumentResponseItem? {
+        return try {
+            val response = documentRemoteDataSource.getDocument(getDocumentItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to getDocument: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error getDocument: ${exception.message}", exception)
             null
         }
     }

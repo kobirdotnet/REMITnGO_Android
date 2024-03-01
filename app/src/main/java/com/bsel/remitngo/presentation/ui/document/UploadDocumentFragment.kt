@@ -100,35 +100,44 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
             val datePickerDialog = DatePickerDialog(
-                requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+                requireContext(),
+                { _, selectedYear, selectedMonth, selectedDay ->
                     val selectedDate = Calendar.getInstance()
                     selectedDate.set(selectedYear, selectedMonth, selectedDay)
                     if (!selectedDate.after(Calendar.getInstance())) {
                         val formattedDate =
-                            "%02d/%02d/%04d".format(selectedDay, selectedMonth + 1, selectedYear)
+                            "%04d-%02d-%02d".format(selectedYear, selectedMonth + 1, selectedDay)
                         binding.issueDate.setText(formattedDate)
                     }
-                }, year, month, day
+                },
+                year,
+                month,
+                day
             )
             datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
             datePickerDialog.show()
+
         }
 
-        binding.expireDate.setOnClickListener {
+        binding.expireDate.setOnClickListener  {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
             val datePickerDialog = DatePickerDialog(
-                requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+                requireContext(),
+                { _, selectedYear, selectedMonth, selectedDay ->
                     val selectedDate = Calendar.getInstance()
                     selectedDate.set(selectedYear, selectedMonth, selectedDay)
                     if (!selectedDate.before(Calendar.getInstance())) {
                         val formattedDate =
-                            "%02d/%02d/%04d".format(selectedDay, selectedMonth + 1, selectedYear)
+                            "%04d-%02d-%02d".format(selectedYear, selectedMonth + 1, selectedDay)
                         binding.expireDate.setText(formattedDate)
                     }
-                }, year, month, day
+                },
+                year,
+                month,
+                day
             )
             datePickerDialog.datePicker.minDate = System.currentTimeMillis()
             datePickerDialog.show()
@@ -286,21 +295,15 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         selectedFile = selectedItem
         Log.i("info", "selectedFile: $selectedFile")
         selectedFile?.let {
-            val file = getFileNameFromUri(it)
+            val file = generateFilename()
             binding.selectFile.text = file
+            Log.i("info", "file: $file")
         }
     }
 
-    @SuppressLint("Range")
-    private fun getFileNameFromUri(uri: Uri): String {
-        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val displayName = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                return displayName ?: "file"
-            }
-        }
-        return "file"
+    private fun generateFilename(): String {
+        val timestamp = System.currentTimeMillis()
+        return "$timestamp.jpg"
     }
 
 

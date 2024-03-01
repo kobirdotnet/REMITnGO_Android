@@ -18,6 +18,8 @@ import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.data.model.district.DistrictResponseItem
 import com.bsel.remitngo.data.model.division.DivisionItem
 import com.bsel.remitngo.data.model.division.DivisionResponseItem
+import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
+import com.bsel.remitngo.data.model.document.getDocument.GetDocumentResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeItem
@@ -155,6 +157,9 @@ interface REMITnGoService {
 
     @POST("api/General/LoadDocumentTypeByCategoryId")
     suspend fun documentType(@Body documentTypeItem: DocumentTypeItem): Response<DocumentTypeResponseItem>
+
+    @POST("api/General/PopulateCustomerDocumentList")
+    suspend fun getDocument(@Body getDocumentItem: GetDocumentItem): Response<GetDocumentResponseItem>
 
 }
 

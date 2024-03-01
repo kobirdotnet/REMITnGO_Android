@@ -160,23 +160,6 @@ class ChooseBankFragment : Fragment() {
         }
     }
 
-    private fun getDeviceId(context: Context): String {
-        val deviceId: String
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            deviceId =
-                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-        } else {
-            @Suppress("DEPRECATION")
-            deviceId = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
-        }
-
-        return deviceId
-    }
-
     private fun bankItem(selectedItem: GetBankData) {
         val bundle = Bundle().apply {
             putString("orderType", orderType)
@@ -207,6 +190,22 @@ class ChooseBankFragment : Fragment() {
             R.id.action_nav_choose_bank_to_nav_review,
             bundle
         )
+    }
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
     }
 
 }

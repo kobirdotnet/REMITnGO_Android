@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.DocumentAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.model.document.getDocument.GetDocumentData
+import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
 import com.bsel.remitngo.databinding.FragmentDocumentBinding
 import com.bsel.remitngo.model.DocumentsItem
 import com.bsel.remitngo.presentation.di.Injector
-import com.bsel.remitngo.presentation.ui.bank.BankViewModel
-import com.bsel.remitngo.presentation.ui.bank.BankViewModelFactory
 import java.util.*
 import javax.inject.Inject
 
@@ -35,9 +35,7 @@ class DocumentFragment : Fragment() {
 
     private lateinit var preferenceManager: PreferenceManager
 
-    private lateinit var documentsAdapter: DocumentAdapter
-
-    private lateinit var documentsItems: List<DocumentsItem>
+    private lateinit var documentAdapter: DocumentAdapter
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
@@ -66,85 +64,77 @@ class DocumentFragment : Fragment() {
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        binding.btnUploadDocuments.setOnClickListener {
+        binding.btnUploadDocument.setOnClickListener {
             findNavController().navigate(
                 R.id.action_nav_documents_to_nav_upload_documents
             )
         }
 
-        documentsItems = arrayOf(
-            DocumentsItem("Box"),
-            DocumentsItem("table"),
-            DocumentsItem("file"),
-            DocumentsItem("Box"),
-            DocumentsItem("table"),
-            DocumentsItem("file"),
-            DocumentsItem("Box"),
-            DocumentsItem("table"),
-            DocumentsItem("file"),
-            DocumentsItem("Box"),
-            DocumentsItem("table"),
-            DocumentsItem("file"),
-            DocumentsItem("Box"),
-            DocumentsItem("table"),
-            DocumentsItem("file"),
-            DocumentsItem("Box"),
-            DocumentsItem("table"),
-            DocumentsItem("file")
-        ).toList()
-
-        binding.documentsRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        documentsAdapter = DocumentAdapter(
-            selectedItem = { selectedItem: DocumentsItem ->
-                documentsItem(selectedItem)
-                binding.documentsSearch.setQuery("", false)
-            }
+        val getDocumentItem = GetDocumentItem(
+            deviceId = deviceId,
+            params1 = personId.toInt(),
+            params2 = 0
         )
-        binding.documentsRecyclerView.adapter = documentsAdapter
-        documentsAdapter.setList(documentsItems)
-        documentsAdapter.notifyDataSetChanged()
-
-        binding.documentsSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                documentsAdapter.filter(newText.orEmpty())
-                return true
-            }
-        })
-
-        binding.documentsRecyclerView.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int
-                ) {
-                    super.onScrolled(
-                        recyclerView,
-                        dx,
-                        dy
-                    )
-                    if (dy > 10 && binding.btnUploadDocuments.isExtended) {
-                        binding.btnUploadDocuments.shrink()
-                    }
-                    if (dy < -10 && !binding.btnUploadDocuments.isExtended) {
-                        binding.btnUploadDocuments.extend()
-                    }
-                    if (!recyclerView.canScrollVertically(
-                            -1
-                        )
-                    ) {
-                        binding.btnUploadDocuments.extend()
-                    }
-                }
-            })
-
+        documentViewModel.getDocument(getDocumentItem)
+        observeGetDocumentResult()
     }
 
-    private fun documentsItem(selectedItem: DocumentsItem) {
+    private fun observeGetDocumentResult() {
+        documentViewModel.getDocumentResult.observe(this) { result ->
+            if (result!!.data != null) {
+                binding.documentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                documentAdapter = DocumentAdapter(
+                    selectedItem = { selectedItem: GetDocumentData ->
+                        documentItem(selectedItem)
+                        binding.documentSearch.setQuery("", false)
+                    }
+                )
+                binding.documentRecyclerView.adapter = documentAdapter
+                documentAdapter.setList(result.data as List<GetDocumentData>)
+                documentAdapter.notifyDataSetChanged()
+                binding.documentSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        documentAdapter.filter(newText.orEmpty())
+                        return true
+                    }
+                })
+                binding.documentRecyclerView.addOnScrollListener(
+                    object : RecyclerView.OnScrollListener() {
+                        override fun onScrolled(
+                            recyclerView: RecyclerView,
+                            dx: Int,
+                            dy: Int
+                        ) {
+                            super.onScrolled(
+                                recyclerView,
+                                dx,
+                                dy
+                            )
+                            if (dy > 10 && binding.btnUploadDocument.isExtended) {
+                                binding.btnUploadDocument.shrink()
+                            }
+                            if (dy < -10 && !binding.btnUploadDocument.isExtended) {
+                                binding.btnUploadDocument.extend()
+                            }
+                            if (!recyclerView.canScrollVertically(
+                                    -1
+                                )
+                            ) {
+                                binding.btnUploadDocument.extend()
+                            }
+                        }
+                    })
+            } else {
+                Log.i("info", "get document failed")
+            }
+        }
+    }
+
+    private fun documentItem(selectedItem: GetDocumentData) {
         Log.i("info", "selectedItem: $selectedItem")
     }
 

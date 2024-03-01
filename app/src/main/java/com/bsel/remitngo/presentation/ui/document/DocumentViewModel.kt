@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
+import com.bsel.remitngo.data.model.document.getDocument.GetDocumentResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeItem
@@ -30,6 +32,16 @@ class DocumentViewModel(private val documentUseCase: DocumentUseCase) : ViewMode
         viewModelScope.launch {
             val result = documentUseCase.execute(documentTypeItem)
             _documentTypeResult.value = result
+        }
+    }
+
+    private val _getDocumentResult = MutableLiveData<GetDocumentResponseItem?>()
+    val getDocumentResult: LiveData<GetDocumentResponseItem?> = _getDocumentResult
+
+    fun getDocument(getDocumentItem: GetDocumentItem) {
+        viewModelScope.launch {
+            val result = documentUseCase.execute(getDocumentItem)
+            _getDocumentResult.value = result
         }
     }
 
