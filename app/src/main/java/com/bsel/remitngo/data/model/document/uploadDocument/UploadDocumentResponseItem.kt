@@ -1,13 +1,13 @@
-package com.bsel.remitngo.data.model.document.uploadDocument.documentType
+package com.bsel.remitngo.data.model.document.uploadDocument
 
 
 import com.google.gson.annotations.SerializedName
 
-data class DocumentTypeResponseItem(
+data class UploadDocumentResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: List<DocumentTypeData?>?,
+    val `data`: Int?,
     @SerializedName("Message")
     val message: String?,
     @SerializedName("Token")

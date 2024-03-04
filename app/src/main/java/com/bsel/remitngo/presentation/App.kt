@@ -12,6 +12,7 @@ import com.bsel.remitngo.presentation.di.login.LoginSubComponent
 import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
+import com.bsel.remitngo.presentation.di.transaction.TransactionSubComponent
 
 class App : Application(), Injector {
     private val appComponent: AppComponent by lazy {
@@ -52,6 +53,9 @@ class App : Application(), Injector {
 
     override fun createDocumentSubComponent(): DocumentSubComponent {
         return appComponent.documentSubComponent().create()
+    }
+    override fun createTransactionSubComponent(): TransactionSubComponent {
+        return appComponent.transactionSubComponent().create()
     }
 
 }

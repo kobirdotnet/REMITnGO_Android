@@ -1,9 +1,9 @@
-package com.bsel.remitngo.data.model.document.uploadDocument.documentType
+package com.bsel.remitngo.data.model.transaction
 
 
 import com.google.gson.annotations.SerializedName
 
-data class DocumentTypeItem(
+data class TransactionItem(
     @SerializedName("deviceId")
     val deviceId: String?,
     @SerializedName("params1")

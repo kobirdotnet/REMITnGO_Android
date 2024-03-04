@@ -1,8 +1,8 @@
 package com.bsel.remitngo.interfaceses
 
 import android.net.Uri
-import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryData
-import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeData
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
+import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
 
 interface OnDocumentItemSelectedListener {
     fun onDocumentCategoryItemSelected(selectedItem: DocumentCategoryData)

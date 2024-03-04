@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.DocumentCategoryAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryData
-import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryItem
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.databinding.DocumentCategoryLayoutBinding
 import com.bsel.remitngo.interfaceses.OnDocumentItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
@@ -129,7 +129,7 @@ class DocumentCategoryBottomSheet : BottomSheetDialogFragment() {
                     }
                 })
             } else {
-                Log.i("info", "bank failed")
+                Log.i("info", "document category failed")
             }
         }
     }

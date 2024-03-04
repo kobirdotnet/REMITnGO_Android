@@ -148,17 +148,33 @@
         <action
             android:id="@+id/action_nav_documents_to_nav_upload_documents"
             app:destination="@id/nav_upload_documents" />
+        <action
+            android:id="@+id/action_nav_documents_to_nav_update_documents"
+            app:destination="@id/nav_update_documents" />
     </fragment>
     <fragment
         android:id="@+id/nav_upload_documents"
         android:name="com.bsel.remitngo.presentation.ui.document.UploadDocumentFragment"
         android:label="@string/menu_documents"
-        tools:layout="@layout/fragment_upload_document" />
+        tools:layout="@layout/fragment_upload_document" >
+        <action
+            android:id="@+id/action_nav_upload_documents_to_nav_documents"
+            app:destination="@id/nav_documents" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_update_documents"
+        android:name="com.bsel.remitngo.presentation.ui.document.UpdateDocumentFragment"
+        android:label="@string/menu_update_documents"
+        tools:layout="@layout/fragment_update_document" >
+        <action
+            android:id="@+id/action_nav_update_documents_to_nav_documents"
+            app:destination="@id/nav_documents" />
+    </fragment>
     <fragment
         android:id="@+id/nav_transaction_history"
-        android:name="com.bsel.remitngo.ui.transaction_history.TransactionHistoryFragment"
+        android:name="com.bsel.remitngo.presentation.ui.transaction.TransactionFragment"
         android:label="@string/menu_transaction_history"
-        tools:layout="@layout/fragment_transaction_history" />
+        tools:layout="@layout/fragment_transaction" />
     <fragment
         android:id="@+id/nav_cancellation"
         android:name="com.bsel.remitngo.ui.cancel_request.CancellationFragment"

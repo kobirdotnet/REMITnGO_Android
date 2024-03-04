@@ -8,6 +8,7 @@ import com.bsel.remitngo.presentation.di.login.LoginSubComponent
 import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
+import com.bsel.remitngo.presentation.di.transaction.TransactionSubComponent
 import dagger.Component
 import javax.inject.Singleton
 
@@ -30,4 +31,5 @@ interface AppComponent {
     fun paymentSubComponent(): PaymentSubComponent.Factory
     fun profileSubComponent(): ProfileSubComponent.Factory
     fun documentSubComponent(): DocumentSubComponent.Factory
+    fun transactionSubComponent(): TransactionSubComponent.Factory
 }

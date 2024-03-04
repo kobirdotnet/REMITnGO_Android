@@ -21,7 +21,6 @@ import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.document.getDocument.GetDocumentData
 import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
 import com.bsel.remitngo.databinding.FragmentDocumentBinding
-import com.bsel.remitngo.model.DocumentsItem
 import com.bsel.remitngo.presentation.di.Injector
 import java.util.*
 import javax.inject.Inject
@@ -135,7 +134,22 @@ class DocumentFragment : Fragment() {
     }
 
     private fun documentItem(selectedItem: GetDocumentData) {
-        Log.i("info", "selectedItem: $selectedItem")
+        val bundle = Bundle().apply {
+            putString("personId", selectedItem.personId.toString())
+            putString("status", selectedItem.status.toString())
+            putString("iD", selectedItem.iD.toString())
+            putString("documentCategoryId", selectedItem.categoryId.toString())
+            putString("documentTypeId", selectedItem.typeId.toString())
+            putString("docNo", selectedItem.docNo.toString())
+            putString("issueBy", selectedItem.issueBy.toString())
+            putString("issueDate", selectedItem.issueDate.toString())
+            putString("expireDate", selectedItem.expireDate.toString())
+            putString("fileName", selectedItem.fileName.toString())
+        }
+        findNavController().navigate(
+            R.id.action_nav_documents_to_nav_update_documents,
+            bundle
+        )
     }
 
     private fun getDeviceId(context: Context): String {

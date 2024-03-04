@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.DocumentTypeAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeData
-import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeItem
+import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
+import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
 import com.bsel.remitngo.databinding.DocumentTypeLayoutBinding
 import com.bsel.remitngo.interfaceses.OnDocumentItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector

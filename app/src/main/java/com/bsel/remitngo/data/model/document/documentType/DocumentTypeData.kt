@@ -1,4 +1,4 @@
-package com.bsel.remitngo.data.model.document.uploadDocument.documentType
+package com.bsel.remitngo.data.model.document.documentType
 
 
 import com.google.gson.annotations.SerializedName

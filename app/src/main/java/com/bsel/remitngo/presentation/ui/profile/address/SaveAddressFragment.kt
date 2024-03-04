@@ -5,16 +5,12 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottom_sheet.AddressBottomSheet
 import com.bsel.remitngo.bottom_sheet.CityBottomSheet
@@ -31,7 +27,6 @@ import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
 import com.bsel.remitngo.databinding.FragmentSaveAddressBinding
 import com.bsel.remitngo.interfaceses.OnAddressItemSelectedListener
-import com.bsel.remitngo.model.AddressItem
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModelFactory

@@ -8,6 +8,7 @@ import com.bsel.remitngo.presentation.di.login.LoginSubComponent
 import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
+import com.bsel.remitngo.presentation.di.transaction.TransactionSubComponent
 
 interface Injector {
     fun createRegistrationSubComponent(): RegistrationSubComponent
@@ -18,4 +19,5 @@ interface Injector {
     fun createPaymentSubComponent(): PaymentSubComponent
     fun createProfileSubComponent(): ProfileSubComponent
     fun createDocumentSubComponent(): DocumentSubComponent
+    fun createTransactionSubComponent(): TransactionSubComponent
 }

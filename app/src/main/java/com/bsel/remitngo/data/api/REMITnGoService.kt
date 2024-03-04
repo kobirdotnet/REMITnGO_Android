@@ -18,12 +18,13 @@ import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.data.model.district.DistrictResponseItem
 import com.bsel.remitngo.data.model.division.DivisionItem
 import com.bsel.remitngo.data.model.division.DivisionResponseItem
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
+import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
+import com.bsel.remitngo.data.model.document.documentType.DocumentTypeResponseItem
 import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
 import com.bsel.remitngo.data.model.document.getDocument.GetDocumentResponseItem
-import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryItem
-import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryResponseItem
-import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeItem
-import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeResponseItem
+import com.bsel.remitngo.data.model.document.uploadDocument.UploadDocumentResponseItem
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.gender.GenderResponseItem
 import com.bsel.remitngo.data.model.login.LoginItem
@@ -61,11 +62,12 @@ import com.bsel.remitngo.data.model.registration.RegistrationItem
 import com.bsel.remitngo.data.model.registration.RegistrationResponseItem
 import com.bsel.remitngo.data.model.relation.RelationItem
 import com.bsel.remitngo.data.model.relation.RelationResponseItem
+import com.bsel.remitngo.data.model.transaction.TransactionItem
+import com.bsel.remitngo.data.model.transaction.TransactionResponseItem
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface REMITnGoService {
     @POST("api/Home/Registration")
@@ -160,6 +162,25 @@ interface REMITnGoService {
 
     @POST("api/General/PopulateCustomerDocumentList")
     suspend fun getDocument(@Body getDocumentItem: GetDocumentItem): Response<GetDocumentResponseItem>
+
+    @Multipart
+    @POST("api/General/UploadDocument")
+    suspend fun uploadDocument(
+        @Part("deviceId") deviceId: RequestBody,
+        @Part("personId") personId: RequestBody,
+        @Part("categoryId") categoryId: RequestBody,
+        @Part("docId") docId: RequestBody,
+        @Part("typeId") typeId: RequestBody,
+        @Part("proofNo") proofNo: RequestBody,
+        @Part("issueBy") issueBy: RequestBody,
+        @Part("issueDate") issueDate: RequestBody,
+        @Part("expireDate") expireDate: RequestBody,
+        @Part("updateDate") updateDate: RequestBody,
+        @Part file: MultipartBody.Part
+    ): Response<UploadDocumentResponseItem>
+
+    @POST("api/Transaction/PopulateTransactionList")
+    suspend fun transaction(@Body transactionItem: TransactionItem): Response<TransactionResponseItem>
 
 }
 

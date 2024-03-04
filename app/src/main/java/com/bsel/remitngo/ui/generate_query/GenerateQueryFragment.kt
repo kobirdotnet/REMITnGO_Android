@@ -2,20 +2,16 @@ package com.bsel.remitngo.ui.generate_query
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.CancellationAdapter
 import com.bsel.remitngo.adapter.QueryAdapter
 import com.bsel.remitngo.bottom_sheet.AddQueryBottomSheet
-import com.bsel.remitngo.bottom_sheet.ReasonBottomSheet
 import com.bsel.remitngo.databinding.FragmentGenerateQueryBinding
-import com.bsel.remitngo.databinding.FragmentTransactionHistoryBinding
-import com.bsel.remitngo.model.CancellationItem
 import com.bsel.remitngo.model.QueryItem
 
 

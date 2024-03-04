@@ -16,6 +16,8 @@ import com.bsel.remitngo.data.repository.profile.ProfileRepositoryImpl
 import com.bsel.remitngo.data.repository.profile.dataSource.ProfileRemoteDataSource
 import com.bsel.remitngo.data.repository.registration.RegistrationRepositoryImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
+import com.bsel.remitngo.data.repository.transaction.TransactionRepositoryImpl
+import com.bsel.remitngo.data.repository.transaction.dataSource.TransactionRemoteDataSource
 import com.bsel.remitngo.domain.repository.*
 import dagger.Module
 import dagger.Provides
@@ -67,6 +69,11 @@ class RepositoryModule {
     @Provides
     fun provideDocumentRepository(documentRemoteDataSource: DocumentRemoteDataSource): DocumentRepository {
         return DocumentRepositoryImpl(documentRemoteDataSource)
+    }
+    @Singleton
+    @Provides
+    fun provideTransactionRepository(transactionRemoteDataSource: TransactionRemoteDataSource): TransactionRepository {
+        return TransactionRepositoryImpl(transactionRemoteDataSource)
     }
 
 }

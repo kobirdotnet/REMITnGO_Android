@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeData
+import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
 import com.bsel.remitngo.databinding.ItemDocumentTypeBinding
 
 class DocumentTypeAdapter(

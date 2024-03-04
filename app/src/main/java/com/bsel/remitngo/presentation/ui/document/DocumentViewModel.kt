@@ -4,14 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
+import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
+import com.bsel.remitngo.data.model.document.documentType.DocumentTypeResponseItem
 import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
 import com.bsel.remitngo.data.model.document.getDocument.GetDocumentResponseItem
-import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryItem
-import com.bsel.remitngo.data.model.document.uploadDocument.documentCategory.DocumentCategoryResponseItem
-import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeItem
-import com.bsel.remitngo.data.model.document.uploadDocument.documentType.DocumentTypeResponseItem
+import com.bsel.remitngo.data.model.document.uploadDocument.UploadDocumentResponseItem
 import com.bsel.remitngo.domain.useCase.DocumentUseCase
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class DocumentViewModel(private val documentUseCase: DocumentUseCase) : ViewModel() {
 
@@ -42,6 +45,40 @@ class DocumentViewModel(private val documentUseCase: DocumentUseCase) : ViewMode
         viewModelScope.launch {
             val result = documentUseCase.execute(getDocumentItem)
             _getDocumentResult.value = result
+        }
+    }
+
+    private val _uploadDocumentResult = MutableLiveData<UploadDocumentResponseItem?>()
+    val uploadDocumentResult: LiveData<UploadDocumentResponseItem?> = _uploadDocumentResult
+
+    fun uploadDocument(
+        deviceId: RequestBody,
+        personId: RequestBody,
+        categoryId: RequestBody,
+        docId: RequestBody,
+        typeId: RequestBody,
+        proofNo: RequestBody,
+        issueBy: RequestBody,
+        issueDate: RequestBody,
+        expireDate: RequestBody,
+        updateDate: RequestBody,
+        file: MultipartBody.Part
+    ) {
+        viewModelScope.launch {
+            val result = documentUseCase.execute(
+                deviceId,
+                personId,
+                categoryId,
+                docId,
+                typeId,
+                proofNo,
+                issueBy,
+                issueDate,
+                expireDate,
+                updateDate,
+                file
+            )
+            _uploadDocumentResult.value = result
         }
     }
 

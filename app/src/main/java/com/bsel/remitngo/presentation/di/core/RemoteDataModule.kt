@@ -17,6 +17,8 @@ import com.bsel.remitngo.data.repository.profile.dataSource.ProfileRemoteDataSou
 import com.bsel.remitngo.data.repository.profile.dataSourceImpl.ProfileRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
 import com.bsel.remitngo.data.repository.registration.dataSourceImpl.RegistrationRemoteDataSourceImpl
+import com.bsel.remitngo.data.repository.transaction.dataSource.TransactionRemoteDataSource
+import com.bsel.remitngo.data.repository.transaction.dataSourceImpl.TransactionRemoteDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -66,6 +68,12 @@ class RemoteDataModule {
     @Provides
     fun provideDocumentRemoteDataSource(remitNgoService: REMITnGoService): DocumentRemoteDataSource {
         return DocumentRemoteDataSourceImpl(remitNgoService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTransactionRemoteDataSource(remitNgoService: REMITnGoService): TransactionRemoteDataSource {
+        return TransactionRemoteDataSourceImpl(remitNgoService)
     }
 
 }

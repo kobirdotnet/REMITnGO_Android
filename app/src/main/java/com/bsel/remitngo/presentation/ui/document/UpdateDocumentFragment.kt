@@ -8,19 +8,27 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.widget.SearchView
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
+import com.bsel.remitngo.adapter.DocumentCategoryAdapter
+import com.bsel.remitngo.adapter.DocumentTypeAdapter
 import com.bsel.remitngo.bottom_sheet.DocumentCategoryBottomSheet
 import com.bsel.remitngo.bottom_sheet.DocumentTypeBottomSheet
 import com.bsel.remitngo.bottom_sheet.SelectFileBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
+import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
+import com.bsel.remitngo.databinding.FragmentUpdateDocumentBinding
 import com.bsel.remitngo.databinding.FragmentUploadDocumentBinding
 import com.bsel.remitngo.interfaceses.OnDocumentItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
@@ -31,15 +39,17 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
-class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
+class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
     @Inject
     lateinit var documentViewModelFactory: DocumentViewModelFactory
     private lateinit var documentViewModel: DocumentViewModel
 
-    private lateinit var binding: FragmentUploadDocumentBinding
+    private lateinit var binding: FragmentUpdateDocumentBinding
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -52,8 +62,20 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
 
     private lateinit var personId: String
 
+    private lateinit var status: String
+    private lateinit var docId: String
+
     private lateinit var documentCategoryId: String
+    private lateinit var documentCategory: String
+
     private lateinit var documentTypeId: String
+    private lateinit var documentType: String
+
+    private lateinit var docNo: String
+    private lateinit var issueBy: String
+    private lateinit var issueDate: String
+    private lateinit var expireDate: String
+    private lateinit var fileName: String
 
     private var selectedFile: Uri? = null
 
@@ -61,12 +83,13 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_upload_document, container, false)
+        return inflater.inflate(R.layout.fragment_update_document, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentUploadDocumentBinding.bind(view)
+        binding = FragmentUpdateDocumentBinding.bind(view)
 
         (requireActivity().application as Injector).createDocumentSubComponent().inject(this)
 
@@ -78,6 +101,37 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
+
+        personId = arguments?.getString("personId").toString()
+
+        status = arguments?.getString("status").toString()
+        docId = arguments?.getString("iD").toString()
+
+        documentCategoryId = arguments?.getString("documentCategoryId").toString()
+        documentTypeId = arguments?.getString("documentTypeId").toString()
+
+        docNo = arguments?.getString("docNo").toString()
+        binding.documentNo.setText(docNo)
+
+        issueBy = arguments?.getString("issueBy").toString()
+        binding.issueBy.setText(issueBy)
+
+        issueDate = arguments?.getString("issueDate").toString()
+        val dateTime =
+            LocalDateTime.parse(issueDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        val date = dateTime.toLocalDate()
+        val issueDate = date.format(DateTimeFormatter.ISO_DATE)
+        binding.issueDate.setText(issueDate)
+
+        expireDate = arguments?.getString("expireDate").toString()
+        val dateTimeExpireDate =
+            LocalDateTime.parse(expireDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        val dateExpireDate = dateTimeExpireDate.toLocalDate()
+        val expireDate = dateExpireDate.format(DateTimeFormatter.ISO_DATE)
+        binding.expireDate.setText(expireDate)
+
+        fileName = arguments?.getString("fileName").toString()
+        binding.selectFile.text = "$fileName"
 
         categoryFocusListener()
         documentFocusListener()
@@ -157,13 +211,62 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
 
         observeUploadDocumentResult()
 
+        val documentCategoryItem = DocumentCategoryItem(
+            deviceId = deviceId,
+            dropdownId = 20000,
+            param1 = 0,
+            param2 = 0
+        )
+        documentViewModel.documentCategory(documentCategoryItem)
+        observeDocumentCategoryResult()
+
+        if (::documentCategoryId.isInitialized) {
+            val documentTypeItem = DocumentTypeItem(
+                deviceId = deviceId,
+                params1 = documentCategoryId!!.toInt(),
+                params2 = 0
+            )
+            documentViewModel.documentType(documentTypeItem)
+            observeDocumentTypeResult()
+        }
+
+    }
+
+    private fun observeDocumentCategoryResult() {
+        documentViewModel.documentCategoryResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (categoryData in result!!.data!!) {
+                    if (::documentCategoryId.isInitialized && documentCategoryId == categoryData!!.id.toString()) {
+                        documentCategory = categoryData!!.name.toString()
+                        binding.documentCategory.setText(documentCategory)
+                    }
+                }
+            } else {
+                Log.i("info", "category failed")
+            }
+        }
+    }
+
+    private fun observeDocumentTypeResult() {
+        documentViewModel.documentTypeResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (typeData in result!!.data!!) {
+                    if (::documentTypeId.isInitialized && documentTypeId == typeData!!.id.toString()) {
+                        documentType = typeData!!.name.toString()
+                        binding.documentType.setText(documentType)
+                    }
+                }
+            } else {
+                Log.i("info", "document type failed")
+            }
+        }
     }
 
     private fun observeUploadDocumentResult() {
         documentViewModel.uploadDocumentResult.observe(this) { result ->
             if (result != null) {
                 findNavController().navigate(
-                    R.id.action_nav_upload_documents_to_nav_documents
+                    R.id.action_nav_update_documents_to_nav_documents
                 )
             } else {
                 Log.i("info", "save uploadDocument failed")
@@ -189,7 +292,7 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         if (validCategory && validDocument && validDocumentNo && validIssueBy
             && validIssueDate && validExpireDate
         ) {
-        submitDocumentFrom()
+            submitDocumentFrom()
         }
     }
 
@@ -211,7 +314,7 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                     deviceId.toRequestBody(),
                     personId.toRequestBody(),
                     documentCategoryId.toRequestBody(),
-                    "0".toRequestBody(),
+                    docId.toRequestBody(),
                     documentTypeId.toRequestBody(),
                     documentNo.toRequestBody(),
                     issueBy.toRequestBody(),

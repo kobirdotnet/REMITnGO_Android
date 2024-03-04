@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.model.profile.postCode.PostCodeData
 import com.bsel.remitngo.databinding.ItemAddressBinding
-import com.bsel.remitngo.model.AddressItem
 
 class AddressAdapter(
     private val selectedItem: (PostCodeData) -> Unit

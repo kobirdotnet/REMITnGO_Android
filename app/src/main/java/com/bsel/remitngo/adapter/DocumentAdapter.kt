@@ -70,7 +70,7 @@ class DocumentViewHolder(val binding: ItemDocumentBinding) :
         binding.expireDate.text = "Expire Date: $expireDate"
 
         val fileName=documentItem.fileName
-        val imageUrl = "https://uat.bracsaajanexchange.com/REUATX/UploadedFiles/PersonFiles/$fileName"
+        val imageUrl = "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/$fileName"
 
         Glide.with(binding.docImage)
             .load(imageUrl)

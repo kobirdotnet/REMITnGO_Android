@@ -43,5 +43,9 @@ class UseCaseModule {
     fun provideDocumentUseCase(documentRepository: DocumentRepository): DocumentUseCase {
         return DocumentUseCase(documentRepository)
     }
+    @Provides
+    fun provideTransactionUseCase(transactionRepository: TransactionRepository): TransactionUseCase {
+        return TransactionUseCase(transactionRepository)
+    }
 
 }
