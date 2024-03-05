@@ -47,5 +47,9 @@ class UseCaseModule {
     fun provideTransactionUseCase(transactionRepository: TransactionRepository): TransactionUseCase {
         return TransactionUseCase(transactionRepository)
     }
+    @Provides
+    fun provideCancelRequestUseCase(cancelRequestRepository: CancelRequestRepository): CancelRequestUseCase {
+        return CancelRequestUseCase(cancelRequestRepository)
+    }
 
 }

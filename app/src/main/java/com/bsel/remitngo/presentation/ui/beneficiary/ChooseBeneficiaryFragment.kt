@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -143,6 +144,17 @@ class ChooseBeneficiaryFragment : Fragment() {
                 binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
                 beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
                 beneficiaryAdapter.notifyDataSetChanged()
+
+                binding.beneficiarySearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        beneficiaryAdapter.filter(newText.orEmpty())
+                        return true
+                    }
+                })
                 Log.i("info", "get beneficiary successful: $result")
             } else {
                 Log.i("info", "get beneficiary failed")

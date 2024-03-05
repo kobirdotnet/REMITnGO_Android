@@ -38,7 +38,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
                         android:text="Amount"
                         android:textColor="@color/black" />
@@ -208,7 +208,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Recipient amount"
                     android:textColor="@color/black" />
@@ -218,7 +218,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
                     android:text="BDT 1400.00"
                     android:textColor="@color/black" />
@@ -246,7 +246,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
                         android:text="Recipient"
                         android:textColor="@color/black" />
@@ -275,7 +275,7 @@
                     android:id="@+id/bank_account_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Mohammad Ameerul Islam"
                     android:textColor="@color/black" />
@@ -312,7 +312,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
                         android:text="Order type"
                         android:textColor="@color/black" />

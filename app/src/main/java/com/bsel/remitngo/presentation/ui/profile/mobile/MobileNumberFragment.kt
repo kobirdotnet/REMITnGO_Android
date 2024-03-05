@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
@@ -72,6 +73,9 @@ class MobileNumberFragment : Fragment() {
     private fun observeUpdateProfileResult() {
         profileViewModel.updateProfileResult.observe(this) { result ->
             if (result != null) {
+                findNavController().navigate(
+                    R.id.action_nav_mobile_number_to_nav_my_profile
+                )
                 Log.i("info", "update profile successful: $result")
             } else {
                 Log.i("info", "update profile failed")

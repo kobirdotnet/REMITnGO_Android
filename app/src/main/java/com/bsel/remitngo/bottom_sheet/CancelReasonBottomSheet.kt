@@ -11,9 +11,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.CancelReasonAdapter
+import com.bsel.remitngo.data.model.cancel_request.cancel_reason.CancelReasonData
 import com.bsel.remitngo.databinding.CancelReasonNameLayoutBinding
 import com.bsel.remitngo.interfaceses.OnCancelReasonItemSelectedListener
-import com.bsel.remitngo.model.CancelReasonItem
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -56,21 +56,15 @@ class CancelReasonBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
-        val cancelReasonItems = arrayOf(
-            CancelReasonItem("Family Support"),
-            CancelReasonItem("Education"),
-            CancelReasonItem("Donation")
-        )
-
         binding.reasonRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
         cancelReasonAdapter = CancelReasonAdapter(
-            selectedItem = { selectedItem: CancelReasonItem ->
+            selectedItem = { selectedItem: CancelReasonData ->
                 reasonItem(selectedItem)
                 binding.reasonSearch.setQuery("", false)
             }
         )
         binding.reasonRecyclerView.adapter = cancelReasonAdapter
-        cancelReasonAdapter.setList(cancelReasonItems.asList())
+//        cancelReasonAdapter.setList(cancelReasonItems.asList())
         cancelReasonAdapter.notifyDataSetChanged()
 
         binding.reasonSearch.setOnQueryTextListener(object :
@@ -90,7 +84,7 @@ class CancelReasonBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    private fun reasonItem(selectedItem: CancelReasonItem) {
+    private fun reasonItem(selectedItem: CancelReasonData) {
         Log.i("info", "selectedItem: $selectedItem")
         itemSelectedListener?.onCancelReasonItemSelected(selectedItem)
         dismiss()

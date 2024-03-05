@@ -54,7 +54,15 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
         transactionItem: TransactionData,
         selectedItem: (TransactionData) -> Unit
     ) {
-        binding.benName.text = transactionItem.benName
+        binding.benName.text = transactionItem.benName.toString()
+        binding.orderType.text = transactionItem.orderTypeName.toString()
+        binding.transactionCode.text = transactionItem.transactionCode.toString()
+        binding.transactionDate.text = transactionItem.transactionDateTime12hr.toString()
+
+        binding.bankName.text = transactionItem.bankName.toString()
+        binding.accountNo.text = transactionItem.accountNo.toString()
+        binding.currencyToAmount.text = transactionItem.currencyToAmount.toString()
+
         binding.itemTransactionLayout.setOnClickListener {
             selectedItem(transactionItem)
         }

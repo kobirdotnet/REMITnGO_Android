@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottom_sheet.CancelReasonBottomSheet
+import com.bsel.remitngo.data.model.cancel_request.cancel_reason.CancelReasonData
 import com.bsel.remitngo.databinding.FragmentGenerateCancelRequestBinding
 import com.bsel.remitngo.interfaceses.OnCancelReasonItemSelectedListener
-import com.bsel.remitngo.model.CancelReasonItem
 
 class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedListener {
 
@@ -194,8 +194,8 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
         return null
     }
 
-    override fun onCancelReasonItemSelected(selectedItem: CancelReasonItem) {
-        binding.cancelReason.setText(selectedItem.cancelReasonName)
+    override fun onCancelReasonItemSelected(selectedItem: CancelReasonData) {
+        binding.cancelReason.setText(selectedItem.name)
     }
 
 }

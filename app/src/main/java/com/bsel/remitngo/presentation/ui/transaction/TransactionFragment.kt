@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.TransactionAdapter
+import com.bsel.remitngo.bottom_sheet.BankBottomSheet
+import com.bsel.remitngo.bottom_sheet.TransactionBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.transaction.TransactionData
 import com.bsel.remitngo.data.model.transaction.TransactionItem
@@ -31,6 +33,8 @@ class TransactionFragment : Fragment() {
     private lateinit var preferenceManager: PreferenceManager
 
     private lateinit var transactionAdapter: TransactionAdapter
+
+    private val transactionBottomSheet: TransactionBottomSheet by lazy { TransactionBottomSheet() }
 
     private lateinit var deviceId: String
     private lateinit var personId: String
@@ -99,6 +103,9 @@ class TransactionFragment : Fragment() {
 
     private fun transaction(selectedItem: TransactionData) {
         Log.i("info", "selectedItem: $selectedItem")
+        val transactionCode=selectedItem.transactionCode.toString()
+        transactionBottomSheet.setSelectedTransactionCode(transactionCode)
+        transactionBottomSheet.show(childFragmentManager, transactionBottomSheet.tag)
     }
 
     private fun getDeviceId(context: Context): String {

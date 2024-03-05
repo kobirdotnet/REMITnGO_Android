@@ -95,18 +95,18 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
         profileViewModel =
             ViewModelProvider(this, profileViewModelFactory)[ProfileViewModel::class.java]
 
-        binding.occupationLayout.visibility = View.VISIBLE
+        binding.occupationLayout.visibility = View.GONE
         binding.sourceOfIncomeLayout.visibility = View.GONE
 
         firstNameFocusListener()
         lastNameFocusListener()
         dobFocusListener()
-        genderFocusListener()
-        occupationTypeFocusListener()
+//        genderFocusListener()
+//        occupationTypeFocusListener()
 //        occupationFocusListener()
 //        sourceOfIncomeFocusListener()
-        annualIncomeFocusListener()
-        nationalityFocusListener()
+//        annualIncomeFocusListener()
+//        nationalityFocusListener()
 
         preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
@@ -137,13 +137,13 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
         nationalityId = arguments?.getString("nationalityId").toString()
 
         if (::occupationTypeId.isInitialized && occupationTypeId == "1") {
-            binding.occupationLayout.visibility = View.VISIBLE
+            binding.occupationLayout.visibility = View.GONE
             binding.sourceOfIncomeLayout.visibility = View.GONE
             sourceOfIncomeId = "0"
         } else {
             binding.occupationLayout.visibility = View.GONE
             occupationId = "0"
-            binding.sourceOfIncomeLayout.visibility = View.VISIBLE
+            binding.sourceOfIncomeLayout.visibility = View.GONE
         }
 
         binding.dobContainer.setEndIconOnClickListener {
@@ -259,6 +259,9 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
     private fun observeUpdateProfileResult() {
         profileViewModel.updateProfileResult.observe(this) { result ->
             if (result != null) {
+                findNavController().navigate(
+                    R.id.action_nav_personal_information_to_nav_my_profile
+                )
                 Log.i("info", "update profile successful: $result")
             } else {
                 Log.i("info", "update profile failed")
@@ -345,24 +348,24 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
         binding.firstNameContainer.helperText = validFirstName()
         binding.lastNameContainer.helperText = validLastName()
         binding.dobContainer.helperText = validDob()
-        binding.genderContainer.helperText = validGender()
-        binding.occupationTypeContainer.helperText = validOccupationType()
+//        binding.genderContainer.helperText = validGender()
+//        binding.occupationTypeContainer.helperText = validOccupationType()
 //        binding.occupationContainer.helperText = validOccupation()
 //        binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
-        binding.annualIncomeContainer.helperText = validAnnualIncome()
-        binding.nationalityContainer.helperText = validNationality()
+//        binding.annualIncomeContainer.helperText = validAnnualIncome()
+//        binding.nationalityContainer.helperText = validNationality()
 
         val validFirstName = binding.firstNameContainer.helperText == null
         val validLastName = binding.lastNameContainer.helperText == null
         val validDob = binding.dobContainer.helperText == null
-        val validGender = binding.genderContainer.helperText == null
-        val validOccupationType = binding.occupationTypeContainer.helperText == null
+//        val validGender = binding.genderContainer.helperText == null
+//        val validOccupationType = binding.occupationTypeContainer.helperText == null
 //        val validOccupation = binding.occupationContainer.helperText == null
 //        val validSourceOfIncome = binding.sourceOfIncomeContainer.helperText == null
-        val validAnnualIncome = binding.annualIncomeContainer.helperText == null
-        val validNationality = binding.nationalityContainer.helperText == null
+//        val validAnnualIncome = binding.annualIncomeContainer.helperText == null
+//        val validNationality = binding.nationalityContainer.helperText == null
 
-        if (validFirstName && validLastName && validDob && validGender && validOccupationType && validAnnualIncome && validNationality) {
+        if (validFirstName && validLastName && validDob) {
             submitPersonalInfoForm()
         }
     }
@@ -387,10 +390,10 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
             mobile = "",
             email = "",
             dob = dob,
-            gender = genderId.toInt(),
-            nationality = nationalityId.toInt(),
-            occupationTypeId = occupationTypeId.toInt(),
-            occupationCode = occupationId.toInt(),
+            gender = 0,
+            nationality = 0,
+            occupationTypeId = 0,
+            occupationCode = 0,
             postcode = "",
             divisionId = 0,
             districtId = 0,
@@ -398,8 +401,8 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
             buildingno = "",
             housename = "",
             address = "",
-            annualNetIncomeId = annualIncomeId.toInt(),
-            sourceOfIncomeId = sourceOfIncomeId.toInt(),
+            annualNetIncomeId = 0,
+            sourceOfIncomeId = 0,
             sourceOfFundId = 0,
             userIPAddress = ipAddress
         )

@@ -37,7 +37,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
                         android:text="QueryId"
                         android:textColor="@color/navy_blue"
@@ -56,7 +56,7 @@
                         android:id="@+id/query_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
                         android:text="Amendment Related Query"
                         android:textColor="@color/navy_blue"
@@ -83,7 +83,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
                         android:text="Type"
                         android:textColor="@color/blue" />
@@ -100,7 +100,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
                         android:text="Amendment Related Query"
                         android:textColor="@color/blue" />
@@ -126,7 +126,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
                         android:text="Status"
                         android:textColor="@color/text_color" />
@@ -143,7 +143,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
                         android:text="OPEN"
                         android:textColor="@color/black" />
@@ -169,7 +169,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
                         android:text="Transaction Code"
                         android:textColor="@color/text_color" />
@@ -186,7 +186,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
                         android:text="3175960"
                         android:textColor="@color/black" />
@@ -212,7 +212,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
                         android:text="Description"
                         android:textColor="@color/blue" />
@@ -229,7 +229,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
                         android:text="status updated"
                         android:textColor="@color/blue" />

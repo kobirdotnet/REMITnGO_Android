@@ -124,7 +124,11 @@
         android:id="@+id/nav_personal_information"
         android:name="com.bsel.remitngo.presentation.ui.profile.personal_information.PersonalInformationFragment"
         android:label="@string/menu_personal_information"
-        tools:layout="@layout/fragment_personal_information" />
+        tools:layout="@layout/fragment_personal_information" >
+        <action
+            android:id="@+id/action_nav_personal_information_to_nav_my_profile"
+            app:destination="@id/nav_my_profile" />
+    </fragment>
     <fragment
         android:id="@+id/nav_change_password"
         android:name="com.bsel.remitngo.ui.profile.change_password.ChangePasswordFragment"
@@ -134,12 +138,20 @@
         android:id="@+id/nav_mobile_number"
         android:name="com.bsel.remitngo.presentation.ui.profile.mobile.MobileNumberFragment"
         android:label="@string/menu_mobile_number"
-        tools:layout="@layout/fragment_mobile_number" />
+        tools:layout="@layout/fragment_mobile_number" >
+        <action
+            android:id="@+id/action_nav_mobile_number_to_nav_my_profile"
+            app:destination="@id/nav_my_profile" />
+    </fragment>
     <fragment
         android:id="@+id/nav_save_address"
         android:name="com.bsel.remitngo.presentation.ui.profile.address.SaveAddressFragment"
         android:label="@string/menu_address"
-        tools:layout="@layout/fragment_save_address" />
+        tools:layout="@layout/fragment_save_address" >
+        <action
+            android:id="@+id/action_nav_save_address_to_nav_my_profile"
+            app:destination="@id/nav_my_profile" />
+    </fragment>
     <fragment
         android:id="@+id/nav_documents"
         android:name="com.bsel.remitngo.presentation.ui.document.DocumentFragment"
@@ -177,7 +189,7 @@
         tools:layout="@layout/fragment_transaction" />
     <fragment
         android:id="@+id/nav_cancellation"
-        android:name="com.bsel.remitngo.ui.cancel_request.CancellationFragment"
+        android:name="com.bsel.remitngo.presentation.ui.cancel_request.CancellationFragment"
         android:label="@string/menu_cancel_request"
         tools:layout="@layout/fragment_cancellation">
         <action

@@ -31,7 +31,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
-                android:fontFamily="@font/roboto_condensed_bold"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:hint="Mohammad Kobirul Islam"
                 android:textColor="@color/white" />
@@ -115,7 +115,7 @@
                 android:id="@+id/referralCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_bold"
+                android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:text="CM007788"
                 android:textColor="@color/black" />
@@ -126,7 +126,7 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_condensed_bold"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
             android:text="Share Now"
             android:textColor="@color/blue" />

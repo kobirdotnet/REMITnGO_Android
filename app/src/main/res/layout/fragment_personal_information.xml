@@ -104,13 +104,11 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/dob_container"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:hint="Date of birth"
-                    android:paddingRight="8dp"
                     app:endIconDrawable="@drawable/calendar"
                     app:endIconTint="@color/blue"
                     app:helperTextTextColor="@android:color/holo_red_dark">
@@ -126,7 +124,6 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="datetime"
-                        
                         android:textColor="@color/black" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -142,7 +139,8 @@
                     android:hint="Gender"
                     android:paddingLeft="8dp"
                     app:endIconTint="@color/blue"
-                    app:helperTextTextColor="@android:color/holo_red_dark">
+                    app:helperTextTextColor="@android:color/holo_red_dark"
+                    android:visibility="gone">
 
                     <AutoCompleteTextView
                         android:id="@+id/gender"
@@ -169,7 +167,8 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/occupation_type_container"
@@ -208,7 +207,8 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/occupation_container"
@@ -286,7 +286,8 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/annual_income_container"
@@ -324,7 +325,8 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/nationality_container"

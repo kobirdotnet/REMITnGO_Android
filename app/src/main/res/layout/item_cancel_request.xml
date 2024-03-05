@@ -38,9 +38,8 @@
                         android:id="@+id/benName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="JUBAYER AHMED"
                         android:textColor="@color/navy_blue" />
 
                     <TextView
@@ -49,7 +48,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="Bank Deposit"
                         android:textColor="@color/text_color" />
 
                     <TextView
@@ -58,16 +56,14 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="21000004519755B"
                         android:textColor="@color/blue" />
 
                     <TextView
-                        android:id="@+id/transactionDateTime12hr"
+                        android:id="@+id/transactionDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="28/09/2023 11:23 PM"
                         android:textColor="@color/black"
                         android:textSize="13sp" />
 
@@ -84,9 +80,8 @@
                         android:id="@+id/bankName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="DUTCH BANGLA BANK LTD"
                         android:textColor="@color/navy_blue" />
 
                     <TextView
@@ -95,7 +90,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="1581570023054"
                         android:textColor="@color/blue" />
 
                     <TextView
@@ -104,7 +98,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="BDT 50408.50"
                         android:textColor="@color/black" />
                 </LinearLayout>
 
@@ -134,17 +127,17 @@
                         <LinearLayout
                             android:layout_width="35dp"
                             android:layout_height="35dp"
-                            android:background="@drawable/circle_background"
+                            android:background="@drawable/circle_background_white"
                             android:gravity="center"
                             android:orientation="vertical" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:text="Payment      Done"
-                            android:textColor="@color/green" />
+                            android:textColor="@color/black" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -157,17 +150,17 @@
                         <LinearLayout
                             android:layout_width="35dp"
                             android:layout_height="35dp"
-                            android:background="@drawable/circle_background"
+                            android:background="@drawable/circle_background_white"
                             android:gravity="center"
                             android:orientation="vertical" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:text="Payment Received"
-                            android:textColor="@color/green" />
+                            android:textColor="@color/black" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -190,17 +183,17 @@
                         <LinearLayout
                             android:layout_width="35dp"
                             android:layout_height="35dp"
-                            android:background="@drawable/circle_background"
+                            android:background="@drawable/circle_background_white"
                             android:gravity="center"
                             android:orientation="vertical" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:text="On the           way"
-                            android:textColor="@color/green" />
+                            android:textColor="@color/black" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -213,17 +206,17 @@
                         <LinearLayout
                             android:layout_width="35dp"
                             android:layout_height="35dp"
-                            android:background="@drawable/circle_background"
+                            android:background="@drawable/circle_background_white"
                             android:gravity="center"
                             android:orientation="vertical" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:text="Send to        Bank"
-                            android:textColor="@color/green" />
+                            android:textColor="@color/black" />
                     </LinearLayout>
 
                 </LinearLayout>

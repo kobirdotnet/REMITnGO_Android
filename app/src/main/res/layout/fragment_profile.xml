@@ -75,7 +75,8 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Gender"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/gender"
@@ -83,7 +84,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:textColor="@color/text_color" />
+                    android:textColor="@color/text_color"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -107,7 +109,8 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Occupation"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/occupation"
@@ -115,7 +118,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:textColor="@color/text_color" />
+                    android:textColor="@color/text_color"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -123,7 +127,8 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Annual Income"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/annualIncome"
@@ -131,7 +136,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:textColor="@color/text_color" />
+                    android:textColor="@color/text_color"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -139,7 +145,8 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:text="Nationality"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/nationality"
@@ -147,7 +154,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:textColor="@color/text_color" />
+                    android:textColor="@color/text_color"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

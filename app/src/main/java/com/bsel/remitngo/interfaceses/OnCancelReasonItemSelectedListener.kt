@@ -1,7 +1,7 @@
 package com.bsel.remitngo.interfaceses
 
-import com.bsel.remitngo.model.CancelReasonItem
+import com.bsel.remitngo.data.model.cancel_request.cancel_reason.CancelReasonData
 
 interface OnCancelReasonItemSelectedListener {
-    fun onCancelReasonItemSelected(selectedItem: CancelReasonItem)
+    fun onCancelReasonItemSelected(selectedItem: CancelReasonData)
 }

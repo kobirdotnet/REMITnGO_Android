@@ -67,7 +67,7 @@
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
-                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:inputType="none"
                         

@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2.5">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -26,7 +26,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/transactionCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
@@ -35,7 +34,6 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
@@ -44,7 +42,6 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/sendAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
@@ -53,7 +50,6 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/cancellationReason"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
@@ -66,11 +62,12 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/transactionCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
@@ -79,6 +76,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
@@ -87,6 +85,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/sendAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
@@ -95,6 +94,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/cancellationReason"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"

@@ -14,6 +14,14 @@ import com.bsel.remitngo.data.model.branch.BranchItem
 import com.bsel.remitngo.data.model.branch.BranchResponseItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
+import com.bsel.remitngo.data.model.cancel_request.cancel_reason.CancelReasonItem
+import com.bsel.remitngo.data.model.cancel_request.cancel_reason.CancelReasonResponseItem
+import com.bsel.remitngo.data.model.cancel_request.get_cancel_request.GetCancelRequestItem
+import com.bsel.remitngo.data.model.cancel_request.get_cancel_request.GetCancelResponseItem
+import com.bsel.remitngo.data.model.cancel_request.populate_cancel_request.PopulateCancelItem
+import com.bsel.remitngo.data.model.cancel_request.populate_cancel_request.PopulateCancelResponseItem
+import com.bsel.remitngo.data.model.cancel_request.save_cancel_request.SaveCancelRequestItem
+import com.bsel.remitngo.data.model.cancel_request.save_cancel_request.SaveCancelResponseItem
 import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.data.model.district.DistrictResponseItem
 import com.bsel.remitngo.data.model.division.DivisionItem
@@ -64,6 +72,8 @@ import com.bsel.remitngo.data.model.relation.RelationItem
 import com.bsel.remitngo.data.model.relation.RelationResponseItem
 import com.bsel.remitngo.data.model.transaction.TransactionItem
 import com.bsel.remitngo.data.model.transaction.TransactionResponseItem
+import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
+import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsResponseItem
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -181,6 +191,22 @@ interface REMITnGoService {
 
     @POST("api/Transaction/PopulateTransactionList")
     suspend fun transaction(@Body transactionItem: TransactionItem): Response<TransactionResponseItem>
+
+    @POST("api/Transaction/GetTransactionDetailsByTransactionCode")
+    suspend fun transactionDetails(@Body transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem>
+
+    @POST("api/General/GetCancelResionList")
+    suspend fun cancelReason(@Body cancelReasonItem: CancelReasonItem): Response<CancelReasonResponseItem>
+
+    @POST("api/General/GetCancelRequestList")
+    suspend fun getCancelRequest(@Body getCancelRequestItem: GetCancelRequestItem): Response<GetCancelResponseItem>
+
+    @POST("api/Transaction/PopulateTransactionListForCancellation")
+    suspend fun populateCancel(@Body populateCancelItem: PopulateCancelItem): Response<PopulateCancelResponseItem>
+
+    @POST("api/General/SaveCancelRequest")
+    suspend fun saveCancelRequest(@Body saveCancelRequestItem: SaveCancelRequestItem): Response<SaveCancelResponseItem>
+
 
 }
 

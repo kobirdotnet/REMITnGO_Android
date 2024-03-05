@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.cancel_request.get_cancel_request.GetCancelResponseData
 import com.bsel.remitngo.databinding.ItemCancellationBinding
-import com.bsel.remitngo.model.CancellationItem
 
 class CancellationAdapter(
-    private val selectedItem: (CancellationItem) -> Unit
+    private val selectedItem: (GetCancelResponseData) -> Unit
 ) : RecyclerView.Adapter<CancellationViewHolder>() {
 
-    private val cancellationList = ArrayList<CancellationItem>()
-    private var filteredCancellationList = ArrayList<CancellationItem>()
+    private val cancellationList = ArrayList<GetCancelResponseData>()
+    private var filteredCancellationList = ArrayList<GetCancelResponseData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CancellationViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -30,7 +30,7 @@ class CancellationAdapter(
         holder.bind(filteredCancellationList[position], selectedItem)
     }
 
-    fun setList(cancellationItem: List<CancellationItem>) {
+    fun setList(cancellationItem: List<GetCancelResponseData>) {
         cancellationList.clear()
         cancellationList.addAll(cancellationItem)
         filter("")
@@ -39,7 +39,7 @@ class CancellationAdapter(
     fun filter(query: String) {
         filteredCancellationList.clear()
         for (cancellations in cancellationList) {
-            if (cancellations.cancellationCode!!.contains(query, ignoreCase = true)) {
+            if (cancellations.transactionCode!!.contains(query, ignoreCase = true)) {
                 filteredCancellationList.add(cancellations)
             }
         }
@@ -51,10 +51,18 @@ class CancellationAdapter(
 class CancellationViewHolder(val binding: ItemCancellationBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        cancellationItem: CancellationItem,
-        selectedItem: (CancellationItem) -> Unit
+        cancellationItem: GetCancelResponseData,
+        selectedItem: (GetCancelResponseData) -> Unit
     ) {
-        binding.transactionCode.text = cancellationItem.cancellationCode
+        binding.transactionCode.text = cancellationItem.transactionCode.toString()
+        binding.cancellationReason.text = cancellationItem.cancelReasion.toString()
+        val beneAmount = cancellationItem.beneAmount.toString()
+        binding.sendAmount.text = "$beneAmount"
+        val orderStatus = cancellationItem.orderStatus.toString()
+        if (orderStatus == "17") {
+            binding.status.text = "cancel"
+        }
+
         binding.itemCancellationLayout.setOnClickListener {
             selectedItem(cancellationItem)
         }

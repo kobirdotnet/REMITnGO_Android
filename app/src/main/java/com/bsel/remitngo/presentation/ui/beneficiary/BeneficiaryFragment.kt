@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.ChooseOrderTypeAdapter
 import com.bsel.remitngo.adapter.GenderAdapter
 import com.bsel.remitngo.bottom_sheet.ReasonBottomSheet
 import com.bsel.remitngo.bottom_sheet.RelationBottomSheet
@@ -24,7 +23,6 @@ import com.bsel.remitngo.data.model.reason.ReasonData
 import com.bsel.remitngo.data.model.relation.RelationData
 import com.bsel.remitngo.databinding.FragmentBeneficiaryBinding
 import com.bsel.remitngo.interfaceses.OnBeneficiarySelectedListener
-import com.bsel.remitngo.model.ChooseOrderType
 import com.bsel.remitngo.presentation.di.Injector
 import java.util.*
 import javax.inject.Inject
@@ -93,11 +91,11 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 
         recipientNameFocusListener()
         phoneNumberFocusListener()
-        genderFocusListener()
-        relationFocusListener()
-        reasonFocusListener()
-        addressFocusListener()
-        countryFocusListener()
+//        genderFocusListener()
+//        relationFocusListener()
+//        reasonFocusListener()
+//        addressFocusListener()
+//        countryFocusListener()
 
         orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
@@ -121,27 +119,6 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         } else {
             binding.recipientBankStatus.visibility = View.VISIBLE
             binding.recipientWalletStatus.visibility = View.GONE
-        }
-
-        val chooseOrderTypes = arrayOf(
-            ChooseOrderType(R.drawable.bank, "Bank Account"),
-            ChooseOrderType(R.drawable.bkash, "bKash")
-        )
-        val adapter =
-            ChooseOrderTypeAdapter(requireContext(), R.layout.choose_order_type, chooseOrderTypes)
-        binding.chooseOrderType.setAdapter(adapter)
-        binding.chooseOrderType.setOnItemClickListener { _, _, position, _ ->
-            val type = adapter.getItem(position)
-            orderType = type?.orderTypeName.toString()
-
-            if (orderType == "Bank Account") {
-                binding.recipientBankStatus.visibility = View.VISIBLE
-                binding.recipientWalletStatus.visibility = View.GONE
-            } else if (orderType == "bKash") {
-                binding.recipientBankStatus.visibility = View.GONE
-                binding.recipientWalletStatus.visibility = View.VISIBLE
-            }
-
         }
 
         binding.btnContinue.setOnClickListener { recipientForm() }
@@ -269,22 +246,22 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 //        binding.chooseOrderTypeContainer.helperText = validChooseOrderType()
         binding.recipientNameContainer.helperText = validRecipientName()
         binding.phoneNumberContainer.helperText = validPhoneNumber()
-        binding.genderContainer.helperText = validGender()
-        binding.relationContainer.helperText = validRelation()
-        binding.reasonContainer.helperText = validReason()
-        binding.addressContainer.helperText = validAddress()
-        binding.countryContainer.helperText = validCountry()
+//        binding.genderContainer.helperText = validGender()
+//        binding.relationContainer.helperText = validRelation()
+//        binding.reasonContainer.helperText = validReason()
+//        binding.addressContainer.helperText = validAddress()
+//        binding.countryContainer.helperText = validCountry()
 
 //        val validChooseOrderType = binding.chooseOrderTypeContainer.helperText == null
         val validRecipientName = binding.recipientNameContainer.helperText == null
         val validPhoneNumber = binding.phoneNumberContainer.helperText == null
-        val validGender = binding.genderContainer.helperText == null
-        val validRelation = binding.relationContainer.helperText == null
-        val validReason = binding.reasonContainer.helperText == null
-        val validAddress = binding.addressContainer.helperText == null
-        val validCountry = binding.countryContainer.helperText == null
+//        val validGender = binding.genderContainer.helperText == null
+//        val validRelation = binding.relationContainer.helperText == null
+//        val validReason = binding.reasonContainer.helperText == null
+//        val validAddress = binding.addressContainer.helperText == null
+//        val validCountry = binding.countryContainer.helperText == null
 
-        if (validRecipientName && validPhoneNumber && validGender && validRelation && validReason && validAddress && validCountry) {
+        if (validRecipientName && validPhoneNumber) {
             submitRecipientForm()
         }
     }
@@ -307,27 +284,25 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
             firstname = recipientName,
             middlename = "",
             lastname = "",
-            gender = genderId.toInt(),
+            gender = 0,
             mobile = phoneNumber,
             emailId = "",
             countryID = countryId,
             divisionID = 0,
             districtID = 0,
             thanaID = 0,
-            address = address,
+            address = "",
             active = true,
             isOnlineCustomer = isOnlineCustomer,
             userIPAddress = ipAddress.toString(),
-            relationType = relationId.toInt(),
-            resonID = reasonId.toInt(),
+            relationType = 0,
+            resonID = 0,
             iban = "",
             bic = "",
             identityType = 0,
             beneOccupation = 0,
             otherOccupation = ""
         )
-
-        // Call the login method in the ViewModel
         beneficiaryViewModel.beneficiary(beneficiaryItem)
 
     }

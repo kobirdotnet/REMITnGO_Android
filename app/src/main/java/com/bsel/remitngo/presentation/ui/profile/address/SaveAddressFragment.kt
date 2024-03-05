@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottom_sheet.AddressBottomSheet
 import com.bsel.remitngo.bottom_sheet.CityBottomSheet
@@ -209,6 +210,9 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
     private fun observeUpdateProfileResult() {
         profileViewModel.updateProfileResult.observe(this) { result ->
             if (result != null) {
+                findNavController().navigate(
+                    R.id.action_nav_save_address_to_nav_my_profile
+                )
                 Log.i("info", "update profile successful: $result")
             } else {
                 Log.i("info", "update profile failed")
