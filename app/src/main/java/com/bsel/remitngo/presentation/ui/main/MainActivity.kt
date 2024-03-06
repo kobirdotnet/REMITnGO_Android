@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         val referralCode = headerView.findViewById<TextView>(R.id.referralCode)
         val inviteReferralCode = headerView.findViewById<TextView>(R.id.inviteReferralCode)
 
+        val transfer = headerView.findViewById<LinearLayout>(R.id.transfer)
         val myProfile = headerView.findViewById<LinearLayout>(R.id.myProfile)
         val kycDocument = headerView.findViewById<LinearLayout>(R.id.kyc_document)
         val transactionHistory = headerView.findViewById<LinearLayout>(R.id.transaction_history)
@@ -129,6 +130,10 @@ class MainActivity : AppCompatActivity() {
         drawerClose.setOnClickListener { drawerLayout.close() }
 
         // Set click listeners for navigation items
+        transfer.setOnClickListener {
+            navController.navigate(R.id.nav_main)
+            drawerLayout.close()
+        }
         myProfile.setOnClickListener {
             navController.navigate(R.id.nav_my_profile)
             drawerLayout.close()
