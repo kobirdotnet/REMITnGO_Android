@@ -30,11 +30,11 @@ class TransactionFragment : Fragment() {
 
     private lateinit var binding: FragmentTransactionBinding
 
-    private lateinit var preferenceManager: PreferenceManager
-
     private lateinit var transactionAdapter: TransactionAdapter
 
     private val transactionBottomSheet: TransactionBottomSheet by lazy { TransactionBottomSheet() }
+
+    private lateinit var preferenceManager: PreferenceManager
 
     private lateinit var deviceId: String
     private lateinit var personId: String

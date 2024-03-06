@@ -1,4 +1,4 @@
-package com.bsel.remitngo.ui.cancel_request
+package com.bsel.remitngo.presentation.ui.cancel_request
 
 import android.content.Context
 import android.os.Build
@@ -19,8 +19,6 @@ import com.bsel.remitngo.data.model.cancel_request.populate_cancel_request.Popul
 import com.bsel.remitngo.data.model.cancel_request.populate_cancel_request.PopulateCancelItem
 import com.bsel.remitngo.databinding.FragmentCancelRequestBinding
 import com.bsel.remitngo.presentation.di.Injector
-import com.bsel.remitngo.presentation.ui.cancel_request.CancelRequestViewModel
-import com.bsel.remitngo.presentation.ui.cancel_request.CancelRequestViewModelFactory
 import javax.inject.Inject
 
 class CancelRequestFragment : Fragment() {
@@ -88,9 +86,16 @@ class CancelRequestFragment : Fragment() {
     }
 
     private fun populateCancel(selectedItem: PopulateCancelData) {
-        Log.i("info", "selectedItem: $selectedItem")
+        val bundle = Bundle().apply {
+            putString("transactionCode", selectedItem.transactionCode.toString())
+            putString("transactionDate", selectedItem.transactionDateTime12hr.toString())
+            putString("orderType", selectedItem.orderTypeName.toString())
+            putString("beneficiaryName", selectedItem.beneficiaryName.toString())
+            putString("sendAmount", selectedItem.beneAmount.toString())
+        }
         findNavController().navigate(
-            R.id.action_nav_cancel_request_to_nav_generate_cancel_request
+            R.id.action_nav_cancel_request_to_nav_generate_cancel_request,
+            bundle
         )
     }
 

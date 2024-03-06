@@ -51,5 +51,9 @@ class UseCaseModule {
     fun provideCancelRequestUseCase(cancelRequestRepository: CancelRequestRepository): CancelRequestUseCase {
         return CancelRequestUseCase(cancelRequestRepository)
     }
+    @Provides
+    fun provideQueryUseCase(queryRepository: QueryRepository): QueryUseCase {
+        return QueryUseCase(queryRepository)
+    }
 
 }

@@ -1,110 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/item_cancellation_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
+        android:layout_marginBottom="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2.5">
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Transaction Code : "
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/transactionCode"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="right"
+                    android:textColor="@color/navy_blue"  />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Status : "
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/status"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="right"
+                    android:textColor="@color/navy_blue"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Send Amount : "
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/sendAmount"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:fontFamily="@font/roboto_regular"
-                    android:gravity="left"
-                    android:text="Cancellation Reason : "
-                    android:textColor="@color/black" />
+                    android:gravity="right"
+                    android:textColor="@color/navy_blue" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <TextView
-                    android:id="@+id/transactionCode"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
-                    android:gravity="right"
-                    android:text="21000004519755B"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="right"
-                    android:text="Active"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/sendAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="right"
-                    android:text="BDT 50408.50"
+                    android:gravity="left"
+                    android:text="Reason : "
                     android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/cancellationReason"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
-                    android:text="address not fount"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/navy_blue" />
 
             </LinearLayout>
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/grey"
+            android:layout_marginTop="8dp"/>
 
     </LinearLayout>
 

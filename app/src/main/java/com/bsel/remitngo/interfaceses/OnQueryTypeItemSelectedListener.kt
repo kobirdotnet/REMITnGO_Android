@@ -1,7 +1,7 @@
 package com.bsel.remitngo.interfaceses
 
-import com.bsel.remitngo.model.QueryType
+import com.bsel.remitngo.data.model.query.query_type.QueryTypeData
 
 interface OnQueryTypeItemSelectedListener {
-    fun onQueryTypeItemSelected(selectedItem: QueryType)
+    fun onQueryTypeItemSelected(selectedItem: QueryTypeData)
 }

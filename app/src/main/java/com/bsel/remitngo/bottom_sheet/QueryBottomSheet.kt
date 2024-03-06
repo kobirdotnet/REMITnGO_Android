@@ -1,26 +1,53 @@
 package com.bsel.remitngo.bottom_sheet
 
 import android.app.Dialog
+import android.content.Context
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.View
+import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
+import com.bsel.remitngo.adapter.QueryAdapter
+import com.bsel.remitngo.adapter.QueryTypeAdapter
+import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.model.query.QueryItem
+import com.bsel.remitngo.data.model.query.QueryTable
+import com.bsel.remitngo.data.model.query.add_query.AddQueryItem
+import com.bsel.remitngo.data.model.query.query_type.QueryTypeData
 import com.bsel.remitngo.databinding.AddQueryLayoutBinding
 import com.bsel.remitngo.interfaceses.OnQueryTypeItemSelectedListener
-import com.bsel.remitngo.model.QueryType
+import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.query.QueryViewModel
+import com.bsel.remitngo.presentation.ui.query.QueryViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import javax.inject.Inject
 
-class AddQueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelectedListener {
+class QueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelectedListener {
+    @Inject
+    lateinit var queryViewModelFactory: QueryViewModelFactory
+    private lateinit var queryViewModel: QueryViewModel
 
     private lateinit var addQueryBehavior: BottomSheetBehavior<*>
 
     private lateinit var binding: AddQueryLayoutBinding
 
     private val queryTypeBottomSheet: QueryTypeBottomSheet by lazy { QueryTypeBottomSheet() }
+
+    private lateinit var preferenceManager: PreferenceManager
+
+    private lateinit var deviceId: String
+    private lateinit var personId: String
+
+    private lateinit var queryTypeId: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -50,6 +77,15 @@ class AddQueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelected
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
+        (requireActivity().application as Injector).createQuerySubComponent().inject(this)
+
+        queryViewModel =
+            ViewModelProvider(this, queryViewModelFactory)[QueryViewModel::class.java]
+
+        preferenceManager = PreferenceManager(requireContext())
+        personId = preferenceManager.loadData("personId").toString()
+        deviceId = getDeviceId(requireContext())
+
         queryTypeFocusListener()
         statusFocusListener()
         messageFocusListener()
@@ -60,20 +96,11 @@ class AddQueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelected
             queryTypeBottomSheet.show(childFragmentManager, queryTypeBottomSheet.tag)
         }
 
-        binding.btnSave.setOnClickListener { queryFrom()}
+        binding.btnSave.setOnClickListener { queryFrom() }
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
         return bottomSheet
-    }
-
-    override fun onStart() {
-        super.onStart()
-        addQueryBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
-    override fun onQueryTypeItemSelected(selectedItem: QueryType) {
-        binding.queryType.setText(selectedItem.queryTypeName)
     }
 
     private fun queryFrom() {
@@ -98,7 +125,30 @@ class AddQueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelected
         val message = binding.message.text.toString()
         val transactionNo = binding.transactionNo.text.toString()
 
-        dismiss()
+        val addQueryItem = AddQueryItem(
+            checkTranNo = true,
+            complainId = 0,
+            complainMessage = message,
+            complainStatus = true,
+            deviceId = deviceId,
+            querySender = personId.toInt(),
+            queryType = queryTypeId.toInt(),
+            transactionNo = transactionNo,
+            userIPAddress = ""
+        )
+        queryViewModel.addQuery(addQueryItem)
+        observeAddQueryResult()
+    }
+
+    private fun observeAddQueryResult() {
+        queryViewModel.addQueryResult.observe(this) { result ->
+            if (result!!.data != null) {
+                Log.i("info", " queryType successful: $result")
+                dismiss()
+            } else {
+                Log.i("info", " queryType failed")
+            }
+        }
     }
 
     //Form validation
@@ -164,6 +214,33 @@ class AddQueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelected
             return "enter transaction no"
         }
         return null
+    }
+
+    override fun onQueryTypeItemSelected(selectedItem: QueryTypeData) {
+        binding.queryType.setText(selectedItem.name)
+        queryTypeId = selectedItem.id.toString()
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
+    }
+
+    override fun onStart() {
+        super.onStart()
+        addQueryBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
 }

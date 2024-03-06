@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.query.QueryTable
 import com.bsel.remitngo.databinding.ItemQueryBinding
-import com.bsel.remitngo.model.QueryItem
 
 class QueryAdapter(
-    private val selectedItem: (QueryItem) -> Unit
+    private val selectedItem: (QueryTable) -> Unit
 ) : RecyclerView.Adapter<QueryViewHolder>() {
 
-    private val queryItemList = ArrayList<QueryItem>()
-    private var filteredQueryItemList = ArrayList<QueryItem>()
+    private val queryItemList = ArrayList<QueryTable>()
+    private var filteredQueryItemList = ArrayList<QueryTable>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +34,7 @@ class QueryAdapter(
         holder.bind(filteredQueryItemList[position], selectedItem)
     }
 
-    fun setList(queryItem: List<QueryItem>) {
+    fun setList(queryItem: List<QueryTable>) {
         queryItemList.clear()
         queryItemList.addAll(queryItem)
         filter("")
@@ -43,7 +43,7 @@ class QueryAdapter(
     fun filter(query: String) {
         filteredQueryItemList.clear()
         for (queryItem in queryItemList) {
-            if (queryItem.queryName!!.contains(query, ignoreCase = true)) {
+            if (queryItem.transactionCode!!.contains(query, ignoreCase = true)) {
                 filteredQueryItemList.add(queryItem)
             }
         }
@@ -55,10 +55,14 @@ class QueryAdapter(
 class QueryViewHolder(val binding: ItemQueryBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        queryItem: QueryItem,
-        selectedItem: (QueryItem) -> Unit
+        queryItem: QueryTable,
+        selectedItem: (QueryTable) -> Unit
     ) {
-        binding.queryId.text = queryItem.queryName
+        binding.query.text = queryItem.complainTypeString
+        binding.type.text = queryItem.complainTypeString
+        binding.status.text = queryItem.complainStatusString
+        binding.transactionCode.text = queryItem.transactionCode
+        binding.message.text = queryItem.message
         binding.itemQueryLayout.setOnClickListener {
             selectedItem(queryItem)
         }

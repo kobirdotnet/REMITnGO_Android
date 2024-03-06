@@ -17,6 +17,8 @@ import com.bsel.remitngo.data.repository.payment.dataSource.PaymentRemoteDataSou
 import com.bsel.remitngo.data.repository.payment.dataSourceImpl.PaymentRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.profile.dataSource.ProfileRemoteDataSource
 import com.bsel.remitngo.data.repository.profile.dataSourceImpl.ProfileRemoteDataSourceImpl
+import com.bsel.remitngo.data.repository.query.dataSource.QueryRemoteDataSource
+import com.bsel.remitngo.data.repository.query.dataSourceImpl.QueryRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
 import com.bsel.remitngo.data.repository.registration.dataSourceImpl.RegistrationRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.transaction.dataSource.TransactionRemoteDataSource
@@ -82,6 +84,11 @@ class RemoteDataModule {
     @Provides
     fun provideCancelRequestRemoteDataSource(remitNgoService: REMITnGoService): CancelRequestRemoteDataSource {
         return CancelRequestRemoteDataSourceImpl(remitNgoService)
+    }
+    @Singleton
+    @Provides
+    fun provideQueryRemoteDataSource(remitNgoService: REMITnGoService): QueryRemoteDataSource {
+        return QueryRemoteDataSourceImpl(remitNgoService)
     }
 
 }

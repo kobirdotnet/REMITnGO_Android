@@ -1,20 +1,24 @@
 package com.bsel.remitngo.adapter
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.query.query_message.QueryMessageTable
 import com.bsel.remitngo.databinding.ItemQueryMessageBinding
-import com.bsel.remitngo.model.QueryMessage
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class QueryMessageAdapter(
-    private val selectedItem: (QueryMessage) -> Unit
+    private val selectedItem: (QueryMessageTable) -> Unit
 ) : RecyclerView.Adapter<QueryMessageViewHolder>() {
 
-    private val queryMessageList = ArrayList<QueryMessage>()
-    private var filteredQueryMessageList = ArrayList<QueryMessage>()
+    private val queryMessageList = ArrayList<QueryMessageTable>()
+    private var filteredQueryMessageList = ArrayList<QueryMessageTable>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueryMessageViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -27,6 +31,7 @@ class QueryMessageAdapter(
         return filteredQueryMessageList.size
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(
         holder: QueryMessageViewHolder,
         @SuppressLint("RecyclerView") position: Int
@@ -34,7 +39,7 @@ class QueryMessageAdapter(
         holder.bind(filteredQueryMessageList[position], selectedItem)
     }
 
-    fun setList(queryMessage: List<QueryMessage>) {
+    fun setList(queryMessage: List<QueryMessageTable>) {
         queryMessageList.clear()
         queryMessageList.addAll(queryMessage)
         filter("")
@@ -43,7 +48,7 @@ class QueryMessageAdapter(
     fun filter(query: String) {
         filteredQueryMessageList.clear()
         for (queryMessage in queryMessageList) {
-            if (queryMessage.queryMessage!!.contains(query, ignoreCase = true)) {
+            if (queryMessage.transactionCode!!.contains(query, ignoreCase = true)) {
                 filteredQueryMessageList.add(queryMessage)
             }
         }
@@ -54,11 +59,20 @@ class QueryMessageAdapter(
 
 class QueryMessageViewHolder(val binding: ItemQueryMessageBinding) :
     RecyclerView.ViewHolder(binding.root) {
+    @RequiresApi(Build.VERSION_CODES.O)
     fun bind(
-        queryMessage: QueryMessage,
-        selectedItem: (QueryMessage) -> Unit
+        queryMessage: QueryMessageTable,
+        selectedItem: (QueryMessageTable) -> Unit
     ) {
-        binding.message.text = queryMessage.queryMessage
+        binding.message.text = queryMessage.message
+        binding.postedBy.text = queryMessage.name
+
+        val dateTime =
+            LocalDateTime.parse(queryMessage.updateDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        val date = dateTime.toLocalDate()
+        val updateDate = date.format(DateTimeFormatter.ISO_DATE)
+
+        binding.postedDate.text = "$updateDate"
         binding.itemQueryMessageLayout.setOnClickListener {
             selectedItem(queryMessage)
         }

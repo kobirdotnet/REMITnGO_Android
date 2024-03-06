@@ -34,23 +34,36 @@
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/posted_by"
+                android:id="@+id/postedBy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
-                android:text="Jubair Alom"
                 android:textColor="@color/black" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/posted_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_regular"
-            android:gravity="center_vertical"
-            android:text="28/08/2024 11:30 AM"
-            android:textColor="@color/black" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:gravity="center_vertical"
+                android:text="Date : "
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/postedDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:gravity="center_vertical"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
 
     </LinearLayout>
 

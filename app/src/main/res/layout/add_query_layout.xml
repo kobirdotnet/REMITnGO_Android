@@ -68,7 +68,7 @@
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
                     <AutoCompleteTextView
-                        android:id="@+id/query_type"
+                        android:id="@+id/queryType"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
@@ -175,7 +175,7 @@
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/transaction_no"
+                        android:id="@+id/transactionNo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"

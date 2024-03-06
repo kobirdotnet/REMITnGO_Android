@@ -8,6 +8,7 @@ import com.bsel.remitngo.presentation.di.document.DocumentSubComponent
 import com.bsel.remitngo.presentation.di.login.LoginSubComponent
 import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
+import com.bsel.remitngo.presentation.di.query.QuerySubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
 import com.bsel.remitngo.presentation.di.transaction.TransactionSubComponent
 import dagger.Component
@@ -34,4 +35,5 @@ interface AppComponent {
     fun documentSubComponent(): DocumentSubComponent.Factory
     fun transactionSubComponent(): TransactionSubComponent.Factory
     fun cancelRequestSubComponent(): CancelRequestSubComponent.Factory
+    fun querySubComponent(): QuerySubComponent.Factory
 }

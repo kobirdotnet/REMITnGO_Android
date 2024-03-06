@@ -198,7 +198,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_cancel_request"
-        android:name="com.bsel.remitngo.ui.cancel_request.CancelRequestFragment"
+        android:name="com.bsel.remitngo.presentation.ui.cancel_request.CancelRequestFragment"
         android:label="@string/menu_cancel_request"
         tools:layout="@layout/fragment_cancel_request">
         <action
@@ -207,7 +207,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_generate_cancel_request"
-        android:name="com.bsel.remitngo.ui.cancel_request.GenerateCancelRequestFragment"
+        android:name="com.bsel.remitngo.presentation.ui.cancel_request.GenerateCancelRequestFragment"
         android:label="@string/menu_cancel_request"
         tools:layout="@layout/fragment_generate_cancel_request">
         <action
@@ -216,7 +216,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_generate_query"
-        android:name="com.bsel.remitngo.ui.generate_query.GenerateQueryFragment"
+        android:name="com.bsel.remitngo.presentation.ui.query.GenerateQueryFragment"
         android:label="@string/menu_generate_query"
         tools:layout="@layout/fragment_generate_query">
         <action
@@ -225,7 +225,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_update_query"
-        android:name="com.bsel.remitngo.ui.generate_query.UpdateQueryFragment"
+        android:name="com.bsel.remitngo.presentation.ui.query.UpdateQueryFragment"
         android:label="@string/menu_update_query"
         tools:layout="@layout/fragment_update_query" />
 

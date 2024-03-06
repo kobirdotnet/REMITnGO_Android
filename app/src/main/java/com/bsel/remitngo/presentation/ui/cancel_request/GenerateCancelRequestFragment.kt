@@ -1,22 +1,48 @@
-package com.bsel.remitngo.ui.cancel_request
+package com.bsel.remitngo.presentation.ui.cancel_request
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottom_sheet.CancelReasonBottomSheet
+import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.cancel_request.cancel_reason.CancelReasonData
+import com.bsel.remitngo.data.model.cancel_request.save_cancel_request.SaveCancelRequestItem
 import com.bsel.remitngo.databinding.FragmentGenerateCancelRequestBinding
 import com.bsel.remitngo.interfaceses.OnCancelReasonItemSelectedListener
+import com.bsel.remitngo.presentation.di.Injector
+import javax.inject.Inject
 
 class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedListener {
+    @Inject
+    lateinit var cancelRequestViewModelFactory: CancelRequestViewModelFactory
+    private lateinit var cancelRequestViewModel: CancelRequestViewModel
 
     private lateinit var binding: FragmentGenerateCancelRequestBinding
 
     private val cancelReasonBottomSheet: CancelReasonBottomSheet by lazy { CancelReasonBottomSheet() }
+
+    private lateinit var preferenceManager: PreferenceManager
+
+    private lateinit var deviceId: String
+    private lateinit var personId: String
+
+    private lateinit var cancelReasonId: String
+
+    private lateinit var transactionCode: String
+    private lateinit var transactionDate: String
+    private lateinit var orderType: String
+    private lateinit var beneficiaryName: String
+    private lateinit var sendAmount: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +51,7 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
         return inflater.inflate(R.layout.fragment_generate_cancel_request, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentGenerateCancelRequestBinding.bind(view)
@@ -37,13 +64,55 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
         cancelReasonFocusListener()
         descriptionFocusListener()
 
+        (requireActivity().application as Injector).createCancelRequestSubComponent().inject(this)
+
+        cancelRequestViewModel =
+            ViewModelProvider(
+                this,
+                cancelRequestViewModelFactory
+            )[CancelRequestViewModel::class.java]
+
+        preferenceManager = PreferenceManager(requireContext())
+        personId = preferenceManager.loadData("personId").toString()
+        deviceId = getDeviceId(requireContext())
+
+        transactionCode = arguments?.getString("transactionCode").toString()
+        binding.transactionCode.setText(transactionCode)
+
+        transactionDate = arguments?.getString("transactionDate").toString()
+        binding.transactionDate.setText(transactionDate)
+
+        orderType = arguments?.getString("orderType").toString()
+        binding.orderType.setText(orderType)
+
+        beneficiaryName = arguments?.getString("beneficiaryName").toString()
+        binding.beneficiaryName.setText(beneficiaryName)
+
+        sendAmount = arguments?.getString("sendAmount").toString()
+        binding.sendAmount.setText("BDT $sendAmount")
+
         binding.cancelReason.setOnClickListener {
             cancelReasonBottomSheet.itemSelectedListener = this
             cancelReasonBottomSheet.show(childFragmentManager, cancelReasonBottomSheet.tag)
         }
 
-        binding.btnSubmit.setOnClickListener {cancelRequestFrom()}
+        binding.btnSubmit.setOnClickListener { cancelRequestFrom() }
 
+        observeSaveCancelRequestResult()
+
+    }
+
+    private fun observeSaveCancelRequestResult() {
+        cancelRequestViewModel.saveCancelRequestResult.observe(this) { result ->
+            if (result!!.data != null) {
+                Log.i("info", "save cancel Request successful: $result")
+                findNavController().navigate(
+                    R.id.action_nav_generate_cancel_request_to_nav_cancellation
+                )
+            } else {
+                Log.i("info", "save cancel Request failed")
+            }
+        }
     }
 
     private fun cancelRequestFrom() {
@@ -76,9 +145,13 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
         val cancelReason = binding.cancelReason.text.toString()
         val description = binding.description.text.toString()
 
-        findNavController().navigate(
-            R.id.action_nav_generate_cancel_request_to_nav_cancellation
+        val saveCancelRequestItem = SaveCancelRequestItem(
+            cancelReasonId = cancelReasonId.toInt(),
+            personId = personId.toInt(),
+            remarks = description,
+            transactionCode = transactionCode
         )
+        cancelRequestViewModel.saveCancelRequest(saveCancelRequestItem)
     }
 
     //Form validation
@@ -196,6 +269,24 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
 
     override fun onCancelReasonItemSelected(selectedItem: CancelReasonData) {
         binding.cancelReason.setText(selectedItem.name)
+        cancelReasonId = selectedItem.id.toString()
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
     }
 
 }

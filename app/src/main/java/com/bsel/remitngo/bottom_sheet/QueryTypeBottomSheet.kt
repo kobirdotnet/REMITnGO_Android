@@ -1,24 +1,43 @@
 package com.bsel.remitngo.bottom_sheet
 
 import android.app.Dialog
+import android.content.Context
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
+import com.bsel.remitngo.adapter.BankAdapter
+import com.bsel.remitngo.adapter.QueryAdapter
 import com.bsel.remitngo.adapter.QueryTypeAdapter
+import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankData
+import com.bsel.remitngo.data.model.query.QueryItem
+import com.bsel.remitngo.data.model.query.QueryTable
+import com.bsel.remitngo.data.model.query.query_type.QueryTypeData
+import com.bsel.remitngo.data.model.query.query_type.QueryTypeItem
 import com.bsel.remitngo.databinding.QueryTypeLayoutBinding
 import com.bsel.remitngo.interfaceses.OnQueryTypeItemSelectedListener
 import com.bsel.remitngo.model.QueryType
+import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.query.QueryViewModel
+import com.bsel.remitngo.presentation.ui.query.QueryViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import javax.inject.Inject
 
 class QueryTypeBottomSheet : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var queryViewModelFactory: QueryViewModelFactory
+    private lateinit var queryViewModel: QueryViewModel
 
     var itemSelectedListener: OnQueryTypeItemSelectedListener? = null
 
@@ -27,6 +46,11 @@ class QueryTypeBottomSheet : BottomSheetDialogFragment() {
     private lateinit var binding: QueryTypeLayoutBinding
 
     private lateinit var queryTypeAdapter: QueryTypeAdapter
+
+    private lateinit var preferenceManager: PreferenceManager
+
+    private lateinit var deviceId: String
+    private lateinit var personId: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -56,44 +80,78 @@ class QueryTypeBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
-        val queryTypes = arrayOf(
-            QueryType("Transaction status"),
-            QueryType("Refund"),
-            QueryType("Other")
-        )
+        (requireActivity().application as Injector).createQuerySubComponent().inject(this)
 
-        binding.queryTypeRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        queryTypeAdapter = QueryTypeAdapter(
-            selectedItem = { selectedItem: QueryType ->
-                queryType(selectedItem)
-                binding.queryTypeSearch.setQuery("", false)
-            }
-        )
-        binding.queryTypeRecyclerView.adapter = queryTypeAdapter
-        queryTypeAdapter.setList(queryTypes.asList())
-        queryTypeAdapter.notifyDataSetChanged()
+        queryViewModel =
+            ViewModelProvider(this, queryViewModelFactory)[QueryViewModel::class.java]
 
-        binding.queryTypeSearch.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                queryTypeAdapter.filter(newText.orEmpty())
-                return true
-            }
-        })
+        preferenceManager = PreferenceManager(requireContext())
+        personId = preferenceManager.loadData("personId").toString()
+        deviceId = getDeviceId(requireContext())
         
         binding.cancelButton.setOnClickListener { dismiss() }
+
+        val queryTypeItem = QueryTypeItem(
+            deviceId = deviceId
+        )
+        queryViewModel.queryType(queryTypeItem)
+        observeQueryTypeResult()
 
         return bottomSheet
     }
 
-    private fun queryType(selectedItem: QueryType) {
-        Log.i("info", "selectedItem: $selectedItem")
+    private fun observeQueryTypeResult() {
+        queryViewModel.queryTypeResult.observe(this) { result ->
+            if (result!!.data != null) {
+                binding.queryTypeRecyclerView.layoutManager =
+                    LinearLayoutManager(requireActivity())
+                queryTypeAdapter = QueryTypeAdapter(
+                    selectedItem = { selectedItem: QueryTypeData ->
+                        queryType(selectedItem)
+                        binding.queryTypeSearch.setQuery("", false)
+                    }
+                )
+                binding.queryTypeRecyclerView.adapter = queryTypeAdapter
+                queryTypeAdapter.setList(result.data as List<QueryTypeData>)
+                queryTypeAdapter.notifyDataSetChanged()
+
+                binding.queryTypeSearch.setOnQueryTextListener(object :
+                    SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        queryTypeAdapter.filter(newText.orEmpty())
+                        return true
+                    }
+                })
+                Log.i("info", " queryType successful: $result")
+            } else {
+                Log.i("info", " queryType failed")
+            }
+        }
+    }
+
+    private fun queryType(selectedItem: QueryTypeData) {
         itemSelectedListener?.onQueryTypeItemSelected(selectedItem)
         dismiss()
+    }
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
     }
 
     override fun onStart() {

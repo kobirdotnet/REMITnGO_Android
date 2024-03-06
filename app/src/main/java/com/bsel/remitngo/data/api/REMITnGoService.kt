@@ -64,6 +64,16 @@ import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
 import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionResponseItem
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileResponseItem
+import com.bsel.remitngo.data.model.query.QueryItem
+import com.bsel.remitngo.data.model.query.QueryResponseItem
+import com.bsel.remitngo.data.model.query.add_message.AddMessageItem
+import com.bsel.remitngo.data.model.query.add_message.AddMessageResponseItem
+import com.bsel.remitngo.data.model.query.add_query.AddQueryItem
+import com.bsel.remitngo.data.model.query.add_query.AddQueryResponseItem
+import com.bsel.remitngo.data.model.query.query_message.QueryMessageItem
+import com.bsel.remitngo.data.model.query.query_message.QueryMessageResponseItem
+import com.bsel.remitngo.data.model.query.query_type.QueryTypeItem
+import com.bsel.remitngo.data.model.query.query_type.QueryTypeResponseItem
 import com.bsel.remitngo.data.model.reason.ReasonItem
 import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.registration.RegistrationItem
@@ -206,6 +216,19 @@ interface REMITnGoService {
 
     @POST("api/General/SaveCancelRequest")
     suspend fun saveCancelRequest(@Body saveCancelRequestItem: SaveCancelRequestItem): Response<SaveCancelResponseItem>
+
+    @POST("api/General/LoadQueryList")
+    suspend fun query(@Body queryItem: QueryItem): Response<QueryResponseItem>
+
+    @POST("api/General/LoadQueryDataByComplainId")
+    suspend fun queryMessage(@Body queryMessageItem: QueryMessageItem): Response<QueryMessageResponseItem>
+
+    @POST("api/General/LoadComplainType")
+    suspend fun queryType(@Body queryTypeItem: QueryTypeItem): Response<QueryTypeResponseItem>
+    @POST("api/General/SaveQuery")
+    suspend fun addQuery(@Body addQueryItem: AddQueryItem): Response<AddQueryResponseItem>
+    @POST("api/General/SaveUserMessage")
+    suspend fun addMessage(@Body addMessageItem: AddMessageItem): Response<AddMessageResponseItem>
 
 
 }

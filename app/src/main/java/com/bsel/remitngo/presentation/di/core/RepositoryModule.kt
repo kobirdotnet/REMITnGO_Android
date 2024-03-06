@@ -16,6 +16,8 @@ import com.bsel.remitngo.data.repository.payment.PaymentRepositoryImpl
 import com.bsel.remitngo.data.repository.payment.dataSource.PaymentRemoteDataSource
 import com.bsel.remitngo.data.repository.profile.ProfileRepositoryImpl
 import com.bsel.remitngo.data.repository.profile.dataSource.ProfileRemoteDataSource
+import com.bsel.remitngo.data.repository.query.QueryRepositoryImpl
+import com.bsel.remitngo.data.repository.query.dataSource.QueryRemoteDataSource
 import com.bsel.remitngo.data.repository.registration.RegistrationRepositoryImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
 import com.bsel.remitngo.data.repository.transaction.TransactionRepositoryImpl
@@ -81,6 +83,11 @@ class RepositoryModule {
     @Provides
     fun provideCancelRequestRepository(cancelRequestRemoteDataSource: CancelRequestRemoteDataSource): CancelRequestRepository {
         return CancelRequestRepositoryImpl(cancelRequestRemoteDataSource)
+    }
+    @Singleton
+    @Provides
+    fun provideQueryRepository(queryRemoteDataSource: QueryRemoteDataSource): QueryRepository {
+        return QueryRepositoryImpl(queryRemoteDataSource)
     }
 
 }

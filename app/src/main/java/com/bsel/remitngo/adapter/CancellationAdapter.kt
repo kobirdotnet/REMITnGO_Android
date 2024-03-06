@@ -57,10 +57,10 @@ class CancellationViewHolder(val binding: ItemCancellationBinding) :
         binding.transactionCode.text = cancellationItem.transactionCode.toString()
         binding.cancellationReason.text = cancellationItem.cancelReasion.toString()
         val beneAmount = cancellationItem.beneAmount.toString()
-        binding.sendAmount.text = "$beneAmount"
+        binding.sendAmount.text = "BDT $beneAmount"
         val orderStatus = cancellationItem.orderStatus.toString()
         if (orderStatus == "17") {
-            binding.status.text = "cancel"
+            binding.status.text = "Cancel"
         }
 
         binding.itemCancellationLayout.setOnClickListener {

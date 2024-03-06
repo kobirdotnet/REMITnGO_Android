@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.query.query_type.QueryTypeData
 import com.bsel.remitngo.databinding.ItemQueryTypeBinding
-import com.bsel.remitngo.model.QueryType
 
 class QueryTypeAdapter(
-    private val selectedItem: (QueryType) -> Unit
+    private val selectedItem: (QueryTypeData) -> Unit
 ) : RecyclerView.Adapter<QueryTypeViewHolder>() {
 
-    private val queryTypeList = ArrayList<QueryType>()
-    private var filteredQueryTypeList = ArrayList<QueryType>()
+    private val queryTypeList = ArrayList<QueryTypeData>()
+    private var filteredQueryTypeList = ArrayList<QueryTypeData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueryTypeViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,7 +34,7 @@ class QueryTypeAdapter(
         holder.bind(filteredQueryTypeList[position], selectedItem)
     }
 
-    fun setList(queryType: List<QueryType>) {
+    fun setList(queryType: List<QueryTypeData>) {
         queryTypeList.clear()
         queryTypeList.addAll(queryType)
         filter("")
@@ -43,7 +43,7 @@ class QueryTypeAdapter(
     fun filter(query: String) {
         filteredQueryTypeList.clear()
         for (queryType in queryTypeList) {
-            if (queryType.queryTypeName!!.contains(query, ignoreCase = true)) {
+            if (queryType.name!!.contains(query, ignoreCase = true)) {
                 filteredQueryTypeList.add(queryType)
             }
         }
@@ -55,10 +55,10 @@ class QueryTypeAdapter(
 class QueryTypeViewHolder(val binding: ItemQueryTypeBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        queryType: QueryType,
-        selectedItem: (QueryType) -> Unit
+        queryType: QueryTypeData,
+        selectedItem: (QueryTypeData) -> Unit
     ) {
-        binding.queryTypeName.text = queryType.queryTypeName
+        binding.queryTypeName.text = queryType.name
         binding.itemQueryTypeLayout.setOnClickListener {
             selectedItem(queryType)
         }
