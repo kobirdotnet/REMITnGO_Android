@@ -1,45 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/blue">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/cancel_button"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_cancel" />
-
-                <TextView
-                    android:id="@+id/nameToolbar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="15dp"
-                    android:layout_weight="1"
-                    android:text="Update Query"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-        </com.google.android.material.appbar.AppBarLayout>
+        android:background="@color/white"
+        android:fillViewport="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:scrollbars="none"
+        tools:context=".presentation.ui.query.QueryMessageFragment">
 
         <LinearLayout
-            android:id="@+id/extraSpace"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
@@ -78,7 +52,6 @@
                         android:gravity="center_vertical"
                         android:inputType="none"
                         android:textColor="@color/black" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -104,7 +77,7 @@
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/userMessage"
+                        android:id="@+id/user_message"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
@@ -115,7 +88,6 @@
                         android:inputType="textMultiLine"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
-
             </LinearLayout>
 
             <LinearLayout
@@ -141,10 +113,9 @@
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
-
             </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 </layout>

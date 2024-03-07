@@ -1,44 +1,32 @@
-package com.bsel.remitngo.bottom_sheet
+package com.bsel.remitngo.presentation.ui.query
 
-import android.app.Dialog
 import android.content.Context
-import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.SearchView
-import androidx.annotation.NonNull
-import androidx.databinding.DataBindingUtil
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.QueryAdapter
-import com.bsel.remitngo.adapter.QueryTypeAdapter
+import com.bsel.remitngo.bottom_sheet.QueryTypeBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.query.QueryItem
-import com.bsel.remitngo.data.model.query.QueryTable
 import com.bsel.remitngo.data.model.query.add_query.AddQueryItem
 import com.bsel.remitngo.data.model.query.query_type.QueryTypeData
-import com.bsel.remitngo.databinding.AddQueryLayoutBinding
+import com.bsel.remitngo.databinding.FragmentAddQueryBinding
 import com.bsel.remitngo.interfaceses.OnQueryTypeItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
-import com.bsel.remitngo.presentation.ui.query.QueryViewModel
-import com.bsel.remitngo.presentation.ui.query.QueryViewModelFactory
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 
-class QueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelectedListener {
+class AddQueryFragment : Fragment(), OnQueryTypeItemSelectedListener {
     @Inject
     lateinit var queryViewModelFactory: QueryViewModelFactory
     private lateinit var queryViewModel: QueryViewModel
 
-    private lateinit var addQueryBehavior: BottomSheetBehavior<*>
-
-    private lateinit var binding: AddQueryLayoutBinding
+    private lateinit var binding: FragmentAddQueryBinding
 
     private val queryTypeBottomSheet: QueryTypeBottomSheet by lazy { QueryTypeBottomSheet() }
 
@@ -49,33 +37,16 @@ class QueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelectedLis
 
     private lateinit var queryTypeId: String
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        val view = View.inflate(requireContext(), R.layout.add_query_layout, null)
-        binding = DataBindingUtil.bind(view)!!
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_add_query, container, false)
+    }
 
-        bottomSheet.setContentView(view)
-        addQueryBehavior = BottomSheetBehavior.from(view.parent as View)
-        addQueryBehavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
-
-        binding.extraSpace.minimumHeight = (Resources.getSystem().displayMetrics.heightPixels)
-
-        addQueryBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(@NonNull view: View, i: Int) {
-                when (i) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> dismiss()
-                }
-            }
-
-            override fun onSlide(@NonNull view: View, v: Float) {}
-        })
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentAddQueryBinding.bind(view)
 
         (requireActivity().application as Injector).createQuerySubComponent().inject(this)
 
@@ -98,9 +69,20 @@ class QueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelectedLis
 
         binding.btnSave.setOnClickListener { queryFrom() }
 
-        binding.cancelButton.setOnClickListener { dismiss() }
+        observeAddQueryResult()
 
-        return bottomSheet
+    }
+
+    private fun observeAddQueryResult() {
+        queryViewModel.addQueryResult.observe(this) { result ->
+            if (result!!.data != null) {
+                findNavController().navigate(
+                    R.id.action_nav_add_query_to_nav_generate_query
+                )
+            } else {
+                Log.i("info", " add query failed")
+            }
+        }
     }
 
     private fun queryFrom() {
@@ -137,18 +119,6 @@ class QueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelectedLis
             userIPAddress = ""
         )
         queryViewModel.addQuery(addQueryItem)
-        observeAddQueryResult()
-    }
-
-    private fun observeAddQueryResult() {
-        queryViewModel.addQueryResult.observe(this) { result ->
-            if (result!!.data != null) {
-                Log.i("info", " queryType successful: $result")
-                dismiss()
-            } else {
-                Log.i("info", " queryType failed")
-            }
-        }
     }
 
     //Form validation
@@ -236,11 +206,6 @@ class QueryBottomSheet : BottomSheetDialogFragment(), OnQueryTypeItemSelectedLis
         }
 
         return deviceId
-    }
-
-    override fun onStart() {
-        super.onStart()
-        addQueryBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
 }

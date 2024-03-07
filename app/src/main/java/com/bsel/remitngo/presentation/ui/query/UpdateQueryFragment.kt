@@ -10,10 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.QueryMessageAdapter
-import com.bsel.remitngo.bottom_sheet.UpdateQueryBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.query.query_message.QueryMessageItem
 import com.bsel.remitngo.data.model.query.query_message.QueryMessageTable
@@ -29,8 +29,6 @@ class UpdateQueryFragment : Fragment() {
     private lateinit var binding: FragmentUpdateQueryBinding
 
     private lateinit var queryMessageAdapter: QueryMessageAdapter
-
-    private val updateQueryBottomSheet: UpdateQueryBottomSheet by lazy { UpdateQueryBottomSheet() }
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -65,8 +63,15 @@ class UpdateQueryFragment : Fragment() {
         complainId = arguments?.getString("complainId").toString()
 
         binding.btnAddMessage.setOnClickListener {
-            updateQueryBottomSheet.setSelectedData(complainId, queryTypeId, transactionCode)
-            updateQueryBottomSheet.show(childFragmentManager, updateQueryBottomSheet.tag)
+            val bundle = Bundle().apply {
+                putString("complainId", complainId)
+                putString("queryTypeId", queryTypeId)
+                putString("transactionCode", transactionCode)
+            }
+            findNavController().navigate(
+                R.id.action_nav_update_query_to_nav_query_message,
+                bundle
+            )
         }
 
         val queryMessageItem = QueryMessageItem(

@@ -216,17 +216,45 @@
     </fragment>
     <fragment
         android:id="@+id/nav_generate_query"
-        android:name="com.bsel.remitngo.presentation.ui.query.GenerateQueryFragment"
+        android:name="com.bsel.remitngo.presentation.ui.query.QueryFragment"
         android:label="@string/menu_generate_query"
-        tools:layout="@layout/fragment_generate_query">
+        tools:layout="@layout/fragment_query">
         <action
             android:id="@+id/action_nav_generate_query_to_nav_update_query"
             app:destination="@id/nav_update_query" />
+        <action
+            android:id="@+id/action_nav_generate_query_to_nav_add_query"
+            app:destination="@id/nav_add_query" />
     </fragment>
     <fragment
         android:id="@+id/nav_update_query"
         android:name="com.bsel.remitngo.presentation.ui.query.UpdateQueryFragment"
         android:label="@string/menu_update_query"
-        tools:layout="@layout/fragment_update_query" />
+        tools:layout="@layout/fragment_update_query" >
+        <action
+            android:id="@+id/action_nav_update_query_to_nav_query_message"
+            app:destination="@id/nav_query_message" />
+        <action
+            android:id="@+id/action_nav_update_query_to_nav_generate_query"
+            app:destination="@id/nav_generate_query" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_add_query"
+        android:name="com.bsel.remitngo.presentation.ui.query.AddQueryFragment"
+        android:label="@string/menu_add_query"
+        tools:layout="@layout/fragment_add_query">
+        <action
+            android:id="@+id/action_nav_add_query_to_nav_generate_query"
+            app:destination="@id/nav_generate_query" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_query_message"
+        android:name="com.bsel.remitngo.presentation.ui.query.QueryMessageFragment"
+        android:label="@string/menu_update_query"
+        tools:layout="@layout/fragment_query_message">
+        <action
+            android:id="@+id/action_nav_query_message_to_nav_update_query"
+            app:destination="@id/nav_update_query" />
+    </fragment>
 
 </navigation>

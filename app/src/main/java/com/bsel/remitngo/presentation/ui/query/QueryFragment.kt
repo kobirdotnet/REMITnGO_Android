@@ -14,25 +14,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.QueryAdapter
-import com.bsel.remitngo.bottom_sheet.QueryBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.query.QueryItem
 import com.bsel.remitngo.data.model.query.QueryTable
-import com.bsel.remitngo.databinding.FragmentGenerateQueryBinding
+import com.bsel.remitngo.databinding.FragmentQueryBinding
 import com.bsel.remitngo.presentation.di.Injector
 import javax.inject.Inject
 
 
-class GenerateQueryFragment : Fragment() {
+class QueryFragment : Fragment() {
     @Inject
     lateinit var queryViewModelFactory: QueryViewModelFactory
     private lateinit var queryViewModel: QueryViewModel
 
-    private lateinit var binding: FragmentGenerateQueryBinding
+    private lateinit var binding: FragmentQueryBinding
 
     private lateinit var queryAdapter: QueryAdapter
 
-    private val queryBottomSheet: QueryBottomSheet by lazy { QueryBottomSheet() }
+    private val addQueryFragment: AddQueryFragment by lazy { AddQueryFragment() }
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -43,12 +42,12 @@ class GenerateQueryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_generate_query, container, false)
+        return inflater.inflate(R.layout.fragment_query, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentGenerateQueryBinding.bind(view)
+        binding = FragmentQueryBinding.bind(view)
 
         (requireActivity().application as Injector).createQuerySubComponent().inject(this)
 
@@ -60,7 +59,9 @@ class GenerateQueryFragment : Fragment() {
         deviceId = getDeviceId(requireContext())
 
         binding.btnAddNewQuere.setOnClickListener {
-            queryBottomSheet.show(childFragmentManager, queryBottomSheet.tag)
+            findNavController().navigate(
+                R.id.action_nav_generate_query_to_nav_add_query
+            )
         }
 
         val queryItem = QueryItem(
@@ -92,7 +93,6 @@ class GenerateQueryFragment : Fragment() {
             }
         }
     }
-
 
     private fun queryItem(selectedItem: QueryTable) {
         val bundle = Bundle().apply {
