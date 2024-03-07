@@ -5,7 +5,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.DocumentAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.document.getDocument.GetDocumentData
-import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
+import com.bsel.remitngo.data.model.document.document.GetDocumentData
+import com.bsel.remitngo.data.model.document.document.GetDocumentItem
 import com.bsel.remitngo.databinding.FragmentDocumentBinding
 import com.bsel.remitngo.presentation.di.Injector
 import java.util.*
@@ -91,7 +90,8 @@ class DocumentFragment : Fragment() {
                 binding.documentRecyclerView.adapter = documentAdapter
                 documentAdapter.setList(result.data as List<GetDocumentData>)
                 documentAdapter.notifyDataSetChanged()
-                binding.documentSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                binding.documentSearch.setOnQueryTextListener(object :
+                    SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         return false
                     }
@@ -127,8 +127,6 @@ class DocumentFragment : Fragment() {
                             }
                         }
                     })
-            } else {
-                Log.i("info", "get document failed")
             }
         }
     }

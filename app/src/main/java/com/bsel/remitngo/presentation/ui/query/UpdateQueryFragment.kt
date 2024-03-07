@@ -116,9 +116,6 @@ class UpdateQueryFragment : Fragment() {
                         queryTypeId = queryData.complainType.toString()
                         transactionCode = queryData.transactionCode.toString()
                     }
-                    Log.i("info", "get query message successful: $queryResponse")
-                } else {
-                    Log.i("info", "get query message failed")
                 }
             }
         }

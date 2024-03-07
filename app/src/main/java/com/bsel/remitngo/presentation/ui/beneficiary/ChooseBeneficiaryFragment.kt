@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BeneficiaryAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryData
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
 import com.bsel.remitngo.databinding.FragmentChooseBeneficiaryBinding
 import com.bsel.remitngo.presentation.di.Injector
 import javax.inject.Inject
@@ -145,7 +144,8 @@ class ChooseBeneficiaryFragment : Fragment() {
                 beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
                 beneficiaryAdapter.notifyDataSetChanged()
 
-                binding.beneficiarySearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                binding.beneficiarySearch.setOnQueryTextListener(object :
+                    SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         return false
                     }
@@ -155,12 +155,10 @@ class ChooseBeneficiaryFragment : Fragment() {
                         return true
                     }
                 })
-                Log.i("info", "get beneficiary successful: $result")
-            } else {
-                Log.i("info", "get beneficiary failed")
             }
         }
     }
+
     private fun recipientItem(selectedItem: GetBeneficiaryData) {
         val bundle = Bundle().apply {
             putString("orderType", orderType)
@@ -189,6 +187,7 @@ class ChooseBeneficiaryFragment : Fragment() {
             bundle
         )
     }
+
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 

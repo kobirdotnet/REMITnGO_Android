@@ -1,7 +1,7 @@
 package com.bsel.remitngo.data.repository.beneficiary.dataSource
 
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryItem
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryResponseItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryResponseItem
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryResponseItem
 import com.bsel.remitngo.data.model.gender.GenderItem

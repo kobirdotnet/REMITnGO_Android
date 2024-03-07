@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryData
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.databinding.ItemBeneficiaryBinding
 
 class BeneficiaryAdapter(

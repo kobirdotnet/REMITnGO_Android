@@ -2,8 +2,8 @@ package com.bsel.remitngo.data.repository.bank.dataSource
 
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.data.model.bank.BankResponseItem
-import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankItem
-import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankResponseItem
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankResponseItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankResponseItem
 import com.bsel.remitngo.data.model.branch.BranchItem

@@ -76,9 +76,6 @@ class MobileNumberFragment : Fragment() {
                 findNavController().navigate(
                     R.id.action_nav_mobile_number_to_nav_my_profile
                 )
-                Log.i("info", "update profile successful: $result")
-            } else {
-                Log.i("info", "update profile failed")
             }
         }
     }

@@ -10,6 +10,7 @@ import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
 import com.bsel.remitngo.presentation.di.query.QuerySubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
+import com.bsel.remitngo.presentation.di.settings.SettingsSubComponent
 import com.bsel.remitngo.presentation.di.transaction.TransactionSubComponent
 
 interface Injector {
@@ -24,4 +25,5 @@ interface Injector {
     fun createTransactionSubComponent(): TransactionSubComponent
     fun createCancelRequestSubComponent(): CancelRequestSubComponent
     fun createQuerySubComponent(): QuerySubComponent
+    fun createSettingsSubComponent(): SettingsSubComponent
 }

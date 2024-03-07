@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.CancellationAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.cancel_request.get_cancel_request.GetCancelRequestItem
-import com.bsel.remitngo.data.model.cancel_request.get_cancel_request.GetCancelResponseData
+import com.bsel.remitngo.data.model.cancel_request.cancel_request.GetCancelRequestItem
+import com.bsel.remitngo.data.model.cancel_request.cancel_request.GetCancelResponseData
 import com.bsel.remitngo.databinding.FragmentCancellationBinding
 import com.bsel.remitngo.presentation.di.Injector
 import javax.inject.Inject
@@ -49,7 +49,10 @@ class CancellationFragment : Fragment() {
         (requireActivity().application as Injector).createCancelRequestSubComponent().inject(this)
 
         cancelRequestViewModel =
-            ViewModelProvider(this, cancelRequestViewModelFactory)[CancelRequestViewModel::class.java]
+            ViewModelProvider(
+                this,
+                cancelRequestViewModelFactory
+            )[CancelRequestViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
@@ -84,9 +87,6 @@ class CancellationFragment : Fragment() {
                 binding.cancellationRecyclerView.adapter = cancellationAdapter
                 cancellationAdapter.setList(result.data as List<GetCancelResponseData>)
                 cancellationAdapter.notifyDataSetChanged()
-                Log.i("info", "get cancel Request successful: $result")
-            } else {
-                Log.i("info", "get cancel Request failed")
             }
         }
     }

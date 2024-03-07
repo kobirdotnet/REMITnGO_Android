@@ -53,8 +53,6 @@ class PaymentCardFragment : Fragment() {
         paymentViewModel.paymentStatusResult.observe(this) { result ->
             if (result!!.data != null) {
                 Log.i("info", "payment Status successful: $result")
-            } else {
-                Log.i("info", "payment Status failed")
             }
         }
     }

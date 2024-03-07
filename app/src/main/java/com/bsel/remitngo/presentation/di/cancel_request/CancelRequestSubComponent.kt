@@ -1,6 +1,6 @@
 package com.bsel.remitngo.presentation.di.cancel_request
 
-import com.bsel.remitngo.bottom_sheet.CancelReasonBottomSheet
+import com.bsel.remitngo.bottomSheet.CancelReasonBottomSheet
 import com.bsel.remitngo.presentation.ui.cancel_request.CancelRequestFragment
 import com.bsel.remitngo.presentation.ui.cancel_request.CancellationFragment
 import com.bsel.remitngo.presentation.ui.cancel_request.GenerateCancelRequestFragment

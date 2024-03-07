@@ -86,9 +86,6 @@ class QueryFragment : Fragment() {
                     binding.queryRecyclerView.adapter = queryAdapter
                     queryAdapter.setList(queryDataList as List<QueryTable>)
                     queryAdapter.notifyDataSetChanged()
-                    Log.i("info", "get query successful: $queryResponse")
-                } else {
-                    Log.i("info", "get query failed")
                 }
             }
         }

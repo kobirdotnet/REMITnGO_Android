@@ -1,9 +1,9 @@
 package com.bsel.remitngo.presentation.di.bank
 
-import com.bsel.remitngo.bottom_sheet.BankBottomSheet
-import com.bsel.remitngo.bottom_sheet.BranchBottomSheet
-import com.bsel.remitngo.bottom_sheet.DistrictBottomSheet
-import com.bsel.remitngo.bottom_sheet.DivisionBottomSheet
+import com.bsel.remitngo.bottomSheet.BankBottomSheet
+import com.bsel.remitngo.bottomSheet.BranchBottomSheet
+import com.bsel.remitngo.bottomSheet.DistrictBottomSheet
+import com.bsel.remitngo.bottomSheet.DivisionBottomSheet
 import com.bsel.remitngo.presentation.ui.bank.BankFragment
 import com.bsel.remitngo.presentation.ui.bank.ChooseBankFragment
 import dagger.Subcomponent

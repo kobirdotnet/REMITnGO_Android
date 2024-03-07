@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,13 +18,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottom_sheet.PayingAgentBottomSheet
+import com.bsel.remitngo.bottomSheet.PayingAgentBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentData
 import com.bsel.remitngo.databinding.FragmentMainBinding
-import com.bsel.remitngo.interfaceses.OnCalculationSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnCalculationSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import java.text.DecimalFormat
 import java.util.*
@@ -213,7 +211,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             }
         }
 
-        //GBP Amount
         binding.sendAmount.setText("100")
         updateValuesGBP()
         binding.sendAmount.addTextChangedListener(object : TextWatcher {
@@ -233,7 +230,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             }
         })
 
-        //BDT Amount
         binding.receiveAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
@@ -258,9 +254,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
                 putString("send_amount", binding.sendAmount.text.toString())
                 putString("receive_amount", binding.receiveAmount.text.toString())
-
-//                putString("bankId", bankId.toString())
-//                putString("bankName", bankName.toString())
 
                 putString("payingAgentId", payingAgentId.toString())
                 putString("payingAgentName", binding.collectionPointBank.text.toString())
@@ -344,12 +337,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     cardCommission = data!!.commissionForCardPayment!!.toDouble()
                     exchangeRate = data!!.rate!!.toDouble()
                     binding.exchangeRate.text = exchangeRate.toString()
-
                     updateValuesGBP()
                 }
-                Log.i("info", "Calculate Rate successful: $result")
-            } else {
-                Log.i("info", "Calculate Rate failed")
             }
         }
     }

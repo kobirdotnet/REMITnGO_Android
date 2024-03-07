@@ -55,5 +55,9 @@ class UseCaseModule {
     fun provideQueryUseCase(queryRepository: QueryRepository): QueryUseCase {
         return QueryUseCase(queryRepository)
     }
+    @Provides
+    fun provideSettingsUseCase(settingsRepository: SettingsRepository): SettingsUseCase {
+        return SettingsUseCase(settingsRepository)
+    }
 
 }

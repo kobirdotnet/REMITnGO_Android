@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottom_sheet.CancelReasonBottomSheet
+import com.bsel.remitngo.bottomSheet.CancelReasonBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.cancel_request.cancel_reason.CancelReasonData
 import com.bsel.remitngo.data.model.cancel_request.save_cancel_request.SaveCancelRequestItem
 import com.bsel.remitngo.databinding.FragmentGenerateCancelRequestBinding
-import com.bsel.remitngo.interfaceses.OnCancelReasonItemSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnCancelReasonItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import javax.inject.Inject
 
@@ -56,14 +55,6 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentGenerateCancelRequestBinding.bind(view)
 
-        transactionCodeFocusListener()
-        transactionDateFocusListener()
-        orderTypeFocusListener()
-        beneficiaryNameFocusListener()
-        sendAmountFocusListener()
-        cancelReasonFocusListener()
-        descriptionFocusListener()
-
         (requireActivity().application as Injector).createCancelRequestSubComponent().inject(this)
 
         cancelRequestViewModel =
@@ -71,6 +62,14 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
                 this,
                 cancelRequestViewModelFactory
             )[CancelRequestViewModel::class.java]
+
+        transactionCodeFocusListener()
+        transactionDateFocusListener()
+        orderTypeFocusListener()
+        beneficiaryNameFocusListener()
+        sendAmountFocusListener()
+        cancelReasonFocusListener()
+        descriptionFocusListener()
 
         preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
@@ -105,12 +104,9 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
     private fun observeSaveCancelRequestResult() {
         cancelRequestViewModel.saveCancelRequestResult.observe(this) { result ->
             if (result!!.data != null) {
-                Log.i("info", "save cancel Request successful: $result")
                 findNavController().navigate(
                     R.id.action_nav_generate_cancel_request_to_nav_cancellation
                 )
-            } else {
-                Log.i("info", "save cancel Request failed")
             }
         }
     }

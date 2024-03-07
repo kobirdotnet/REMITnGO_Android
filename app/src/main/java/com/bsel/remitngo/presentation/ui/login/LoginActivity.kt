@@ -6,16 +6,16 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.util.Patterns
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottom_sheet.ForgotPasswordBottomSheet
+import com.bsel.remitngo.bottomSheet.ForgotPasswordBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.api.TokenManager
 import com.bsel.remitngo.data.model.login.LoginItem
@@ -23,6 +23,7 @@ import com.bsel.remitngo.databinding.ActivityLoginBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.registration.RegistrationActivity
 import com.bsel.remitngo.presentation.ui.main.MainActivity
+import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
@@ -78,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(this) { result ->
-            if (result != null) {
+            if (result!!.data != null) {
                 for (data in result.data!!) {
                     preferenceManager.saveData("personId", data.personId.toString())
                     preferenceManager.saveData("firstName", data.firstName.toString())
@@ -88,32 +89,16 @@ class LoginActivity : AppCompatActivity() {
                     preferenceManager.saveData("dob", data.dateOfBirth.toString())
                 }
                 TokenManager.setToken(result.token)
-
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 intent.putExtra("changePassword", changePassword)
                 startActivity(intent)
-
             } else {
-                Log.i("info", "Login failed")
+                val parentLayout: View = findViewById(android.R.id.content)
+                val snackbar =
+                    Snackbar.make(parentLayout, result.message.toString(), Snackbar.LENGTH_SHORT)
+                snackbar.show()
             }
         }
-    }
-
-    private fun getDeviceId(context: Context): String {
-        val deviceId: String
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            deviceId =
-                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-        } else {
-            @Suppress("DEPRECATION")
-            deviceId = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
-        }
-
-        return deviceId
     }
 
     private fun logInForm() {
@@ -191,6 +176,23 @@ class LoginActivity : AppCompatActivity() {
             return "Must Contain 1 Special Character (@#\$%^&+=)"
         }
         return null
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {

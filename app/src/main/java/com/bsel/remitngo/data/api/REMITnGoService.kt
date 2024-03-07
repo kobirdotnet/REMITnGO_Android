@@ -2,12 +2,12 @@ package com.bsel.remitngo.data.api
 
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.data.model.bank.BankResponseItem
-import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankItem
-import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankResponseItem
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankResponseItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankResponseItem
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryItem
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryResponseItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryResponseItem
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryResponseItem
 import com.bsel.remitngo.data.model.branch.BranchItem
@@ -16,12 +16,14 @@ import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.cancel_request.cancel_reason.CancelReasonItem
 import com.bsel.remitngo.data.model.cancel_request.cancel_reason.CancelReasonResponseItem
-import com.bsel.remitngo.data.model.cancel_request.get_cancel_request.GetCancelRequestItem
-import com.bsel.remitngo.data.model.cancel_request.get_cancel_request.GetCancelResponseItem
+import com.bsel.remitngo.data.model.cancel_request.cancel_request.GetCancelRequestItem
+import com.bsel.remitngo.data.model.cancel_request.cancel_request.GetCancelResponseItem
 import com.bsel.remitngo.data.model.cancel_request.populate_cancel_request.PopulateCancelItem
 import com.bsel.remitngo.data.model.cancel_request.populate_cancel_request.PopulateCancelResponseItem
 import com.bsel.remitngo.data.model.cancel_request.save_cancel_request.SaveCancelRequestItem
 import com.bsel.remitngo.data.model.cancel_request.save_cancel_request.SaveCancelResponseItem
+import com.bsel.remitngo.data.model.change_password.ChangePasswordItem
+import com.bsel.remitngo.data.model.change_password.ChangePasswordResponseItem
 import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.data.model.district.DistrictResponseItem
 import com.bsel.remitngo.data.model.division.DivisionItem
@@ -30,8 +32,8 @@ import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryIt
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeResponseItem
-import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
-import com.bsel.remitngo.data.model.document.getDocument.GetDocumentResponseItem
+import com.bsel.remitngo.data.model.document.document.GetDocumentItem
+import com.bsel.remitngo.data.model.document.document.GetDocumentResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.UploadDocumentResponseItem
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.gender.GenderResponseItem
@@ -229,6 +231,9 @@ interface REMITnGoService {
     suspend fun addQuery(@Body addQueryItem: AddQueryItem): Response<AddQueryResponseItem>
     @POST("api/General/SaveUserMessage")
     suspend fun addMessage(@Body addMessageItem: AddMessageItem): Response<AddMessageResponseItem>
+
+    @POST("api/Home/ChangePassword")
+    suspend fun changePassword(@Body changePasswordItem: ChangePasswordItem): Response<ChangePasswordResponseItem>
 
 
 }

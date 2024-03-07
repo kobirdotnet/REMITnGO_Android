@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.data.model.cancel_request.get_cancel_request.GetCancelResponseData
+import com.bsel.remitngo.data.model.cancel_request.cancel_request.GetCancelResponseData
 import com.bsel.remitngo.databinding.ItemCancellationBinding
 
 class CancellationAdapter(

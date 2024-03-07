@@ -21,6 +21,8 @@ import com.bsel.remitngo.data.repository.query.dataSource.QueryRemoteDataSource
 import com.bsel.remitngo.data.repository.query.dataSourceImpl.QueryRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
 import com.bsel.remitngo.data.repository.registration.dataSourceImpl.RegistrationRemoteDataSourceImpl
+import com.bsel.remitngo.data.repository.settings.dataSource.SettingsRemoteDataSource
+import com.bsel.remitngo.data.repository.settings.dataSourceImpl.SettingsRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.transaction.dataSource.TransactionRemoteDataSource
 import com.bsel.remitngo.data.repository.transaction.dataSourceImpl.TransactionRemoteDataSourceImpl
 import dagger.Module
@@ -89,6 +91,11 @@ class RemoteDataModule {
     @Provides
     fun provideQueryRemoteDataSource(remitNgoService: REMITnGoService): QueryRemoteDataSource {
         return QueryRemoteDataSourceImpl(remitNgoService)
+    }
+    @Singleton
+    @Provides
+    fun provideSettingsRemoteDataSource(remitNgoService: REMITnGoService): SettingsRemoteDataSource {
+        return SettingsRemoteDataSourceImpl(remitNgoService)
     }
 
 }

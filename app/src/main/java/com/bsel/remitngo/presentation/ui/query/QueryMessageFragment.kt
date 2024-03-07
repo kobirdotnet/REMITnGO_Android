@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +15,8 @@ import com.bsel.remitngo.adapter.StatusAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.query.add_message.AddMessageItem
 import com.bsel.remitngo.databinding.FragmentQueryMessageBinding
-import com.bsel.remitngo.model.StatusItem
+import com.bsel.remitngo.data.model.query.add_message.StatusItem
 import com.bsel.remitngo.presentation.di.Injector
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 
 class QueryMessageFragment : Fragment() {
@@ -90,8 +88,6 @@ class QueryMessageFragment : Fragment() {
                     R.id.action_nav_query_message_to_nav_update_query,
                     bundle
                 )
-            } else {
-                Log.i("info", " query message failed")
             }
         }
     }

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankData
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
 import com.bsel.remitngo.databinding.ItemGetBankBinding
 
 class BankAdapter(

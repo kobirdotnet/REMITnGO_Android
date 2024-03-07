@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottom_sheet.QueryTypeBottomSheet
+import com.bsel.remitngo.bottomSheet.QueryTypeBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.query.add_query.AddQueryItem
 import com.bsel.remitngo.data.model.query.query_type.QueryTypeData
 import com.bsel.remitngo.databinding.FragmentAddQueryBinding
-import com.bsel.remitngo.interfaceses.OnQueryTypeItemSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnQueryTypeItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import javax.inject.Inject
 
@@ -79,8 +78,6 @@ class AddQueryFragment : Fragment(), OnQueryTypeItemSelectedListener {
                 findNavController().navigate(
                     R.id.action_nav_add_query_to_nav_generate_query
                 )
-            } else {
-                Log.i("info", " add query failed")
             }
         }
     }

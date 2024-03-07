@@ -70,9 +70,9 @@
     </fragment>
     <fragment
         android:id="@+id/nav_complete_bank_transaction"
-        android:name="com.bsel.remitngo.ui.main.complete_bank_transfer.CompleteBankTransactionFragment"
+        android:name="com.bsel.remitngo.presentation.ui.payment.PaymentBankFragment"
         android:label="@string/menu_transaction"
-        tools:layout="@layout/fragment_complete_bank_transaction">
+        tools:layout="@layout/fragment_payment_bank">
         <action
             android:id="@+id/action_nav_complete_bank_transaction_to_nav_main"
             app:destination="@id/nav_main" />
@@ -96,9 +96,6 @@
             android:id="@+id/action_nav_my_profile_to_nav_personal_information"
             app:destination="@id/nav_personal_information" />
         <action
-            android:id="@+id/action_nav_my_profile_to_nav_change_password"
-            app:destination="@id/nav_change_password" />
-        <action
             android:id="@+id/action_nav_my_profile_to_nav_mobile_number"
             app:destination="@id/nav_mobile_number" />
         <action
@@ -107,12 +104,21 @@
     </fragment>
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.bsel.remitngo.ui.settings.SettingsFragment"
+        android:name="com.bsel.remitngo.presentation.ui.settings.SettingsFragment"
         android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_nav_settings_to_nav_change_password"
+            app:destination="@id/nav_change_password" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_change_password"
+        android:name="com.bsel.remitngo.presentation.ui.settings.changePassword.ChangePasswordFragment"
+        android:label="@string/menu_change_password"
+        tools:layout="@layout/fragment_change_password" />
     <fragment
         android:id="@+id/nav_support"
-        android:name="com.bsel.remitngo.ui.support.SupportFragment"
+        android:name="com.bsel.remitngo.presentation.ui.support.SupportFragment"
         android:label="@string/menu_support"
         tools:layout="@layout/fragment_support" />
     <fragment
@@ -129,11 +135,7 @@
             android:id="@+id/action_nav_personal_information_to_nav_my_profile"
             app:destination="@id/nav_my_profile" />
     </fragment>
-    <fragment
-        android:id="@+id/nav_change_password"
-        android:name="com.bsel.remitngo.ui.profile.change_password.ChangePasswordFragment"
-        android:label="@string/menu_change_password"
-        tools:layout="@layout/fragment_change_password" />
+
     <fragment
         android:id="@+id/nav_mobile_number"
         android:name="com.bsel.remitngo.presentation.ui.profile.mobile.MobileNumberFragment"

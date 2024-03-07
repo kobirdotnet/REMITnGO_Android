@@ -12,25 +12,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.DocumentCategoryAdapter
-import com.bsel.remitngo.adapter.DocumentTypeAdapter
-import com.bsel.remitngo.bottom_sheet.DocumentCategoryBottomSheet
-import com.bsel.remitngo.bottom_sheet.DocumentTypeBottomSheet
-import com.bsel.remitngo.bottom_sheet.SelectFileBottomSheet
+import com.bsel.remitngo.bottomSheet.DocumentCategoryBottomSheet
+import com.bsel.remitngo.bottomSheet.DocumentTypeBottomSheet
+import com.bsel.remitngo.bottomSheet.SelectFileBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
 import com.bsel.remitngo.databinding.FragmentUpdateDocumentBinding
-import com.bsel.remitngo.databinding.FragmentUploadDocumentBinding
-import com.bsel.remitngo.interfaceses.OnDocumentItemSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnDocumentItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -241,8 +236,6 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                         binding.documentCategory.setText(documentCategory)
                     }
                 }
-            } else {
-                Log.i("info", "category failed")
             }
         }
     }
@@ -256,8 +249,6 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                         binding.documentType.setText(documentType)
                     }
                 }
-            } else {
-                Log.i("info", "document type failed")
             }
         }
     }
@@ -268,8 +259,6 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                 findNavController().navigate(
                     R.id.action_nav_update_documents_to_nav_documents
                 )
-            } else {
-                Log.i("info", "save uploadDocument failed")
             }
         }
     }
@@ -326,10 +315,7 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
             }
         } else {
             Snackbar.make(view!!, "Select your file.", Snackbar.LENGTH_SHORT).show()
-            Log.e("uploadDocument", "Selected file is null")
         }
-
-
     }
 
     //Form validation

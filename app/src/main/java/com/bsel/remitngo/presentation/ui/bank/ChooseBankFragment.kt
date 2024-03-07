@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BankAdapter
-import com.bsel.remitngo.adapter.BeneficiaryAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankData
-import com.bsel.remitngo.data.model.bank.get_bank_account.GetBankItem
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryData
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryItem
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.databinding.FragmentChooseBankBinding
 import com.bsel.remitngo.presentation.di.Injector
 import javax.inject.Inject
@@ -134,7 +130,6 @@ class ChooseBankFragment : Fragment() {
             params1 = cusBankInfoId.toInt(),
             params2 = orderType.toInt()
         )
-        // Call the login method in the ViewModel
         bankViewModel.getBank(getBankItem)
         observeGetBankResult()
     }
@@ -153,9 +148,6 @@ class ChooseBankFragment : Fragment() {
                 binding.bankRecyclerView.adapter = bankAdapter
                 bankAdapter.setList(result.data as List<GetBankData>)
                 bankAdapter.notifyDataSetChanged()
-                Log.i("info", "get bank successful: $result")
-            } else {
-                Log.i("info", "get bank failed")
             }
         }
     }
@@ -191,6 +183,7 @@ class ChooseBankFragment : Fragment() {
             bundle
         )
     }
+
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 

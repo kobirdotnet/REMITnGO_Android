@@ -5,8 +5,8 @@ import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryIt
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeResponseItem
-import com.bsel.remitngo.data.model.document.getDocument.GetDocumentItem
-import com.bsel.remitngo.data.model.document.getDocument.GetDocumentResponseItem
+import com.bsel.remitngo.data.model.document.document.GetDocumentItem
+import com.bsel.remitngo.data.model.document.document.GetDocumentResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.UploadDocumentResponseItem
 import com.bsel.remitngo.data.repository.document.dataSource.DocumentRemoteDataSource
 import okhttp3.MultipartBody

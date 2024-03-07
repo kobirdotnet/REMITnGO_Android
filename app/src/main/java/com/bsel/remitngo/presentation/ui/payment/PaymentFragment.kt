@@ -210,9 +210,6 @@ class PaymentFragment : Fragment() {
                 } else if (paymentType == "3") {
                     findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
                 }
-                Log.i("info", "payment successful: $result")
-            } else {
-                Log.i("info", "payment failed")
             }
         }
     }
@@ -258,25 +255,27 @@ class PaymentFragment : Fragment() {
             "07893986598",
             billingAddress,
 //            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
-            "https://emptest.remitngo.com/EmerchantNotification/EmerchantNotification",
+            "https://emptest.remitngo.com/EmerchantNotification/EmerchantNotification?120",
             transactionTypes
         )
 
+        paymentRequest.setReturnSuccessUrl("https://uat2.remitngo.com/Emerchantpay/WPFSuccessURL.aspx?220")
+        paymentRequest.setReturnFailureUrl("https://uat2.remitngo.com/Emerchantpay/WPFFailureURL.aspx?320")
+        paymentRequest.setReturnCancelUrl("https://uat2.remitngo.com/Emerchantpay/WPFCancelURL.aspx?420")
+
         // Set return URLs after a delay of 30 seconds
-        Handler(Looper.getMainLooper()).postDelayed({
-            paymentRequest.setReturnSuccessUrl("https://uat2.remitngo.com/Emerchantpay/WPFSuccessURL.aspx")
-            paymentRequest.setReturnFailureUrl("https://uat2.remitngo.com/Emerchantpay/WPFFailureURL.aspx")
-            paymentRequest.setReturnCancelUrl("https://uat2.remitngo.com/Emerchantpay/WPFCancelURL.aspx")
-
-            val bundle = Bundle().apply {
-                putString("transactionCode", transactionCode)
-            }
-            findNavController().navigate(
-                R.id.action_nav_review_to_nav_complete_card_transaction,
-                bundle
-            )
-
-        }, 60000)
+//        Handler(Looper.getMainLooper()).postDelayed({
+//
+//
+//            val bundle = Bundle().apply {
+//                putString("transactionCode", transactionCode)
+//            }
+//            findNavController().navigate(
+//                R.id.action_nav_review_to_nav_complete_card_transaction,
+//                bundle
+//            )
+//
+//        }, 60000)
 
         paymentRequest.setUsage("Test Staging")
         paymentRequest.setDescription("Test payment gateway")
@@ -411,6 +410,7 @@ class PaymentFragment : Fragment() {
                             val seconds = secondsRemaining % 60
                             timer.text = String.format("%02d:%02d", minutes, seconds)
                         }
+
                         override fun onFinish() {
                             dialog.dismiss()
                         }

@@ -15,14 +15,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottom_sheet.DocumentCategoryBottomSheet
-import com.bsel.remitngo.bottom_sheet.DocumentTypeBottomSheet
-import com.bsel.remitngo.bottom_sheet.SelectFileBottomSheet
+import com.bsel.remitngo.bottomSheet.DocumentCategoryBottomSheet
+import com.bsel.remitngo.bottomSheet.DocumentTypeBottomSheet
+import com.bsel.remitngo.bottomSheet.SelectFileBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
 import com.bsel.remitngo.databinding.FragmentUploadDocumentBinding
-import com.bsel.remitngo.interfaceses.OnDocumentItemSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnDocumentItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -165,8 +165,6 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                 findNavController().navigate(
                     R.id.action_nav_upload_documents_to_nav_documents
                 )
-            } else {
-                Log.i("info", "save uploadDocument failed")
             }
         }
     }
@@ -189,7 +187,7 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         if (validCategory && validDocument && validDocumentNo && validIssueBy
             && validIssueDate && validExpireDate
         ) {
-        submitDocumentFrom()
+            submitDocumentFrom()
         }
     }
 
@@ -223,10 +221,7 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
             }
         } else {
             Snackbar.make(view!!, "Select your file.", Snackbar.LENGTH_SHORT).show()
-            Log.e("uploadDocument", "Selected file is null")
         }
-
-
     }
 
     //Form validation

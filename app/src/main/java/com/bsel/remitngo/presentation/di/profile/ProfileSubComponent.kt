@@ -1,6 +1,6 @@
 package com.bsel.remitngo.presentation.di.profile
 
-import com.bsel.remitngo.bottom_sheet.*
+import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.presentation.ui.profile.ProfileFragment
 import com.bsel.remitngo.presentation.ui.profile.address.SaveAddressFragment
 import com.bsel.remitngo.presentation.ui.profile.mobile.MobileNumberFragment

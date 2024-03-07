@@ -1,5 +1,6 @@
 package com.bsel.remitngo.presentation.ui.main
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -14,6 +15,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -22,7 +25,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottom_sheet.ChangePasswordBottomSheet
+import com.bsel.remitngo.bottomSheet.ChangePasswordBottomSheet
 import com.bsel.remitngo.databinding.ActivityMainBinding
 import com.bsel.remitngo.presentation.ui.login.LoginActivity
 import com.google.android.material.navigation.NavigationView
@@ -44,20 +47,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inflate the layout
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Set up dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        // Initialize views
         drawerLayout = binding.drawerLayout
         navView = binding.navView
         navController = findNavController(R.id.nav_host_fragment_content_main)
 
-        // Set up navigation
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_main,
@@ -74,10 +73,8 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // Get a reference to the header view
         val headerView = navView.getHeaderView(0)
 
-        // Find the TextViews in the header view by their IDs
         val customerName = headerView.findViewById<TextView>(R.id.customerName)
         val customerEmailAddress = headerView.findViewById<TextView>(R.id.customerEmailAddress)
         val customerPhoneNumber = headerView.findViewById<TextView>(R.id.customerPhoneNumber)
@@ -101,7 +98,6 @@ class MainActivity : AppCompatActivity() {
         val support = headerView.findViewById<LinearLayout>(R.id.support)
         val logOut = headerView.findViewById<LinearLayout>(R.id.logOut)
 
-        // Set the text for the TextViews
         customerName.text = "Mohammad Kobirul Islam"
         customerEmailAddress.text = "kobirdotnet@gmail.com"
         customerPhoneNumber.text = "+8801535111573"
@@ -114,7 +110,6 @@ class MainActivity : AppCompatActivity() {
         inviteReferralCode.text = "Share Now"
 
         inviteReferralCode.setOnClickListener {
-            // Create an intent to share the referral code
             val url =
                 "I am recommending to you send money abroad using the new REMITnGO mobile app. Your first transaction is completely FREE - just use the code " + referralCode.text.toString() + " when you sign up. The app is free to download, get it now from https://app.remitngo.com"
             val sendIntent = Intent().apply {
@@ -122,14 +117,11 @@ class MainActivity : AppCompatActivity() {
                 putExtra(Intent.EXTRA_TEXT, url)
                 type = "text/plain"
             }
-            // Start the activity to choose sharing method
             startActivity(Intent.createChooser(sendIntent, "REMITnGO"))
         }
 
-        // Close the drawer when the close button is clicked
         drawerClose.setOnClickListener { drawerLayout.close() }
 
-        // Set click listeners for navigation items
         transfer.setOnClickListener {
             navController.navigate(R.id.nav_main)
             drawerLayout.close()
@@ -181,52 +173,36 @@ class MainActivity : AppCompatActivity() {
         if (changePassword == "12345") {
             changePasswordBottomSheet.show(supportFragmentManager, changePasswordBottomSheet.tag)
         }
-
-
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    override fun onBackPressed() {
-//        val drawerLayout: DrawerLayout = binding.drawerLayout
-//
-//        // Check if the navigation drawer is open, close it if true
-//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            drawerLayout.closeDrawer(GravityCompat.START)
-//        } else {
-//            // If the navigation drawer is not open, show an alert dialog for app termination
-//            if (!isFinishing && !isDestroyed) {
-//                val builder = AlertDialog.Builder(this)
-//                builder.setTitle("App termination")
-//                builder.setMessage("Do you want to close the app?")
-//
-//                // Positive button action: Exit the app
-//                builder.setPositiveButton("EXIT") { _, _ ->
-//                    ActivityCompat.finishAffinity(this)
-//                }
-//
-//                // Negative button action: Stay in the app
-//                builder.setNegativeButton("STAY") { _, _ ->
-//                    // If the user chooses to stay, do nothing or handle as needed
-//                }
-//
-//                // Create and display the dialog
-//                val dialog = builder.create()
-//                dialog.show()
-//            }
-//        }
-//    }
-
     override fun onSupportNavigateUp(): Boolean {
-        // Handle Up button press in the action bar, return to the previous destination
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        // Handle touch events to hide the keyboard when clicking outside EditText
-        val v = currentFocus
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        val drawerLayout: DrawerLayout = binding.drawerLayout
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            if (!isFinishing && !isDestroyed) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("App termination")
+                builder.setMessage("Do you want to close the app?")
+                builder.setPositiveButton("EXIT") { _, _ ->
+                    ActivityCompat.finishAffinity(this)
+                }
+                builder.setNegativeButton("STAY") { _, _ ->
+                }
+                val dialog = builder.create()
+                dialog.show()
+            }
+        }
+    }
 
-        // Check if the touch event is an UP or MOVE event and if the focused view is an EditText
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        val v = currentFocus
         if (v != null &&
             (ev.action == MotionEvent.ACTION_UP || ev.action == MotionEvent.ACTION_MOVE) &&
             v is EditText &&
@@ -236,19 +212,14 @@ class MainActivity : AppCompatActivity() {
             v.getLocationOnScreen(scrcoords)
             val x = ev.rawX + v.getLeft() - scrcoords[0]
             val y = ev.rawY + v.getTop() - scrcoords[1]
-
-            // Hide the keyboard if the touch event is outside the EditText
             if (x < v.getLeft() || x > v.getRight() || y < v.getTop() || y > v.getBottom()) {
                 hideKeyBoard(this)
             }
         }
-
-        // Continue with the default touch event handling
         return super.dispatchTouchEvent(ev)
     }
 
     fun hideKeyBoard(activity: Activity?) {
-        // Hide the soft keyboard from the current window
         if (activity != null && activity.window != null) {
             val imm = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(activity.window.decorView.windowToken, 0)

@@ -5,7 +5,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottom_sheet.*
+import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.bank.BankData
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
@@ -21,7 +20,7 @@ import com.bsel.remitngo.data.model.branch.BranchData
 import com.bsel.remitngo.data.model.district.DistrictData
 import com.bsel.remitngo.data.model.division.DivisionData
 import com.bsel.remitngo.databinding.FragmentBankBinding
-import com.bsel.remitngo.interfaceses.OnBankSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnBankSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import java.util.*
 import javax.inject.Inject
@@ -200,66 +199,8 @@ class BankFragment : Fragment(), OnBankSelectedListener {
                     R.id.action_nav_save_bank_to_nav_review,
                     bundle
                 )
-                Log.i("info", "save bank successful: $result")
-            } else {
-                Log.i("info", "save bank failed")
             }
         }
-    }
-
-    private fun getDeviceId(context: Context): String {
-        val deviceId: String
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            deviceId =
-                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-        } else {
-            @Suppress("DEPRECATION")
-            deviceId = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
-        }
-
-        return deviceId
-    }
-
-    private fun getIPAddress(context: Context): String? {
-        val wifiManager =
-            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        val wifiInfo = wifiManager.connectionInfo
-        val ipAddress = wifiInfo.ipAddress
-        return String.format(
-            Locale.getDefault(),
-            "%d.%d.%d.%d",
-            ipAddress and 0xff,
-            ipAddress shr 8 and 0xff,
-            ipAddress shr 16 and 0xff,
-            ipAddress shr 24 and 0xff
-        )
-    }
-
-    override fun onBankItemSelected(selectedItem: BankData) {
-        binding.bankName.setText(selectedItem.name)
-        bankId = selectedItem.id.toString()
-        preferenceManager.saveData("bankId", bankId)
-    }
-
-    override fun onDivisionItemSelected(selectedItem: DivisionData) {
-        binding.divisionName.setText(selectedItem.name)
-        divisionId = selectedItem.id.toString()
-        preferenceManager.saveData("divisionId", divisionId)
-    }
-
-    override fun onDistrictItemSelected(selectedItem: DistrictData) {
-        binding.districtName.setText(selectedItem.name)
-        districtId = selectedItem.id.toString()
-        preferenceManager.saveData("districtId", districtId)
-    }
-
-    override fun onBranchItemSelected(selectedItem: BranchData) {
-        binding.branchName.setText(selectedItem.name)
-        branchId = selectedItem.id.toString()
     }
 
     private fun bankAccountForm() {
@@ -470,6 +411,61 @@ class BankFragment : Fragment(), OnBankSelectedListener {
             return "enter phone number"
         }
         return null
+    }
+
+    override fun onBankItemSelected(selectedItem: BankData) {
+        binding.bankName.setText(selectedItem.name)
+        bankId = selectedItem.id.toString()
+        preferenceManager.saveData("bankId", bankId)
+    }
+
+    override fun onDivisionItemSelected(selectedItem: DivisionData) {
+        binding.divisionName.setText(selectedItem.name)
+        divisionId = selectedItem.id.toString()
+        preferenceManager.saveData("divisionId", divisionId)
+    }
+
+    override fun onDistrictItemSelected(selectedItem: DistrictData) {
+        binding.districtName.setText(selectedItem.name)
+        districtId = selectedItem.id.toString()
+        preferenceManager.saveData("districtId", districtId)
+    }
+
+    override fun onBranchItemSelected(selectedItem: BranchData) {
+        binding.branchName.setText(selectedItem.name)
+        branchId = selectedItem.id.toString()
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
+    }
+
+    private fun getIPAddress(context: Context): String? {
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiInfo = wifiManager.connectionInfo
+        val ipAddress = wifiInfo.ipAddress
+        return String.format(
+            Locale.getDefault(),
+            "%d.%d.%d.%d",
+            ipAddress and 0xff,
+            ipAddress shr 8 and 0xff,
+            ipAddress shr 16 and 0xff,
+            ipAddress shr 24 and 0xff
+        )
     }
 
 }

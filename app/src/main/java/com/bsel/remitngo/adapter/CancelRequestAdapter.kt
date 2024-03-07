@@ -2,6 +2,7 @@ package com.bsel.remitngo.adapter
 
 import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
@@ -67,7 +68,39 @@ class CancelRequestViewHolder(val binding: ItemCancelRequestBinding) :
         binding.bankName.text = cancelRequestItem.bankName.toString()
         binding.accountNo.text = cancelRequestItem.beneAccountNo.toString()
         val beneAmount = cancelRequestItem.beneAmount.toString()
-        binding.currencyToAmount.text = "BDT $beneAmount"
+        binding.benAmount.text = "BDT $beneAmount"
+
+        val orderStatus = cancelRequestItem.orderStatus.toString()
+
+        if (orderStatus == "7" || orderStatus == "8" || orderStatus == "10" || orderStatus == "11") {
+            binding.cancelStatus.visibility = View.VISIBLE
+            binding.successStatus.visibility = View.GONE
+        } else {
+            binding.cancelStatus.visibility = View.GONE
+            binding.successStatus.visibility = View.VISIBLE
+
+            if (orderStatus == "1") {
+                binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
+                binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_white)
+                binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_white)
+                binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_white)
+            } else if (orderStatus == "2" || orderStatus == "3" || orderStatus == "4") {
+                binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
+                binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_green)
+                binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_white)
+                binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_white)
+            } else if (orderStatus == "5") {
+                binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
+                binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_green)
+                binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_green)
+                binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_white)
+            } else if (orderStatus == "5") {
+                binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
+                binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_green)
+                binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_green)
+                binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_green)
+            }
+        }
 
         binding.btnGenerateRequest.setOnClickListener {
             selectedItem(cancelRequestItem)

@@ -49,7 +49,10 @@ class CancelRequestFragment : Fragment() {
         (requireActivity().application as Injector).createCancelRequestSubComponent().inject(this)
 
         cancelRequestViewModel =
-            ViewModelProvider(this, cancelRequestViewModelFactory)[CancelRequestViewModel::class.java]
+            ViewModelProvider(
+                this,
+                cancelRequestViewModelFactory
+            )[CancelRequestViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
@@ -78,9 +81,6 @@ class CancelRequestFragment : Fragment() {
                 binding.cancelRequestRecyclerView.adapter = cancelRequestAdapter
                 cancelRequestAdapter.setList(result.data as List<PopulateCancelData>)
                 cancelRequestAdapter.notifyDataSetChanged()
-                Log.i("info", "get cancel Request successful: $result")
-            } else {
-                Log.i("info", "get cancel Request failed")
             }
         }
     }

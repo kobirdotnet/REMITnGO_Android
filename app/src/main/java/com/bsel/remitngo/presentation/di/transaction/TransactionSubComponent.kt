@@ -1,6 +1,6 @@
 package com.bsel.remitngo.presentation.di.transaction
 
-import com.bsel.remitngo.bottom_sheet.TransactionBottomSheet
+import com.bsel.remitngo.bottomSheet.TransactionBottomSheet
 import com.bsel.remitngo.presentation.ui.transaction.TransactionFragment
 import dagger.Subcomponent
 

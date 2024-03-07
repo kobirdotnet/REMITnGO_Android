@@ -5,7 +5,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,15 +13,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.GenderAdapter
-import com.bsel.remitngo.bottom_sheet.ReasonBottomSheet
-import com.bsel.remitngo.bottom_sheet.RelationBottomSheet
+import com.bsel.remitngo.bottomSheet.ReasonBottomSheet
+import com.bsel.remitngo.bottomSheet.RelationBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.reason.ReasonData
 import com.bsel.remitngo.data.model.relation.RelationData
 import com.bsel.remitngo.databinding.FragmentBeneficiaryBinding
-import com.bsel.remitngo.interfaceses.OnBeneficiarySelectedListener
+import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import java.util.*
 import javax.inject.Inject
@@ -172,9 +171,9 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
                         putString("payingAgentId", payingAgentId)
                         putString("payingAgentName", payingAgentName)
 
-                        putString("exchangeRate", exchangeRate.toString())
-                        putString("bankCommission", bankCommission.toString())
-                        putString("cardCommission", cardCommission.toString())
+                        putString("exchangeRate", exchangeRate)
+                        putString("bankCommission", bankCommission)
+                        putString("cardCommission", cardCommission)
 
                         putString("cusBankInfoId", cusBankInfoId)
                         putString("recipientName", recipientName)
@@ -185,61 +184,9 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
                         R.id.action_nav_save_beneficiary_to_nav_save_bank,
                         bundle
                     )
-                    Log.i("info", "save beneficiary successful: $result")
-                } else {
-                    Log.i("info", "failed to extract data")
                 }
-            } else {
-                Log.i("info", "save beneficiary failed")
             }
         }
-    }
-
-    private fun extractData(data: String): String? {
-        val parts = data.split("*")
-        return if (parts.size >= 2) parts[1] else null
-    }
-
-    private fun getDeviceId(context: Context): String {
-        val deviceId: String
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            deviceId =
-                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-        } else {
-            @Suppress("DEPRECATION")
-            deviceId = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
-        }
-
-        return deviceId
-    }
-
-    private fun getIPAddress(context: Context): String? {
-        val wifiManager =
-            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        val wifiInfo = wifiManager.connectionInfo
-        val ipAddress = wifiInfo.ipAddress
-        return String.format(
-            Locale.getDefault(),
-            "%d.%d.%d.%d",
-            ipAddress and 0xff,
-            ipAddress shr 8 and 0xff,
-            ipAddress shr 16 and 0xff,
-            ipAddress shr 24 and 0xff
-        )
-    }
-
-    override fun onRelationItemSelected(selectedItem: RelationData) {
-        binding.relation.setText(selectedItem.name)
-        relationId = selectedItem.id.toString()
-    }
-
-    override fun onReasonItemSelected(selectedItem: ReasonData) {
-        binding.reason.setText(selectedItem.name)
-        reasonId = selectedItem.id.toString()
     }
 
     private fun recipientForm() {
@@ -417,6 +364,53 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
             return "enter country"
         }
         return null
+    }
+
+    private fun extractData(data: String): String? {
+        val parts = data.split("*")
+        return if (parts.size >= 2) parts[1] else null
+    }
+
+    override fun onRelationItemSelected(selectedItem: RelationData) {
+        binding.relation.setText(selectedItem.name)
+        relationId = selectedItem.id.toString()
+    }
+
+    override fun onReasonItemSelected(selectedItem: ReasonData) {
+        binding.reason.setText(selectedItem.name)
+        reasonId = selectedItem.id.toString()
+    }
+
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
+
+        return deviceId
+    }
+
+    private fun getIPAddress(context: Context): String? {
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiInfo = wifiManager.connectionInfo
+        val ipAddress = wifiInfo.ipAddress
+        return String.format(
+            Locale.getDefault(),
+            "%d.%d.%d.%d",
+            ipAddress and 0xff,
+            ipAddress shr 8 and 0xff,
+            ipAddress shr 16 and 0xff,
+            ipAddress shr 24 and 0xff
+        )
     }
 
 }

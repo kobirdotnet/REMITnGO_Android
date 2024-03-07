@@ -7,7 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.data.model.document.getDocument.GetDocumentData
+import com.bsel.remitngo.data.model.document.document.GetDocumentData
 import com.bsel.remitngo.databinding.ItemDocumentBinding
 import com.bumptech.glide.Glide
 import java.time.LocalDateTime

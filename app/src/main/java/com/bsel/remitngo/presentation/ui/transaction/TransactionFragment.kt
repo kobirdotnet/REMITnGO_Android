@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.TransactionAdapter
-import com.bsel.remitngo.bottom_sheet.BankBottomSheet
-import com.bsel.remitngo.bottom_sheet.TransactionBottomSheet
+import com.bsel.remitngo.bottomSheet.TransactionBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.transaction.TransactionData
 import com.bsel.remitngo.data.model.transaction.TransactionItem
@@ -84,7 +82,8 @@ class TransactionFragment : Fragment() {
                 transactionAdapter.setList(result.data as List<TransactionData>)
                 transactionAdapter.notifyDataSetChanged()
 
-                binding.transactionSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                binding.transactionSearch.setOnQueryTextListener(object :
+                    SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         return false
                     }
@@ -94,16 +93,12 @@ class TransactionFragment : Fragment() {
                         return true
                     }
                 })
-                Log.i("info", "get transaction successful: $result")
-            } else {
-                Log.i("info", "get transaction failed")
             }
         }
     }
 
     private fun transaction(selectedItem: TransactionData) {
-        Log.i("info", "selectedItem: $selectedItem")
-        val transactionCode=selectedItem.transactionCode.toString()
+        val transactionCode = selectedItem.transactionCode.toString()
         transactionBottomSheet.setSelectedTransactionCode(transactionCode)
         transactionBottomSheet.show(childFragmentManager, transactionBottomSheet.tag)
     }

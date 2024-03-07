@@ -9,7 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
 import com.bsel.remitngo.databinding.ItemContactBinding
-import com.bsel.remitngo.model.ContactItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.ContactItem
 import kotlin.random.Random
 
 class ContactsAdapter(

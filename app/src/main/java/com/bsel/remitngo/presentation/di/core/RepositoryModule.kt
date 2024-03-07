@@ -20,6 +20,8 @@ import com.bsel.remitngo.data.repository.query.QueryRepositoryImpl
 import com.bsel.remitngo.data.repository.query.dataSource.QueryRemoteDataSource
 import com.bsel.remitngo.data.repository.registration.RegistrationRepositoryImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
+import com.bsel.remitngo.data.repository.settings.SettingsRepositoryImpl
+import com.bsel.remitngo.data.repository.settings.dataSource.SettingsRemoteDataSource
 import com.bsel.remitngo.data.repository.transaction.TransactionRepositoryImpl
 import com.bsel.remitngo.data.repository.transaction.dataSource.TransactionRemoteDataSource
 import com.bsel.remitngo.domain.repository.*
@@ -88,6 +90,11 @@ class RepositoryModule {
     @Provides
     fun provideQueryRepository(queryRemoteDataSource: QueryRemoteDataSource): QueryRepository {
         return QueryRepositoryImpl(queryRemoteDataSource)
+    }
+    @Singleton
+    @Provides
+    fun provideSettingsRepository(settingsRemoteDataSource: SettingsRemoteDataSource): SettingsRepository {
+        return SettingsRepositoryImpl(settingsRemoteDataSource)
     }
 
 }

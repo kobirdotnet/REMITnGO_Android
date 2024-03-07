@@ -24,6 +24,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -95,7 +96,7 @@
                         android:textColor="@color/blue" />
 
                     <TextView
-                        android:id="@+id/currencyToAmount"
+                        android:id="@+id/benAmount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
@@ -106,121 +107,133 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/cancelStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center"
+                    android:text="Transaction Canceled"
+                    android:textColor="@color/red" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/successStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:weightSum="4">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/imgPaymentReceived"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/circle_background_white"
+                        android:gravity="center"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/txtPaymentReceived"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/circle_background_white"
-                            android:gravity="center"
-                            android:orientation="vertical" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_regular"
-                            android:gravity="center_vertical"
-                            android:text="Payment      Done"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/circle_background_white"
-                            android:gravity="center"
-                            android:orientation="vertical" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_regular"
-                            android:gravity="center_vertical"
-                            android:text="Payment Received"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:text="Payment Received"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/imgOnTheWay"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/circle_background_white"
+                        android:gravity="center"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/txtOnTheWay"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:text="On The        Way"
+                        android:textColor="@color/black" />
+                </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/circle_background_white"
-                            android:gravity="center"
-                            android:orientation="vertical" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_regular"
-                            android:gravity="center_vertical"
-                            android:text="On the           way"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/imgSendToBank"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/circle_background_white"
+                        android:gravity="center"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/txtSendToBank"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:text="Send To    Bank"
+                        android:textColor="@color/black" />
+                </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/circle_background_white"
-                            android:gravity="center"
-                            android:orientation="vertical" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_regular"
-                            android:gravity="center_vertical"
-                            android:text="Send to        Bank"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/imgPaidToBeneficiary"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/circle_background_white"
+                        android:gravity="center"
+                        android:orientation="vertical" />
 
+                    <TextView
+                        android:id="@+id/txtPaidToBeneficiary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:text="Paid To Beneficiary"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -228,6 +241,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="bottom"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -235,7 +249,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
+                    android:gravity="left"
                     android:orientation="vertical">
 
                     <com.google.android.material.button.MaterialButton
@@ -256,7 +270,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton

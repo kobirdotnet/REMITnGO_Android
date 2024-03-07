@@ -219,12 +219,6 @@ class ProfileFragment : Fragment() {
             )
         }
 
-        binding.changePassword.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_nav_my_profile_to_nav_change_password
-            )
-        }
-
     }
 
     private fun observeOccupationTypeResult() {
@@ -235,8 +229,6 @@ class ProfileFragment : Fragment() {
                         occupationType = occupationTypeData!!.name.toString()
                     }
                 }
-            } else {
-                Log.i("info", "occupationType failed")
             }
         }
     }
@@ -250,8 +242,6 @@ class ProfileFragment : Fragment() {
                         binding.occupation.text = "$occupation"
                     }
                 }
-            } else {
-                Log.i("info", "occupation failed")
             }
         }
     }
@@ -264,8 +254,6 @@ class ProfileFragment : Fragment() {
                         sourceOfIncome = sourceOfIncomeData!!.name.toString()
                     }
                 }
-            } else {
-                Log.i("info", "sourceOfIncome failed")
             }
         }
     }
@@ -279,8 +267,6 @@ class ProfileFragment : Fragment() {
                         binding.annualIncome.text = "$annualIncome"
                     }
                 }
-            } else {
-                Log.i("info", "annualIncome failed")
             }
         }
     }
@@ -294,8 +280,6 @@ class ProfileFragment : Fragment() {
                         binding.nationality.text = "$nationality"
                     }
                 }
-            } else {
-                Log.i("info", "nationality failed")
             }
         }
     }
@@ -308,8 +292,6 @@ class ProfileFragment : Fragment() {
                         ukDivision = ukDivisionData!!.name.toString()
                     }
                 }
-            } else {
-                Log.i("info", "division failed")
             }
         }
     }
@@ -322,8 +304,6 @@ class ProfileFragment : Fragment() {
                         county = countyData!!.name.toString()
                     }
                 }
-            } else {
-                Log.i("info", "division failed")
             }
         }
     }
@@ -336,8 +316,6 @@ class ProfileFragment : Fragment() {
                         city = cityData!!.name.toString()
                     }
                 }
-            } else {
-                Log.i("info", "division failed")
             }
         }
     }
@@ -407,12 +385,9 @@ class ProfileFragment : Fragment() {
                         binding.mobileEdit.visibility = View.GONE
                     }
                 }
-            } else {
-                Log.i("info", "profile failed")
             }
         }
     }
-
 
     override fun onResume() {
         super.onResume()

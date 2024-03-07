@@ -1,6 +1,6 @@
 package com.bsel.remitngo.presentation.di.calculation
 
-import com.bsel.remitngo.bottom_sheet.PayingAgentBottomSheet
+import com.bsel.remitngo.bottomSheet.PayingAgentBottomSheet
 import com.bsel.remitngo.presentation.ui.main.MainFragment
 import dagger.Subcomponent
 

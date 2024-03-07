@@ -14,6 +14,7 @@ import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
 import com.bsel.remitngo.presentation.di.query.QuerySubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
+import com.bsel.remitngo.presentation.di.settings.SettingsSubComponent
 import com.bsel.remitngo.presentation.di.transaction.TransactionSubComponent
 
 class App : Application(), Injector {
@@ -65,6 +66,9 @@ class App : Application(), Injector {
     }
     override fun createQuerySubComponent(): QuerySubComponent {
         return appComponent.querySubComponent().create()
+    }
+    override fun createSettingsSubComponent(): SettingsSubComponent {
+        return appComponent.settingsSubComponent().create()
     }
 
 }

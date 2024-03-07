@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryItem
-import com.bsel.remitngo.data.model.beneficiary.get_beneficiary.GetBeneficiaryResponseItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryResponseItem
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryResponseItem
 import com.bsel.remitngo.data.model.gender.GenderItem

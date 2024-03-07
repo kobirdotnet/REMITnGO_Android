@@ -6,7 +6,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.GenderAdapter
-import com.bsel.remitngo.bottom_sheet.*
+import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeData
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -31,8 +29,7 @@ import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
 import com.bsel.remitngo.databinding.FragmentPersonalInformationBinding
-import com.bsel.remitngo.interfaceses.OnPersonalInfoItemSelectedListener
-import com.bsel.remitngo.model.*
+import com.bsel.remitngo.data.interfaceses.OnPersonalInfoItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModelFactory
@@ -262,9 +259,6 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
                 findNavController().navigate(
                     R.id.action_nav_personal_information_to_nav_my_profile
                 )
-                Log.i("info", "update profile successful: $result")
-            } else {
-                Log.i("info", "update profile failed")
             }
         }
     }
@@ -278,8 +272,6 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
                         binding.occupationType.setText(occupationType)
                     }
                 }
-            } else {
-                Log.i("info", "occupationType failed")
             }
         }
     }
@@ -293,8 +285,6 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
                         binding.occupation.setText(occupation)
                     }
                 }
-            } else {
-                Log.i("info", "occupation failed")
             }
         }
     }
@@ -308,8 +298,6 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
                         binding.sourceOfIncome.setText(sourceOfIncome)
                     }
                 }
-            } else {
-                Log.i("info", "sourceOfIncome failed")
             }
         }
     }
@@ -323,8 +311,6 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
                         binding.annualIncome.setText(annualIncome)
                     }
                 }
-            } else {
-                Log.i("info", "annualIncome failed")
             }
         }
     }
@@ -338,8 +324,6 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
                         binding.nationality.setText(nationality)
                     }
                 }
-            } else {
-                Log.i("info", "nationality failed")
             }
         }
     }
@@ -490,37 +474,37 @@ class PersonalInformationFragment : Fragment(), OnPersonalInfoItemSelectedListen
         return null
     }
 
-//    private fun occupationFocusListener() {
-//        binding.occupation.setOnFocusChangeListener { _, focused ->
-//            if (!focused) {
-//                binding.occupationContainer.helperText = validOccupation()
-//            }
-//        }
-//    }
-//
-//    private fun validOccupation(): String? {
-//        val occupation = binding.occupation.text.toString()
-//        if (occupation.isEmpty()) {
-//            return "Select occupation"
-//        }
-//        return null
-//    }
+    private fun occupationFocusListener() {
+        binding.occupation.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.occupationContainer.helperText = validOccupation()
+            }
+        }
+    }
 
-//    private fun sourceOfIncomeFocusListener() {
-//        binding.sourceOfIncome.setOnFocusChangeListener { _, focused ->
-//            if (!focused) {
-//                binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
-//            }
-//        }
-//    }
-//
-//    private fun validSourceOfIncome(): String? {
-//        val sourceOfIncome = binding.sourceOfIncome.text.toString()
-//        if (sourceOfIncome.isEmpty()) {
-//            return "Select source of income"
-//        }
-//        return null
-//    }
+    private fun validOccupation(): String? {
+        val occupation = binding.occupation.text.toString()
+        if (occupation.isEmpty()) {
+            return "Select occupation"
+        }
+        return null
+    }
+
+    private fun sourceOfIncomeFocusListener() {
+        binding.sourceOfIncome.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
+            }
+        }
+    }
+
+    private fun validSourceOfIncome(): String? {
+        val sourceOfIncome = binding.sourceOfIncome.text.toString()
+        if (sourceOfIncome.isEmpty()) {
+            return "Select source of income"
+        }
+        return null
+    }
 
     private fun annualIncomeFocusListener() {
         binding.annualIncome.setOnFocusChangeListener { _, focused ->

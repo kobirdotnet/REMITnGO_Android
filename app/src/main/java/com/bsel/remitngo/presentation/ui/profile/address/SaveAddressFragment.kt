@@ -5,7 +5,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottom_sheet.AddressBottomSheet
-import com.bsel.remitngo.bottom_sheet.CityBottomSheet
-import com.bsel.remitngo.bottom_sheet.CountyBottomSheet
-import com.bsel.remitngo.bottom_sheet.UkDivisionBottomSheet
+import com.bsel.remitngo.bottomSheet.AddressBottomSheet
+import com.bsel.remitngo.bottomSheet.CityBottomSheet
+import com.bsel.remitngo.bottomSheet.CountyBottomSheet
+import com.bsel.remitngo.bottomSheet.UkDivisionBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.profile.city.CityData
 import com.bsel.remitngo.data.model.profile.city.CityItem
@@ -27,7 +26,7 @@ import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionData
 import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
 import com.bsel.remitngo.databinding.FragmentSaveAddressBinding
-import com.bsel.remitngo.interfaceses.OnAddressItemSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnAddressItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModelFactory
@@ -171,8 +170,6 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
                         binding.division.setText(ukDivision)
                     }
                 }
-            } else {
-                Log.i("info", "division failed")
             }
         }
     }
@@ -186,8 +183,6 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
                         binding.county.setText(county)
                     }
                 }
-            } else {
-                Log.i("info", "division failed")
             }
         }
     }
@@ -201,8 +196,6 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
                         binding.city.setText(city)
                     }
                 }
-            } else {
-                Log.i("info", "division failed")
             }
         }
     }
@@ -213,9 +206,6 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
                 findNavController().navigate(
                     R.id.action_nav_save_address_to_nav_my_profile
                 )
-                Log.i("info", "update profile successful: $result")
-            } else {
-                Log.i("info", "update profile failed")
             }
         }
     }
@@ -288,26 +278,6 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         addressBottomSheet.setSelectedPostCode(postcode)
         addressBottomSheet.itemSelectedListener = this
         addressBottomSheet.show(childFragmentManager, addressBottomSheet.tag)
-    }
-
-    override fun onAddressItemSelected(selectedItem: PostCodeData) {
-        binding.postCode.setText(selectedItem.postcode)
-        binding.address.setText(selectedItem.ukAddress)
-    }
-
-    override fun onUkDivisionItemSelected(selectedItem: UkDivisionData) {
-        binding.division.setText(selectedItem.name)
-        ukDivisionId = selectedItem.id.toString()
-    }
-
-    override fun onCountyItemSelected(selectedItem: CountyData) {
-        binding.county.setText(selectedItem.name)
-        countyId = selectedItem.id.toString()
-    }
-
-    override fun onCityItemSelected(selectedItem: CityData) {
-        binding.city.setText(selectedItem.name)
-        cityId = selectedItem.id.toString()
     }
 
     //Form validation
@@ -405,6 +375,26 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
             return "enter city"
         }
         return null
+    }
+
+    override fun onAddressItemSelected(selectedItem: PostCodeData) {
+        binding.postCode.setText(selectedItem.postcode)
+        binding.address.setText(selectedItem.ukAddress)
+    }
+
+    override fun onUkDivisionItemSelected(selectedItem: UkDivisionData) {
+        binding.division.setText(selectedItem.name)
+        ukDivisionId = selectedItem.id.toString()
+    }
+
+    override fun onCountyItemSelected(selectedItem: CountyData) {
+        binding.county.setText(selectedItem.name)
+        countyId = selectedItem.id.toString()
+    }
+
+    override fun onCityItemSelected(selectedItem: CityData) {
+        binding.city.setText(selectedItem.name)
+        cityId = selectedItem.id.toString()
     }
 
     private fun getDeviceId(context: Context): String {
