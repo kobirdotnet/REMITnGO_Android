@@ -2,10 +2,15 @@ package com.bsel.remitngo.presentation.ui.registration
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.util.Patterns
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -13,10 +18,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottomSheet.ExistingCustomerBottomSheet
+import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.api.TokenManager
+import com.bsel.remitngo.data.model.registration.RegistrationData
 import com.bsel.remitngo.data.model.registration.RegistrationItem
 import com.bsel.remitngo.databinding.ActivityRegistrationBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.main.MainActivity
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.*
 import javax.inject.Inject
 
@@ -29,14 +40,22 @@ class RegistrationActivity : AppCompatActivity() {
 
     private val existingCustomerBottomSheet: ExistingCustomerBottomSheet by lazy { ExistingCustomerBottomSheet() }
 
+    private lateinit var deviceId: String
+
+    private lateinit var preferenceManager: PreferenceManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_registration)
+
+        preferenceManager = PreferenceManager(this@RegistrationActivity)
 
         (application as Injector).createRegistrationSubComponent().inject(this)
 
         registrationViewModel =
             ViewModelProvider(this, registrationViewModelFactory)[RegistrationViewModel::class.java]
+
+        deviceId = getDeviceId(applicationContext)
 
         firstNameFocusListener()
         lastNameFocusListener()
@@ -44,9 +63,6 @@ class RegistrationActivity : AppCompatActivity() {
         emailFocusListener()
         phoneFocusListener()
         passwordFocusListener()
-        confirmPasswordFocusListener()
-
-        binding.btnSignUp.setOnClickListener { signUpForm() }
 
         binding.dobContainer.setEndIconOnClickListener {
             val calendar = Calendar.getInstance()
@@ -78,15 +94,48 @@ class RegistrationActivity : AppCompatActivity() {
             )
         }
 
+        binding.btnSignUp.setOnClickListener { signUpForm() }
+
         observeRegistrationResult()
 
     }
 
     private fun observeRegistrationResult() {
         registrationViewModel.registrationResult.observe(this) { result ->
-            if (result != null) {
-                val intent = Intent(this@RegistrationActivity, MainActivity::class.java)
-                startActivity(intent)
+            result?.let { registrationResponse ->
+                if (registrationResponse.code == "000") {
+                    val data = registrationResponse.data
+                    if (data is List<*>) {
+                        val gson = Gson()
+                        val registrationDataList = gson.fromJson<List<RegistrationData>>(
+                            gson.toJsonTree(data),
+                            object : TypeToken<List<RegistrationData>>() {}.type
+                        )
+                        registrationDataList.forEach { registrationData ->
+                            registrationData?.let {
+                                preferenceManager.saveData("personId", it.personId?.toString() ?: "")
+                                preferenceManager.saveData("firstName", it.firstName ?: "")
+                                preferenceManager.saveData("lastName", it.lastName ?: "")
+                                preferenceManager.saveData("email", it.email ?: "")
+                                preferenceManager.saveData("mobile", it.mobile ?: "")
+                                preferenceManager.saveData("dob", it.dateOfBirth ?: "")
+                            }
+                        }
+                    } else {
+                        Log.e("error", "Invalid data type for 'Data'")
+                    }
+                    registrationResponse.token?.let { TokenManager.setToken(it) }
+                    val intent = Intent(this@RegistrationActivity, MainActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Log.i("info", "Registration not successful. Code: ${registrationResponse.data}")
+                    val parentLayout: View = findViewById(android.R.id.content)
+                    val snackbar =
+                        Snackbar.make(parentLayout, registrationResponse.data.toString(), Snackbar.LENGTH_SHORT)
+                    snackbar.show()
+                }
+            } ?: run {
+                Log.e("error", "Null response received")
             }
         }
     }
@@ -98,7 +147,6 @@ class RegistrationActivity : AppCompatActivity() {
         binding.emailContainer.helperText = validEmail()
         binding.phoneNumberContainer.helperText = validPhone()
         binding.passwordContainer.helperText = validPassword()
-        binding.confirmPasswordContainer.helperText = validConfirmPassword()
 
         val validFirstName = binding.firstNameContainer.helperText == null
         val validLastName = binding.lastNameContainer.helperText == null
@@ -106,9 +154,8 @@ class RegistrationActivity : AppCompatActivity() {
         val validEmail = binding.emailContainer.helperText == null
         val validPhone = binding.phoneNumberContainer.helperText == null
         val validPassword = binding.passwordContainer.helperText == null
-        val validConfirmPassword = binding.confirmPasswordContainer.helperText == null
 
-        if (validFirstName && validLastName && validDob && validEmail && validPhone && validPassword && validConfirmPassword) {
+        if (validFirstName && validLastName && validDob && validEmail && validPhone && validPassword) {
             submitSignUpForm()
         }
     }
@@ -120,24 +167,25 @@ class RegistrationActivity : AppCompatActivity() {
         val email = binding.email.text.toString()
         val phoneNumber = binding.phoneNumber.text.toString()
         val password = binding.password.text.toString()
-        val confirmPassword = binding.confirmPassword.text.toString()
         val isOnline = 1
         val refCode = "1"
 
         val registrationItem = RegistrationItem(
+            deviceId = deviceId,
+            channel = "Apps",
+            firstname = firstName,
+            middlename = "",
+            lastname = lastName,
             dob = dob,
             email = email,
-            firstname = firstName,
-            isOnlineCustomer = isOnline,
-            lastname = lastName,
-            middlename = "",
             mobile = phoneNumber,
             password = password,
+            refCode = refCode,
+            isOnlineCustomer = isOnline,
             rdoemail = true,
             rdophone = true,
             rdopost = true,
-            rdosms = true,
-            refCode = refCode
+            rdosms = true
         )
         registrationViewModel.registerUser(registrationItem)
     }
@@ -226,8 +274,8 @@ class RegistrationActivity : AppCompatActivity() {
         if (!phone.matches(".*[0-9].*".toRegex())) {
             return "Must be all digits"
         }
-        if (phone.length != 11) {
-            return "Must be 11 digits"
+        if (phone.length != 10) {
+            return "Must be 10 digits"
         }
         return null
     }
@@ -260,34 +308,22 @@ class RegistrationActivity : AppCompatActivity() {
         return null
     }
 
-    private fun confirmPasswordFocusListener() {
-        binding.confirmPassword.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.confirmPasswordContainer.helperText = validConfirmPassword()
-            }
-        }
-    }
+    private fun getDeviceId(context: Context): String {
+        val deviceId: String
 
-    private fun validConfirmPassword(): String? {
-        val confirmPassword = binding.confirmPassword.text.toString()
-        if (confirmPassword.isEmpty()) {
-            return "Enter confirm password"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            deviceId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
         }
-        if (confirmPassword.length < 8) {
-            return "Minimum 8 Character Password"
-        }
-        if (!confirmPassword.matches(".*[A-Z].*".toRegex())) {
-            return "Must Contain 1 Upper-case Character"
-        }
-        if (!confirmPassword.matches(".*[a-z].*".toRegex())) {
-            return "Must Contain 1 Lower-case Character"
-        }
-        if (!confirmPassword.matches(".*[@#\$%^&+=].*".toRegex())) {
-            return "Must Contain 1 Special Character (@#\$%^&+=)"
-        }
-        return null
-    }
 
+        return deviceId
+    }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         val v = currentFocus

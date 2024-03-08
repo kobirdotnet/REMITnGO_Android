@@ -1,9 +1,9 @@
-package com.bsel.remitngo.data.model.login
+package com.bsel.remitngo.data.model.registration
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Data(
+data class RegistrationData(
     @SerializedName("DateOfBirth")
     val dateOfBirth: String?,
     @SerializedName("Email")

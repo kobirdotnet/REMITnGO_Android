@@ -32,7 +32,7 @@
     <string name="menu_sign_in_sign_up">REMITnGO</string>
     <string name="menu_login">Log in</string>
     <string name="menu_sign_up">Sign Up</string>
-    <string name="term_and_condition">By signing up you agree to our Tams of use Privacy Policy and to rectify receiving communications from BRAC Saajan regarding your transactions, new offers, products or services.</string>
+    <string name="term_and_condition">By signing up you agree to our Terms of Use and Privacy Policy.</string>
     <string name="recipient_name_as_bank">Recipient name should be legal name, as registered with bank.</string>
     <string name="recipient_name_as_wallet">Recipient name should be legal name, as registered with wallet service.</string>
     <string name="bank_transfer_txt">Please double check the account information, as we may not be able to refund the transfer once it has been sent.</string>

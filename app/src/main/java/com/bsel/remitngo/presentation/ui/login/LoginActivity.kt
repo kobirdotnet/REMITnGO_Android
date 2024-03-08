@@ -196,10 +196,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        // Handle touch events to hide the keyboard when clicking outside EditText
         val v = currentFocus
-
-        // Check if the touch event is an UP or MOVE event and if the focused view is an EditText
         if (v != null &&
             (ev.action == MotionEvent.ACTION_UP || ev.action == MotionEvent.ACTION_MOVE) &&
             v is EditText &&
@@ -209,19 +206,14 @@ class LoginActivity : AppCompatActivity() {
             v.getLocationOnScreen(scrcoords)
             val x = ev.rawX + v.getLeft() - scrcoords[0]
             val y = ev.rawY + v.getTop() - scrcoords[1]
-
-            // Hide the keyboard if the touch event is outside the EditText
             if (x < v.getLeft() || x > v.getRight() || y < v.getTop() || y > v.getBottom()) {
                 hideKeyBoard(this)
             }
         }
-
-        // Continue with the default touch event handling
         return super.dispatchTouchEvent(ev)
     }
 
     fun hideKeyBoard(activity: Activity?) {
-        // Hide the soft keyboard from the current window
         if (activity != null && activity.window != null) {
             val imm = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(activity.window.decorView.windowToken, 0)

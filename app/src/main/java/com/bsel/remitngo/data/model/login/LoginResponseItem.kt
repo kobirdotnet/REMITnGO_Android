@@ -6,7 +6,7 @@ data class LoginResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: List<Data>?,
+    val `data`: List<LoginData>?,
     @SerializedName("Message")
     val message: String?,
     @SerializedName("Token")
