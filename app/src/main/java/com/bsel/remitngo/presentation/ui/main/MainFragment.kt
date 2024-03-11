@@ -140,7 +140,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     orderType = 5
 
                     preferenceManager.saveData("orderType", orderType.toString())
-                    preferenceManager.saveData("send_amount", amount.toString())
+                    preferenceManager.saveData("send_amount", amount)
                 }
                 R.id.cash_pickup -> {
                     binding.collectionPointBankLayout.visibility = View.VISIBLE
@@ -150,7 +150,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     orderType = 2
 
                     preferenceManager.saveData("orderType", orderType.toString())
-                    preferenceManager.saveData("send_amount", amount.toString())
+                    preferenceManager.saveData("send_amount", amount)
                 }
                 R.id.mobile_wallet -> {
                     binding.collectionPointBankLayout.visibility = View.GONE

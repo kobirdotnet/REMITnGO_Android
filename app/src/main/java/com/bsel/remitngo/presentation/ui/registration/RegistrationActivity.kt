@@ -18,8 +18,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottomSheet.ExistingCustomerBottomSheet
+import com.bsel.remitngo.bottomSheet.MarketingBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.api.TokenManager
+import com.bsel.remitngo.data.interfaceses.OnMarketingItemSelectedListener
+import com.bsel.remitngo.data.model.marketing.MarketingResponseItem
+import com.bsel.remitngo.data.model.marketing.MarketingValue
 import com.bsel.remitngo.data.model.registration.RegistrationData
 import com.bsel.remitngo.data.model.registration.RegistrationItem
 import com.bsel.remitngo.databinding.ActivityRegistrationBinding
@@ -31,7 +35,7 @@ import com.google.gson.reflect.TypeToken
 import java.util.*
 import javax.inject.Inject
 
-class RegistrationActivity : AppCompatActivity() {
+class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListener {
     @Inject
     lateinit var registrationViewModelFactory: RegistrationViewModelFactory
     private lateinit var registrationViewModel: RegistrationViewModel
@@ -40,9 +44,18 @@ class RegistrationActivity : AppCompatActivity() {
 
     private val existingCustomerBottomSheet: ExistingCustomerBottomSheet by lazy { ExistingCustomerBottomSheet() }
 
+    private val marketingBottomSheet: MarketingBottomSheet by lazy { MarketingBottomSheet() }
+
     private lateinit var deviceId: String
 
     private lateinit var preferenceManager: PreferenceManager
+
+    var checkedValue = false
+
+    var rdoEmail = false
+    var rdoSMS = false
+    var rdoPhone = false
+    var rdoPost = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +107,27 @@ class RegistrationActivity : AppCompatActivity() {
             )
         }
 
+        checkedValue = false
+        binding.termAndCondition.setOnCheckedChangeListener { checkBox, isChecked ->
+            checkedValue = isChecked
+        }
+
+        binding.marketingRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.marketing_check -> {
+                    if (!marketingBottomSheet.isAdded) {
+                        marketingBottomSheet.setSelectedMarketing(rdoEmail, rdoSMS, rdoPhone, rdoPost)
+                        marketingBottomSheet.itemSelectedListener = this@RegistrationActivity
+                        marketingBottomSheet.show(supportFragmentManager, marketingBottomSheet.tag)
+                    }
+                }
+                R.id.marketing_uncheck -> {
+                    // Handle if needed
+                }
+            }
+        }
+
+
         binding.btnSignUp.setOnClickListener { signUpForm() }
 
         observeRegistrationResult()
@@ -113,7 +147,10 @@ class RegistrationActivity : AppCompatActivity() {
                         )
                         registrationDataList.forEach { registrationData ->
                             registrationData?.let {
-                                preferenceManager.saveData("personId", it.personId?.toString() ?: "")
+                                preferenceManager.saveData(
+                                    "personId",
+                                    it.personId?.toString() ?: ""
+                                )
                                 preferenceManager.saveData("firstName", it.firstName ?: "")
                                 preferenceManager.saveData("lastName", it.lastName ?: "")
                                 preferenceManager.saveData("email", it.email ?: "")
@@ -131,7 +168,11 @@ class RegistrationActivity : AppCompatActivity() {
                     Log.i("info", "Registration not successful. Code: ${registrationResponse.data}")
                     val parentLayout: View = findViewById(android.R.id.content)
                     val snackbar =
-                        Snackbar.make(parentLayout, registrationResponse.data.toString(), Snackbar.LENGTH_SHORT)
+                        Snackbar.make(
+                            parentLayout,
+                            registrationResponse.data.toString(),
+                            Snackbar.LENGTH_SHORT
+                        )
                     snackbar.show()
                 }
             } ?: run {
@@ -168,7 +209,7 @@ class RegistrationActivity : AppCompatActivity() {
         val phoneNumber = binding.phoneNumber.text.toString()
         val password = binding.password.text.toString()
         val isOnline = 1
-        val refCode = "1"
+        val refCode = binding.referralCode.text.toString()
 
         val registrationItem = RegistrationItem(
             deviceId = deviceId,
@@ -182,10 +223,10 @@ class RegistrationActivity : AppCompatActivity() {
             password = password,
             refCode = refCode,
             isOnlineCustomer = isOnline,
-            rdoemail = true,
-            rdophone = true,
-            rdopost = true,
-            rdosms = true
+            rdoemail = rdoEmail,
+            rdophone = rdoPhone,
+            rdopost = rdoPost,
+            rdosms = rdoSMS
         )
         registrationViewModel.registerUser(registrationItem)
     }
@@ -306,6 +347,22 @@ class RegistrationActivity : AppCompatActivity() {
             return "Must Contain 1 Special Character (@#\$%^&+=)"
         }
         return null
+    }
+
+    override fun onMarketingItemSelected(selectedItem: MarketingValue) {
+        rdoEmail = selectedItem.rdoEmail == true
+        rdoSMS = selectedItem.rdoSMS == true
+        rdoPhone = selectedItem.rdoPhone == true
+        rdoPost = selectedItem.rdoPost == true
+
+        if (rdoEmail && rdoSMS && rdoPhone && rdoPost) {
+            binding.marketingCheck.isChecked = true
+            binding.marketingUncheck.isChecked = false
+        } else {
+            binding.marketingCheck.isChecked = false
+            binding.marketingUncheck.isChecked = true
+        }
+
     }
 
     private fun getDeviceId(context: Context): String {

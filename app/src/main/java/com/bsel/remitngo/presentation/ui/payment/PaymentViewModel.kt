@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bsel.remitngo.data.model.encript.EncryptItem
+import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
@@ -29,6 +31,16 @@ class PaymentViewModel(private val paymentUseCase: PaymentUseCase) : ViewModel()
         viewModelScope.launch {
             val result = paymentUseCase.execute(transactionCode)
             _paymentStatusResult.value = result
+        }
+    }
+
+    private val _encryptResult = MutableLiveData<EncryptResponseItem?>()
+    val encryptResult: LiveData<EncryptResponseItem?> = _encryptResult
+
+    fun encrypt(encryptItem: EncryptItem) {
+        viewModelScope.launch {
+            val result = paymentUseCase.execute(encryptItem)
+            _encryptResult.value = result
         }
     }
 

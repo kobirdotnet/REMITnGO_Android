@@ -1,6 +1,8 @@
 package com.bsel.remitngo.data.repository.payment
 
 import android.util.Log
+import com.bsel.remitngo.data.model.encript.EncryptItem
+import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
@@ -40,6 +42,23 @@ class PaymentRepositoryImpl(private val paymentRemoteDataSource: PaymentRemoteDa
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error payment status: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun encrypt(encryptItem: EncryptItem): EncryptResponseItem? {
+        return try {
+            val response = paymentRemoteDataSource.encrypt(encryptItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to encrypt: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error encrypt: ${exception.message}", exception)
             null
         }
     }

@@ -344,6 +344,26 @@
                     android:textColor="@color/text_color" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="top"
+                    android:text="I would like to receive communications from BRAC Saajan regarding: Transaction, New Offer and Service."
+                    android:textColor="@color/text_color" />
+
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -354,7 +374,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <RadioGroup
-                    android:id="@+id/order_mode_radio_group"
+                    android:id="@+id/marketing_radio_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -362,7 +382,7 @@
                     android:weightSum="4">
 
                     <RadioButton
-                        android:id="@+id/bank_account"
+                        android:id="@+id/marketing_check"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="4dp"
@@ -372,7 +392,7 @@
                         android:text="Yes" />
 
                     <RadioButton
-                        android:id="@+id/instant_credit"
+                        android:id="@+id/marketing_uncheck"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"

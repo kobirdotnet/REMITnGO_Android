@@ -24,6 +24,7 @@ interface ProfileSubComponent {
     fun inject(ukDivisionBottomSheet: UkDivisionBottomSheet)
     fun inject(countyBottomSheet: CountyBottomSheet)
     fun inject(cityBottomSheet: CityBottomSheet)
+    
 
     @Subcomponent.Factory
     interface Factory {

@@ -16,12 +16,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
+import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.databinding.FragmentPaymentBinding
 import com.bsel.remitngo.presentation.di.Injector
-import com.bsel.remitngo.presentation.ui.bank.BankViewModel
-import com.bsel.remitngo.presentation.ui.bank.BankViewModelFactory
 import com.emerchantpay.gateway.genesisandroid.api.constants.*
 import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringCategory
 import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringType
@@ -88,6 +86,9 @@ class PaymentFragment : Fragment() {
     private lateinit var cardCommission: String
 
     private lateinit var transactionCode: String
+    private lateinit var encryptCode: String
+    private lateinit var encryptChanel: String
+    private lateinit var encryptKey: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -195,8 +196,13 @@ class PaymentFragment : Fragment() {
                 longitude = ""
             )
             paymentViewModel.payment(paymentItem)
-
             observePaymentResult()
+
+            encryptKey="bsel2024$#@!"
+
+            observeEncryptResult()
+            observeEncryptChannelResult()
+
         }
 
     }
@@ -205,11 +211,38 @@ class PaymentFragment : Fragment() {
         paymentViewModel.paymentResult.observe(this) { result ->
             if (result!!.data != null) {
                 transactionCode = result.data.toString()
+                val encryptItem = EncryptItem(
+                    key=encryptKey,
+                    plainText=transactionCode
+                )
+                paymentViewModel.encrypt(encryptItem)
+
+                val encryptChanel = EncryptItem(
+                    key=encryptKey,
+                    plainText="1"
+                )
+                paymentViewModel.encrypt(encryptChanel)
+
+            }
+        }
+    }
+
+    private fun observeEncryptResult() {
+        paymentViewModel.encryptResult.observe(this) { result ->
+            if (result!!.data != null) {
+                encryptCode=result.data.toString()
                 if (paymentType == "4") {
                     cardPayment(transactionCode)
                 } else if (paymentType == "3") {
                     findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
                 }
+            }
+        }
+    }
+    private fun observeEncryptChannelResult() {
+        paymentViewModel.encryptResult.observe(this) { result ->
+            if (result!!.data != null) {
+                encryptChanel=result.data.toString()
             }
         }
     }
@@ -255,13 +288,13 @@ class PaymentFragment : Fragment() {
             "07893986598",
             billingAddress,
 //            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
-            "https://emptest.remitngo.com/EmerchantNotification/EmerchantNotification?120",
+            "https://emptest.remitngo.com/Emerchantpay/EmerNotificationResponse",
             transactionTypes
         )
 
-        paymentRequest.setReturnSuccessUrl("https://uat2.remitngo.com/Emerchantpay/WPFSuccessURL.aspx?220")
-        paymentRequest.setReturnFailureUrl("https://uat2.remitngo.com/Emerchantpay/WPFFailureURL.aspx?320")
-        paymentRequest.setReturnCancelUrl("https://uat2.remitngo.com/Emerchantpay/WPFCancelURL.aspx?420")
+        paymentRequest.setReturnSuccessUrl("https://emptest.remitngo.com/Emerchantpay/WPFSuccessURL?tcode="+encryptCode)
+        paymentRequest.setReturnFailureUrl("https://emptest.remitngo.com/Emerchantpay/WPFFailureURL?tcode="+encryptCode)
+        paymentRequest.setReturnCancelUrl("https://emptest.remitngo.com/Emerchantpay/WPFCancelURL?tcode="+encryptCode)
 
         // Set return URLs after a delay of 30 seconds
 //        Handler(Looper.getMainLooper()).postDelayed({

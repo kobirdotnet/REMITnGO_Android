@@ -35,10 +35,14 @@ import com.bsel.remitngo.data.model.document.documentType.DocumentTypeResponseIt
 import com.bsel.remitngo.data.model.document.document.GetDocumentItem
 import com.bsel.remitngo.data.model.document.document.GetDocumentResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.UploadDocumentResponseItem
+import com.bsel.remitngo.data.model.encript.EncryptItem
+import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.gender.GenderResponseItem
 import com.bsel.remitngo.data.model.login.LoginItem
 import com.bsel.remitngo.data.model.login.LoginResponseItem
+import com.bsel.remitngo.data.model.marketing.MarketingItem
+import com.bsel.remitngo.data.model.marketing.MarketingResponseItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
@@ -234,6 +238,12 @@ interface REMITnGoService {
 
     @POST("api/Home/ChangePassword")
     suspend fun changePassword(@Body changePasswordItem: ChangePasswordItem): Response<ChangePasswordResponseItem>
+
+    @POST("api/General/CommunicationPreferencesUpdate")
+    suspend fun marketing(@Body marketingItem: MarketingItem): Response<MarketingResponseItem>
+
+    @POST("api/General/Encrypt")
+    suspend fun encrypt(@Body encryptItem: EncryptItem): Response<EncryptResponseItem>
 
 
 }
