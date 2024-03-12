@@ -1,6 +1,5 @@
 package com.bsel.remitngo.presentation.ui.payment
 
-import android.app.Dialog
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.os.*
@@ -9,13 +8,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
+import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
+import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.databinding.FragmentPaymentBinding
@@ -48,9 +48,6 @@ class PaymentFragment : Fragment() {
     private lateinit var binding: FragmentPaymentBinding
 
     private lateinit var preferenceManager: PreferenceManager
-
-    lateinit var dialogHandler: AlertDialogHandler
-    lateinit var error: GenesisError
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
@@ -86,9 +83,19 @@ class PaymentFragment : Fragment() {
     private lateinit var cardCommission: String
 
     private lateinit var transactionCode: String
+    private lateinit var transactionCodeWithChannel: String
     private lateinit var encryptCode: String
-    private lateinit var encryptChanel: String
-    private lateinit var encryptKey: String
+
+    lateinit var dialogHandler: AlertDialogHandler
+    lateinit var error: GenesisError
+    private lateinit var paymentRequest: PaymentRequest
+    private lateinit var configuration: Configuration
+    private lateinit var transactionTypes: TransactionTypesRequest
+    private lateinit var billingAddress: PaymentAddress
+    private lateinit var riskParams: RiskParams
+    private lateinit var threeDsV2Params: ThreeDsV2Params
+    private lateinit var genesis: Genesis
+    private lateinit var consumerId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -196,14 +203,20 @@ class PaymentFragment : Fragment() {
                 longitude = ""
             )
             paymentViewModel.payment(paymentItem)
-            observePaymentResult()
-
-            encryptKey="bsel2024$#@!"
-
-            observeEncryptResult()
-            observeEncryptChannelResult()
-
         }
+        observePaymentResult()
+        observeEncryptResult()
+
+        val consumerItem = ConsumerItem(
+            deviceId = deviceId,
+            params1 = personId.toInt(),
+            params2 = ""
+        )
+        paymentViewModel.consumer(consumerItem)
+        observeConsumerResult()
+
+        observeSaveConsumerResult()
+        observeEmpResult()
 
     }
 
@@ -211,17 +224,15 @@ class PaymentFragment : Fragment() {
         paymentViewModel.paymentResult.observe(this) { result ->
             if (result!!.data != null) {
                 transactionCode = result.data.toString()
-                val encryptItem = EncryptItem(
-                    key=encryptKey,
-                    plainText=transactionCode
-                )
-                paymentViewModel.encrypt(encryptItem)
+                transactionCodeWithChannel = "$transactionCode*1"
 
-                val encryptChanel = EncryptItem(
-                    key=encryptKey,
-                    plainText="1"
-                )
-                paymentViewModel.encrypt(encryptChanel)
+                if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
+                    val encryptItem = EncryptItem(
+                        key = "bsel2024$#@!",
+                        plainText = transactionCodeWithChannel
+                    )
+                    paymentViewModel.encrypt(encryptItem)
+                }
 
             }
         }
@@ -230,40 +241,58 @@ class PaymentFragment : Fragment() {
     private fun observeEncryptResult() {
         paymentViewModel.encryptResult.observe(this) { result ->
             if (result!!.data != null) {
-                encryptCode=result.data.toString()
+                encryptCode = result.data.toString()
                 if (paymentType == "4") {
-                    cardPayment(transactionCode)
+                    cardPayment()
                 } else if (paymentType == "3") {
                     findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
                 }
             }
         }
     }
-    private fun observeEncryptChannelResult() {
-        paymentViewModel.encryptResult.observe(this) { result ->
+
+    private fun observeConsumerResult() {
+        paymentViewModel.consumerResult.observe(this) { result ->
             if (result!!.data != null) {
-                encryptChanel=result.data.toString()
+                consumerId = result.data.toString()
             }
         }
     }
 
-    private fun cardPayment(transactionCode: String) {
+    private fun observeSaveConsumerResult() {
+        paymentViewModel.saveConsumerResult.observe(this) { result ->
+            if (result!!.data != null) {
+                Log.i("info", "Save Consumer: " + result.data.toString())
+            }
+        }
+    }
 
+    private fun observeEmpResult() {
+        paymentViewModel.empResult.observe(this) { result ->
+            if (result!!.data != null) {
+                Log.i("info", "save emp data: " + result.data.toString())
+            }
+        }
+    }
+
+    private fun cardPayment() {
         // Generate unique Id
         val uniqueId = UUID.randomUUID().toString()
 
         // Create configuration
-        val configuration = Configuration(
+        configuration = Configuration(
             "8609ffa7b710c6c74645bfb055888b82ce71c08e",
             "637c89215aa96a41ef53468296459072d809c70a",
             Environments.STAGING,
             Endpoints.EMERCHANTPAY,
             Locales.EN
         )
+
+        // Enable Debug mode
         configuration.setDebugMode(true)
 
         // Create Billing PaymentAddress
-        val billingAddress = PaymentAddress(
+        billingAddress = PaymentAddress(
             "Mohammad",
             "Kobirul Islam",
             "Dhaka",
@@ -275,20 +304,32 @@ class PaymentFragment : Fragment() {
         )
 
         // Create Transaction types
-        val transactionTypes = TransactionTypesRequest()
+        transactionTypes = TransactionTypesRequest()
         transactionTypes.addTransaction(WPFTransactionTypes.SALE3D)
 
+        transactionTypes.setMode(RecurringMode.AUTOMATIC)
+        transactionTypes.setInterval(RecurringInterval.DAYS)
+//            transactionTypes.setFirstDate(FIRST_DATE)
+        transactionTypes.setFrequency(RecurringFrequency.DAYLY)
+        transactionTypes.setAmountType(RecurringAmountType.MAX)
+        transactionTypes.setPaymentType(RecurringPaymentType.INITIAL)
+        transactionTypes.setTimeOfDay(7)
+        transactionTypes.setPeriod(7)
+        transactionTypes.setAmount(500)
+        transactionTypes.setMaxAmount(5000)
+        transactionTypes.setMaxCount(10)
+        transactionTypes.setRegistrationReferenceNumber(7)
+
         // Init WPF API request
-        val paymentRequest = PaymentRequest(
+        paymentRequest = PaymentRequest(
             requireContext(),
             transactionCode,
-            BigDecimal("100"),
+            BigDecimal(send_amount),
             Currency.GBP,
-            "alalkodu@gmail.com",
-            "07893986598",
+            customerEmail,
+            customerMobile,
             billingAddress,
-//            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
-            "https://emptest.remitngo.com/Emerchantpay/EmerNotificationResponse",
+            "https://uat2.remitngo.com/Emerchantpay/WPFNotificationURL.aspx",
             transactionTypes
         )
 
@@ -296,30 +337,19 @@ class PaymentFragment : Fragment() {
         paymentRequest.setReturnFailureUrl("https://emptest.remitngo.com/Emerchantpay/WPFFailureURL?tcode="+encryptCode)
         paymentRequest.setReturnCancelUrl("https://emptest.remitngo.com/Emerchantpay/WPFCancelURL?tcode="+encryptCode)
 
-        // Set return URLs after a delay of 30 seconds
-//        Handler(Looper.getMainLooper()).postDelayed({
-//
-//
-//            val bundle = Bundle().apply {
-//                putString("transactionCode", transactionCode)
-//            }
-//            findNavController().navigate(
-//                R.id.action_nav_review_to_nav_complete_card_transaction,
-//                bundle
-//            )
-//
-//        }, 60000)
-
         paymentRequest.setUsage("Test Staging")
         paymentRequest.setDescription("Test payment gateway")
         paymentRequest.setLifetime(60)
         paymentRequest.setRememberCard(true)
+        paymentRequest.setPayLater(false)
+        paymentRequest.setCrypto(false)
+        paymentRequest.setGaming(false)
 
         paymentRequest.setRecurringType(RecurringType.INITIAL)
-        paymentRequest.setRecurringCategory(RecurringCategory.STANDING_ORDER)
+        paymentRequest.setRecurringCategory(RecurringCategory.SUBSCRIPTION)
 
         // Risk params
-        val riskParams = RiskParams(
+        riskParams = RiskParams(
             "1002547",
             "1DA53551-5C60-498C-9C18-8456BDBA74A9",
             "987-65-4320",
@@ -343,7 +373,7 @@ class PaymentFragment : Fragment() {
         )
         paymentRequest.setRiskParams(riskParams)
 
-        val threeDsV2Params = ThreeDsV2Params.build {
+        threeDsV2Params = ThreeDsV2Params.build {
             purchaseCategory = ThreeDsV2PurchaseCategory.GOODS
 
             val merchantRiskPreorderDate = SimpleDateFormat("dd-MM-yyyy").calendar.apply {
@@ -381,9 +411,12 @@ class PaymentFragment : Fragment() {
             recurring = ThreeDsV2RecurringParams()
         }
         paymentRequest.setThreeDsV2Params(threeDsV2Params)
-        paymentRequest.setConsumerId("157074")
 
-        val genesis = Genesis(requireContext(), configuration, paymentRequest)
+        if (::consumerId.isInitialized && consumerId != "null") {
+            paymentRequest.setConsumerId(consumerId)
+        }
+
+        genesis = Genesis(requireContext(), configuration, paymentRequest)
 
         if (!genesis?.isConnected(requireContext())!!) {
             dialogHandler =
@@ -394,73 +427,89 @@ class PaymentFragment : Fragment() {
         if (genesis.isConnected(requireContext())!! && genesis.isValidData!!) {
             //Execute WPF API request
             genesis.push()
-
             // Get response
             val response = genesis!!.response!!
-
-            // Check if response isSuccess
             if (!response!!.isSuccess!!) {
-                // Get Error Handler
                 error = response!!.error!!
-
                 dialogHandler = AlertDialogHandler(
                     requireContext(),
                     "Failure",
                     "Code: " + error!!.code + "\nMessage: " + error!!.technicalMessage
                 )
                 dialogHandler.show()
-
             } else if (response!!.isSuccess!!) {
-                val consumerId = response.consumerId.toString()
-                Log.i("info", "consumerId: $consumerId")
 
-                Handler(Looper.getMainLooper()).postDelayed({
+                consumerId = response.consumerId.toString()
 
-                    val timerDuration = 60 * 1000
+                val saveConsumerItem = SaveConsumerItem(
+                    deviceId = deviceId,
+                    params1 = personId.toInt(),
+                    params2 = consumerId
+                )
+                paymentViewModel.saveConsumer(saveConsumerItem)
 
-                    val dialog = Dialog(requireContext())
-                    dialog.setContentView(R.layout.fragment_payment_status)
-                    dialog.setCancelable(false)
-                    dialog.window?.setLayout(
-                        WindowManager.LayoutParams.MATCH_PARENT,
-                        WindowManager.LayoutParams.MATCH_PARENT
-                    )
+                val encryptItem = EmpItem(
+                    status = response.status.toString(),
+                    uniqueId = response.uniqueId.toString(),
+                    transactionId = response.transaction!!.transactionId.toString(),
+                    consumerId = consumerId,
+                    timestamp = response.transaction!!.timestamp.toString(),
+                    amount = response.transaction!!.amount.toString(),
+                    currency = response.transaction!!.currency.toString(),
+                    redirectUrl = response.redirectUrl.toString(),
+                    channel = "1"
+                )
+                paymentViewModel.emp(encryptItem)
 
-                    val receiveName = dialog.findViewById<TextView>(R.id.recipient_name)
-                    val receiveAmount = dialog.findViewById<TextView>(R.id.receive_amount)
-                    val transactionId = dialog.findViewById<TextView>(R.id.transactionCode)
-                    val timer = dialog.findViewById<TextView>(R.id.timerTxt)
+//                findNavController().navigate(
+//                    R.id.action_nav_review_to_nav_complete_card_transaction
+//                )
 
-                    receiveName.text = "Your transfer to $recipientName is processing !"
-                    receiveAmount.text = "BDT $receive_amount"
-                    transactionId.text = "Your Transfer ID $transactionCode"
-                    dialog.show()
-
-                    object : CountDownTimer(timerDuration.toLong(), 1000) {
-                        override fun onTick(millisUntilFinished: Long) {
-                            val secondsRemaining = millisUntilFinished / 1000
-                            val minutes = secondsRemaining / 60
-                            val seconds = secondsRemaining % 60
-                            timer.text = String.format("%02d:%02d", minutes, seconds)
-                        }
-
-                        override fun onFinish() {
-                            dialog.dismiss()
-                        }
-                    }.start()
-
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        dialog.dismiss()
-                    }, 30000)
-                }, 30000)
+//                Handler(Looper.getMainLooper()).postDelayed({
+//
+//                    val timerDuration = 60 * 1000
+//
+//                    val dialog = Dialog(requireContext())
+//                    dialog.setContentView(R.layout.fragment_payment_status)
+//                    dialog.setCancelable(false)
+//                    dialog.window?.setLayout(
+//                        WindowManager.LayoutParams.MATCH_PARENT,
+//                        WindowManager.LayoutParams.MATCH_PARENT
+//                    )
+//
+//                    val receiveName = dialog.findViewById<TextView>(R.id.recipient_name)
+//                    val receiveAmount = dialog.findViewById<TextView>(R.id.receive_amount)
+//                    val transactionId = dialog.findViewById<TextView>(R.id.transactionCode)
+//                    val timer = dialog.findViewById<TextView>(R.id.timerTxt)
+//
+//                    receiveName.text = "Your transfer to $recipientName is processing !"
+//                    receiveAmount.text = "BDT $receive_amount"
+//                    transactionId.text = "Your Transfer ID $transactionCode"
+//                    dialog.show()
+//
+//                    object : CountDownTimer(timerDuration.toLong(), 1000) {
+//                        override fun onTick(millisUntilFinished: Long) {
+//                            val secondsRemaining = millisUntilFinished / 1000
+//                            val minutes = secondsRemaining / 60
+//                            val seconds = secondsRemaining % 60
+//                            timer.text = String.format("%02d:%02d", minutes, seconds)
+//                        }
+//
+//                        override fun onFinish() {
+//                            dialog.dismiss()
+//                        }
+//                    }.start()
+//
+//                    Handler(Looper.getMainLooper()).postDelayed({
+//                        dialog.dismiss()
+//                    }, 30000)
+//                }, 30000)
 
             }
         }
 
         if (!genesis.isValidData!!) {
-            // Get Error Hand
             error = genesis.error!!
-
             var message = error.message!!
             var technicalMessage: String
             if (error.technicalMessage != null && !error.technicalMessage!!.isEmpty()) {

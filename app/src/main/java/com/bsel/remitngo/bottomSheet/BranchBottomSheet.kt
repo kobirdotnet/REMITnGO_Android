@@ -47,7 +47,8 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
     private var bankId: Int = 0
     private var countryId: Int = 0
     private var divisionId: Int = 0
-    private var districtId: Int = 0
+
+    private var selectedDistrict: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -80,7 +81,6 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
         preferenceManager = PreferenceManager(requireContext())
         bankId = preferenceManager.loadData("bankId")!!.toInt()
         divisionId = preferenceManager.loadData("divisionId")!!.toInt()
-        districtId = preferenceManager.loadData("districtId")!!.toInt()
 
         (requireActivity().application as Injector).createBankSubComponent().inject(this)
 
@@ -98,12 +98,15 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
             bankId = bankId,
             toCountryId = countryId,
             divisionId = divisionId,
-            districtId = districtId
-
+            districtId = selectedDistrict!!.toInt()
         )
         bankViewModel.branch(branchItem)
 
         return bottomSheet
+    }
+
+    fun setSelectedDistrict(districtId: String) {
+        selectedDistrict = districtId
     }
 
     private fun observeBranchResult() {
@@ -132,8 +135,6 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
                     }
                 })
 
-            } else {
-                Log.i("info", "branch failed")
             }
         }
     }

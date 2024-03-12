@@ -24,6 +24,10 @@ import com.bsel.remitngo.data.model.cancel_request.save_cancel_request.SaveCance
 import com.bsel.remitngo.data.model.cancel_request.save_cancel_request.SaveCancelResponseItem
 import com.bsel.remitngo.data.model.change_password.ChangePasswordItem
 import com.bsel.remitngo.data.model.change_password.ChangePasswordResponseItem
+import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
+import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
+import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
+import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseItem
 import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.data.model.district.DistrictResponseItem
 import com.bsel.remitngo.data.model.division.DivisionItem
@@ -35,6 +39,8 @@ import com.bsel.remitngo.data.model.document.documentType.DocumentTypeResponseIt
 import com.bsel.remitngo.data.model.document.document.GetDocumentItem
 import com.bsel.remitngo.data.model.document.document.GetDocumentResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.UploadDocumentResponseItem
+import com.bsel.remitngo.data.model.emp.EmpItem
+import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.gender.GenderItem
@@ -244,6 +250,15 @@ interface REMITnGoService {
 
     @POST("api/General/Encrypt")
     suspend fun encrypt(@Body encryptItem: EncryptItem): Response<EncryptResponseItem>
+
+    @POST("api/Payment/EmerchantCreateTxnResponse")
+    suspend fun emp(@Body empItem: EmpItem): Response<EmpResponseItem>
+
+    @POST("api/Home/SaveConsumerId")
+    suspend fun saveConsumer(@Body saveConsumerItem: SaveConsumerItem): Response<SaveConsumerResponseItem>
+
+    @POST("api/Home/GetConsumerId")
+    suspend fun consumer(@Body consumerItem: ConsumerItem): Response<ConsumerResponseItem>
 
 
 }

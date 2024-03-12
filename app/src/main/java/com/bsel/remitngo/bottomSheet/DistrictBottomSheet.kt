@@ -44,8 +44,8 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
     private lateinit var preferenceManager: PreferenceManager
 
     private lateinit var deviceId: String
-    private var dropdownId: Int = 0
-    private var divisionId: Int = 0
+
+    private var selectedDivision: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -76,7 +76,6 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
         })
 
         preferenceManager = PreferenceManager(requireContext())
-        divisionId = preferenceManager.loadData("divisionId")!!.toInt()
 
         (requireActivity().application as Injector).createBankSubComponent().inject(this)
 
@@ -88,17 +87,20 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
         observeDistrictResult()
 
         deviceId = getDeviceId(requireContext())
-        dropdownId = 2
 
         val districtItem = DistrictItem(
             deviceId = deviceId,
-            dropdownId = dropdownId,
-            param1 = divisionId,
+            dropdownId = 2,
+            param1 = selectedDivision!!.toInt(),
             param2 = 0
         )
         bankViewModel.district(districtItem)
 
         return bottomSheet
+    }
+
+    fun setSelectedDivision(divisionId: String) {
+        selectedDivision = divisionId
     }
 
     private fun observeDistrictResult() {
@@ -127,8 +129,6 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
                     }
                 })
 
-            } else {
-                Log.i("info", "district failed")
             }
         }
     }

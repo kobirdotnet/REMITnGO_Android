@@ -41,8 +41,6 @@ class BankBottomSheet : BottomSheetDialogFragment() {
     private lateinit var bankNameAdapter: BankNameAdapter
 
     private lateinit var deviceId: String
-    private var dropdownId: Int = 0
-    private var countryId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -80,13 +78,11 @@ class BankBottomSheet : BottomSheetDialogFragment() {
         binding.cancelButton.setOnClickListener { dismiss() }
 
         deviceId = getDeviceId(requireContext())
-        dropdownId = 5
-        countryId = 1
 
         val bankItem = BankItem(
             deviceId = deviceId,
-            dropdownId = dropdownId,
-            param1 = countryId,
+            dropdownId = 5,
+            param1 = 1,
             param2 = 0
         )
         bankViewModel.bank(bankItem)
@@ -120,8 +116,6 @@ class BankBottomSheet : BottomSheetDialogFragment() {
                         return true
                     }
                 })
-            } else {
-                Log.i("info", "bank failed")
             }
         }
     }

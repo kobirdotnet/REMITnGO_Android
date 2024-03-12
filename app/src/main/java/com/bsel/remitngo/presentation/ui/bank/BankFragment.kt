@@ -98,7 +98,6 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         divisionNameFocusListener()
         branchNameFocusListener()
         bankAccountNumberFocusListener()
-        confirmBankAccountNumberFocusListener()
 
         walletAccountNameFocusListener()
         phoneNumberFocusListener()
@@ -147,6 +146,7 @@ class BankFragment : Fragment(), OnBankSelectedListener {
 
         binding.districtName.setOnClickListener {
             if (::divisionId.isInitialized && !divisionId.isNullOrEmpty()) {
+                districtBottomSheet.setSelectedDivision(divisionId)
                 districtBottomSheet.itemSelectedListener = this
                 districtBottomSheet.show(childFragmentManager, districtBottomSheet.tag)
             }
@@ -154,6 +154,7 @@ class BankFragment : Fragment(), OnBankSelectedListener {
 
         binding.branchName.setOnClickListener {
             if (::districtId.isInitialized && !districtId.isNullOrEmpty()) {
+                bankBranchBottomSheet.setSelectedDistrict(districtId)
                 bankBranchBottomSheet.itemSelectedListener = this
                 bankBranchBottomSheet.show(childFragmentManager, bankBranchBottomSheet.tag)
             }
@@ -191,9 +192,9 @@ class BankFragment : Fragment(), OnBankSelectedListener {
                     putString("payingAgentId", payingAgentId)
                     putString("payingAgentName", payingAgentName)
 
-                    putString("exchangeRate", exchangeRate.toString())
-                    putString("bankCommission", bankCommission.toString())
-                    putString("cardCommission", cardCommission.toString())
+                    putString("exchangeRate", exchangeRate)
+                    putString("bankCommission", bankCommission)
+                    putString("cardCommission", cardCommission)
                 }
                 findNavController().navigate(
                     R.id.action_nav_save_bank_to_nav_review,
@@ -209,17 +210,14 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         binding.divisionNameContainer.helperText = validDivisionName()
         binding.branchNameContainer.helperText = validBranchName()
         binding.bankAccountNumberContainer.helperText = validBankAccountNumber()
-        binding.confirmBankAccountNumberContainer.helperText = validConfirmBankAccountNumber()
 
         val validBankAccountName = binding.bankAccountNameContainer.helperText == null
         val validBankName = binding.bankNameContainer.helperText == null
         val validDivisionName = binding.divisionNameContainer.helperText == null
         val validBranchName = binding.branchNameContainer.helperText == null
         val validBankAccountNumber = binding.bankAccountNumberContainer.helperText == null
-        val validConfirmBankAccountNumber =
-            binding.confirmBankAccountNumberContainer.helperText == null
 
-        if (validBankAccountName && validBankName && validDivisionName && validBranchName && validBankAccountNumber && validConfirmBankAccountNumber) {
+        if (validBankAccountName && validBankName && validDivisionName && validBranchName && validBankAccountNumber) {
             submitBankAccountForm()
         }
     }
@@ -230,7 +228,6 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val divisionName = binding.divisionName.text.toString()
         val branchName = binding.branchName.text.toString()
         val bankAccountNumber = binding.bankAccountNumber.text.toString()
-        val confirmBankAccountNumber = binding.confirmBankAccountNumber.text.toString()
 
         id = 0
         isVersion113 = 0
@@ -248,7 +245,6 @@ class BankFragment : Fragment(), OnBankSelectedListener {
             accountType = 0,
             active = true
         )
-        // Call the login method in the ViewModel
         bankViewModel.saveBank(saveBankItem)
     }
 
@@ -364,23 +360,6 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         return null
     }
 
-    private fun confirmBankAccountNumberFocusListener() {
-        binding.confirmBankAccountNumber.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.confirmBankAccountNumberContainer.helperText =
-                    validConfirmBankAccountNumber()
-            }
-        }
-    }
-
-    private fun validConfirmBankAccountNumber(): String? {
-        val confirmBankAccountNumber = binding.confirmBankAccountNumber.text.toString()
-        if (confirmBankAccountNumber.isEmpty()) {
-            return "enter confirm bank account number"
-        }
-        return null
-    }
-
     private fun walletAccountNameFocusListener() {
         binding.walletAccountName.setOnFocusChangeListener { _, focused ->
             if (!focused) {
@@ -434,6 +413,7 @@ class BankFragment : Fragment(), OnBankSelectedListener {
     override fun onBranchItemSelected(selectedItem: BranchData) {
         binding.branchName.setText(selectedItem.name)
         branchId = selectedItem.id.toString()
+        preferenceManager.saveData("branchId", branchId)
     }
 
     private fun getDeviceId(context: Context): String {

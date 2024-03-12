@@ -45,8 +45,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
-        binding.email.setText("mizan.se@outlook.com")
-        binding.password.setText("Nilasish@1994")
+        binding.email.setText("alalkodu@gmail.com")
+        binding.password.setText("Normal@222")
 
         preferenceManager = PreferenceManager(this@LoginActivity)
 
