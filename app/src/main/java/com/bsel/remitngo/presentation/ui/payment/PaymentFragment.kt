@@ -309,7 +309,11 @@ class PaymentFragment : Fragment() {
                     val recipientName = paymentTransactionData!!.benName.toString()
                     if (recipientName != "null") {
                         binding.recipientName.text = "$recipientName"
-                        binding.bankAccountName.text = "$recipientName"
+                    }
+
+                    val bankAccountName = paymentTransactionData!!.beneBankAccountName.toString()
+                    if (bankAccountName != "null") {
+                        binding.bankAccountName.text = "$bankAccountName"
                     }
 
                     val bankName = paymentTransactionData!!.bankName.toString()
