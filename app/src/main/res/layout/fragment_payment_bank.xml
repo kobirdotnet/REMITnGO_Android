@@ -221,8 +221,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
-                    
-                    android:text="Continue"
+                    android:text="Back to Home"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="18sp" />

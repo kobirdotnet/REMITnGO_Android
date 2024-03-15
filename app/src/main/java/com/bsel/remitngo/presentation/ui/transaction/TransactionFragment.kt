@@ -4,12 +4,14 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.TransactionAdapter
@@ -76,6 +78,9 @@ class TransactionFragment : Fragment() {
                     selectedItem = { selectedItem: TransactionData ->
                         transaction(selectedItem)
                         binding.transactionSearch.setQuery("", false)
+                    },
+                    sendAgain = { sendAgain: TransactionData ->
+                        sendAgain(sendAgain)
                     }
                 )
                 binding.transactionRecyclerView.adapter = transactionAdapter
@@ -101,6 +106,16 @@ class TransactionFragment : Fragment() {
         val transactionCode = selectedItem.transactionCode.toString()
         transactionBottomSheet.setSelectedTransactionCode(transactionCode)
         transactionBottomSheet.show(childFragmentManager, transactionBottomSheet.tag)
+    }
+
+    private fun sendAgain(sendAgain: TransactionData) {
+        val bundle = Bundle().apply {
+            putString("transactionCode", sendAgain.transactionCode.toString())
+        }
+        findNavController().navigate(
+            R.id.action_nav_transaction_history_to_nav_review,
+            bundle
+        )
     }
 
     private fun getDeviceId(context: Context): String {

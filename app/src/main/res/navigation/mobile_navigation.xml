@@ -122,11 +122,6 @@
         android:label="@string/menu_support"
         tools:layout="@layout/fragment_support" />
     <fragment
-        android:id="@+id/nav_about"
-        android:name="com.bsel.remitngo.ui.about.AboutFragment"
-        android:label="@string/menu_about"
-        tools:layout="@layout/fragment_about" />
-    <fragment
         android:id="@+id/nav_personal_information"
         android:name="com.bsel.remitngo.presentation.ui.profile.personal_information.PersonalInformationFragment"
         android:label="@string/menu_personal_information"
@@ -188,7 +183,11 @@
         android:id="@+id/nav_transaction_history"
         android:name="com.bsel.remitngo.presentation.ui.transaction.TransactionFragment"
         android:label="@string/menu_transaction_history"
-        tools:layout="@layout/fragment_transaction" />
+        tools:layout="@layout/fragment_transaction" >
+        <action
+            android:id="@+id/action_nav_transaction_history_to_nav_review"
+            app:destination="@id/nav_review" />
+    </fragment>
     <fragment
         android:id="@+id/nav_cancellation"
         android:name="com.bsel.remitngo.presentation.ui.cancel_request.CancellationFragment"

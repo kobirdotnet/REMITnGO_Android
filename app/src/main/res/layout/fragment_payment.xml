@@ -80,7 +80,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
-                    android:text="GBP 100.00"
+                    android:hint="GBP 0.0"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -110,7 +110,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
-                    android:text="GBP 0.00"
+                    android:hint="GBP 0.0"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -140,7 +140,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
-                    android:text="GBP 100.00"
+                    android:hint="GBP 0.0"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -189,7 +189,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:text=" BDT 140.00"
+                        android:hint=" BDT 0.0"
                         android:textColor="@color/black" />
                 </LinearLayout>
 
@@ -220,7 +220,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
-                    android:text="BDT 1400.00"
+                    android:hint="BDT 0.0"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -277,7 +277,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="Mohammad Ameerul Islam"
+                    android:hint="Account Name"
                     android:textColor="@color/black" />
 
                 <TextView
@@ -286,7 +286,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="632166777567788 (BRAC Bank: UTTAR BADDA (DHAKA))"
+                    android:hint="Account Number"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -354,7 +354,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
-                    android:text="Ameer"
+                    android:hint="Recipient Name"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -384,7 +384,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
-                    android:text="BRAC Bank Ltd"
+                    android:hint="Bank Name"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -414,7 +414,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="right"
-                    android:text="632166777567788"
+                    android:hint="Account No"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -438,7 +438,6 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
-                    
                     android:text="Send"
                     android:textAllCaps="false"
                     android:textColor="@color/white"

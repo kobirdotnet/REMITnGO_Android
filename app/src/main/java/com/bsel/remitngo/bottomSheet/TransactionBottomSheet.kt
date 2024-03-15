@@ -103,7 +103,7 @@ class TransactionBottomSheet : BottomSheetDialogFragment() {
                     binding.transactionDate.text =
                         transactionDetailsData!!.transactionDateTime12hr.toString()
 
-                    binding.paymentMode.text = transactionDetailsData!!.paymentMode.toString()
+//                    binding.paymentMode.text = transactionDetailsData!!.paymentMode.toString()
 
                     binding.orderType.text = transactionDetailsData!!.orderTypeName.toString()
 
@@ -113,8 +113,8 @@ class TransactionBottomSheet : BottomSheetDialogFragment() {
 
                     binding.accountNo.text = transactionDetailsData!!.accountNo.toString()
 
-                    val totalAmount = transactionDetailsData!!.totalAmount.toString()
-                    binding.sendAmount.text = "GBP $totalAmount"
+//                    val totalAmount = transactionDetailsData!!.totalAmount.toString()
+//                    binding.sendAmount.text = "GBP $totalAmount"
 
                     val benAmount = transactionDetailsData!!.benAmount.toString()
                     binding.benAmount.text = "BDT $benAmount"
@@ -122,8 +122,8 @@ class TransactionBottomSheet : BottomSheetDialogFragment() {
                     val exchangeRate=transactionDetailsData!!.rate.toString()
                     binding.exchangeRate.text = "BDT $exchangeRate"
 
-                    val commission=transactionDetailsData!!.transferFees.toString()
-                    binding.commission.text = "GBP $commission"
+//                    val commission=transactionDetailsData!!.transferFees.toString()
+//                    binding.commission.text = "GBP $commission"
 
                     binding.paymentStatus.text = transactionDetailsData!!.paymentStatus.toString()
 

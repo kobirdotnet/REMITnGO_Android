@@ -10,7 +10,8 @@ import com.bsel.remitngo.data.model.transaction.TransactionData
 import com.bsel.remitngo.databinding.ItemTransactionBinding
 
 class TransactionAdapter(
-    private val selectedItem: (TransactionData) -> Unit
+    private val selectedItem: (TransactionData) -> Unit,
+    private val sendAgain: (TransactionData) -> Unit
 ) : RecyclerView.Adapter<TransactionViewHolder>() {
 
     private val transactionList = ArrayList<TransactionData>()
@@ -28,7 +29,7 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        holder.bind(filteredTransactionList[position], selectedItem)
+        holder.bind(filteredTransactionList[position], selectedItem,sendAgain)
     }
 
     fun setList(transactionItem: List<TransactionData>) {
@@ -53,7 +54,8 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
         transactionItem: TransactionData,
-        selectedItem: (TransactionData) -> Unit
+        selectedItem: (TransactionData) -> Unit,
+        sendAgain: (TransactionData) -> Unit
     ) {
         binding.benName.text = transactionItem.benName.toString()
         binding.orderType.text = transactionItem.orderTypeName.toString()
@@ -99,6 +101,10 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
 
         binding.itemTransactionLayout.setOnClickListener {
             selectedItem(transactionItem)
+        }
+
+        binding.btnSendAgain.setOnClickListener {
+            sendAgain(transactionItem)
         }
     }
 

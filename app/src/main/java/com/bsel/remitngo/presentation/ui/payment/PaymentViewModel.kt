@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
+import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
@@ -15,6 +17,8 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
+import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsResponseItem
 import com.bsel.remitngo.domain.useCase.PaymentUseCase
 import kotlinx.coroutines.launch
 
@@ -77,6 +81,26 @@ class PaymentViewModel(private val paymentUseCase: PaymentUseCase) : ViewModel()
         viewModelScope.launch {
             val result = paymentUseCase.execute(consumerItem)
             _consumerResult.value = result
+        }
+    }
+
+    private val _rateCalculateResult = MutableLiveData<CalculateRateResponseItem?>()
+    val rateCalculateResult: LiveData<CalculateRateResponseItem?> = _rateCalculateResult
+
+    fun rateCalculate(calculateRateItem: CalculateRateItem) {
+        viewModelScope.launch {
+            val result = paymentUseCase.execute(calculateRateItem)
+            _rateCalculateResult.value = result
+        }
+    }
+
+    private val _paymentTransactionResult = MutableLiveData<TransactionDetailsResponseItem?>()
+    val paymentTransactionResult: LiveData<TransactionDetailsResponseItem?> = _paymentTransactionResult
+
+    fun paymentTransaction(transactionDetailsItem: TransactionDetailsItem) {
+        viewModelScope.launch {
+            val result = paymentUseCase.execute(transactionDetailsItem)
+            _paymentTransactionResult.value = result
         }
     }
 

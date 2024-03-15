@@ -1,6 +1,8 @@
 package com.bsel.remitngo.data.repository.payment.dataSourceImpl
 
 import com.bsel.remitngo.data.api.REMITnGoService
+import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
+import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
@@ -12,6 +14,8 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
+import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsResponseItem
 import com.bsel.remitngo.data.repository.payment.dataSource.PaymentRemoteDataSource
 import retrofit2.Response
 
@@ -40,6 +44,14 @@ class PaymentRemoteDataSourceImpl(private val remitNgoService: REMITnGoService) 
 
     override suspend fun consumer(consumerItem: ConsumerItem): Response<ConsumerResponseItem> {
         return remitNgoService.consumer(consumerItem)
+    }
+
+    override suspend fun rateCalculate(calculateRateItem: CalculateRateItem): Response<CalculateRateResponseItem> {
+        return remitNgoService.rateCalculate(calculateRateItem)
+    }
+
+    override suspend fun paymentTransaction(transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem> {
+        return remitNgoService.paymentTransaction(transactionDetailsItem)
     }
 
 }

@@ -9,7 +9,6 @@ import dagger.Subcomponent
 interface CalculationSubComponent {
 
     fun inject(mainFragment: MainFragment)
-
     fun inject(payingAgentBottomSheet: PayingAgentBottomSheet)
 
     @Subcomponent.Factory

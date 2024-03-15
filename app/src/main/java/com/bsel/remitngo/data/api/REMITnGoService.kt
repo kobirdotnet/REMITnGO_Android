@@ -164,6 +164,8 @@ interface REMITnGoService {
 
     @POST("api/Transaction/CalculateRate")
     suspend fun calculateRate(@Body calculateRateItem: CalculateRateItem): Response<CalculateRateResponseItem>
+    @POST("api/Transaction/CalculateRate")
+    suspend fun rateCalculate(@Body calculateRateItem: CalculateRateItem): Response<CalculateRateResponseItem>
 
     @POST("api/Transaction/Payment")
     suspend fun payment(@Body paymentItem: PaymentItem): Response<PaymentResponseItem>
@@ -216,6 +218,8 @@ interface REMITnGoService {
 
     @POST("api/Transaction/GetTransactionDetailsByTransactionCode")
     suspend fun transactionDetails(@Body transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem>
+    @POST("api/Transaction/GetTransactionDetailsByTransactionCode")
+    suspend fun paymentTransaction(@Body transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem>
 
     @POST("api/General/GetCancelResionList")
     suspend fun cancelReason(@Body cancelReasonItem: CancelReasonItem): Response<CancelReasonResponseItem>

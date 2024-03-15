@@ -1,5 +1,7 @@
 package com.bsel.remitngo.data.repository.payment.dataSource
 
+import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
+import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
@@ -11,6 +13,8 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
+import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsResponseItem
 import retrofit2.Response
 
 interface PaymentRemoteDataSource {
@@ -22,6 +26,9 @@ interface PaymentRemoteDataSource {
     suspend fun emp(empItem: EmpItem): Response<EmpResponseItem>
     suspend fun saveConsumer(saveConsumerItem: SaveConsumerItem): Response<SaveConsumerResponseItem>
     suspend fun consumer(consumerItem: ConsumerItem): Response<ConsumerResponseItem>
+
+    suspend fun rateCalculate(calculateRateItem: CalculateRateItem): Response<CalculateRateResponseItem>
+    suspend fun paymentTransaction(transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem>
 
 }
 
