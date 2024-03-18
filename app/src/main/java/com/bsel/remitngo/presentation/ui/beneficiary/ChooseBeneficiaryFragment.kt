@@ -104,9 +104,9 @@ class ChooseBeneficiaryFragment : Fragment() {
                 putString("payingAgentId", payingAgentId)
                 putString("payingAgentName", payingAgentName)
 
-                putString("exchangeRate", exchangeRate.toString())
-                putString("bankCommission", bankCommission.toString())
-                putString("cardCommission", cardCommission.toString())
+                putString("exchangeRate", exchangeRate)
+                putString("bankCommission", bankCommission)
+                putString("cardCommission", cardCommission)
             }
             findNavController().navigate(
                 R.id.action_nav_choose_beneficiary_to_nav_save_beneficiary,

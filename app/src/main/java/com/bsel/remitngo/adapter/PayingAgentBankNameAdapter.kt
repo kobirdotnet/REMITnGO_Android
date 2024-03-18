@@ -7,20 +7,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentData
-import com.bsel.remitngo.databinding.ItemPayingAgentBinding
+import com.bsel.remitngo.databinding.ItemPayingAgentBankBinding
 
-class PayingAgentNameAdapter(
+class PayingAgentBankNameAdapter(
     private val selectedItem: (PayingAgentData) -> Unit
-) : RecyclerView.Adapter<PayingAgentNameViewHolder>() {
+) : RecyclerView.Adapter<PayingAgentBankNameViewHolder>() {
 
     private val payingAgentItemList = ArrayList<PayingAgentData>()
     private var filteredPayingAgentItemList = ArrayList<PayingAgentData>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PayingAgentNameViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PayingAgentBankNameViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val binding: ItemPayingAgentBinding =
-            DataBindingUtil.inflate(layoutInflater, R.layout.item_paying_agent, parent, false)
-        return PayingAgentNameViewHolder(binding)
+        val binding: ItemPayingAgentBankBinding =
+            DataBindingUtil.inflate(layoutInflater, R.layout.item_paying_agent_bank, parent, false)
+        return PayingAgentBankNameViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -28,7 +28,7 @@ class PayingAgentNameAdapter(
     }
 
     override fun onBindViewHolder(
-        holder: PayingAgentNameViewHolder,
+        holder: PayingAgentBankNameViewHolder,
         @SuppressLint("RecyclerView") position: Int
     ) {
         holder.bind(filteredPayingAgentItemList[position], selectedItem)
@@ -52,7 +52,7 @@ class PayingAgentNameAdapter(
 
 }
 
-class PayingAgentNameViewHolder(val binding: ItemPayingAgentBinding) :
+class PayingAgentBankNameViewHolder(val binding: ItemPayingAgentBankBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
         payingAgentItem: PayingAgentData,

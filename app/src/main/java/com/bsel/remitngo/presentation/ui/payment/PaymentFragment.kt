@@ -85,8 +85,7 @@ class PaymentFragment : Fragment() {
 
     private var gbpValue: Double = 0.0
     private var exchangeRate: Double = 0.0
-    private lateinit var bankCommission: String
-    private lateinit var cardCommission: String
+    private lateinit var commission: String
 
     private var fromCountry: Int = 0
     private var toCountry: Int = 0
@@ -128,8 +127,35 @@ class PaymentFragment : Fragment() {
         paymentViewModel =
             ViewModelProvider(this, paymentViewModelFactory)[PaymentViewModel::class.java]
 
-        preferenceManager = PreferenceManager(requireContext())
+        binding.transferHistory.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("orderType", orderType)
+                putString("paymentType", paymentType)
 
+
+                putString("exchangeRate", exchangeRate.toString())
+                putString("commission", commission)
+            }
+            findNavController().navigate(
+                R.id.action_nav_review_to_nav_main,
+                bundle
+            )
+        }
+        binding.receiverHistory.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("orderType", orderType)
+                putString("paymentType", paymentType)
+
+                putString("exchangeRate", exchangeRate.toString())
+                putString("commission", commission)
+            }
+            findNavController().navigate(
+                R.id.action_nav_review_to_nav_choose_beneficiary,
+                bundle
+            )
+        }
+
+        preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
         firstName = preferenceManager.loadData("firstName").toString()
         lastName = preferenceManager.loadData("lastName").toString()
@@ -162,10 +188,9 @@ class PaymentFragment : Fragment() {
             binding.receiveAmount.text = "BDT $receiveAmount"
         }
 
-        val bankCommission = arguments?.getString("bankCommission").toString()
-        val cardCommission = arguments?.getString("cardCommission").toString()
-        if (cardCommission != "null") {
-            binding.transferFee.text = "GBP $cardCommission"
+        val commission = arguments?.getString("commission").toString()
+        if (commission != "null") {
+            binding.transferFee.text = "GBP $commission"
         }
 
         val exchangeRate = arguments?.getString("exchangeRate").toString()
@@ -336,8 +361,7 @@ class PaymentFragment : Fragment() {
         paymentViewModel.rateCalculateResult.observe(this) { result ->
             if (result!!.data != null) {
                 for (data in result.data!!) {
-                    bankCommission = data!!.commissionForBankTransfer.toString()
-                    cardCommission = data!!.commissionForCardPayment.toString()
+                    commission = data!!.commission.toString()
                     exchangeRate = data!!.rate!!.toString().toDouble()
                     binding.exchangeRate.text = exchangeRate.toString()
                     updateValuesGBP()

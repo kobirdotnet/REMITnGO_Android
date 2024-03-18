@@ -14,12 +14,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.PayingAgentNameAdapter
-import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.adapter.PayingAgentBankNameAdapter
+import com.bsel.remitngo.data.interfaceses.OnCalculationSelectedListener
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentData
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
-import com.bsel.remitngo.databinding.PayingAgentNameLayoutBinding
-import com.bsel.remitngo.data.interfaceses.OnCalculationSelectedListener
+import com.bsel.remitngo.databinding.PayingAgentBankNameLayoutBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.main.CalculationViewModel
 import com.bsel.remitngo.presentation.ui.main.CalculationViewModelFactory
@@ -28,7 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 
-class PayingAgentBottomSheet : BottomSheetDialogFragment() {
+class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
     @Inject
     lateinit var calculationViewModelFactory: CalculationViewModelFactory
     private lateinit var calculationViewModel: CalculationViewModel
@@ -37,21 +36,17 @@ class PayingAgentBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var payingAgentNameBehavior: BottomSheetBehavior<*>
 
-    private lateinit var binding: PayingAgentNameLayoutBinding
+    private lateinit var binding: PayingAgentBankNameLayoutBinding
 
-    private lateinit var payingAgentNameAdapter: PayingAgentNameAdapter
+    private lateinit var payingAgentBankNameAdapter: PayingAgentBankNameAdapter
 
     private lateinit var deviceId: String
-    private var fromCountryId: Int = 0
-    private var toCountryId: Int = 0
-    private lateinit var orderType: String
-    private lateinit var amount: String
-
-    private lateinit var preferenceManager: PreferenceManager
+    private var selectedOrderType: String? = null
+    private var selectedAmount: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        val view = View.inflate(requireContext(), R.layout.paying_agent_name_layout, null)
+        val view = View.inflate(requireContext(), R.layout.paying_agent_bank_name_layout, null)
         binding = DataBindingUtil.bind(view)!!
 
         bottomSheet.setContentView(view)
@@ -77,10 +72,6 @@ class PayingAgentBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
-        preferenceManager = PreferenceManager(requireContext())
-        orderType = preferenceManager.loadData("orderType").toString()
-        amount = preferenceManager.loadData("send_amount").toString()
-
         (requireActivity().application as Injector).createCalculationSubComponent().inject(this)
 
         calculationViewModel =
@@ -91,34 +82,36 @@ class PayingAgentBottomSheet : BottomSheetDialogFragment() {
         observePayingAgentResult()
 
         deviceId = getDeviceId(requireContext())
-        fromCountryId = 4
-        toCountryId = 1
-
         val payingAgentItem = PayingAgentItem(
             deviceId = deviceId,
-            fromCountryId = fromCountryId,
-            toCountryId = toCountryId,
-            orderTypeId = orderType.toInt(),
-            amount = amount.toInt()
+            fromCountryId = 4,
+            toCountryId = 1,
+            orderTypeId = selectedOrderType!!.toInt(),
+            amount = selectedAmount!!.toInt()
         )
         calculationViewModel.payingAgent(payingAgentItem)
 
         return bottomSheet
     }
 
+    fun setSelectedOrderType(orderType: String,amount:String) {
+        selectedOrderType = orderType
+        selectedAmount = amount
+    }
+
     private fun observePayingAgentResult() {
         calculationViewModel.payingAgentResult.observe(this) { result ->
             if (result!!.data != null) {
                 binding.payingAgentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                payingAgentNameAdapter = PayingAgentNameAdapter(
+                payingAgentBankNameAdapter = PayingAgentBankNameAdapter(
                     selectedItem = { selectedItem: PayingAgentData ->
                         payingAgentItem(selectedItem)
                         binding.payingAgentSearch.setQuery("", false)
                     }
                 )
-                binding.payingAgentRecyclerView.adapter = payingAgentNameAdapter
-                payingAgentNameAdapter.setList(result.data as List<PayingAgentData>)
-                payingAgentNameAdapter.notifyDataSetChanged()
+                binding.payingAgentRecyclerView.adapter = payingAgentBankNameAdapter
+                payingAgentBankNameAdapter.setList(result.data as List<PayingAgentData>)
+                payingAgentBankNameAdapter.notifyDataSetChanged()
 
                 binding.payingAgentSearch.setOnQueryTextListener(object :
                     SearchView.OnQueryTextListener {
@@ -127,7 +120,7 @@ class PayingAgentBottomSheet : BottomSheetDialogFragment() {
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        payingAgentNameAdapter.filter(newText.orEmpty())
+                        payingAgentBankNameAdapter.filter(newText.orEmpty())
                         return true
                     }
                 })
@@ -139,7 +132,7 @@ class PayingAgentBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun payingAgentItem(selectedItem: PayingAgentData) {
-        itemSelectedListener?.onPayingAgentItemSelected(selectedItem)
+        itemSelectedListener?.onPayingAgentBankItemSelected(selectedItem)
         dismiss()
     }
 

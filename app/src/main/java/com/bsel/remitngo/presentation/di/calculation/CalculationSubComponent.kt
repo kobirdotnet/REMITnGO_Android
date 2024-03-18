@@ -1,6 +1,7 @@
 package com.bsel.remitngo.presentation.di.calculation
 
-import com.bsel.remitngo.bottomSheet.PayingAgentBottomSheet
+import com.bsel.remitngo.bottomSheet.PayingAgentBankBottomSheet
+import com.bsel.remitngo.bottomSheet.PayingAgentWalletBottomSheet
 import com.bsel.remitngo.presentation.ui.main.MainFragment
 import dagger.Subcomponent
 
@@ -9,7 +10,8 @@ import dagger.Subcomponent
 interface CalculationSubComponent {
 
     fun inject(mainFragment: MainFragment)
-    fun inject(payingAgentBottomSheet: PayingAgentBottomSheet)
+    fun inject(payingAgentBankBottomSheet: PayingAgentBankBottomSheet)
+    fun inject(payingAgentWalletBottomSheet: PayingAgentWalletBottomSheet)
 
     @Subcomponent.Factory
     interface Factory {

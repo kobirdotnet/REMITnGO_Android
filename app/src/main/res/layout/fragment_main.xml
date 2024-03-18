@@ -38,14 +38,14 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/bangladesh" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:padding="8dp"
                         android:text="Bangladesh"
@@ -59,39 +59,34 @@
                     android:layout_weight="3"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:weightSum="5">
+                    android:weightSum="7">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:fontFamily="@font/roboto_bold"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
                         android:text="GBP 1"
                         android:textColor="@color/black" />
 
-                    <ImageView
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:src="@drawable/equal" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/roboto_bold"
-                        android:gravity="left"
-                        android:text="BDT "
-                        android:textColor="@color/black"/>
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:text="="
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/exchangeRate"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:fontFamily="@font/roboto_bold"
+                        android:layout_weight="4"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
-                        android:hint="150.00"
+                        android:hint="BDT 150.00"
                         android:textColor="@color/black" />
                 </LinearLayout>
 
@@ -107,7 +102,6 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/arrow_drop_down" />
                 </LinearLayout>
-
 
             </LinearLayout>
 
@@ -139,31 +133,30 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:src="@drawable/england" />
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
-                            android:padding="8dp"
+                            android:paddingLeft="8dp"
                             android:text="GBP"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
+                            android:textColor="@color/black" />
 
                     </LinearLayout>
 
                     <EditText
-                        android:id="@+id/send_amount"
+                        android:id="@+id/sendAmount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:focusableInTouchMode="true"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
+                        android:hint="0.0"
                         android:inputType="numberDecimal"
-                        android:text="0.0"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
@@ -198,30 +191,29 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
-                            android:padding="8dp"
+                            android:paddingRight="8dp"
                             android:text="BDT"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
+                            android:textColor="@color/black" />
 
                         <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:src="@drawable/bangladesh" />
 
                     </LinearLayout>
 
                     <EditText
-                        android:id="@+id/receive_amount"
+                        android:id="@+id/receiveAmount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:focusableInTouchMode="true"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
+                        android:hint="0.0"
                         android:inputType="numberDecimal"
-                        android:text="0.0"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
@@ -244,7 +236,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="Order Type"
+                    android:text="How will receiver get money ?"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -276,7 +268,8 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="Bank Account" />
+                        android:text="Bank Account"
+                        android:textColor="@color/black" />
 
                     <RadioButton
                         android:id="@+id/instant_credit"
@@ -287,7 +280,8 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="Instant credit" />
+                        android:text="Instant credit"
+                        android:textColor="@color/black" />
 
                     <RadioButton
                         android:id="@+id/cash_pickup"
@@ -298,7 +292,8 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="Cash pickup" />
+                        android:text="Cash pickup"
+                        android:textColor="@color/black" />
 
                     <RadioButton
                         android:id="@+id/mobile_wallet"
@@ -308,13 +303,14 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="Mobile wallet" />
+                        android:text="Mobile wallet"
+                        android:textColor="@color/black" />
                 </RadioGroup>
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/collectionPointBank_layout"
+                android:id="@+id/collectionPointInstantCreditLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -323,22 +319,22 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:visibility="gone">
+                android:paddingBottom="@dimen/activity_vertical_margin">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/collectionPointBank_container"
+                    android:id="@+id/collectionPointInstantCreditContainer"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Collection Point Bank">
 
                     <AutoCompleteTextView
-                        android:id="@+id/collectionPointBank"
+                        android:id="@+id/collectionPointInstantCredit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
                         android:completionThreshold="1"
+                        android:fontFamily="@font/roboto_regular"
                         android:inputType="none"
                         android:textColor="@color/black" />
 
@@ -347,7 +343,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/collectionPointWallet_layout"
+                android:id="@+id/collectionPointCashPickUpLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -360,7 +356,41 @@
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/collectionPointWallet_container"
+                    android:id="@+id/collectionPointCashPickUpContainer"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Collection Point Bank">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/collectionPointCashPickUp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:completionThreshold="1"
+                        android:fontFamily="@font/roboto_regular"
+                        android:inputType="none"
+                        android:textColor="@color/black" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/collectionPointWalletLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/collectionPointWalletContainer"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -372,6 +402,7 @@
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
                         android:completionThreshold="1"
+                        android:fontFamily="@font/roboto_regular"
                         android:inputType="none"
                         android:textColor="@color/black" />
 
@@ -394,7 +425,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="Payment Type"
+                    android:text="How will you pay ?"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -426,7 +457,8 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="Card Payment" />
+                        android:text="Card Payment"
+                        android:textColor="@color/black" />
 
                     <RadioButton
                         android:id="@+id/bank_transfer"
@@ -436,7 +468,8 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="Bank Transfer" />
+                        android:text="Bank Transfer"
+                        android:textColor="@color/black" />
                 </RadioGroup>
 
             </LinearLayout>
@@ -454,14 +487,14 @@
                     android:id="@+id/extraPercentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/blue"
                     android:focusableInTouchMode="false"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
+                    android:hint="Recipients get an extra 2.5% on their transfer!"
                     android:inputType="none"
-                    
-                    android:text="Recipients get an extra 2.5% on their transfer!"
-                    android:textColor="@color/text_color"
-                    android:textSize="13sp" />
+                    android:textColor="@color/blue"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -477,15 +510,14 @@
                     android:id="@+id/btnContinue"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="55dp"
+                    android:backgroundTint="@color/blue"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
-                    
                     android:text="NEXT"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <LinearLayout
@@ -495,7 +527,8 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:visibility="gone">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/addPromoCode"
@@ -552,7 +585,7 @@
 
                         <ImageView
                             android:layout_width="0dp"
-                            android:layout_height="35dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
                             android:padding="8dp"
@@ -560,7 +593,7 @@
 
                         <ImageView
                             android:layout_width="0dp"
-                            android:layout_height="35dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
                             android:padding="8dp"
@@ -568,7 +601,7 @@
 
                         <ImageView
                             android:layout_width="0dp"
-                            android:layout_height="35dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
                             android:padding="8dp"
@@ -585,7 +618,7 @@
 
                         <ImageView
                             android:layout_width="0dp"
-                            android:layout_height="35dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
                             android:padding="8dp"
@@ -593,7 +626,7 @@
 
                         <ImageView
                             android:layout_width="0dp"
-                            android:layout_height="35dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
                             android:padding="8dp"
@@ -601,13 +634,13 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="45dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1.5"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
                             android:padding="8dp"
                             android:text="and 53 more banks"
-                            android:textColor="@color/text_color" />
+                            android:textColor="@color/black" />
 
                     </LinearLayout>
 
@@ -625,10 +658,10 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
+                            android:hint="Learn more"
                             android:inputType="none"
-                            
-                            android:text="Learn more"
-                            android:textColor="@color/blue" />
+                            android:textColor="@color/blue"
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 

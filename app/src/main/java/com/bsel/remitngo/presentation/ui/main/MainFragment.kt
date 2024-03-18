@@ -3,6 +3,8 @@ package com.bsel.remitngo.presentation.ui.main
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
@@ -18,7 +20,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottomSheet.PayingAgentBottomSheet
+import com.bsel.remitngo.bottomSheet.PayingAgentBankBottomSheet
+import com.bsel.remitngo.bottomSheet.PayingAgentWalletBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentData
@@ -38,11 +41,11 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
     private lateinit var preferenceManager: PreferenceManager
 
-    private val payingAgentBottomSheet: PayingAgentBottomSheet by lazy { PayingAgentBottomSheet() }
+    private val payingAgentBankBottomSheet: PayingAgentBankBottomSheet by lazy { PayingAgentBankBottomSheet() }
+    private val payingAgentWalletBottomSheet: PayingAgentWalletBottomSheet by lazy { PayingAgentWalletBottomSheet() }
 
     private var exchangeRate: Double = 0.0
-    private var bankCommission: Double = 0.0
-    private var cardCommission: Double = 0.0
+    private var commission: Double = 0.0
 
     private val decimalFormat = DecimalFormat("#.##")
 
@@ -51,19 +54,11 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
     private var personId: Int = 0
 
-    private var orderType: Int = 0
-    private var paymentType: Int = 0
-
-    private var fromCountry: Int = 0
-    private var toCountry: Int = 0
-
-    private var mobileOrWebPlatform: Int = 0
-
-    private lateinit var amount: String
+    private var orderType: Int = 3
+    private var paymentType: Int = 4
 
     private var bankId: Int = 0
     private var payingAgentId: Int = 0
-    private lateinit var bankName: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,34 +85,49 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         binding.orderModeRadioGroup.check(R.id.bank_account)
         binding.paymentModeRadioGroup.check(R.id.card_payment)
 
-        orderType = 3
-        paymentType = 4
+        binding.collectionPointInstantCreditLayout.visibility = View.GONE
+        binding.collectionPointInstantCredit.text = null
+        binding.collectionPointInstantCredit.setOnClickListener {
+            payingAgentBankBottomSheet.setSelectedOrderType("5", binding.sendAmount.text.toString())
+            payingAgentBankBottomSheet.itemSelectedListener = this
+            payingAgentBankBottomSheet.show(childFragmentManager, payingAgentBankBottomSheet.tag)
+        }
 
-        binding.collectionPointBankLayout.visibility = View.GONE
-        binding.collectionPointBank.text = null
+        binding.collectionPointCashPickUpLayout.visibility = View.GONE
+        binding.collectionPointCashPickUp.text = null
+        binding.collectionPointCashPickUp.setOnClickListener {
+            payingAgentBankBottomSheet.setSelectedOrderType("2", binding.sendAmount.text.toString())
+            payingAgentBankBottomSheet.itemSelectedListener = this
+            payingAgentBankBottomSheet.show(childFragmentManager, payingAgentBankBottomSheet.tag)
+        }
+
         binding.collectionPointWalletLayout.visibility = View.GONE
         binding.collectionPointWallet.text = null
-
-        binding.collectionPointBank.setOnClickListener {
-            payingAgentBottomSheet.itemSelectedListener = this
-            payingAgentBottomSheet.show(childFragmentManager, payingAgentBottomSheet.tag)
+        binding.collectionPointWallet.setOnClickListener {
+            payingAgentWalletBottomSheet.setSelectedOrderType(
+                "1",
+                binding.sendAmount.text.toString()
+            )
+            payingAgentWalletBottomSheet.itemSelectedListener = this
+            payingAgentWalletBottomSheet.show(
+                childFragmentManager,
+                payingAgentWalletBottomSheet.tag
+            )
         }
 
         binding.orderModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.bank_account -> {
-                    binding.collectionPointBankLayout.visibility = View.GONE
-                    binding.collectionPointBank.text = null
+                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
+                    binding.collectionPointInstantCredit.text = null
+
+                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
+                    binding.collectionPointCashPickUp.text = null
+
                     binding.collectionPointWalletLayout.visibility = View.GONE
                     binding.collectionPointWallet.text = null
-                    orderType = 3
 
-                    bankId = 0
-                    payingAgentId = 0
-                    fromCountry = 4
-                    toCountry = 1
-                    mobileOrWebPlatform = 0
-                    amount = binding.sendAmount.text.toString()
+                    orderType = 3
 
                     calculateRate(
                         deviceId,
@@ -126,36 +136,47 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                         payingAgentId,
                         orderType,
                         paymentType,
-                        fromCountry,
-                        toCountry,
-                        mobileOrWebPlatform,
-                        amount
+                        4,
+                        1,
+                        0,
+                        binding.sendAmount.text.toString()
                     )
+
                 }
                 R.id.instant_credit -> {
-                    binding.collectionPointBankLayout.visibility = View.VISIBLE
-                    binding.collectionPointBank.text = null
+                    binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
+                    binding.collectionPointInstantCredit.text = null
+
+                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
+                    binding.collectionPointCashPickUp.text = null
+
                     binding.collectionPointWalletLayout.visibility = View.GONE
                     binding.collectionPointWallet.text = null
-                    orderType = 5
 
-                    preferenceManager.saveData("orderType", orderType.toString())
-                    preferenceManager.saveData("send_amount", amount)
+                    orderType = 5
                 }
                 R.id.cash_pickup -> {
-                    binding.collectionPointBankLayout.visibility = View.VISIBLE
-                    binding.collectionPointBank.text = null
+                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
+                    binding.collectionPointInstantCredit.text = null
+
+                    binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
+                    binding.collectionPointCashPickUp.text = null
+
                     binding.collectionPointWalletLayout.visibility = View.GONE
                     binding.collectionPointWallet.text = null
-                    orderType = 2
 
-                    preferenceManager.saveData("orderType", orderType.toString())
-                    preferenceManager.saveData("send_amount", amount)
+                    orderType = 2
                 }
                 R.id.mobile_wallet -> {
-                    binding.collectionPointBankLayout.visibility = View.GONE
-                    binding.collectionPointBank.text = null
+                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
+                    binding.collectionPointInstantCredit.text = null
+
+                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
+                    binding.collectionPointCashPickUp.text = null
+
                     binding.collectionPointWalletLayout.visibility = View.VISIBLE
+                    binding.collectionPointWallet.text = null
+
                     orderType = 1
                 }
             }
@@ -164,49 +185,9 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             when (checkedId) {
                 R.id.card_payment -> {
                     paymentType = 4
-
-                    bankId = 0
-                    payingAgentId = 0
-                    fromCountry = 4
-                    toCountry = 1
-                    mobileOrWebPlatform = 0
-                    amount = binding.sendAmount.text.toString()
-
-                    calculateRate(
-                        deviceId,
-                        personId,
-                        bankId,
-                        payingAgentId,
-                        orderType,
-                        paymentType,
-                        fromCountry,
-                        toCountry,
-                        mobileOrWebPlatform,
-                        amount
-                    )
                 }
                 R.id.bank_transfer -> {
                     paymentType = 3
-
-                    bankId = 0
-                    payingAgentId = 0
-                    fromCountry = 4
-                    toCountry = 1
-                    mobileOrWebPlatform = 0
-                    amount = binding.sendAmount.text.toString()
-
-                    calculateRate(
-                        deviceId,
-                        personId,
-                        bankId,
-                        payingAgentId,
-                        orderType,
-                        paymentType,
-                        fromCountry,
-                        toCountry,
-                        mobileOrWebPlatform,
-                        amount
-                    )
                 }
             }
         }
@@ -247,6 +228,19 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             }
         })
 
+        binding.extraPercentage.setText("Recipients get an extra 2.5% on their transfer!")
+        binding.extraPercentage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://bracsaajanexchange.com"))
+            startActivity(intent)
+        }
+
+        binding.learnMore.setText("Learn more!")
+        binding.learnMore.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://bracsaajanexchange.com"))
+            startActivity(intent)
+        }
+
+
         binding.btnContinue.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("paymentType", paymentType.toString())
@@ -256,11 +250,10 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 putString("receive_amount", binding.receiveAmount.text.toString())
 
                 putString("payingAgentId", payingAgentId.toString())
-                putString("payingAgentName", binding.collectionPointBank.text.toString())
+//                putString("payingAgentName", binding.collectionPointBank.text.toString())
 
                 putString("exchangeRate", exchangeRate.toString())
-                putString("bankCommission", bankCommission.toString())
-                putString("cardCommission", cardCommission.toString())
+                putString("commission", commission.toString())
             }
             findNavController().navigate(
                 R.id.action_nav_main_to_nav_choose_beneficiary,
@@ -280,13 +273,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             dialog.show()
         }
 
-        bankId = 0
-        payingAgentId = 0
-        fromCountry = 4
-        toCountry = 1
-        mobileOrWebPlatform = 0
-        amount = binding.sendAmount.text.toString()
-
         calculateRate(
             deviceId,
             personId,
@@ -294,49 +280,21 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             payingAgentId,
             orderType,
             paymentType,
-            fromCountry,
-            toCountry,
-            mobileOrWebPlatform,
-            amount
+            4,
+            1,
+            0,
+            binding.sendAmount.text.toString()
         )
         observeCalculateRateResult()
-    }
-
-    private fun calculateRate(
-        deviceId: String,
-        personId: Int,
-        bankId: Int,
-        payingAgentId: Int,
-        orderType: Int,
-        paymentMode: Int,
-        fromCountry: Int,
-        toCountry: Int,
-        mobileOrWebPlatform: Int,
-        amount: String
-    ) {
-        val calculateRateItem = CalculateRateItem(
-            deviceId = deviceId,
-            personId = personId,
-            bankId = bankId,
-            payingAgentId = payingAgentId,
-            orderType = orderType,
-            paymentMode = paymentMode,
-            fromCountry = fromCountry,
-            toCountry = toCountry,
-            mobileOrWebPlatform = mobileOrWebPlatform,
-            amount = amount,
-        )
-        calculationViewModel.calculateRate(calculateRateItem)
     }
 
     private fun observeCalculateRateResult() {
         calculationViewModel.calculateRateResult.observe(this) { result ->
             if (result!!.data != null) {
                 for (data in result.data!!) {
-                    bankCommission = data!!.commissionForBankTransfer!!.toDouble()
-                    cardCommission = data!!.commissionForCardPayment!!.toDouble()
+                    commission = data!!.commission!!.toDouble()
                     exchangeRate = data!!.rate!!.toDouble()
-                    binding.exchangeRate.text = exchangeRate.toString()
+                    binding.exchangeRate.text = "BDT " + "$exchangeRate"
                     updateValuesGBP()
                 }
             }
@@ -365,17 +323,12 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         }
     }
 
-    override fun onPayingAgentItemSelected(selectedItem: PayingAgentData) {
-        binding.collectionPointBank.setText(selectedItem.name)
+    override fun onPayingAgentBankItemSelected(selectedItem: PayingAgentData) {
+        binding.collectionPointInstantCredit.setText(selectedItem.name)
+        binding.collectionPointCashPickUp.setText(selectedItem.name)
         payingAgentId = selectedItem.payingAgentId!!
 
         bankId = selectedItem!!.bankId!!
-        bankName = selectedItem.name.toString()
-
-        fromCountry = 4
-        toCountry = 1
-        mobileOrWebPlatform = 0
-        amount = binding.sendAmount.text.toString()
 
         calculateRate(
             deviceId,
@@ -384,12 +337,59 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             payingAgentId,
             orderType,
             paymentType,
-            fromCountry,
-            toCountry,
-            mobileOrWebPlatform,
-            amount
+            4,
+            1,
+            0,
+            binding.sendAmount.text.toString()
         )
 
+    }
+
+    override fun onPayingAgentWalletItemSelected(selectedItem: PayingAgentData) {
+        binding.collectionPointWallet.setText(selectedItem.name)
+
+        payingAgentId = selectedItem.payingAgentId!!
+        bankId = selectedItem!!.bankId!!
+
+        calculateRate(
+            deviceId,
+            personId,
+            bankId,
+            payingAgentId,
+            orderType,
+            paymentType,
+            4,
+            1,
+            0,
+            binding.sendAmount.text.toString()
+        )
+    }
+
+    private fun calculateRate(
+        deviceId: String,
+        personId: Int,
+        bankId: Int,
+        payingAgentId: Int,
+        orderType: Int,
+        paymentMode: Int,
+        fromCountry: Int,
+        toCountry: Int,
+        mobileOrWebPlatform: Int,
+        amount: String
+    ) {
+        val calculateRateItem = CalculateRateItem(
+            deviceId = deviceId,
+            personId = personId,
+            bankId = bankId,
+            payingAgentId = payingAgentId,
+            orderType = orderType,
+            paymentMode = paymentMode,
+            fromCountry = fromCountry,
+            toCountry = toCountry,
+            mobileOrWebPlatform = mobileOrWebPlatform,
+            amount = amount,
+        )
+        calculationViewModel.calculateRate(calculateRateItem)
     }
 
     private fun getDeviceId(context: Context): String {
