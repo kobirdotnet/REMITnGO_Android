@@ -245,18 +245,13 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             val bundle = Bundle().apply {
                 putString("paymentType", paymentType.toString())
                 putString("orderType", orderType.toString())
-
-                putString("send_amount", binding.sendAmount.text.toString())
-                putString("receive_amount", binding.receiveAmount.text.toString())
-
-                putString("payingAgentId", payingAgentId.toString())
-//                putString("payingAgentName", binding.collectionPointBank.text.toString())
-
+                putString("sendAmount", binding.sendAmount.text.toString())
+                putString("receiveAmount", binding.receiveAmount.text.toString())
                 putString("exchangeRate", exchangeRate.toString())
                 putString("commission", commission.toString())
             }
             findNavController().navigate(
-                R.id.action_nav_main_to_nav_choose_beneficiary,
+                R.id.action_nav_main_to_nav_review,
                 bundle
             )
         }

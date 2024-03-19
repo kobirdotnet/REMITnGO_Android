@@ -12,18 +12,27 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
+import com.bsel.remitngo.bottomSheet.ReasonBottomSheet
+import com.bsel.remitngo.bottomSheet.SourceOfIncomeBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
+import com.bsel.remitngo.data.interfaceses.OnPersonalInfoItemSelectedListener
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
+import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeData
+import com.bsel.remitngo.data.model.profile.nationality.NationalityData
+import com.bsel.remitngo.data.model.profile.occupation.OccupationData
+import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeData
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
+import com.bsel.remitngo.data.model.reason.ReasonData
+import com.bsel.remitngo.data.model.relation.RelationData
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
 import com.bsel.remitngo.databinding.FragmentPaymentBinding
 import com.bsel.remitngo.presentation.di.Injector
-import com.bsel.remitngo.presentation.ui.main.CalculationViewModel
-import com.bsel.remitngo.presentation.ui.main.CalculationViewModelFactory
 import com.emerchantpay.gateway.genesisandroid.api.constants.*
 import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringCategory
 import com.emerchantpay.gateway.genesisandroid.api.constants.recurring.RecurringType
@@ -45,7 +54,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class PaymentFragment : Fragment() {
+class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
+    OnPersonalInfoItemSelectedListener {
     @Inject
     lateinit var paymentViewModelFactory: PaymentViewModelFactory
     private lateinit var paymentViewModel: PaymentViewModel
@@ -54,47 +64,29 @@ class PaymentFragment : Fragment() {
 
     private lateinit var preferenceManager: PreferenceManager
 
+    private val reasonBottomSheet: ReasonBottomSheet by lazy { ReasonBottomSheet() }
+    private val sourceOfIncomeBottomSheet: SourceOfIncomeBottomSheet by lazy { SourceOfIncomeBottomSheet() }
+
+    private lateinit var personId:String
+    private lateinit var firstName:String
+    private lateinit var lastName:String
+    private lateinit var customerEmail:String
+    private lateinit var customerMobile:String
+    private lateinit var customerDateOfBirth:String
+
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var orderType: String
-    private lateinit var paymentType: String
-
-    private lateinit var personId: String
-    private lateinit var firstName: String
-    private lateinit var lastName: String
-    private lateinit var customerEmail: String
-    private lateinit var customerMobile: String
-    private lateinit var customerdateOfBirth: String
-    private lateinit var cusBankInfoId: String
-    private lateinit var recipientName: String
-    private lateinit var recipientMobile: String
-    private lateinit var recipientAddress: String
-
-    private lateinit var bankId: String
-    private lateinit var bankName: String
-
-    private lateinit var accountNo: String
-    private lateinit var branchId: String
-
-    private lateinit var send_amount: String
-    private lateinit var receive_amount: String
-
-    private lateinit var payingAgentId: String
-    private lateinit var payingAgentName: String
-
-    private var gbpValue: Double = 0.0
-    private var exchangeRate: Double = 0.0
-    private lateinit var commission: String
-
-    private var fromCountry: Int = 0
-    private var toCountry: Int = 0
-
-    private var mobileOrWebPlatform: Int = 0
-
-    private lateinit var amount: String
-
     private lateinit var transactionCode: String
+
+    private lateinit var paymentType: String
+    private lateinit var orderType: String
+
+    private lateinit var sendAmount: String
+    private lateinit var commission: String
+    private lateinit var exchangeRate: String
+    private lateinit var receiveAmount: String
+
     private lateinit var transactionCodeWithChannel: String
     private lateinit var encryptCode: String
 
@@ -127,13 +119,77 @@ class PaymentFragment : Fragment() {
         paymentViewModel =
             ViewModelProvider(this, paymentViewModelFactory)[PaymentViewModel::class.java]
 
+        preferenceManager = PreferenceManager(requireContext())
+        personId = preferenceManager.loadData("personId").toString()
+        firstName = preferenceManager.loadData("firstName").toString()
+        lastName = preferenceManager.loadData("lastName").toString()
+        customerEmail = preferenceManager.loadData("email").toString()
+        customerMobile = preferenceManager.loadData("mobile").toString()
+        customerDateOfBirth = preferenceManager.loadData("dob").toString()
+
+        deviceId = getDeviceId(requireContext())
+        ipAddress = getIPAddress(requireContext())
+
+        val consumerItem = ConsumerItem(
+            deviceId = deviceId,
+            params1 = personId.toInt(),
+            params2 = ""
+        )
+        paymentViewModel.consumer(consumerItem)
+        paymentViewModel.consumerResult.observe(this) { result ->
+            if (result!!.data != null) {
+                consumerId = result.data.toString()
+            }
+        }
+
+        transactionCode = arguments?.getString("transactionCode").toString()
+        if (::transactionCode.isInitialized && transactionCode != "null") {
+            val transactionDetailsItem = TransactionDetailsItem(
+                deviceId = deviceId,
+                params1 = personId.toInt(),
+                params2 = transactionCode
+            )
+            paymentViewModel.paymentTransaction(transactionDetailsItem)
+            observeTransactionDetailsResult()
+        }
+
+        paymentType = arguments?.getString("paymentType").toString()
+        orderType = arguments?.getString("orderType").toString()
+
+        sendAmount = arguments?.getString("sendAmount").toString()
+        if (sendAmount != "null") {
+            binding.sendAmount.text = "GBP $sendAmount"
+        }
+
+        commission = arguments?.getString("commission").toString()
+        if (commission != "null") {
+            binding.transferFee.text = "GBP $commission"
+        }
+
+        if (sendAmount != "null" || commission != "null") {
+            binding.totalAmount.text = "GBP "+(sendAmount.toDouble() + commission.toDouble()).toString()
+        }
+
+        exchangeRate = arguments?.getString("exchangeRate").toString()
+        if (exchangeRate != "null") {
+            binding.exchangeRate.text = "GBP $exchangeRate"
+        }
+
+        receiveAmount = arguments?.getString("receiveAmount").toString()
+        if (receiveAmount != "null") {
+            binding.receiveAmount.text = "BDT $receiveAmount"
+        }
+
+        binding.bankAccountName.text = ""
+        binding.bankAccountNumber.text = ""
+
         binding.transferHistory.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("orderType", orderType)
                 putString("paymentType", paymentType)
-
-
-                putString("exchangeRate", exchangeRate.toString())
+                putString("orderType", orderType)
+                putString("sendAmount", sendAmount)
+                putString("receiveAmount", receiveAmount)
+                putString("exchangeRate", exchangeRate)
                 putString("commission", commission)
             }
             findNavController().navigate(
@@ -141,82 +197,20 @@ class PaymentFragment : Fragment() {
                 bundle
             )
         }
-        binding.receiverHistory.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("orderType", orderType)
-                putString("paymentType", paymentType)
 
-                putString("exchangeRate", exchangeRate.toString())
-                putString("commission", commission)
-            }
+        binding.receiverHistory.setOnClickListener {
             findNavController().navigate(
-                R.id.action_nav_review_to_nav_choose_beneficiary,
-                bundle
+                R.id.action_nav_review_to_nav_choose_beneficiary
             )
         }
 
-        preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
-        firstName = preferenceManager.loadData("firstName").toString()
-        lastName = preferenceManager.loadData("lastName").toString()
-        customerEmail = preferenceManager.loadData("email").toString()
-        customerMobile = preferenceManager.loadData("mobile").toString()
-        customerdateOfBirth = preferenceManager.loadData("dob").toString()
-
-        deviceId = getDeviceId(requireContext())
-        ipAddress = getIPAddress(requireContext())
-
-        orderType = arguments?.getString("orderType").toString()
-        paymentType = arguments?.getString("paymentType").toString()
-
-        cusBankInfoId = arguments?.getString("cusBankInfoId").toString()
-
-        recipientMobile = arguments?.getString("recipientMobile").toString()
-        recipientAddress = arguments?.getString("recipientAddress").toString()
-
-        bankId = arguments?.getString("bankId").toString()
-        branchId = arguments?.getString("branchId").toString()
-
-        val sendAmount = arguments?.getString("send_amount").toString()
-        if (sendAmount != "null") {
-            binding.sendAmount.text = "GBP $sendAmount"
-            binding.totalSend.text = "GBP $sendAmount"
+        binding.reason.setOnClickListener {
+            reasonBottomSheet.itemSelectedListener = this
+            reasonBottomSheet.show(childFragmentManager, reasonBottomSheet.tag)
         }
-
-        val receiveAmount = arguments?.getString("receive_amount").toString()
-        if (receiveAmount != "null") {
-            binding.receiveAmount.text = "BDT $receiveAmount"
-        }
-
-        val commission = arguments?.getString("commission").toString()
-        if (commission != "null") {
-            binding.transferFee.text = "GBP $commission"
-        }
-
-        val exchangeRate = arguments?.getString("exchangeRate").toString()
-        if (exchangeRate != "null") {
-            binding.exchangeRate.text = "GBP $exchangeRate"
-        }
-
-        val payingAgentId = arguments?.getString("payingAgentId").toString()
-        val payingAgentName = arguments?.getString("payingAgentName").toString()
-
-
-        val recipientName = arguments?.getString("recipientName").toString()
-        if (recipientName != "null") {
-            binding.recipientName.text = "$recipientName"
-            binding.bankAccountName.text = "$recipientName"
-        }
-
-        val bankName = arguments?.getString("bankName").toString()
-        if (bankName != "null") {
-            binding.bankName.text = "$bankName"
-            binding.bankAccountNumber.text = "$bankName"
-        }
-
-        val accountNo = arguments?.getString("accountNo").toString()
-        if (accountNo != "null") {
-            binding.accountNo.text = "$accountNo"
+        binding.sourceOfIncome.setOnClickListener {
+            sourceOfIncomeBottomSheet.itemSelectedListener = this
+            sourceOfIncomeBottomSheet.show(childFragmentManager, sourceOfIncomeBottomSheet.tag)
         }
 
         binding.btnSend.setOnClickListener {
@@ -227,21 +221,21 @@ class PaymentFragment : Fragment() {
                 customerName = "$firstName $lastName",
                 customerEmail = customerEmail,
                 customerMobile = customerMobile,
-                customerdateOfBirth = customerdateOfBirth,
+                customerdateOfBirth = customerDateOfBirth,
                 fromCountryID = "4",
                 fromCurrencyID = "96",
                 fromCurrencyCode = "GBP",
-                benPersonID = cusBankInfoId,
+                benPersonID = "0",
                 beneficiaryName = "Abdul Bari",
                 beneficaryEmail = "",
-                beneficarymobile = recipientMobile,
-                beneficaryAddress = recipientAddress,
-                bankId = bankId,
+                beneficarymobile = "",
+                beneficaryAddress = "",
+                bankId = "",
                 bankName = "Brac Bank",
                 accountNo = "2345678",
-                benBranchId = branchId,
-                collectionBankID = payingAgentId,
-                collectionBankName = payingAgentName,
+                benBranchId = "",
+                collectionBankID = "",
+                collectionBankName = "",
                 sendAmount = "200",
                 receivableAmount = "2000",
                 rate = "0.0",
@@ -264,43 +258,9 @@ class PaymentFragment : Fragment() {
         observePaymentResult()
         observeEncryptResult()
 
-        val consumerItem = ConsumerItem(
-            deviceId = deviceId,
-            params1 = personId.toInt(),
-            params2 = ""
-        )
-        paymentViewModel.consumer(consumerItem)
-        observeConsumerResult()
-
         observeSaveConsumerResult()
         observeEmpResult()
 
-        transactionCode = arguments?.getString("transactionCode").toString()
-        if (::transactionCode.isInitialized && transactionCode != "null") {
-            val transactionDetailsItem = TransactionDetailsItem(
-                deviceId = deviceId,
-                params1 = personId.toInt(),
-                params2 = transactionCode
-            )
-            paymentViewModel.paymentTransaction(transactionDetailsItem)
-            observeTransactionDetailsResult()
-        }
-
-
-        val calculateRateItem = CalculateRateItem(
-            deviceId = deviceId,
-            personId = personId.toInt(),
-            bankId = 55,
-            payingAgentId = 0,
-            orderType = 3,
-            paymentMode = 0,
-            fromCountry = 4,
-            toCountry = 1,
-            mobileOrWebPlatform = 0,
-            amount = "200",
-        )
-        paymentViewModel.rateCalculate(calculateRateItem)
-        observeCalculateRateResult()
     }
 
     private fun observeTransactionDetailsResult() {
@@ -310,31 +270,27 @@ class PaymentFragment : Fragment() {
 
                     val sendAmount = paymentTransactionData!!.sendAmount.toString()
                     if (sendAmount != "null") {
-                        gbpValue=sendAmount.toDouble()
-                        Log.i("info","gbpValue: "+gbpValue)
+                        gbpValue = sendAmount.toDouble()
                         binding.sendAmount.text = "GBP $sendAmount"
                         binding.totalSend.text = "GBP $sendAmount"
                     }
 
-//                    val receiveAmount = paymentTransactionData!!.benAmount.toString()
-//                    if (receiveAmount != "null") {
-//                        binding.receiveAmount.text = "BDT $receiveAmount"
-//                    }
+                    val receiveAmount = paymentTransactionData!!.benAmount.toString()
+                    if (receiveAmount != "null") {
+                        binding.receiveAmount.text = "BDT $receiveAmount"
+                    }
 
                     val transferFee = paymentTransactionData!!.transferFees.toString()
                     if (transferFee != "null") {
                         binding.transferFee.text = "GBP $transferFee"
                     }
 
-//                    val exchangeRate = paymentTransactionData!!.rate.toString()
-//                    if (exchangeRate != "null") {
-//                        binding.exchangeRate.text = "GBP $exchangeRate"
-//                    }
+                    val exchangeRate = paymentTransactionData!!.rate.toString()
+                    if (exchangeRate != "null") {
+                        binding.exchangeRate.text = "GBP $exchangeRate"
+                    }
 
                     val recipientName = paymentTransactionData!!.benName.toString()
-                    if (recipientName != "null") {
-                        binding.recipientName.text = "$recipientName"
-                    }
 
                     val bankAccountName = paymentTransactionData!!.beneBankAccountName.toString()
                     if (bankAccountName != "null") {
@@ -343,14 +299,25 @@ class PaymentFragment : Fragment() {
 
                     val bankName = paymentTransactionData!!.bankName.toString()
                     if (bankName != "null") {
-                        binding.bankName.text = "$bankName"
                         binding.bankAccountNumber.text = "$bankName"
                     }
 
                     val accountNo = paymentTransactionData!!.accountNo.toString()
-                    if (accountNo != "null") {
-                        binding.accountNo.text = "$accountNo"
-                    }
+
+                    val calculateRateItem = CalculateRateItem(
+                        deviceId = deviceId,
+                        personId = personId.toInt(),
+                        bankId = paymentTransactionData!!.beneBankId!!.toInt(),
+                        payingAgentId = paymentTransactionData!!.payingAgentId!!.toInt(),
+                        orderType = paymentTransactionData!!.orderTypeId!!.toInt(),
+                        paymentMode = 0,
+                        fromCountry = 4,
+                        toCountry = 1,
+                        mobileOrWebPlatform = 0,
+                        amount = paymentTransactionData!!.sendAmount!!.toString(),
+                    )
+                    paymentViewModel.rateCalculate(calculateRateItem)
+                    observeCalculateRateResult()
 
                 }
             }
@@ -367,6 +334,17 @@ class PaymentFragment : Fragment() {
                     updateValuesGBP()
                 }
             }
+        }
+    }
+
+    private fun updateValuesGBP() {
+        if (gbpValue != null) {
+            Log.i("info", "gbpValue: $gbpValue")
+            val bdtValue = gbpValue * exchangeRate
+            Log.i("info", "bdtValue: $bdtValue")
+            val formattedBDT = decimalFormat.format(bdtValue)
+            Log.i("info", "formattedBDT: $formattedBDT")
+            binding.receiveAmount.text = formattedBDT.toString()
         }
     }
 
@@ -395,30 +373,6 @@ class PaymentFragment : Fragment() {
                 } else if (paymentType == "3") {
                     findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
                 }
-            }
-        }
-    }
-
-    private fun observeConsumerResult() {
-        paymentViewModel.consumerResult.observe(this) { result ->
-            if (result!!.data != null) {
-                consumerId = result.data.toString()
-            }
-        }
-    }
-
-    private fun observeSaveConsumerResult() {
-        paymentViewModel.saveConsumerResult.observe(this) { result ->
-            if (result!!.data != null) {
-                Log.i("info", "Save Consumer: " + result.data.toString())
-            }
-        }
-    }
-
-    private fun observeEmpResult() {
-        paymentViewModel.empResult.observe(this) { result ->
-            if (result!!.data != null) {
-                Log.i("info", "save emp data: " + result.data.toString())
             }
         }
     }
@@ -609,13 +563,13 @@ class PaymentFragment : Fragment() {
                 )
                 paymentViewModel.emp(encryptItem)
 
-                val bundle = Bundle().apply {
-                    putString("transactionCode", transactionCode)
-                }
-                findNavController().navigate(
-                    R.id.action_nav_review_to_nav_complete_card_transaction,
-                    bundle
-                )
+//                val bundle = Bundle().apply {
+//                    putString("transactionCode", transactionCode)
+//                }
+//                findNavController().navigate(
+//                    R.id.action_nav_review_to_nav_complete_card_transaction,
+//                    bundle
+//                )
 
 //                Handler(Looper.getMainLooper()).postDelayed({
 //
@@ -676,14 +630,19 @@ class PaymentFragment : Fragment() {
 
     }
 
-    fun updateValuesGBP() {
-        if (gbpValue != null) {
-            Log.i("info","gbpValue: "+gbpValue)
-            val bdtValue = gbpValue * exchangeRate
-            Log.i("info","bdtValue: "+bdtValue)
-            val formattedBDT = decimalFormat.format(bdtValue)
-            Log.i("info","formattedBDT: "+formattedBDT)
-            binding.receiveAmount.text = formattedBDT.toString()
+    private fun observeSaveConsumerResult() {
+        paymentViewModel.saveConsumerResult.observe(this) { result ->
+            if (result!!.data != null) {
+                Log.i("info", "Save Consumer: " + result.data.toString())
+            }
+        }
+    }
+
+    private fun observeEmpResult() {
+        paymentViewModel.empResult.observe(this) { result ->
+            if (result!!.data != null) {
+                Log.i("info", "save emp data: " + result.data.toString())
+            }
         }
     }
 
@@ -717,6 +676,32 @@ class PaymentFragment : Fragment() {
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
+    }
+
+    override fun onRelationItemSelected(selectedItem: RelationData) {
+
+    }
+
+    override fun onReasonItemSelected(selectedItem: ReasonData) {
+        binding.reason.setText(selectedItem.name)
+        val reasonId = selectedItem.id.toString()
+    }
+
+    override fun onOccupationTypeItemSelected(selectedItem: OccupationTypeData) {
+    }
+
+    override fun onOccupationItemSelected(selectedItem: OccupationData) {
+    }
+
+    override fun onSourceOfIncomeItemSelected(selectedItem: SourceOfIncomeData) {
+        binding.sourceOfIncome.setText(selectedItem.name)
+        val sourceOfIncomeId = selectedItem.id.toString()
+    }
+
+    override fun onAnnualIncomeItemSelected(selectedItem: AnnualIncomeData) {
+    }
+
+    override fun onNationalityItemSelected(selectedItem: NationalityData) {
     }
 
 }

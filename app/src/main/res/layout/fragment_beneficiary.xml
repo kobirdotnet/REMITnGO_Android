@@ -51,7 +51,6 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
-                        
                         android:textColor="@color/black" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -124,7 +123,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="textPersonName"
-                            
                             android:textColor="@color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -160,7 +158,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="phone"
-                            
                             android:maxLength="11"
                             android:textColor="@color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -199,7 +196,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
-                            
                             android:textColor="@color/black" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -238,7 +234,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
-                            
                             android:textColor="@color/black" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -277,7 +272,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
-                            
                             android:textColor="@color/black" />
 
                     </com.google.android.material.textfield.TextInputLayout>
