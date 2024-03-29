@@ -77,8 +77,6 @@ class ReasonBottomSheet : BottomSheetDialogFragment() {
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
-        observeReasonResult()
-
         deviceId = getDeviceId(requireContext())
 
         val reasonItem = ReasonItem(
@@ -88,6 +86,7 @@ class ReasonBottomSheet : BottomSheetDialogFragment() {
             param2 = 0
         )
         beneficiaryViewModel.reason(reasonItem)
+        observeReasonResult()
 
         return bottomSheet
     }
@@ -121,8 +120,6 @@ class ReasonBottomSheet : BottomSheetDialogFragment() {
                     })
                 }
 
-            } else {
-                Log.i("info", "reason failed")
             }
         }
     }

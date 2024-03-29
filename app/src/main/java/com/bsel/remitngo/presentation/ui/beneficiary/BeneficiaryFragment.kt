@@ -180,10 +180,10 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
                         putString("recipientMobile", binding.phoneNumber.toString())
                         putString("recipientAddress", binding.address.toString())
                     }
-                    findNavController().navigate(
-                        R.id.action_nav_save_beneficiary_to_nav_save_bank,
-                        bundle
-                    )
+//                    findNavController().navigate(
+//                        R.id.action_nav_save_beneficiary_to_nav_save_bank,
+//                        bundle
+//                    )
                 }
             }
         }

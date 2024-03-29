@@ -196,10 +196,10 @@ class BankFragment : Fragment(), OnBankSelectedListener {
                     putString("bankCommission", bankCommission)
                     putString("cardCommission", cardCommission)
                 }
-                findNavController().navigate(
-                    R.id.action_nav_save_bank_to_nav_review,
-                    bundle
-                )
+//                findNavController().navigate(
+//                    R.id.action_nav_save_bank_to_nav_review,
+//                    bundle
+//                )
             }
         }
     }
@@ -273,10 +273,10 @@ class BankFragment : Fragment(), OnBankSelectedListener {
             putString("recipientMobile", recipientMobile)
             putString("recipientAddress", recipientAddress)
         }
-        findNavController().navigate(
-            R.id.action_nav_save_bank_to_nav_review,
-            bundle
-        )
+//        findNavController().navigate(
+//            R.id.action_nav_save_bank_to_nav_review,
+//            bundle
+//        )
     }
 
     //Form validation

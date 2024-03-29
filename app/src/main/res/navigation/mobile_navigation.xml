@@ -55,12 +55,19 @@
         <action
             android:id="@+id/action_nav_choose_beneficiary_to_nav_save_beneficiary"
             app:destination="@id/nav_save_beneficiary" />
+        <action
+            android:id="@+id/action_nav_choose_beneficiary_to_nav_review"
+            app:destination="@id/nav_review" />
     </fragment>
     <fragment
         android:id="@+id/nav_save_beneficiary"
         android:name="com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryFragment"
         android:label="@string/menu_recipient_details"
-        tools:layout="@layout/fragment_beneficiary"></fragment>
+        tools:layout="@layout/fragment_beneficiary">
+        <action
+            android:id="@+id/action_nav_save_beneficiary_to_nav_choose_beneficiary"
+            app:destination="@id/nav_choose_beneficiary" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_choose_bank"
@@ -70,12 +77,19 @@
         <action
             android:id="@+id/action_nav_choose_bank_to_nav_save_bank"
             app:destination="@id/nav_save_bank" />
+        <action
+            android:id="@+id/action_nav_choose_bank_to_nav_review"
+            app:destination="@id/nav_review" />
     </fragment>
     <fragment
         android:id="@+id/nav_save_bank"
         android:name="com.bsel.remitngo.presentation.ui.bank.BankFragment"
         android:label="@string/menu_recipient_details"
-        tools:layout="@layout/fragment_bank"></fragment>
+        tools:layout="@layout/fragment_bank">
+        <action
+            android:id="@+id/action_nav_save_bank_to_nav_choose_bank"
+            app:destination="@id/nav_choose_bank" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_complete_bank_transaction"

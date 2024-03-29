@@ -41,6 +41,7 @@ class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
     private lateinit var payingAgentBankNameAdapter: PayingAgentBankNameAdapter
 
     private lateinit var deviceId: String
+
     private var selectedOrderType: String? = null
     private var selectedAmount: String? = null
 
@@ -79,8 +80,6 @@ class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
-        observePayingAgentResult()
-
         deviceId = getDeviceId(requireContext())
         val payingAgentItem = PayingAgentItem(
             deviceId = deviceId,
@@ -90,6 +89,8 @@ class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
             amount = selectedAmount!!.toInt()
         )
         calculationViewModel.payingAgent(payingAgentItem)
+
+        observePayingAgentResult()
 
         return bottomSheet
     }
@@ -125,8 +126,6 @@ class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
                     }
                 })
 
-            } else {
-                Log.i("info", "paying agent failed")
             }
         }
     }

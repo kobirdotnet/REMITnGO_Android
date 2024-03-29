@@ -11,6 +11,7 @@ import com.bsel.remitngo.databinding.ItemTransactionBinding
 
 class TransactionAdapter(
     private val selectedItem: (TransactionData) -> Unit,
+    private val downloadReceipt: (TransactionData) -> Unit,
     private val sendAgain: (TransactionData) -> Unit
 ) : RecyclerView.Adapter<TransactionViewHolder>() {
 
@@ -29,7 +30,7 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        holder.bind(filteredTransactionList[position], selectedItem,sendAgain)
+        holder.bind(filteredTransactionList[position], selectedItem,downloadReceipt,sendAgain)
     }
 
     fun setList(transactionItem: List<TransactionData>) {
@@ -55,6 +56,7 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
     fun bind(
         transactionItem: TransactionData,
         selectedItem: (TransactionData) -> Unit,
+        downloadReceipt: (TransactionData) -> Unit,
         sendAgain: (TransactionData) -> Unit
     ) {
         binding.benName.text = transactionItem.benName.toString()
@@ -101,6 +103,10 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
 
         binding.itemTransactionLayout.setOnClickListener {
             selectedItem(transactionItem)
+        }
+
+        binding.btnDownloadReceipt.setOnClickListener {
+            downloadReceipt(transactionItem)
         }
 
         binding.btnSendAgain.setOnClickListener {

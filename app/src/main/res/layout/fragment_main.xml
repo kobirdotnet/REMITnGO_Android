@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
@@ -51,7 +50,6 @@
                         android:text="Bangladesh"
                         android:textColor="@color/black" />
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -253,7 +251,7 @@
                 android:paddingBottom="@dimen/activity_vertical_margin">
 
                 <RadioGroup
-                    android:id="@+id/order_mode_radio_group"
+                    android:id="@+id/orderModeRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -261,7 +259,7 @@
                     android:weightSum="4">
 
                     <RadioButton
-                        android:id="@+id/bank_account"
+                        android:id="@+id/bankAccount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="4dp"
@@ -272,7 +270,7 @@
                         android:textColor="@color/black" />
 
                     <RadioButton
-                        android:id="@+id/instant_credit"
+                        android:id="@+id/instantCredit"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -284,7 +282,7 @@
                         android:textColor="@color/black" />
 
                     <RadioButton
-                        android:id="@+id/cash_pickup"
+                        android:id="@+id/cashPickup"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -296,7 +294,7 @@
                         android:textColor="@color/black" />
 
                     <RadioButton
-                        android:id="@+id/mobile_wallet"
+                        android:id="@+id/mobileWallet"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -319,7 +317,8 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/collectionPointInstantCreditContainer"
@@ -442,7 +441,7 @@
                 android:paddingBottom="@dimen/activity_vertical_margin">
 
                 <RadioGroup
-                    android:id="@+id/payment_mode_radio_group"
+                    android:id="@+id/paymentModeRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -450,7 +449,7 @@
                     android:weightSum="2">
 
                     <RadioButton
-                        android:id="@+id/card_payment"
+                        android:id="@+id/cardPayment"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="4dp"
@@ -461,7 +460,7 @@
                         android:textColor="@color/black" />
 
                     <RadioButton
-                        android:id="@+id/bank_transfer"
+                        android:id="@+id/bankPayment"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -470,6 +469,7 @@
                         android:gravity="center_vertical"
                         android:text="Bank Transfer"
                         android:textColor="@color/black" />
+
                 </RadioGroup>
 
             </LinearLayout>
@@ -491,7 +491,7 @@
                     android:focusableInTouchMode="false"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
-                    android:hint="Recipients get an extra 2.5% on their transfer!"
+                    android:hint="@string/extra_percentage"
                     android:inputType="none"
                     android:textColor="@color/blue"
                     android:textSize="12sp" />
@@ -507,7 +507,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnContinue"
+                    android:id="@+id/btnNext"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -518,28 +518,6 @@
                     android:text="NEXT"
                     android:textAllCaps="false"
                     android:textColor="@color/white" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:visibility="gone">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/addPromoCode"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/promo"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="center"
-                    android:text="ADD PROMO CODE"
-                    android:textColor="@color/blue" />
             </LinearLayout>
 
             <LinearLayout

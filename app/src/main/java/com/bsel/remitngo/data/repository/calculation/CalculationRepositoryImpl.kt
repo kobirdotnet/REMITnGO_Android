@@ -5,6 +5,8 @@ import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentResponseItem
+import com.bsel.remitngo.data.model.percentage.PercentageItem
+import com.bsel.remitngo.data.model.percentage.PercentageResponseItem
 import com.bsel.remitngo.data.repository.calculation.dataSource.CalculationRemoteDataSource
 import com.bsel.remitngo.domain.repository.CalculationRepository
 
@@ -41,6 +43,23 @@ class CalculationRepositoryImpl(private val calculationRemoteDataSource: Calcula
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error calculate rate: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun percentage(percentageItem: PercentageItem): PercentageResponseItem? {
+        return try {
+            val response = calculationRemoteDataSource.percentage(percentageItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to percentage: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error percentage: ${exception.message}", exception)
             null
         }
     }

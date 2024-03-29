@@ -5,6 +5,8 @@ import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentResponseItem
+import com.bsel.remitngo.data.model.percentage.PercentageItem
+import com.bsel.remitngo.data.model.percentage.PercentageResponseItem
 import com.bsel.remitngo.data.repository.calculation.dataSource.CalculationRemoteDataSource
 import retrofit2.Response
 
@@ -17,6 +19,10 @@ class CalculationRemoteDataSourceImpl(private val remitNgoService: REMITnGoServi
 
     override suspend fun calculateRate(calculateRateItem: CalculateRateItem): Response<CalculateRateResponseItem> {
         return remitNgoService.calculateRate(calculateRateItem)
+    }
+
+    override suspend fun percentage(percentageItem: PercentageItem): Response<PercentageResponseItem> {
+        return remitNgoService.percentage(percentageItem)
     }
 
 }

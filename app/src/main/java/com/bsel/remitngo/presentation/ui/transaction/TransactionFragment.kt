@@ -79,6 +79,9 @@ class TransactionFragment : Fragment() {
                         transaction(selectedItem)
                         binding.transactionSearch.setQuery("", false)
                     },
+                    downloadReceipt = { downloadReceipt: TransactionData ->
+                        downloadReceipt(downloadReceipt)
+                    },
                     sendAgain = { sendAgain: TransactionData ->
                         sendAgain(sendAgain)
                     }
@@ -106,6 +109,12 @@ class TransactionFragment : Fragment() {
         val transactionCode = selectedItem.transactionCode.toString()
         transactionBottomSheet.setSelectedTransactionCode(transactionCode)
         transactionBottomSheet.show(childFragmentManager, transactionBottomSheet.tag)
+    }
+
+    private fun downloadReceipt(downloadReceipt: TransactionData) {
+        var downloadReceipt=downloadReceipt.transactionCode
+        val receiptUrl = "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$downloadReceipt.pdf"
+        Log.i("info", "receiptUrl: $receiptUrl")
     }
 
     private fun sendAgain(sendAgain: TransactionData) {

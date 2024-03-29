@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/transferHistory"
+                    android:id="@+id/transferHistoryModify"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
@@ -209,7 +209,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/receive_amount"
+                    android:id="@+id/receiveAmount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -228,54 +228,14 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:weightSum="7">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="left"
-                    android:text="Receiver History"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/receiverHistory"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="right"
-                    android:text="Modify"
-                    android:textColor="@color/blue" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin">
 
                 <TextView
-                    android:id="@+id/bank_account_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:hint="Account Name"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/bank_account_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="center_vertical"
-                    android:hint="Account Number"
+                    android:text="Receiver History"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -288,16 +248,119 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:weightSum="9">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/reason_container"
+                    android:id="@+id/receiverContainer"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Reason"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
+                    android:hint="Receiver Name"
+                    app:endIconTint="@color/blue"
+                    app:helperTextTextColor="@android:color/holo_red_dark">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/receiverName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:backgroundTint="@color/white"
+                        android:completionThreshold="1"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center_vertical"
+                        android:inputType="none"
+                        android:textColor="@color/black" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addReceiver"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:backgroundTint="@color/grey"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center"
+                    android:inputType="none"
+                    android:text="Add"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blue"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:weightSum="9">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/receiverAccountContainer"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:hint="Receiver Account"
+                    app:endIconTint="@color/blue"
+                    app:helperTextTextColor="@android:color/holo_red_dark">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/receiverAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:backgroundTint="@color/white"
+                        android:completionThreshold="1"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center_vertical"
+                        android:inputType="none"
+                        android:textColor="@color/black" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addAccount"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:backgroundTint="@color/grey"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center"
+                    android:inputType="none"
+                    android:text="Add"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blue"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/reasonContainer"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:hint="Reason"
                     app:endIconTint="@color/blue"
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
@@ -306,7 +369,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
-                        android:backgroundTint="@color/grey"
+                        android:backgroundTint="@color/white"
                         android:completionThreshold="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
@@ -318,41 +381,62 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/source_of_income_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/source_of_income_container"
+                    android:id="@+id/sourceOfIncomeContainer"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
+                    android:hint="Source of Income"
                     app:endIconTint="@color/blue"
-                    app:helperTextTextColor="@android:color/holo_red_dark"
-                    android:hint="Source of Income">
+                    app:helperTextTextColor="@android:color/holo_red_dark">
 
                     <AutoCompleteTextView
-                        android:id="@+id/source_of_income"
+                        android:id="@+id/sourceOfIncome"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
-                        android:backgroundTint="@color/grey"
+                        android:backgroundTint="@color/white"
                         android:completionThreshold="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addPromoCode"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/promo"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center"
+                    android:text="ADD PROMO CODE"
+                    android:textColor="@color/blue" />
             </LinearLayout>
 
             <LinearLayout

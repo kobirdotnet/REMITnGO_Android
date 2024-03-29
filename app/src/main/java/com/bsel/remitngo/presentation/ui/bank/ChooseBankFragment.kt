@@ -1,6 +1,7 @@
 package com.bsel.remitngo.presentation.ui.bank
 
 import android.content.Context
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -18,6 +19,7 @@ import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.databinding.FragmentChooseBankBinding
 import com.bsel.remitngo.presentation.di.Injector
+import java.util.*
 import javax.inject.Inject
 
 class ChooseBankFragment : Fragment() {
@@ -31,29 +33,37 @@ class ChooseBankFragment : Fragment() {
 
     private lateinit var bankAdapter: BankAdapter
 
-    private lateinit var orderType: String
-    private lateinit var paymentType: String
+    private lateinit var personId: String
+    private lateinit var firstName: String
+    private lateinit var lastName: String
+    private lateinit var customerEmail: String
+    private lateinit var customerMobile: String
+    private lateinit var customerDateOfBirth: String
 
-    private lateinit var send_amount: String
-    private lateinit var receive_amount: String
+    var ipAddress: String? = null
+    private lateinit var deviceId: String
+
+    private lateinit var paymentType: String
+    private lateinit var orderType: String
+
+    private lateinit var sendAmount: String
+    private lateinit var receiveAmount: String
+
+    private lateinit var exchangeRate: String
+    private lateinit var commission: String
 
     private lateinit var bankId: String
     private lateinit var bankName: String
-
     private lateinit var payingAgentId: String
-    private lateinit var payingAgentName: String
 
-    private lateinit var exchangeRate: String
-    private lateinit var bankCommission: String
-    private lateinit var cardCommission: String
+    private lateinit var beneficiaryId: String
+    private lateinit var beneficiaryName: String
 
-    private lateinit var cusBankInfoId: String
-    private lateinit var recipientName: String
-    private lateinit var recipientMobile: String
-    private lateinit var recipientAddress: String
+    private lateinit var reasonId: String
+    private lateinit var reasonName: String
 
-    private lateinit var deviceId: String
-    private lateinit var personId: String
+    private lateinit var sourceOfIncomeId: String
+    private lateinit var sourceOfIncomeName: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,51 +83,58 @@ class ChooseBankFragment : Fragment() {
 
         preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
+        firstName = preferenceManager.loadData("firstName").toString()
+        lastName = preferenceManager.loadData("lastName").toString()
+        customerEmail = preferenceManager.loadData("email").toString()
+        customerMobile = preferenceManager.loadData("mobile").toString()
+        customerDateOfBirth = preferenceManager.loadData("dob").toString()
+
         deviceId = getDeviceId(requireContext())
+        ipAddress = getIPAddress(requireContext())
 
-        orderType = arguments?.getString("orderType").toString()
         paymentType = arguments?.getString("paymentType").toString()
+        orderType = arguments?.getString("orderType").toString()
 
-        send_amount = arguments?.getString("send_amount").toString()
-        receive_amount = arguments?.getString("receive_amount").toString()
+        sendAmount = arguments?.getString("sendAmount").toString()
+        receiveAmount = arguments?.getString("receiveAmount").toString()
+
+        exchangeRate = arguments?.getString("exchangeRate").toString()
+        commission = arguments?.getString("commission").toString()
 
         bankId = arguments?.getString("bankId").toString()
         bankName = arguments?.getString("bankName").toString()
-
         payingAgentId = arguments?.getString("payingAgentId").toString()
-        payingAgentName = arguments?.getString("payingAgentName").toString()
 
-        exchangeRate = arguments?.getString("exchangeRate").toString()
-        bankCommission = arguments?.getString("bankCommission").toString()
-        cardCommission = arguments?.getString("cardCommission").toString()
+        beneficiaryId = arguments?.getString("beneficiaryId").toString()
+        beneficiaryName = arguments?.getString("beneficiaryName").toString()
 
-        cusBankInfoId = arguments?.getString("cusBankInfoId").toString()
-        recipientName = arguments?.getString("recipientName").toString()
-        recipientMobile = arguments?.getString("recipientMobile").toString()
-        recipientAddress = arguments?.getString("recipientAddress").toString()
+        reasonId = arguments?.getString("reasonId").toString()
+        reasonName = arguments?.getString("reasonName").toString()
+
+        sourceOfIncomeId = arguments?.getString("sourceOfIncomeId").toString()
+        sourceOfIncomeName = arguments?.getString("sourceOfIncomeName").toString()
 
         binding.btnBank.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("orderType", orderType)
                 putString("paymentType", paymentType)
-
-                putString("send_amount", send_amount)
-                putString("receive_amount", receive_amount)
+                putString("orderType", orderType)
+                putString("sendAmount", sendAmount)
+                putString("receiveAmount", receiveAmount)
+                putString("exchangeRate", exchangeRate)
+                putString("commission", commission)
 
                 putString("bankId", bankId)
                 putString("bankName", bankName)
-
                 putString("payingAgentId", payingAgentId)
-                putString("payingAgentName", payingAgentName)
 
-                putString("exchangeRate", exchangeRate.toString())
-                putString("bankCommission", bankCommission.toString())
-                putString("cardCommission", cardCommission.toString())
+                putString("beneficiaryId", beneficiaryId)
+                putString("beneficiaryName", beneficiaryName)
 
-                putString("cusBankInfoId", cusBankInfoId)
-                putString("recipientName", recipientName)
-                putString("recipientMobile", recipientMobile)
-                putString("recipientAddress", recipientAddress)
+                putString("reasonId", reasonId)
+                putString("reasonName", reasonName)
+
+                putString("sourceOfIncomeId", sourceOfIncomeId)
+                putString("sourceOfIncomeName", sourceOfIncomeName)
             }
             findNavController().navigate(
                 R.id.action_nav_choose_bank_to_nav_save_bank,
@@ -127,7 +144,7 @@ class ChooseBankFragment : Fragment() {
 
         val getBankItem = GetBankItem(
             deviceId = deviceId,
-            params1 = cusBankInfoId.toInt(),
+            params1 = beneficiaryId.toInt(),
             params2 = orderType.toInt()
         )
         bankViewModel.getBank(getBankItem)
@@ -153,30 +170,30 @@ class ChooseBankFragment : Fragment() {
     }
 
     private fun bankItem(selectedItem: GetBankData) {
+
+        bankId=selectedItem.bankId.toString()
+        bankName=selectedItem.bankName.toString()
+
         val bundle = Bundle().apply {
-            putString("orderType", orderType)
             putString("paymentType", paymentType)
+            putString("orderType", orderType)
+            putString("sendAmount", sendAmount)
+            putString("receiveAmount", receiveAmount)
+            putString("exchangeRate", exchangeRate)
+            putString("commission", commission)
 
-            putString("cusBankInfoId", cusBankInfoId)
-            putString("recipientName", recipientName)
-            putString("recipientMobile", recipientMobile)
-            putString("recipientAddress", recipientAddress)
-
-            putString("bankId", selectedItem.bankId.toString())
-            putString("bankName", selectedItem.bankName.toString())
-
-            putString("accountNo", selectedItem.accountNo.toString())
-            putString("branchId", selectedItem.branchId.toString())
-
-            putString("send_amount", send_amount)
-            putString("receive_amount", receive_amount)
-
+            putString("bankId", bankId)
+            putString("bankName", bankName)
             putString("payingAgentId", payingAgentId)
-            putString("payingAgentName", payingAgentName)
 
-            putString("exchangeRate", exchangeRate.toString())
-            putString("bankCommission", bankCommission.toString())
-            putString("cardCommission", cardCommission.toString())
+            putString("beneficiaryId", beneficiaryId)
+            putString("beneficiaryName", beneficiaryName)
+
+            putString("reasonId", reasonId)
+            putString("reasonName", reasonName)
+
+            putString("sourceOfIncomeId", sourceOfIncomeId)
+            putString("sourceOfIncomeName", sourceOfIncomeName)
         }
         findNavController().navigate(
             R.id.action_nav_choose_bank_to_nav_review,
@@ -199,6 +216,21 @@ class ChooseBankFragment : Fragment() {
         }
 
         return deviceId
+    }
+
+    private fun getIPAddress(context: Context): String? {
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiInfo = wifiManager.connectionInfo
+        val ipAddress = wifiInfo.ipAddress
+        return String.format(
+            Locale.getDefault(),
+            "%d.%d.%d.%d",
+            ipAddress and 0xff,
+            ipAddress shr 8 and 0xff,
+            ipAddress shr 16 and 0xff,
+            ipAddress shr 24 and 0xff
+        )
     }
 
 }

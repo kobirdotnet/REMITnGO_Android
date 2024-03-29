@@ -8,6 +8,8 @@ import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentResponseItem
+import com.bsel.remitngo.data.model.percentage.PercentageItem
+import com.bsel.remitngo.data.model.percentage.PercentageResponseItem
 import com.bsel.remitngo.domain.useCase.CalculationUseCase
 import kotlinx.coroutines.launch
 
@@ -30,6 +32,16 @@ class CalculationViewModel(private val calculationUseCase: CalculationUseCase) :
         viewModelScope.launch {
             val result = calculationUseCase.execute(calculateRateItem)
             _calculateRateResult.value = result
+        }
+    }
+
+    private val _percentageResult = MutableLiveData<PercentageResponseItem?>()
+    val percentageResult: LiveData<PercentageResponseItem?> = _percentageResult
+
+    fun percentage(percentageItem: PercentageItem) {
+        viewModelScope.launch {
+            val result = calculationUseCase.execute(percentageItem)
+            _percentageResult.value = result
         }
     }
 

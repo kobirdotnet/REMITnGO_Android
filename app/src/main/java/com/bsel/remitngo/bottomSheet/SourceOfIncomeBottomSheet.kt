@@ -112,8 +112,6 @@ class SourceOfIncomeBottomSheet : BottomSheetDialogFragment() {
                         return true
                     }
                 })
-            } else {
-                Log.i("info", "sourceOfIncome failed")
             }
         }
     }

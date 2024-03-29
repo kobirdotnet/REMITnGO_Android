@@ -37,5 +37,6 @@
     <string name="recipient_name_as_wallet">Recipient name should be legal name, as registered with wallet service.</string>
     <string name="bank_transfer_txt">Please double check the account information, as we may not be able to refund the transfer once it has been sent.</string>
     <string name="wallet_transfer_txt">Please double check the account information, as we may not be able to refund the transfer once it has been sent.</string>
+    <string name="extra_percentage">Recipients get an extra 2.5% on their transfer!</string>
 
 </resources>

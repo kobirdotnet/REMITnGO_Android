@@ -54,6 +54,8 @@ import com.bsel.remitngo.data.model.paying_agent.PayingAgentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.percentage.PercentageItem
+import com.bsel.remitngo.data.model.percentage.PercentageResponseItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -263,6 +265,8 @@ interface REMITnGoService {
 
     @POST("api/Home/GetConsumerId")
     suspend fun consumer(@Body consumerItem: ConsumerItem): Response<ConsumerResponseItem>
+    @POST("api/General/LoadCalculationPageMsg")
+    suspend fun percentage(@Body percentageItem: PercentageItem): Response<PercentageResponseItem>
 
 
 }
