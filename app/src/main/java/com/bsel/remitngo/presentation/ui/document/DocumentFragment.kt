@@ -1,10 +1,13 @@
 package com.bsel.remitngo.presentation.ui.document
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,6 +88,10 @@ class DocumentFragment : Fragment() {
                     selectedItem = { selectedItem: GetDocumentData ->
                         documentItem(selectedItem)
                         binding.documentSearch.setQuery("", false)
+                    },
+                    preViewItem = { selectedItem: GetDocumentData ->
+                        preViewItem(selectedItem)
+                        binding.documentSearch.setQuery("", false)
                     }
                 )
                 binding.documentRecyclerView.adapter = documentAdapter
@@ -148,6 +155,16 @@ class DocumentFragment : Fragment() {
             R.id.action_nav_documents_to_nav_update_documents,
             bundle
         )
+    }
+
+    private fun preViewItem(preViewItem: GetDocumentData) {
+        val fileName = preViewItem.fileName
+        val imageUrl =
+            "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/$fileName"
+        Log.i("info", "imageUrl: $imageUrl")
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(imageUrl)
+        context?.startActivity(intent)
     }
 
     private fun getDeviceId(context: Context): String {

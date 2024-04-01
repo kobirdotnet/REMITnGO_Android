@@ -20,6 +20,7 @@ import com.bsel.remitngo.data.model.branch.BranchData
 import com.bsel.remitngo.data.model.branch.BranchItem
 import com.bsel.remitngo.databinding.BranchNameLayoutBinding
 import com.bsel.remitngo.data.interfaceses.OnBankSelectedListener
+import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.bank.BankViewModel
 import com.bsel.remitngo.presentation.ui.bank.BankViewModelFactory
@@ -44,11 +45,7 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
     private lateinit var preferenceManager: PreferenceManager
 
     private lateinit var deviceId: String
-    private var bankId: Int = 0
-    private var countryId: Int = 0
-    private var divisionId: Int = 0
-
-    private var selectedDistrict: String? = null
+    private var selectedBankId: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -78,10 +75,6 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
-        preferenceManager = PreferenceManager(requireContext())
-        bankId = preferenceManager.loadData("bankId")!!.toInt()
-        divisionId = preferenceManager.loadData("divisionId")!!.toInt()
-
         (requireActivity().application as Injector).createBankSubComponent().inject(this)
 
         bankViewModel =
@@ -89,24 +82,23 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
-        observeBranchResult()
-
         deviceId = getDeviceId(requireContext())
-        countryId = 1
+
         val branchItem = BranchItem(
             deviceId = deviceId,
-            bankId = bankId,
-            toCountryId = countryId,
-            divisionId = divisionId,
-            districtId = selectedDistrict!!.toInt()
+            dropdownId = 304,
+            param1 = selectedBankId!!.toInt(),
+            param2 = 0
         )
         bankViewModel.branch(branchItem)
+
+        observeBranchResult()
 
         return bottomSheet
     }
 
-    fun setSelectedDistrict(districtId: String) {
-        selectedDistrict = districtId
+    fun setSelectedBank(bankId: String) {
+        selectedBankId = bankId
     }
 
     private fun observeBranchResult() {

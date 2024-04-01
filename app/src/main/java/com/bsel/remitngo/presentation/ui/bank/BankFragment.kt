@@ -36,42 +36,41 @@ class BankFragment : Fragment(), OnBankSelectedListener {
 
     private val bankBottomSheet: BankBottomSheet by lazy { BankBottomSheet() }
 
-    private val divisionBottomSheet: DivisionBottomSheet by lazy { DivisionBottomSheet() }
-
-    private val districtBottomSheet: DistrictBottomSheet by lazy { DistrictBottomSheet() }
-
     private val bankBranchBottomSheet: BranchBottomSheet by lazy { BranchBottomSheet() }
 
-    private var id: Int = 0
-    private var isVersion113: Int = 0
+    private lateinit var personId: String
+    private lateinit var firstName: String
+    private lateinit var lastName: String
+    private lateinit var customerEmail: String
+    private lateinit var customerMobile: String
+    private lateinit var customerDateOfBirth: String
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var orderType: String
     private lateinit var paymentType: String
+    private lateinit var orderType: String
 
-    private lateinit var send_amount: String
-    private lateinit var receive_amount: String
-
-    private lateinit var bankId: String
-    private lateinit var bankName: String
-
-    private lateinit var payingAgentId: String
-    private lateinit var payingAgentName: String
+    private lateinit var sendAmount: String
+    private lateinit var receiveAmount: String
 
     private lateinit var exchangeRate: String
-    private lateinit var bankCommission: String
-    private lateinit var cardCommission: String
+    private lateinit var commission: String
 
-    private lateinit var cusBankInfoId: String
-    private lateinit var recipientName: String
-    private lateinit var recipientMobile: String
-    private lateinit var recipientAddress: String
-
-    private lateinit var divisionId: String
-    private lateinit var districtId: String
+    private lateinit var bankId: String
     private lateinit var branchId: String
+    private lateinit var bankName: String
+    private lateinit var payingAgentId: String
+
+    private lateinit var beneficiaryId: String
+    private lateinit var beneficiaryName: String
+    private lateinit var beneficiaryPhoneNumber: String
+
+    private lateinit var reasonId: String
+    private lateinit var reasonName: String
+
+    private lateinit var sourceOfIncomeId: String
+    private lateinit var sourceOfIncomeName: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,41 +89,51 @@ class BankFragment : Fragment(), OnBankSelectedListener {
             ViewModelProvider(this, bankViewModelFactory)[BankViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
+        personId = preferenceManager.loadData("personId").toString()
+        firstName = preferenceManager.loadData("firstName").toString()
+        lastName = preferenceManager.loadData("lastName").toString()
+        customerEmail = preferenceManager.loadData("email").toString()
+        customerMobile = preferenceManager.loadData("mobile").toString()
+        customerDateOfBirth = preferenceManager.loadData("dob").toString()
+
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
+        paymentType = arguments?.getString("paymentType").toString()
+        orderType = arguments?.getString("orderType").toString()
+
+        sendAmount = arguments?.getString("sendAmount").toString()
+        receiveAmount = arguments?.getString("receiveAmount").toString()
+
+        exchangeRate = arguments?.getString("exchangeRate").toString()
+        commission = arguments?.getString("commission").toString()
+
+        bankId = arguments?.getString("bankId").toString()
+        branchId = arguments?.getString("branchId").toString()
+        bankName = arguments?.getString("bankName").toString()
+        payingAgentId = arguments?.getString("payingAgentId").toString()
+
+        beneficiaryId = arguments?.getString("beneficiaryId").toString()
+        beneficiaryName = arguments?.getString("beneficiaryName").toString()
+        beneficiaryPhoneNumber = arguments?.getString("beneficiaryPhoneNumber").toString()
+
+        reasonId = arguments?.getString("reasonId").toString()
+        reasonName = arguments?.getString("reasonName").toString()
+
+        sourceOfIncomeId = arguments?.getString("sourceOfIncomeId").toString()
+        sourceOfIncomeName = arguments?.getString("sourceOfIncomeName").toString()
+
         bankAccountNameFocusListener()
         bankNameFocusListener()
-        divisionNameFocusListener()
         branchNameFocusListener()
         bankAccountNumberFocusListener()
 
         walletAccountNameFocusListener()
         phoneNumberFocusListener()
 
-        orderType = arguments?.getString("orderType").toString()
-        paymentType = arguments?.getString("paymentType").toString()
-
-        send_amount = arguments?.getString("send_amount").toString()
-        receive_amount = arguments?.getString("receive_amount").toString()
-
-        bankId = arguments?.getString("bankId").toString()
-        bankName = arguments?.getString("bankName").toString()
-
-        payingAgentId = arguments?.getString("payingAgentId").toString()
-        payingAgentName = arguments?.getString("payingAgentName").toString()
-
-        exchangeRate = arguments?.getString("exchangeRate").toString()
-        bankCommission = arguments?.getString("bankCommission").toString()
-        cardCommission = arguments?.getString("cardCommission").toString()
-
-        cusBankInfoId = arguments?.getString("cusBankInfoId").toString()
-        recipientName = arguments?.getString("recipientName").toString()
-        recipientMobile = arguments?.getString("recipientMobile").toString()
-        recipientAddress = arguments?.getString("recipientAddress").toString()
-
-        binding.bankAccountName.setText(recipientName)
-        binding.walletAccountName.setText(recipientName)
+        binding.bankAccountName.setText(beneficiaryName)
+        binding.walletAccountName.setText(beneficiaryName)
+        binding.phoneNumber.setText(beneficiaryPhoneNumber)
 
         if (orderType == "1") {
             binding.bankAccountLayout.visibility = View.GONE
@@ -135,26 +144,14 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         }
 
         binding.bankName.setOnClickListener {
+            bankBottomSheet.setSelectedBank(bankId)
             bankBottomSheet.itemSelectedListener = this
             bankBottomSheet.show(childFragmentManager, bankBottomSheet.tag)
         }
 
-        binding.divisionName.setOnClickListener {
-            divisionBottomSheet.itemSelectedListener = this
-            divisionBottomSheet.show(childFragmentManager, divisionBottomSheet.tag)
-        }
-
-        binding.districtName.setOnClickListener {
-            if (::divisionId.isInitialized && !divisionId.isNullOrEmpty()) {
-                districtBottomSheet.setSelectedDivision(divisionId)
-                districtBottomSheet.itemSelectedListener = this
-                districtBottomSheet.show(childFragmentManager, districtBottomSheet.tag)
-            }
-        }
-
         binding.branchName.setOnClickListener {
-            if (::districtId.isInitialized && !districtId.isNullOrEmpty()) {
-                bankBranchBottomSheet.setSelectedDistrict(districtId)
+            if (::bankId.isInitialized && !bankId.isNullOrEmpty()) {
+                bankBranchBottomSheet.setSelectedBank(bankId)
                 bankBranchBottomSheet.itemSelectedListener = this
                 bankBranchBottomSheet.show(childFragmentManager, bankBranchBottomSheet.tag)
             }
@@ -172,34 +169,32 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         bankViewModel.saveBankResult.observe(this) { result ->
             if (result != null) {
                 val bundle = Bundle().apply {
-                    putString("orderType", orderType)
                     putString("paymentType", paymentType)
-
-                    putString("cusBankInfoId", cusBankInfoId)
-                    putString("recipientName", recipientName)
-                    putString("recipientMobile", recipientMobile)
-                    putString("recipientAddress", recipientAddress)
+                    putString("orderType", orderType)
+                    putString("sendAmount", sendAmount)
+                    putString("receiveAmount", receiveAmount)
+                    putString("exchangeRate", exchangeRate)
+                    putString("commission", commission)
 
                     putString("bankId", bankId)
-                    putString("bankName", binding.bankName.toString())
-
-                    putString("accountNo", binding.bankAccountNumber.toString())
                     putString("branchId", branchId)
-
-                    putString("send_amount", send_amount)
-                    putString("receive_amount", receive_amount)
-
+                    putString("bankName", bankName)
                     putString("payingAgentId", payingAgentId)
-                    putString("payingAgentName", payingAgentName)
 
-                    putString("exchangeRate", exchangeRate)
-                    putString("bankCommission", bankCommission)
-                    putString("cardCommission", cardCommission)
+                    putString("beneficiaryId", beneficiaryId)
+                    putString("beneficiaryName", beneficiaryName)
+                    putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
+
+                    putString("reasonId", reasonId)
+                    putString("reasonName", reasonName)
+
+                    putString("sourceOfIncomeId", sourceOfIncomeId)
+                    putString("sourceOfIncomeName", sourceOfIncomeName)
                 }
-//                findNavController().navigate(
-//                    R.id.action_nav_save_bank_to_nav_review,
-//                    bundle
-//                )
+                findNavController().navigate(
+                    R.id.action_nav_save_bank_to_nav_choose_bank,
+                    bundle
+                )
             }
         }
     }
@@ -207,17 +202,15 @@ class BankFragment : Fragment(), OnBankSelectedListener {
     private fun bankAccountForm() {
         binding.bankAccountNameContainer.helperText = validBankAccountName()
         binding.bankNameContainer.helperText = validBankName()
-        binding.divisionNameContainer.helperText = validDivisionName()
         binding.branchNameContainer.helperText = validBranchName()
         binding.bankAccountNumberContainer.helperText = validBankAccountNumber()
 
         val validBankAccountName = binding.bankAccountNameContainer.helperText == null
         val validBankName = binding.bankNameContainer.helperText == null
-        val validDivisionName = binding.divisionNameContainer.helperText == null
         val validBranchName = binding.branchNameContainer.helperText == null
         val validBankAccountNumber = binding.bankAccountNumberContainer.helperText == null
 
-        if (validBankAccountName && validBankName && validDivisionName && validBranchName && validBankAccountNumber) {
+        if (validBankAccountName && validBankName && validBranchName && validBankAccountNumber) {
             submitBankAccountForm()
         }
     }
@@ -225,23 +218,20 @@ class BankFragment : Fragment(), OnBankSelectedListener {
     private fun submitBankAccountForm() {
         val bankAccountName = binding.bankAccountName.text.toString()
         val bankName = binding.bankName.text.toString()
-        val divisionName = binding.divisionName.text.toString()
         val branchName = binding.branchName.text.toString()
         val bankAccountNumber = binding.bankAccountNumber.text.toString()
 
-        id = 0
-        isVersion113 = 0
         val saveBankItem = SaveBankItem(
-            id = id,
+            id = 0,
             deviceId = deviceId,
             userIPAddress = ipAddress.toString(),
             orderType = orderType.toInt(),
-            cusBankInfoID = cusBankInfoId.toInt(),
+            cusBankInfoID = beneficiaryId.toInt(),
             accountName = bankAccountName,
             bankID = bankId.toInt(),
             branchID = branchId.toInt(),
             accountNo = bankAccountNumber,
-            isVersion113 = isVersion113,
+            isVersion113 = 0,
             accountType = 0,
             active = true
         )
@@ -265,18 +255,32 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val phoneNumber = binding.phoneNumber.text.toString()
 
         val bundle = Bundle().apply {
-            putString("orderType", orderType)
             putString("paymentType", paymentType)
+            putString("orderType", orderType)
+            putString("sendAmount", sendAmount)
+            putString("receiveAmount", receiveAmount)
+            putString("exchangeRate", exchangeRate)
+            putString("commission", commission)
 
-            putString("cusBankInfoId", cusBankInfoId)
-            putString("recipientName", recipientName)
-            putString("recipientMobile", recipientMobile)
-            putString("recipientAddress", recipientAddress)
+            putString("bankId", bankId)
+            putString("branchId", branchId)
+            putString("bankName", bankName)
+            putString("payingAgentId", payingAgentId)
+
+            putString("beneficiaryId", beneficiaryId)
+            putString("beneficiaryName", beneficiaryName)
+            putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
+
+            putString("reasonId", reasonId)
+            putString("reasonName", reasonName)
+
+            putString("sourceOfIncomeId", sourceOfIncomeId)
+            putString("sourceOfIncomeName", sourceOfIncomeName)
         }
-//        findNavController().navigate(
-//            R.id.action_nav_save_bank_to_nav_review,
-//            bundle
-//        )
+        findNavController().navigate(
+            R.id.action_nav_save_bank_to_nav_choose_bank,
+            bundle
+        )
     }
 
     //Form validation
@@ -308,22 +312,6 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val bankName = binding.bankName.text.toString()
         if (bankName.isEmpty()) {
             return "select bank name"
-        }
-        return null
-    }
-
-    private fun divisionNameFocusListener() {
-        binding.divisionName.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.divisionNameContainer.helperText = validDivisionName()
-            }
-        }
-    }
-
-    private fun validDivisionName(): String? {
-        val divisionName = binding.divisionName.text.toString()
-        if (divisionName.isEmpty()) {
-            return "select division name"
         }
         return null
     }
@@ -395,25 +383,17 @@ class BankFragment : Fragment(), OnBankSelectedListener {
     override fun onBankItemSelected(selectedItem: BankData) {
         binding.bankName.setText(selectedItem.name)
         bankId = selectedItem.id.toString()
-        preferenceManager.saveData("bankId", bankId)
     }
 
     override fun onDivisionItemSelected(selectedItem: DivisionData) {
-        binding.divisionName.setText(selectedItem.name)
-        divisionId = selectedItem.id.toString()
-        preferenceManager.saveData("divisionId", divisionId)
     }
 
     override fun onDistrictItemSelected(selectedItem: DistrictData) {
-        binding.districtName.setText(selectedItem.name)
-        districtId = selectedItem.id.toString()
-        preferenceManager.saveData("districtId", districtId)
     }
 
     override fun onBranchItemSelected(selectedItem: BranchData) {
         binding.branchName.setText(selectedItem.name)
         branchId = selectedItem.id.toString()
-        preferenceManager.saveData("branchId", branchId)
     }
 
     private fun getDeviceId(context: Context): String {

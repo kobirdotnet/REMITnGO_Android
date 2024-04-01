@@ -70,11 +70,13 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     private lateinit var commission: String
 
     private lateinit var bankId: String
+    private lateinit var branchId: String
     private lateinit var bankName: String
     private lateinit var payingAgentId: String
 
     private lateinit var beneficiaryId: String
     private lateinit var beneficiaryName: String
+    private lateinit var beneficiaryPhoneNumber: String
 
     private lateinit var reasonId: String
     private lateinit var reasonName: String
@@ -123,11 +125,13 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         commission = arguments?.getString("commission").toString()
 
         bankId = arguments?.getString("bankId").toString()
+        branchId = arguments?.getString("branchId").toString()
         bankName = arguments?.getString("bankName").toString()
         payingAgentId = arguments?.getString("payingAgentId").toString()
 
         beneficiaryId = arguments?.getString("beneficiaryId").toString()
         beneficiaryName = arguments?.getString("beneficiaryName").toString()
+        beneficiaryPhoneNumber = arguments?.getString("beneficiaryPhoneNumber").toString()
 
         reasonId = arguments?.getString("reasonId").toString()
         reasonName = arguments?.getString("reasonName").toString()
@@ -411,11 +415,13 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 putString("commission", commission)
 
                 putString("bankId", bankId)
+                putString("branchId", branchId)
                 putString("bankName", bankName)
                 putString("payingAgentId", payingAgentId)
 
                 putString("beneficiaryId", beneficiaryId)
                 putString("beneficiaryName", beneficiaryName)
+                putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
 
                 putString("reasonId", reasonId)
                 putString("reasonName", reasonName)

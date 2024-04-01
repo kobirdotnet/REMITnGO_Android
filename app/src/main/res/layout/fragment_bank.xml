@@ -36,7 +36,7 @@
                     android:paddingBottom="@dimen/activity_vertical_margin">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/bank_account_name_container"
+                        android:id="@+id/bankAccountNameContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -45,7 +45,7 @@
                         app:helperTextTextColor="@android:color/holo_red_dark">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/bank_account_name"
+                            android:id="@+id/bankAccountName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
@@ -54,7 +54,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
-
                             android:textColor="@color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,7 +70,7 @@
                     android:paddingBottom="@dimen/activity_vertical_margin">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/bank_name_container"
+                        android:id="@+id/bankNameContainer"
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -82,7 +81,7 @@
                         app:helperTextTextColor="@android:color/holo_red_dark">
 
                         <AutoCompleteTextView
-                            android:id="@+id/bank_name"
+                            android:id="@+id/bankName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
@@ -91,7 +90,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
-
                             android:textColor="@color/black" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -109,83 +107,7 @@
                     android:paddingBottom="@dimen/activity_vertical_margin">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/division_name_container"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:hint="Division"
-                        app:endIconTint="@color/blue"
-                        app:helperTextTextColor="@android:color/holo_red_dark">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/division_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_vertical"
-                            android:backgroundTint="@color/grey"
-                            android:completionThreshold="1"
-                            android:fontFamily="@font/roboto_regular"
-                            android:gravity="center_vertical"
-                            android:inputType="none"
-
-                            android:textColor="@color/black" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingBottom="@dimen/activity_vertical_margin">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/district_name_container"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:hint="District"
-                        app:endIconTint="@color/blue"
-                        app:helperTextTextColor="@android:color/holo_red_dark">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/district_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_vertical"
-                            android:backgroundTint="@color/grey"
-                            android:completionThreshold="1"
-                            android:fontFamily="@font/roboto_regular"
-                            android:gravity="center_vertical"
-                            android:inputType="none"
-
-                            android:textColor="@color/black" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingBottom="@dimen/activity_vertical_margin">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/branch_name_container"
+                        android:id="@+id/branchNameContainer"
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -196,7 +118,7 @@
                         app:helperTextTextColor="@android:color/holo_red_dark">
 
                         <AutoCompleteTextView
-                            android:id="@+id/branch_name"
+                            android:id="@+id/branchName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
@@ -205,7 +127,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
-
                             android:textColor="@color/black" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -223,7 +144,7 @@
                     android:paddingBottom="@dimen/activity_vertical_margin">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/bank_account_number_container"
+                        android:id="@+id/bankAccountNumberContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -232,7 +153,7 @@
                         app:helperTextTextColor="@android:color/holo_red_dark">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/bank_account_number"
+                            android:id="@+id/bankAccountNumber"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
@@ -274,7 +195,6 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:inputType="none"
-
                         android:text="Save"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
@@ -303,7 +223,7 @@
                     android:paddingBottom="@dimen/activity_vertical_margin">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/wallet_account_name_container"
+                        android:id="@+id/walletAccountNameContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -312,7 +232,7 @@
                         app:helperTextTextColor="@android:color/holo_red_dark">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/wallet_account_name"
+                            android:id="@+id/walletAccountName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
@@ -321,7 +241,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
-
                             android:textColor="@color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -338,7 +257,7 @@
                     android:paddingBottom="@dimen/activity_vertical_margin">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/phoneNumber_container"
+                        android:id="@+id/phoneNumberContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -357,7 +276,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="phone"
-
                             android:maxLength="11"
                             android:textColor="@color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -392,7 +310,6 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:inputType="none"
-
                         android:text="Save"
                         android:textAllCaps="false"
                         android:textColor="@color/white"

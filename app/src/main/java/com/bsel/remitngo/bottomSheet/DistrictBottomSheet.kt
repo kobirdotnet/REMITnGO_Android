@@ -90,7 +90,7 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
 
         val districtItem = DistrictItem(
             deviceId = deviceId,
-            dropdownId = 2,
+            dropdownId = 3,
             param1 = selectedDivision!!.toInt(),
             param2 = 0
         )

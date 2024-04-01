@@ -1,6 +1,8 @@
 package com.bsel.remitngo.presentation.ui.transaction
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -115,6 +117,9 @@ class TransactionFragment : Fragment() {
         var downloadReceipt=downloadReceipt.transactionCode
         val receiptUrl = "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$downloadReceipt.pdf"
         Log.i("info", "receiptUrl: $receiptUrl")
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(receiptUrl)
+        context?.startActivity(intent)
     }
 
     private fun sendAgain(sendAgain: TransactionData) {

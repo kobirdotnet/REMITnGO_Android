@@ -56,11 +56,13 @@ class ChooseBeneficiaryFragment : Fragment() {
     private lateinit var commission: String
 
     private lateinit var bankId: String
+    private lateinit var branchId: String
     private lateinit var bankName: String
     private lateinit var payingAgentId: String
 
     private lateinit var beneficiaryId: String
     private lateinit var beneficiaryName: String
+    private lateinit var beneficiaryPhoneNumber: String
 
     private lateinit var reasonId: String
     private lateinit var reasonName: String
@@ -105,11 +107,13 @@ class ChooseBeneficiaryFragment : Fragment() {
         commission = arguments?.getString("commission").toString()
 
         bankId = arguments?.getString("bankId").toString()
+        branchId = arguments?.getString("branchId").toString()
         bankName = arguments?.getString("bankName").toString()
         payingAgentId = arguments?.getString("payingAgentId").toString()
 
         beneficiaryId = arguments?.getString("beneficiaryId").toString()
         beneficiaryName = arguments?.getString("beneficiaryName").toString()
+        beneficiaryPhoneNumber = arguments?.getString("beneficiaryPhoneNumber").toString()
 
         reasonId = arguments?.getString("reasonId").toString()
         reasonName = arguments?.getString("reasonName").toString()
@@ -127,11 +131,13 @@ class ChooseBeneficiaryFragment : Fragment() {
                 putString("commission", commission)
 
                 putString("bankId", bankId)
+                putString("branchId", branchId)
                 putString("bankName", bankName)
                 putString("payingAgentId", payingAgentId)
 
                 putString("beneficiaryId", beneficiaryId)
                 putString("beneficiaryName", beneficiaryName)
+                putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
 
                 putString("reasonId", reasonId)
                 putString("reasonName", reasonName)
@@ -145,9 +151,6 @@ class ChooseBeneficiaryFragment : Fragment() {
             )
         }
 
-        // Retrieve and display contacts
-        //retrieveAndDisplayContacts()
-
         val getBeneficiaryItem = GetBeneficiaryItem(
             deviceId = deviceId,
             personId = personId.toInt(),
@@ -155,8 +158,10 @@ class ChooseBeneficiaryFragment : Fragment() {
             countryId = 1
         )
         beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)
-
         observeGetBeneficiaryResult()
+
+        // Retrieve and display contacts
+        //retrieveAndDisplayContacts()
     }
 
     private fun observeGetBeneficiaryResult() {
@@ -193,6 +198,7 @@ class ChooseBeneficiaryFragment : Fragment() {
 
         beneficiaryId=selectedItem.id.toString()
         beneficiaryName=selectedItem.name.toString()
+        beneficiaryPhoneNumber=selectedItem.mobile.toString()
 
         val bundle = Bundle().apply {
             putString("paymentType", paymentType)
@@ -203,11 +209,13 @@ class ChooseBeneficiaryFragment : Fragment() {
             putString("commission", commission)
 
             putString("bankId", bankId)
+            putString("branchId", branchId)
             putString("bankName", bankName)
             putString("payingAgentId", payingAgentId)
 
             putString("beneficiaryId", beneficiaryId)
             putString("beneficiaryName", beneficiaryName)
+            putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
 
             putString("reasonId", reasonId)
             putString("reasonName", reasonName)

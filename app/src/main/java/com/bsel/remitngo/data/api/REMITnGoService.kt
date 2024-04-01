@@ -158,7 +158,7 @@ interface REMITnGoService {
     @POST("api/General/Dropdown")
     suspend fun district(@Body districtItem: DistrictItem): Response<DistrictResponseItem>
 
-    @POST("api/General/LoadBranch")
+    @POST("api/General/Dropdown")
     suspend fun branch(@Body branchItem: BranchItem): Response<BranchResponseItem>
 
     @POST("api/General/LoadPayingAgent")

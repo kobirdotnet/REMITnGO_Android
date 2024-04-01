@@ -41,6 +41,7 @@ class BankBottomSheet : BottomSheetDialogFragment() {
     private lateinit var bankNameAdapter: BankNameAdapter
 
     private lateinit var deviceId: String
+    private var selectedBankId: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -79,16 +80,31 @@ class BankBottomSheet : BottomSheetDialogFragment() {
 
         deviceId = getDeviceId(requireContext())
 
-        val bankItem = BankItem(
-            deviceId = deviceId,
-            dropdownId = 5,
-            param1 = 1,
-            param2 = 0
-        )
-        bankViewModel.bank(bankItem)
+        if (selectedBankId !="null"){
+            val bankItem = BankItem(
+                deviceId = deviceId,
+                dropdownId = 5,
+                param1 = 1,
+                param2 = selectedBankId!!.toInt()
+            )
+            bankViewModel.bank(bankItem)
+        }else{
+            val bankItem = BankItem(
+                deviceId = deviceId,
+                dropdownId = 5,
+                param1 = 1,
+                param2 = 0
+            )
+            bankViewModel.bank(bankItem)
+        }
+
         observeBankResult()
 
         return bottomSheet
+    }
+
+    fun setSelectedBank(bankId: String) {
+        selectedBankId = bankId
     }
 
     private fun observeBankResult() {

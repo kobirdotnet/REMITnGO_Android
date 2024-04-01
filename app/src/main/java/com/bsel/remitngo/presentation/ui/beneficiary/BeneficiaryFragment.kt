@@ -36,35 +36,42 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 
     private lateinit var preferenceManager: PreferenceManager
 
-    private val relationBottomSheet: RelationBottomSheet by lazy { RelationBottomSheet() }
-    private val reasonBottomSheet: ReasonBottomSheet by lazy { ReasonBottomSheet() }
+//    private val relationBottomSheet: RelationBottomSheet by lazy { RelationBottomSheet() }
+//    private val reasonBottomSheet: ReasonBottomSheet by lazy { ReasonBottomSheet() }
 
-    private lateinit var orderType: String
-    private lateinit var paymentType: String
-
-    private lateinit var send_amount: String
-    private lateinit var receive_amount: String
-
-    private lateinit var bankId: String
-    private lateinit var bankName: String
-
-    private lateinit var payingAgentId: String
-    private lateinit var payingAgentName: String
-
-    private lateinit var exchangeRate: String
-    private lateinit var bankCommission: String
-    private lateinit var cardCommission: String
+    private lateinit var personId: String
+    private lateinit var firstName: String
+    private lateinit var lastName: String
+    private lateinit var customerEmail: String
+    private lateinit var customerMobile: String
+    private lateinit var customerDateOfBirth: String
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var personId: String
+    private lateinit var paymentType: String
+    private lateinit var orderType: String
 
-    private lateinit var genderId: String
-    private lateinit var gender: String
-    private lateinit var relationId: String
+    private lateinit var sendAmount: String
+    private lateinit var receiveAmount: String
+
+    private lateinit var exchangeRate: String
+    private lateinit var commission: String
+
+    private lateinit var bankId: String
+    private lateinit var branchId: String
+    private lateinit var bankName: String
+    private lateinit var payingAgentId: String
+
+    private lateinit var beneficiaryId: String
+    private lateinit var beneficiaryName: String
+    private lateinit var beneficiaryPhoneNumber: String
+
     private lateinit var reasonId: String
-    private lateinit var recipientName: String
+    private lateinit var reasonName: String
+
+    private lateinit var sourceOfIncomeId: String
+    private lateinit var sourceOfIncomeName: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,38 +86,56 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 
         (requireActivity().application as Injector).createBeneficiarySubComponent().inject(this)
 
+        beneficiaryViewModel =
+            ViewModelProvider(this, beneficiaryViewModelFactory)[BeneficiaryViewModel::class.java]
+
         preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
+        firstName = preferenceManager.loadData("firstName").toString()
+        lastName = preferenceManager.loadData("lastName").toString()
+        customerEmail = preferenceManager.loadData("email").toString()
+        customerMobile = preferenceManager.loadData("mobile").toString()
+        customerDateOfBirth = preferenceManager.loadData("dob").toString()
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        beneficiaryViewModel =
-            ViewModelProvider(this, beneficiaryViewModelFactory)[BeneficiaryViewModel::class.java]
+        paymentType = arguments?.getString("paymentType").toString()
+        orderType = arguments?.getString("orderType").toString()
+
+        sendAmount = arguments?.getString("sendAmount").toString()
+        receiveAmount = arguments?.getString("receiveAmount").toString()
+
+        exchangeRate = arguments?.getString("exchangeRate").toString()
+        commission = arguments?.getString("commission").toString()
+
+        bankId = arguments?.getString("bankId").toString()
+        branchId = arguments?.getString("branchId").toString()
+        bankName = arguments?.getString("bankName").toString()
+        payingAgentId = arguments?.getString("payingAgentId").toString()
+
+        beneficiaryId = arguments?.getString("beneficiaryId").toString()
+        beneficiaryName = arguments?.getString("beneficiaryName").toString()
+        beneficiaryPhoneNumber = arguments?.getString("beneficiaryPhoneNumber").toString()
+
+        reasonId = arguments?.getString("reasonId").toString()
+        reasonName = arguments?.getString("reasonName").toString()
+
+        sourceOfIncomeId = arguments?.getString("sourceOfIncomeId").toString()
+        sourceOfIncomeName = arguments?.getString("sourceOfIncomeName").toString()
+
+//        binding.relation.setOnClickListener {
+//            relationBottomSheet.itemSelectedListener = this
+//            relationBottomSheet.show(childFragmentManager, relationBottomSheet.tag)
+//        }
+//
+//        binding.reason.setOnClickListener {
+//            reasonBottomSheet.itemSelectedListener = this
+//            reasonBottomSheet.show(childFragmentManager, reasonBottomSheet.tag)
+//        }
 
         recipientNameFocusListener()
         phoneNumberFocusListener()
-//        genderFocusListener()
-//        relationFocusListener()
-//        reasonFocusListener()
-//        addressFocusListener()
-//        countryFocusListener()
-
-        orderType = arguments?.getString("orderType").toString()
-        paymentType = arguments?.getString("paymentType").toString()
-
-        send_amount = arguments?.getString("send_amount").toString()
-        receive_amount = arguments?.getString("receive_amount").toString()
-
-        bankId = arguments?.getString("bankId").toString()
-        bankName = arguments?.getString("bankName").toString()
-
-        payingAgentId = arguments?.getString("payingAgentId").toString()
-        payingAgentName = arguments?.getString("payingAgentName").toString()
-
-        exchangeRate = arguments?.getString("exchangeRate").toString()
-        bankCommission = arguments?.getString("bankCommission").toString()
-        cardCommission = arguments?.getString("cardCommission").toString()
 
         if (orderType == "1") {
             binding.recipientBankStatus.visibility = View.GONE
@@ -120,36 +145,8 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
             binding.recipientWalletStatus.visibility = View.GONE
         }
 
-        binding.btnContinue.setOnClickListener { recipientForm() }
+        binding.btnSave.setOnClickListener { recipientForm() }
 
-        binding.relation.setOnClickListener {
-            relationBottomSheet.itemSelectedListener = this
-            relationBottomSheet.show(childFragmentManager, relationBottomSheet.tag)
-        }
-
-        binding.reason.setOnClickListener {
-            reasonBottomSheet.itemSelectedListener = this
-            reasonBottomSheet.show(childFragmentManager, reasonBottomSheet.tag)
-        }
-
-        val genderItem = arrayOf(
-            GenderItem("Male"),
-            GenderItem("Female")
-        )
-        val genderAdapter =
-            GenderAdapter(requireContext(), R.layout.gender_item, genderItem)
-        binding.gender.setAdapter(genderAdapter)
-        binding.gender.setOnItemClickListener { _, _, position, _ ->
-            val genderType = genderAdapter.getItem(position)
-            gender = genderType?.gender.toString()
-            if (gender == "Male") {
-                genderId = "1"
-            } else if (gender == "Female") {
-                genderId = "2"
-            }
-        }
-
-        recipientName = binding.recipientName.text.toString()
         observeSaveBeneficiaryResult()
     }
 
@@ -159,31 +156,32 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
                 val cusBankInfoId = extractData(result.data)
                 if (cusBankInfoId != null) {
                     val bundle = Bundle().apply {
-                        putString("orderType", orderType)
                         putString("paymentType", paymentType)
-
-                        putString("send_amount", send_amount)
-                        putString("receive_amount", receive_amount)
+                        putString("orderType", orderType)
+                        putString("sendAmount", sendAmount)
+                        putString("receiveAmount", receiveAmount)
+                        putString("exchangeRate", exchangeRate)
+                        putString("commission", commission)
 
                         putString("bankId", bankId)
+                        putString("branchId", branchId)
                         putString("bankName", bankName)
-
                         putString("payingAgentId", payingAgentId)
-                        putString("payingAgentName", payingAgentName)
 
-                        putString("exchangeRate", exchangeRate)
-                        putString("bankCommission", bankCommission)
-                        putString("cardCommission", cardCommission)
+                        putString("beneficiaryId", beneficiaryId)
+                        putString("beneficiaryName", beneficiaryName)
+                        putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
 
-                        putString("cusBankInfoId", cusBankInfoId)
-                        putString("recipientName", recipientName)
-                        putString("recipientMobile", binding.phoneNumber.toString())
-                        putString("recipientAddress", binding.address.toString())
+                        putString("reasonId", reasonId)
+                        putString("reasonName", reasonName)
+
+                        putString("sourceOfIncomeId", sourceOfIncomeId)
+                        putString("sourceOfIncomeName", sourceOfIncomeName)
                     }
-//                    findNavController().navigate(
-//                        R.id.action_nav_save_beneficiary_to_nav_save_bank,
-//                        bundle
-//                    )
+                    findNavController().navigate(
+                        R.id.action_nav_save_beneficiary_to_nav_choose_beneficiary,
+                        bundle
+                    )
                 }
             }
         }
@@ -215,7 +213,7 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 
     private fun submitRecipientForm() {
         val chooseOrderType = binding.chooseOrderType.text.toString()
-        recipientName = binding.recipientName.text.toString()
+        val recipientName = binding.recipientName.text.toString()
         val phoneNumber = binding.phoneNumber.text.toString()
         val gender = binding.gender.text.toString()
         val relation = binding.relation.text.toString()
@@ -373,12 +371,12 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 
     override fun onRelationItemSelected(selectedItem: RelationData) {
         binding.relation.setText(selectedItem.name)
-        relationId = selectedItem.id.toString()
+//        relationId = selectedItem.id.toString()
     }
 
     override fun onReasonItemSelected(selectedItem: ReasonData) {
         binding.reason.setText(selectedItem.name)
-        reasonId = selectedItem.id.toString()
+//        reasonId = selectedItem.id.toString()
     }
 
     private fun getDeviceId(context: Context): String {

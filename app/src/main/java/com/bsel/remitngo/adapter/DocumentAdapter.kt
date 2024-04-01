@@ -1,6 +1,7 @@
 package com.bsel.remitngo.adapter
 
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
@@ -14,7 +15,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class DocumentAdapter(
-    private val selectedItem: (GetDocumentData) -> Unit
+    private val selectedItem: (GetDocumentData) -> Unit,
+    private val preViewItem: (GetDocumentData) -> Unit
 ) : RecyclerView.Adapter<DocumentViewHolder>() {
 
     private val documentList = ArrayList<GetDocumentData>()
@@ -33,7 +35,7 @@ class DocumentAdapter(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
-        holder.bind(filteredDocumentList[position], selectedItem)
+        holder.bind(filteredDocumentList[position], selectedItem,preViewItem)
     }
 
     fun setList(documentItem: List<GetDocumentData>) {
@@ -59,7 +61,8 @@ class DocumentViewHolder(val binding: ItemDocumentBinding) :
     @RequiresApi(Build.VERSION_CODES.O)
     fun bind(
         documentItem: GetDocumentData,
-        selectedItem: (GetDocumentData) -> Unit
+        selectedItem: (GetDocumentData) -> Unit,
+        preViewItem: (GetDocumentData) -> Unit
     ) {
         binding.documentName.text = documentItem.category
 
@@ -78,6 +81,9 @@ class DocumentViewHolder(val binding: ItemDocumentBinding) :
 
         binding.itemDocumentLayout.setOnClickListener {
             selectedItem(documentItem)
+        }
+        binding.docImage.setOnClickListener {
+            preViewItem(documentItem)
         }
 
     }
