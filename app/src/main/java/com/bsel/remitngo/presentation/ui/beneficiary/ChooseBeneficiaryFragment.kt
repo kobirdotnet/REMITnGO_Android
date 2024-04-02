@@ -224,7 +224,7 @@ class ChooseBeneficiaryFragment : Fragment() {
             putString("sourceOfIncomeName", sourceOfIncomeName)
         }
         findNavController().navigate(
-            R.id.action_nav_choose_beneficiary_to_nav_review,
+            R.id.action_nav_choose_beneficiary_to_nav_choose_bank,
             bundle
         )
     }

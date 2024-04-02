@@ -6,6 +6,7 @@ import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseItem
+import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
@@ -13,6 +14,12 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
+import com.bsel.remitngo.data.model.promoCode.PromoItem
+import com.bsel.remitngo.data.model.promoCode.PromoResponseItem
+import com.bsel.remitngo.data.model.reason.ReasonItem
+import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsResponseItem
 import com.bsel.remitngo.domain.repository.PaymentRepository
@@ -46,6 +53,21 @@ class PaymentUseCase(private val paymentRepository: PaymentRepository) {
     suspend fun execute(transactionDetailsItem: TransactionDetailsItem): TransactionDetailsResponseItem? {
         return paymentRepository.paymentTransaction(transactionDetailsItem)
     }
+
+    suspend fun execute(reasonItem: ReasonItem): ReasonResponseItem? {
+        return paymentRepository.reason(reasonItem)
+    }
+
+    suspend fun execute(sourceOfIncomeItem: SourceOfIncomeItem): SourceOfIncomeResponseItem? {
+        return paymentRepository.sourceOfIncome(sourceOfIncomeItem)
+    }
+    suspend fun execute(promoItem: PromoItem): PromoResponseItem? {
+        return paymentRepository.promo(promoItem)
+    }
+
+//    suspend fun execute(transactionId:String):CreateReceiptResponse?{
+//        return paymentRepository.createReceipt(transactionId)
+//    }
 
 }
 

@@ -7,6 +7,7 @@ import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseItem
+import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
@@ -14,6 +15,12 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
+import com.bsel.remitngo.data.model.promoCode.PromoItem
+import com.bsel.remitngo.data.model.promoCode.PromoResponseItem
+import com.bsel.remitngo.data.model.reason.ReasonItem
+import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsResponseItem
 import com.bsel.remitngo.data.repository.payment.dataSource.PaymentRemoteDataSource
@@ -52,6 +59,22 @@ class PaymentRemoteDataSourceImpl(private val remitNgoService: REMITnGoService) 
 
     override suspend fun paymentTransaction(transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem> {
         return remitNgoService.paymentTransaction(transactionDetailsItem)
+    }
+
+    override suspend fun reason(reasonItem: ReasonItem): Response<ReasonResponseItem> {
+        return remitNgoService.reason(reasonItem)
+    }
+
+    override suspend fun sourceOfIncome(sourceOfIncomeItem: SourceOfIncomeItem): Response<SourceOfIncomeResponseItem> {
+        return remitNgoService.sourceOfIncome(sourceOfIncomeItem)
+    }
+
+    override suspend fun promo(promoItem: PromoItem): Response<PromoResponseItem> {
+        return remitNgoService.promo(promoItem)
+    }
+
+    override suspend fun createReceipt(transactionId: String): Response<CreateReceiptResponse> {
+        return remitNgoService.createReceipt(transactionId)
     }
 
 }

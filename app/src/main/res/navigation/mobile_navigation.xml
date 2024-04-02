@@ -34,9 +34,6 @@
             android:id="@+id/action_nav_review_to_nav_choose_beneficiary"
             app:destination="@id/nav_choose_beneficiary" />
         <action
-            android:id="@+id/action_nav_review_to_nav_choose_bank"
-            app:destination="@id/nav_choose_bank" />
-        <action
             android:id="@+id/action_nav_review_to_nav_complete_bank_transaction"
             app:destination="@id/nav_complete_bank_transaction" />
         <action
@@ -56,8 +53,8 @@
             android:id="@+id/action_nav_choose_beneficiary_to_nav_save_beneficiary"
             app:destination="@id/nav_save_beneficiary" />
         <action
-            android:id="@+id/action_nav_choose_beneficiary_to_nav_review"
-            app:destination="@id/nav_review" />
+            android:id="@+id/action_nav_choose_beneficiary_to_nav_choose_bank"
+            app:destination="@id/nav_choose_bank" />
     </fragment>
     <fragment
         android:id="@+id/nav_save_beneficiary"

@@ -19,7 +19,7 @@ android {
         multiDexEnabled = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String","BASE_URL","\"https://rnguat.bracsaajanexchange.com/\""
+//        buildConfigField "String","BASE_URL","\"https://rnguat.bracsaajanexchange.com/\""
 
     }
 

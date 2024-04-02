@@ -7,6 +7,7 @@ import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseItem
+import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
@@ -14,6 +15,12 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
+import com.bsel.remitngo.data.model.promoCode.PromoItem
+import com.bsel.remitngo.data.model.promoCode.PromoResponseItem
+import com.bsel.remitngo.data.model.reason.ReasonItem
+import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsResponseItem
 import com.bsel.remitngo.data.repository.payment.dataSource.PaymentRemoteDataSource
@@ -144,6 +151,61 @@ class PaymentRepositoryImpl(private val paymentRemoteDataSource: PaymentRemoteDa
             Log.e("MyTag", "Error paymentTransaction: ${exception.message}", exception)
             null
         }
+    }
+
+    override suspend fun reason(reasonItem: ReasonItem): ReasonResponseItem? {
+        return try {
+            val response = paymentRemoteDataSource.reason(reasonItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to reason: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error reason: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun sourceOfIncome(sourceOfIncomeItem: SourceOfIncomeItem): SourceOfIncomeResponseItem? {
+        return try {
+            val response = paymentRemoteDataSource.sourceOfIncome(sourceOfIncomeItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to sourceOfIncome: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error sourceOfIncome: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun promo(promoItem: PromoItem): PromoResponseItem? {
+        return try {
+            val response = paymentRemoteDataSource.promo(promoItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to promo: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error promo: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun createReceipt(transactionId: String): CreateReceiptResponse? {
+        TODO("Not yet implemented")
     }
 
 }

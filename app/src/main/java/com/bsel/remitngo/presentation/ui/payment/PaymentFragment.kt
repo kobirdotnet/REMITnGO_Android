@@ -8,10 +8,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
+import com.bsel.remitngo.adapter.ReasonNameAdapter
+import com.bsel.remitngo.adapter.SourceOfIncomeAdapter
 import com.bsel.remitngo.bottomSheet.ReasonBottomSheet
 import com.bsel.remitngo.bottomSheet.SourceOfIncomeBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
@@ -28,7 +32,10 @@ import com.bsel.remitngo.data.model.profile.nationality.NationalityData
 import com.bsel.remitngo.data.model.profile.occupation.OccupationData
 import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeData
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
+import com.bsel.remitngo.data.model.promoCode.PromoItem
 import com.bsel.remitngo.data.model.reason.ReasonData
+import com.bsel.remitngo.data.model.reason.ReasonItem
 import com.bsel.remitngo.data.model.relation.RelationData
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
 import com.bsel.remitngo.databinding.FragmentPaymentBinding
@@ -84,6 +91,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     private lateinit var commission: String
     private lateinit var exchangeRate: String
     private lateinit var receiveAmount: String
+    private var totalAmount: Double = 0.0
 
     private lateinit var bankId: String
     private lateinit var branchId: String
@@ -179,8 +187,14 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             binding.transferFee.text = "GBP $commission"
         }
         if (sendAmount != "null" || commission != "null") {
-            binding.totalAmount.text =
-                "GBP " + (sendAmount.toDouble() + commission.toDouble()).toString()
+            try {
+                val sa = sendAmount.toDouble()
+                val cm = commission.toDouble()
+                totalAmount = sa + cm
+                binding.totalAmount.text = "GBP $totalAmount"
+            } catch (e: NumberFormatException) {
+                e.message
+            }
         }
         if (exchangeRate != "null") {
             binding.exchangeRate.text = "GBP $exchangeRate"
@@ -213,17 +227,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             }
         }
 
-        transactionCode = arguments?.getString("transactionCode").toString()
-        if (::transactionCode.isInitialized && transactionCode != "null") {
-            val transactionDetailsItem = TransactionDetailsItem(
-                deviceId = deviceId,
-                params1 = personId.toInt(),
-                params2 = transactionCode
-            )
-            paymentViewModel.paymentTransaction(transactionDetailsItem)
-            observeTransactionDetailsResult()
-        }
-
         binding.reason.setOnClickListener {
             reasonBottomSheet.itemSelectedListener = this
             reasonBottomSheet.show(childFragmentManager, reasonBottomSheet.tag)
@@ -234,7 +237,12 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             sourceOfIncomeBottomSheet.show(childFragmentManager, sourceOfIncomeBottomSheet.tag)
         }
 
-        binding.receiverName.setOnClickListener {
+        binding.chooseReceiver.setOnClickListener {
+            val sendAmountValue = binding.sendAmount.text.toString()
+            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+
+            val receiveAmountValue = binding.receiveAmount.text.toString()
+            val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
             val bundle = Bundle().apply {
                 putString("paymentType", paymentType)
                 putString("orderType", orderType)
@@ -264,37 +272,13 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             )
         }
 
-        binding.receiverAccount.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("paymentType", paymentType)
-                putString("orderType", orderType)
-                putString("sendAmount", sendAmount)
-                putString("receiveAmount", receiveAmount)
-                putString("exchangeRate", exchangeRate)
-                putString("commission", commission)
-
-                putString("bankId", bankId)
-                putString("branchId", branchId)
-                putString("bankName", bankName)
-                putString("payingAgentId", payingAgentId)
-
-                putString("beneficiaryId", beneficiaryId)
-                putString("beneficiaryName", beneficiaryName)
-                putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
-
-                putString("reasonId", reasonId)
-                putString("reasonName", reasonName)
-
-                putString("sourceOfIncomeId", sourceOfIncomeId)
-                putString("sourceOfIncomeName", sourceOfIncomeName)
-            }
-            findNavController().navigate(
-                R.id.action_nav_review_to_nav_choose_bank,
-                bundle
-            )
-        }
-
         binding.transferHistoryModify.setOnClickListener {
+            val sendAmountValue = binding.sendAmount.text.toString()
+            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+
+            val receiveAmountValue = binding.receiveAmount.text.toString()
+            val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
+
             val bundle = Bundle().apply {
                 putString("paymentType", paymentType)
                 putString("orderType", orderType)
@@ -325,151 +309,137 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         }
 
         binding.btnSend.setOnClickListener {
-            val paymentItem = PaymentItem(
-                deviceId = deviceId,
-                userIPAddress = ipAddress,
-                personID = personId,
-                customerName = "$firstName $lastName",
-                customerEmail = customerEmail,
-                customerMobile = customerMobile,
-                customerdateOfBirth = customerDateOfBirth,
-                fromCountryID = "4",
-                fromCurrencyID = "96",
-                fromCurrencyCode = "GBP",
-                benPersonID = beneficiaryId,
-                beneficiaryName = beneficiaryName,
-                beneficaryEmail = "",
-                beneficarymobile = "",
-                beneficaryAddress = "",
-                bankId = bankId,
-                bankName = bankName,
-                accountNo = "",
-                benBranchId = branchId,
-                collectionBankID = "",
-                collectionBankName = "",
-                sendAmount = sendAmount,
-                receivableAmount = receiveAmount,
-                rate = exchangeRate,
-                commission = commission,
-                total = sendAmount,
-                toCountryID = "1",
-                toCurrencyID = "6",
-                toCurrencyCode = "BDT",
-                orderTypeID = orderType,
-                paymentMode = paymentType,
-                purposeOfTransferId = reasonId,
-                sourceOfFundId = sourceOfIncomeId,
-                isMobileTransfer = true,
-                isiOS = false,
-                latitude = "",
-                longitude = ""
-            )
-            paymentViewModel.payment(paymentItem)
+            val sendAmountValue = binding.sendAmount.text.toString()
+            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+
+            val receiveAmountValue = binding.receiveAmount.text.toString()
+            val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
+
+            val totalAmountValue = binding.totalAmount.text.toString()
+            val totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "")
+
+            if (paymentType == "null" || reasonId == "null" || sourceOfIncomeId == "null" || sendAmount == "null") {
+                val paymentItem = PaymentItem(
+                    deviceId = deviceId,
+                    userIPAddress = ipAddress,
+                    personID = personId,
+                    customerName = "$firstName $lastName",
+                    customerEmail = customerEmail,
+                    customerMobile = customerMobile,
+                    customerdateOfBirth = customerDateOfBirth,
+                    fromCountryID = "4",
+                    fromCurrencyID = "96",
+                    fromCurrencyCode = "GBP",
+                    benPersonID = beneficiaryId,
+                    beneficiaryName = beneficiaryName,
+                    beneficaryEmail = "",
+                    beneficarymobile = "",
+                    beneficaryAddress = "",
+                    bankId = bankId,
+                    bankName = bankName,
+                    accountNo = "",
+                    benBranchId = branchId,
+                    collectionBankID = "",
+                    collectionBankName = "",
+                    sendAmount = "0.0",
+                    receivableAmount = receiveAmount,
+                    rate = exchangeRate,
+                    commission = commission,
+                    total = totalAmount,
+                    toCountryID = "1",
+                    toCurrencyID = "6",
+                    toCurrencyCode = "BDT",
+                    orderTypeID = orderType,
+                    paymentMode = "0",
+                    purposeOfTransferId = "0",
+                    sourceOfFundId = "0",
+                    isMobileTransfer = true,
+                    isiOS = false,
+                    latitude = "",
+                    longitude = ""
+                )
+                paymentViewModel.payment(paymentItem)
+            } else {
+                val paymentItem = PaymentItem(
+                    deviceId = deviceId,
+                    userIPAddress = ipAddress,
+                    personID = personId,
+                    customerName = "$firstName $lastName",
+                    customerEmail = customerEmail,
+                    customerMobile = customerMobile,
+                    customerdateOfBirth = customerDateOfBirth,
+                    fromCountryID = "4",
+                    fromCurrencyID = "96",
+                    fromCurrencyCode = "GBP",
+                    benPersonID = beneficiaryId,
+                    beneficiaryName = beneficiaryName,
+                    beneficaryEmail = "",
+                    beneficarymobile = "",
+                    beneficaryAddress = "",
+                    bankId = bankId,
+                    bankName = bankName,
+                    accountNo = "",
+                    benBranchId = branchId,
+                    collectionBankID = "",
+                    collectionBankName = "",
+                    sendAmount = sendAmount,
+                    receivableAmount = receiveAmount,
+                    rate = exchangeRate,
+                    commission = commission,
+                    total = totalAmount,
+                    toCountryID = "1",
+                    toCurrencyID = "6",
+                    toCurrencyCode = "BDT",
+                    orderTypeID = orderType,
+                    paymentMode = paymentType,
+                    purposeOfTransferId = reasonId,
+                    sourceOfFundId = sourceOfIncomeId,
+                    isMobileTransfer = true,
+                    isiOS = false,
+                    latitude = "",
+                    longitude = ""
+                )
+                paymentViewModel.payment(paymentItem)
+            }
         }
         observePaymentResult()
         observeEncryptResult()
 
-    }
+        val reasonItem = ReasonItem(
+            deviceId = deviceId,
+            dropdownId = 27,
+            param1 = 0,
+            param2 = 0
+        )
+        paymentViewModel.reason(reasonItem)
+        observeReasonResult()
 
-    private fun observeTransactionDetailsResult() {
-        paymentViewModel.paymentTransactionResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (paymentTransactionData in result.data!!) {
+        val sourceOfIncomeItem = SourceOfIncomeItem(
+            deviceId = deviceId
+        )
+        paymentViewModel.sourceOfIncome(sourceOfIncomeItem)
+        observeSourceOfIncomeResult()
 
-                    paymentType = paymentTransactionData!!.paymentType.toString()
-                    orderType = paymentTransactionData.orderTypeId.toString()
-
-                    beneficiaryId = paymentTransactionData.beneId.toString()
-
-                    bankId = paymentTransactionData.beneBankId.toString()
-                    payingAgentId = paymentTransactionData.payingAgentId.toString()
-
-                    sendAmount = paymentTransactionData.sendAmount.toString()
-                    commission = paymentTransactionData.transferFees.toString()
-                    exchangeRate = paymentTransactionData.rate.toString()
-                    receiveAmount = paymentTransactionData.benAmount.toString()
-                    beneficiaryName = paymentTransactionData.benName.toString()
-                    bankName = paymentTransactionData.bankName.toString()
-
-                    if (sendAmount != "null") {
-                        gbpValue = sendAmount.toDouble()
-                        binding.sendAmount.text = "GBP $sendAmount"
-                    }
-                    if (commission != "null") {
-                        binding.transferFee.text = "GBP $commission"
-                    }
-                    if (sendAmount != "null" || commission != "null") {
-                        binding.totalAmount.text =
-                            "GBP " + (sendAmount.toDouble() + commission.toDouble()).toString()
-                    }
-                    if (exchangeRate != "null") {
-                        binding.exchangeRate.text = "GBP $exchangeRate"
-                    }
-                    if (receiveAmount != "null") {
-                        binding.receiveAmount.text = "BDT $receiveAmount"
-                    }
-                    if (beneficiaryName != "null") {
-                        binding.receiverName.setText(beneficiaryName)
-                    }
-                    if (bankName != "null") {
-                        binding.receiverAccount.setText(bankName)
-                    }
-
-                    val calculateRateItem = CalculateRateItem(
-                        deviceId = deviceId,
-                        personId = personId.toInt(),
-                        bankId = bankId.toInt(),
-                        payingAgentId = payingAgentId.toInt(),
-                        orderType = orderType.toInt(),
-                        paymentMode = 0,
-                        fromCountry = 4,
-                        toCountry = 1,
-                        mobileOrWebPlatform = 0,
-                        amount = sendAmount
-                    )
-                    paymentViewModel.rateCalculate(calculateRateItem)
-
-                    observeCalculateRateResult()
-
-                }
-            }
-        }
-    }
-
-    private fun observeCalculateRateResult() {
-        paymentViewModel.rateCalculateResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (data in result.data!!) {
-                    commission = data!!.commission.toString()
-                    rate = data!!.rate!!.toDouble()
-                    exchangeRate = data!!.rate!!.toString()
-                    binding.exchangeRate.text = exchangeRate
-                    updateValuesGBP()
-                }
-            }
-        }
-    }
-
-    private fun updateValuesGBP() {
-        if (gbpValue != null) {
-            val bdtValue = gbpValue * rate
-            val formattedBDT = decimalFormat.format(bdtValue)
-            binding.receiveAmount.text = "BDT $formattedBDT"
-        }
+        sendAgain()
+        applyPromo()
     }
 
     private fun observePaymentResult() {
         paymentViewModel.paymentResult.observe(this) { result ->
-            if (result!!.data != null) {
-                transactionCode = result.data.toString()
-                transactionCodeWithChannel = "$transactionCode*1"
-                if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
-                    val encryptItem = EncryptItem(
-                        key = "bsel2024$#@!",
-                        plainText = transactionCodeWithChannel
-                    )
-                    paymentViewModel.encrypt(encryptItem)
+            try {
+                if (result!!.data != null) {
+                    transactionCode = result.data.toString()
+                    transactionCodeWithChannel = "$transactionCode*1"
+                    if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
+                        val encryptItem = EncryptItem(
+                            key = "bsel2024$#@!",
+                            plainText = transactionCodeWithChannel
+                        )
+                        paymentViewModel.encrypt(encryptItem)
+                    }
                 }
+            } catch (e: NullPointerException) {
+                e.message
             }
         }
     }
@@ -785,6 +755,235 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
 
     override fun onNationalityItemSelected(selectedItem: NationalityData) {
     }
+
+    private fun observeReasonResult() {
+        paymentViewModel.reasonResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (data in result.data!!) {
+                    if (reasonId == data?.id.toString()) {
+                        binding.reason.setText(data?.name.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeSourceOfIncomeResult() {
+        paymentViewModel.sourceOfIncomeResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (data in result.data!!) {
+                    if (sourceOfIncomeId == data?.id.toString()) {
+                        binding.sourceOfIncome.setText(data?.name.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun sendAgain() {
+        transactionCode = arguments?.getString("transactionCode").toString()
+        if (::transactionCode.isInitialized && transactionCode != "null") {
+            val transactionDetailsItem = TransactionDetailsItem(
+                deviceId = deviceId,
+                params1 = personId.toInt(),
+                params2 = transactionCode
+            )
+            paymentViewModel.paymentTransaction(transactionDetailsItem)
+            observeTransactionDetailsResult()
+        }
+    }
+
+    private fun observeTransactionDetailsResult() {
+        paymentViewModel.paymentTransactionResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (paymentTransactionData in result.data!!) {
+
+                    paymentType = paymentTransactionData?.paymentType.toString()
+                    orderType = paymentTransactionData?.orderTypeId.toString()
+
+                    sendAmount = paymentTransactionData?.sendAmount.toString()
+                    receiveAmount = paymentTransactionData?.benAmount.toString()
+
+                    exchangeRate = paymentTransactionData?.rate.toString()
+                    commission = paymentTransactionData?.transferFees.toString()
+
+                    bankId = paymentTransactionData?.beneBankId.toString()
+                    branchId = paymentTransactionData?.beneBranchId.toString()
+                    bankName = paymentTransactionData?.bankName.toString()
+                    payingAgentId = paymentTransactionData?.payingAgentId.toString()
+
+                    beneficiaryId = paymentTransactionData?.beneId.toString()
+                    beneficiaryName = paymentTransactionData?.benName.toString()
+
+                    reasonId = paymentTransactionData?.purposeOfTransferId.toString()
+
+                    sourceOfIncomeId = paymentTransactionData?.sourceOfFundId.toString()
+
+                    if (sendAmount != "null") {
+                        gbpValue = sendAmount.toDouble()
+                        binding.sendAmount.text = "GBP $sendAmount"
+                    }
+                    if (commission != "null") {
+                        binding.transferFee.text = "GBP $commission"
+                    }
+                    if (sendAmount != "null" || commission != "null") {
+                        try {
+                            val sa = sendAmount.toDouble()
+                            val cm = commission.toDouble()
+                            totalAmount = sa + cm
+                            binding.totalAmount.text = "GBP $totalAmount"
+                        } catch (e: NumberFormatException) {
+                            e.message
+                        }
+                    }
+                    if (exchangeRate != "null") {
+                        binding.exchangeRate.text = "GBP $exchangeRate"
+                    }
+                    if (receiveAmount != "null") {
+                        binding.receiveAmount.text = "BDT $receiveAmount"
+                    }
+                    if (beneficiaryName != "null") {
+                        binding.receiverName.setText(beneficiaryName)
+                    }
+                    if (bankName != "null") {
+                        binding.receiverAccount.setText(bankName)
+                    }
+                    if (reasonName != "null") {
+                        binding.reason.setText("$reasonName")
+                    }
+                    if (sourceOfIncomeName != "null") {
+                        binding.sourceOfIncome.setText("$sourceOfIncomeName")
+                    }
+
+                    val calculateRateItem = CalculateRateItem(
+                        deviceId = deviceId,
+                        personId = personId.toInt(),
+                        bankId = bankId.toInt(),
+                        payingAgentId = payingAgentId.toInt(),
+                        orderType = orderType.toInt(),
+                        paymentMode = 0,
+                        fromCountry = 4,
+                        toCountry = 1,
+                        mobileOrWebPlatform = 0,
+                        amount = sendAmount
+                    )
+                    paymentViewModel.rateCalculate(calculateRateItem)
+                    observeCalculateRateResult()
+                }
+            }
+        }
+    }
+
+    private fun observeCalculateRateResult() {
+        paymentViewModel.rateCalculateResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (data in result.data!!) {
+                        commission = data!!.commission.toString()
+                        rate = data!!.rate!!.toDouble()
+                        exchangeRate = data!!.rate!!.toString()
+                        binding.exchangeRate.text = exchangeRate
+                        updateValuesGBP()
+                    }
+                }
+            } catch (e: NullPointerException) {
+                e.message
+            }
+        }
+    }
+
+    private fun applyPromo() {
+        binding.btnAddPromoCode.visibility = View.VISIBLE
+        binding.promoCodeLayout.visibility = View.GONE
+        binding.btnAddPromoCode.setOnClickListener {
+            binding.btnAddPromoCode.visibility = View.GONE
+            binding.promoCodeLayout.visibility = View.VISIBLE
+        }
+        binding.applyPromoCode.setOnClickListener {
+            val promoCode = binding.promoCode.text.toString()
+
+            val sendAmountValue = binding.sendAmount.text.toString()
+            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+
+            val receiveAmountValue = binding.receiveAmount.text.toString()
+            val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
+
+            val commissionValue = binding.transferFee.text.toString()
+            val commission = commissionValue.replace(Regex("[^\\d.]"), "")
+
+            val rateValue = binding.exchangeRate.text.toString()
+            val exchangeRate = rateValue.replace(Regex("[^\\d.]"), "")
+
+            val promoItem = PromoItem(
+                beneAmount = receiveAmount.toDouble(),
+                commision = commission.toDouble(),
+                personId = 0,
+                promoCode = promoCode,
+                rate = exchangeRate.toDouble(),
+                sendAmount = sendAmount.toDouble()
+            )
+            paymentViewModel.promo(promoItem)
+            observePromoResult()
+        }
+    }
+
+    private fun observePromoResult() {
+        paymentViewModel.promoResult.observe(this) { result ->
+            try {
+                binding.btnAddPromoCode.visibility = View.VISIBLE
+                binding.promoCodeLayout.visibility = View.GONE
+                binding.promoCode.setText("")
+                if (result!!.promoResponseData!!.promoData != null) {
+                    sendAmount =
+                        result!!.promoResponseData!!.promoData!!.modifiedSendAmount.toString()
+                    commission =
+                        result!!.promoResponseData!!.promoData!!.modifiedCommision.toString()
+                    rate = result!!.promoResponseData!!.promoData!!.modifiedRate!!.toDouble()
+                    exchangeRate =
+                        result!!.promoResponseData!!.promoData!!.modifiedRate!!.toString()
+                    receiveAmount =
+                        result!!.promoResponseData!!.promoData!!.modifiedBeneAmount!!.toString()
+
+                    if (sendAmount != "null") {
+                        gbpValue = sendAmount.toDouble()
+                        binding.sendAmount.text = "GBP $sendAmount"
+                    }
+                    if (commission != "null") {
+                        binding.transferFee.text = "GBP $commission"
+                    }
+                    if (sendAmount != "null" || commission != "null") {
+                        try {
+                            val sa = sendAmount.toDouble()
+                            val cm = commission.toDouble()
+                            totalAmount = sa + cm
+                            binding.totalAmount.text = "GBP $totalAmount"
+                        } catch (e: NumberFormatException) {
+                            e.message
+                        }
+                    }
+                    if (exchangeRate != "null") {
+                        binding.exchangeRate.text = "GBP $exchangeRate"
+                    }
+                    if (receiveAmount != "null") {
+                        binding.receiveAmount.text = "BDT $receiveAmount"
+                    }
+
+                    updateValuesGBP()
+                }
+            } catch (e: NullPointerException) {
+                e.message
+            }
+        }
+    }
+
+    private fun updateValuesGBP() {
+        if (gbpValue != null) {
+            val bdtValue = gbpValue * rate
+            val formattedBDT = decimalFormat.format(bdtValue)
+            binding.receiveAmount.text = "BDT $formattedBDT"
+        }
+    }
+
 
     private fun getDeviceId(context: Context): String {
         val deviceId: String

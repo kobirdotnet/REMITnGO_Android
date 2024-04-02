@@ -9,13 +9,15 @@ data class TransactionDetailsData(
     @SerializedName("BankName")
     val bankName: String?,
     @SerializedName("BenAmount")
-    val benAmount: Int?,
+    val benAmount: Double?,
     @SerializedName("BenName")
     val benName: String?,
     @SerializedName("BeneBankAccountName")
     val beneBankAccountName: String?,
     @SerializedName("BeneBankId")
     val beneBankId: String?,
+    @SerializedName("BeneBranchId")
+    val beneBranchId: Int?,
     @SerializedName("BeneId")
     val beneId: String?,
     @SerializedName("OrderStatus")
@@ -32,10 +34,14 @@ data class TransactionDetailsData(
     val paymentType: String?,
     @SerializedName("PaymentTypeName")
     val paymentTypeName: String?,
+    @SerializedName("PurposeOfTransferId")
+    val purposeOfTransferId: Int?,
     @SerializedName("Rate")
     val rate: Double?,
     @SerializedName("SendAmount")
     val sendAmount: String?,
+    @SerializedName("SourceOfFundId")
+    val sourceOfFundId: Int?,
     @SerializedName("TransactionCode")
     val transactionCode: String?,
     @SerializedName("TransactionDate")

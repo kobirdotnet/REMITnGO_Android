@@ -28,6 +28,7 @@ import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseItem
+import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.data.model.district.DistrictResponseItem
 import com.bsel.remitngo.data.model.division.DivisionItem
@@ -78,6 +79,8 @@ import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
 import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionResponseItem
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileResponseItem
+import com.bsel.remitngo.data.model.promoCode.PromoItem
+import com.bsel.remitngo.data.model.promoCode.PromoResponseItem
 import com.bsel.remitngo.data.model.query.QueryItem
 import com.bsel.remitngo.data.model.query.QueryResponseItem
 import com.bsel.remitngo.data.model.query.add_message.AddMessageItem
@@ -265,9 +268,14 @@ interface REMITnGoService {
 
     @POST("api/Home/GetConsumerId")
     suspend fun consumer(@Body consumerItem: ConsumerItem): Response<ConsumerResponseItem>
+
     @POST("api/General/LoadCalculationPageMsg")
     suspend fun percentage(@Body percentageItem: PercentageItem): Response<PercentageResponseItem>
+    @POST("api/Transaction/ApplyPromo")
+    suspend fun promo(@Body promoItem: PromoItem): Response<PromoResponseItem>
 
+    @GET("Receipt/CreateReceipt")
+    suspend fun createReceipt(@Query("TransactionId") transactionId: String): Response<CreateReceiptResponse>
 
 }
 

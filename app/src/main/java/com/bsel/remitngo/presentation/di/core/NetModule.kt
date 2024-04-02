@@ -1,5 +1,6 @@
 package com.bsel.remitngo.presentation.di.core
 
+import com.bsel.remitngo.data.api.Config
 import com.bsel.remitngo.data.api.REMITnGoService
 import com.bsel.remitngo.data.api.TokenInterceptor
 import dagger.Module
@@ -36,7 +37,7 @@ class NetModule(private val baseUrl: String) {
         return Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(baseUrl)
+            .baseUrl(Config.DYNAMIC_BASE_URL)
             .build()
     }
 

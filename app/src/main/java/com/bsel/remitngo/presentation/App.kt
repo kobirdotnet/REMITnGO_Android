@@ -2,6 +2,7 @@ package com.bsel.remitngo.presentation
 
 import android.app.Application
 import com.bsel.remitngo.BuildConfig
+import com.bsel.remitngo.data.api.Config
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.di.bank.BankSubComponent
 import com.bsel.remitngo.presentation.di.beneficiary.BeneficiarySubComponent
@@ -21,7 +22,7 @@ class App : Application(), Injector {
     private val appComponent: AppComponent by lazy {
         DaggerAppComponent.builder()
             .appModule(AppModule(applicationContext))
-            .netModule(NetModule(BuildConfig.BASE_URL))
+            .netModule(NetModule(Config.DYNAMIC_BASE_URL))
             .useCaseModule(UseCaseModule())
             .repositoryModule(RepositoryModule())
             .remoteDataModule(RemoteDataModule())

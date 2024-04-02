@@ -17,6 +17,12 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
+import com.bsel.remitngo.data.model.promoCode.PromoItem
+import com.bsel.remitngo.data.model.promoCode.PromoResponseItem
+import com.bsel.remitngo.data.model.reason.ReasonItem
+import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsResponseItem
 import com.bsel.remitngo.domain.useCase.PaymentUseCase
@@ -101,6 +107,36 @@ class PaymentViewModel(private val paymentUseCase: PaymentUseCase) : ViewModel()
         viewModelScope.launch {
             val result = paymentUseCase.execute(transactionDetailsItem)
             _paymentTransactionResult.value = result
+        }
+    }
+
+    private val _reasonResult = MutableLiveData<ReasonResponseItem?>()
+    val reasonResult: LiveData<ReasonResponseItem?> = _reasonResult
+
+    fun reason(reasonItem: ReasonItem) {
+        viewModelScope.launch {
+            val result = paymentUseCase.execute(reasonItem)
+            _reasonResult.value = result
+        }
+    }
+
+    private val _sourceOfIncomeResult = MutableLiveData<SourceOfIncomeResponseItem?>()
+    val sourceOfIncomeResult: LiveData<SourceOfIncomeResponseItem?> = _sourceOfIncomeResult
+
+    fun sourceOfIncome(sourceOfIncomeItem: SourceOfIncomeItem) {
+        viewModelScope.launch {
+            val result = paymentUseCase.execute(sourceOfIncomeItem)
+            _sourceOfIncomeResult.value = result
+        }
+    }
+
+    private val _promoResult = MutableLiveData<PromoResponseItem?>()
+    val promoResult: LiveData<PromoResponseItem?> = _promoResult
+
+    fun promo(promoItem: PromoItem) {
+        viewModelScope.launch {
+            val result = paymentUseCase.execute(promoItem)
+            _promoResult.value = result
         }
     }
 

@@ -403,8 +403,11 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         binding.btnNext.setOnClickListener {
 
-            sendAmount = binding.sendAmount.text.toString()
-            receiveAmount = binding.receiveAmount.text.toString()
+            val sendAmountValue = binding.sendAmount.text.toString()
+            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+
+            val receiveAmountValue = binding.receiveAmount.text.toString()
+            val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
 
             val bundle = Bundle().apply {
                 putString("paymentType", paymentType)
