@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_nav_transaction_history_to_nav_review"
             app:destination="@id/nav_review" />
+        <action
+            android:id="@+id/action_nav_transaction_history_to_nav_complete_bank_transaction"
+            app:destination="@id/nav_complete_bank_transaction" />
     </fragment>
 
     <fragment
@@ -55,6 +58,9 @@
         <action
             android:id="@+id/action_nav_choose_beneficiary_to_nav_choose_bank"
             app:destination="@id/nav_choose_bank" />
+        <action
+            android:id="@+id/action_nav_choose_beneficiary_to_nav_review"
+            app:destination="@id/nav_review" />
     </fragment>
     <fragment
         android:id="@+id/nav_save_beneficiary"
@@ -96,6 +102,9 @@
         <action
             android:id="@+id/action_nav_complete_bank_transaction_to_nav_main"
             app:destination="@id/nav_main" />
+        <action
+            android:id="@+id/action_nav_complete_bank_transaction_to_nav_transaction_history"
+            app:destination="@id/nav_transaction_history" />
     </fragment>
 
     <fragment

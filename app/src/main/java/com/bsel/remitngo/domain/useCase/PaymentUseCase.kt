@@ -65,9 +65,9 @@ class PaymentUseCase(private val paymentRepository: PaymentRepository) {
         return paymentRepository.promo(promoItem)
     }
 
-//    suspend fun execute(transactionId:String):CreateReceiptResponse?{
-//        return paymentRepository.createReceipt(transactionId)
-//    }
+    suspend fun executeCreateReceipt(transactionId:String): CreateReceiptResponse?{
+        return paymentRepository.createReceipt(transactionId)
+    }
 
 }
 

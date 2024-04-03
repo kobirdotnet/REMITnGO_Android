@@ -1,5 +1,6 @@
 package com.bsel.remitngo.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +43,7 @@ class TransactionAdapter(
     fun filter(query: String) {
         filteredTransactionList.clear()
         for (transactions in transactionList) {
-            if (transactions.benName!!.contains(query, ignoreCase = true)) {
+            if (transactions.transactionCode!!.contains(query, ignoreCase = true)) {
                 filteredTransactionList.add(transactions)
             }
         }
@@ -70,6 +71,10 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
         binding.benAmount.text = "BDT $benAmount"
 
         val orderStatus = transactionItem.orderStatus.toString()
+        Log.i("info", "orderStatus: $orderStatus")
+
+        val paymentMode = transactionItem.paymentType.toString()
+        Log.i("info", "paymentMode: $paymentMode")
 
         if (orderStatus == "7" || orderStatus == "8" || orderStatus == "10" || orderStatus == "11") {
             binding.cancelStatus.visibility = View.VISIBLE
@@ -100,6 +105,13 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
                 binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_green)
             }
         }
+
+        if(orderStatus == "21"){
+            binding.btnDownloadReceipt.text = "Pay Naw"
+        }else{
+            binding.btnDownloadReceipt.text = "Download Receipt"
+        }
+
 
         binding.itemTransactionLayout.setOnClickListener {
             selectedItem(transactionItem)

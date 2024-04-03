@@ -19,11 +19,21 @@ import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.TransactionAdapter
 import com.bsel.remitngo.bottomSheet.TransactionBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.api.RetrofitClient
+import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.transaction.TransactionData
 import com.bsel.remitngo.data.model.transaction.TransactionItem
 import com.bsel.remitngo.databinding.FragmentTransactionBinding
 import com.bsel.remitngo.presentation.di.Injector
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
+
+import java.net.HttpURLConnection
+import java.net.URL
 
 class TransactionFragment : Fragment() {
     @Inject
@@ -113,13 +123,38 @@ class TransactionFragment : Fragment() {
         transactionBottomSheet.show(childFragmentManager, transactionBottomSheet.tag)
     }
 
-    private fun downloadReceipt(downloadReceipt: TransactionData) {
-        var downloadReceipt=downloadReceipt.transactionCode
-        val receiptUrl = "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$downloadReceipt.pdf"
-        Log.i("info", "receiptUrl: $receiptUrl")
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(receiptUrl)
-        context?.startActivity(intent)
+    private fun downloadReceipt(transactionData: TransactionData) {
+
+        val orderStatus = transactionData.orderStatus.toString()
+        Log.i("info", "orderStatus: $orderStatus")
+
+        //paymentMode
+        val paymentMode = transactionData.paymentType.toString()
+        Log.i("info", "paymentMode: $paymentMode")
+
+        if(orderStatus == "21"){
+            if (paymentMode=="5"){
+                //complete bank payment
+                val bundle = Bundle().apply {
+                    putString("transactionCode", transactionData.transactionCode.toString())
+                }
+                findNavController().navigate(
+                    R.id.action_nav_transaction_history_to_nav_complete_bank_transaction,
+                    bundle
+                )
+            }else if (paymentMode=="4"){
+                //payment gateway
+                val bundle = Bundle().apply {
+                    putString("transactionCode", transactionData.transactionCode.toString())
+                }
+                findNavController().navigate(
+                    R.id.action_nav_transaction_history_to_nav_review,
+                    bundle
+                )
+            }
+        }else{
+            checkApiCall(transactionData.transactionCode.toString())
+        }
     }
 
     private fun sendAgain(sendAgain: TransactionData) {
@@ -147,6 +182,46 @@ class TransactionFragment : Fragment() {
         }
 
         return deviceId
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun checkApiCall(transactionCode: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val fileUrl =
+                    "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
+                val url = URL(fileUrl)
+                val connection = url.openConnection() as HttpURLConnection
+
+                connection.requestMethod = "HEAD"
+                val responseCode = connection.responseCode
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val receiptUrl =
+                        "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
+                    Log.i("info", "receiptUrl: $receiptUrl")
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(receiptUrl)
+                    context?.startActivity(intent)
+                } else {
+                    val response: Response<CreateReceiptResponse> =
+                        RetrofitClient.apiService.createReceipt(transactionCode)
+                    if (response.isSuccessful) {
+                        val createReceiptResponse: CreateReceiptResponse? = response.body()
+                        Log.i("info", "createReceiptResponse: $createReceiptResponse")
+                        val receiptUrl =
+                            "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
+                        Log.i("info", "receiptUrl: $receiptUrl")
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(receiptUrl)
+                        context?.startActivity(intent)
+                    }
+                }
+                connection.disconnect()
+            } catch (e: Exception) {
+                e.message
+            }
+        }
     }
 
 }

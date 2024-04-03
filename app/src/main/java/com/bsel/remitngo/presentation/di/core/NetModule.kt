@@ -48,4 +48,3 @@ class NetModule(private val baseUrl: String) {
     }
 
 }
-

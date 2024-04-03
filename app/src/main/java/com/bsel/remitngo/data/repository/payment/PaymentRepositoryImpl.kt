@@ -205,7 +205,20 @@ class PaymentRepositoryImpl(private val paymentRemoteDataSource: PaymentRemoteDa
     }
 
     override suspend fun createReceipt(transactionId: String): CreateReceiptResponse? {
-        TODO("Not yet implemented")
+        return try {
+            val response = paymentRemoteDataSource.createReceipt(transactionId)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to createReceipt: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error createReceipt: ${exception.message}", exception)
+            null
+        }
     }
 
 }

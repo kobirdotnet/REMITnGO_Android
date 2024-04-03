@@ -8,22 +8,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.ReasonNameAdapter
-import com.bsel.remitngo.adapter.SourceOfIncomeAdapter
 import com.bsel.remitngo.bottomSheet.ReasonBottomSheet
 import com.bsel.remitngo.bottomSheet.SourceOfIncomeBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.api.RetrofitClient
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnPersonalInfoItemSelectedListener
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
+import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
@@ -55,6 +53,8 @@ import com.emerchantpay.gateway.genesisandroid.api.models.threedsv2.ThreeDsV2Par
 import com.emerchantpay.gateway.genesisandroid.api.models.threedsv2.ThreeDsV2RecurringParams
 import com.emerchantpay.gateway.genesisandroid.api.ui.AlertDialogHandler
 import com.emerchantpay.gateway.genesisandroid.api.util.Configuration
+import kotlinx.coroutines.*
+import retrofit2.Response
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -238,6 +238,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         }
 
         binding.chooseReceiver.setOnClickListener {
+
             val sendAmountValue = binding.sendAmount.text.toString()
             val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
 
@@ -318,7 +319,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             val totalAmountValue = binding.totalAmount.text.toString()
             val totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "")
 
-            if (paymentType == "null" || reasonId == "null" || sourceOfIncomeId == "null" || sendAmount == "null") {
+            if (paymentType == "null" || reasonId == "null" || sourceOfIncomeId == "null" || sendAmount == "null" || branchId == "null") {
                 val paymentItem = PaymentItem(
                     deviceId = deviceId,
                     userIPAddress = ipAddress,
@@ -338,9 +339,9 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                     bankId = bankId,
                     bankName = bankName,
                     accountNo = "",
-                    benBranchId = branchId,
-                    collectionBankID = "",
-                    collectionBankName = "",
+                    benBranchId = "0",
+                    collectionBankID = bankId,
+                    collectionBankName = bankName,
                     sendAmount = "0.0",
                     receivableAmount = receiveAmount,
                     rate = exchangeRate,
@@ -380,8 +381,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                     bankName = bankName,
                     accountNo = "",
                     benBranchId = branchId,
-                    collectionBankID = "",
-                    collectionBankName = "",
+                    collectionBankID = bankId,
+                    collectionBankName = bankName,
                     sendAmount = sendAmount,
                     receivableAmount = receiveAmount,
                     rate = exchangeRate,
@@ -403,7 +404,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             }
         }
         observePaymentResult()
-        observeEncryptResult()
 
         val reasonItem = ReasonItem(
             deviceId = deviceId,
@@ -436,6 +436,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                             plainText = transactionCodeWithChannel
                         )
                         paymentViewModel.encrypt(encryptItem)
+                        observeEncryptResult()
                     }
                 }
             } catch (e: NullPointerException) {
@@ -451,7 +452,16 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                 if (paymentType == "4") {
                     cardPayment()
                 } else if (paymentType == "3") {
-                    findNavController().navigate(R.id.action_nav_review_to_nav_complete_bank_transaction)
+                    val sendAmountValue = binding.sendAmount.text.toString()
+                    val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+                    val bundle = Bundle().apply {
+                        putString("sendAmount", sendAmount)
+                        putString("transactionCode", transactionCode)
+                    }
+                    findNavController().navigate(
+                        R.id.action_nav_review_to_nav_complete_bank_transaction,
+                        bundle
+                    )
                 }
             }
         }
@@ -983,7 +993,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             binding.receiveAmount.text = "BDT $formattedBDT"
         }
     }
-
 
     private fun getDeviceId(context: Context): String {
         val deviceId: String

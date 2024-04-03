@@ -5,6 +5,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -223,10 +224,19 @@ class ChooseBeneficiaryFragment : Fragment() {
             putString("sourceOfIncomeId", sourceOfIncomeId)
             putString("sourceOfIncomeName", sourceOfIncomeName)
         }
-        findNavController().navigate(
-            R.id.action_nav_choose_beneficiary_to_nav_choose_bank,
-            bundle
-        )
+
+        if (orderType=="2"){
+            findNavController().navigate(
+                R.id.action_nav_choose_beneficiary_to_nav_review,
+                bundle
+            )
+        }else{
+            findNavController().navigate(
+                R.id.action_nav_choose_beneficiary_to_nav_choose_bank,
+                bundle
+            )
+        }
+
     }
 
     private fun getDeviceId(context: Context): String {
