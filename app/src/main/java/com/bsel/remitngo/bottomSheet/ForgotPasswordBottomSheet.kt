@@ -2,22 +2,43 @@ package com.bsel.remitngo.bottomSheet
 
 import android.app.Dialog
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
+import com.bsel.remitngo.data.model.forgotPassword.SetPasswordItem
 import com.bsel.remitngo.databinding.ForgotPasswordLayoutBinding
+import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.login.LoginViewModel
+import com.bsel.remitngo.presentation.ui.login.LoginViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var loginViewModelFactory: LoginViewModelFactory
+    private lateinit var loginViewModel: LoginViewModel
 
     private lateinit var forgotPasswordBehavior: BottomSheetBehavior<*>
 
     private lateinit var binding: ForgotPasswordLayoutBinding
+
+    private var changeValue: Boolean = true
+
+    private lateinit var personId: String
+    private lateinit var otp: String
+    private lateinit var message: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -47,34 +68,197 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
+        (requireActivity().application as Injector).createLoginSubComponent().inject(this)
+
+        loginViewModel =
+            ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
+
+        binding.verifyLayout.visibility = View.VISIBLE
+        binding.validationLayout.visibility = View.GONE
+        binding.setPasswordLayout.visibility = View.GONE
+
         emailFocusListener()
         phoneFocusListener()
+        otpFocusListener()
+        newPasswordFocusListener()
+        confirmNewPasswordFocusListener()
+
+        binding.btnEmail.setOnClickListener {
+
+            binding.emailLayout.visibility = View.GONE
+            binding.mobileLayout.visibility = View.VISIBLE
+
+            binding.email.text = null
+
+            changeValue = false
+        }
+
+        binding.btnMobile.setOnClickListener {
+
+            binding.emailLayout.visibility = View.VISIBLE
+            binding.mobileLayout.visibility = View.GONE
+
+            binding.phoneNumber.text = null
+
+            changeValue = true
+        }
 
         binding.btnVerify.setOnClickListener { passwordForm() }
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
+        observeForgotPasswordResult()
+        observeOtpResult()
+        observeSetPasswordResult()
+
         return bottomSheet
     }
 
-    private fun passwordForm() {
-        binding.emailContainer.helperText = validEmail()
-        binding.phoneNumberContainer.helperText = validPhone()
+    private fun observeForgotPasswordResult() {
+        loginViewModel.forgotPasswordResult.observe(this) { result ->
+            if (result!! != null) {
+                val resultMessage = result!!.message
+                val parts = resultMessage!!.split("*")
+                if (parts.size >= 3) {
+                    personId = parts[0]
+                    otp = parts[1]
+                    message = parts.subList(2, parts.size).joinToString("*")
+                } else {
+                    message = result!!.message.toString()
+                }
 
-        val validEmail = binding.emailContainer.helperText == null
-        val validPhone = binding.phoneNumberContainer.helperText == null
+                if (::personId.isInitialized && personId != "null" || ::otp.isInitialized && otp != "null") {
+                    binding.verifyLayout.visibility = View.GONE
+                    binding.validationLayout.visibility = View.VISIBLE
+                    binding.setPasswordLayout.visibility = View.GONE
 
-        if (validEmail && validPhone) {
-            verifyPasswordForm()
+                    binding.otpVerifyMessage.text = message
+
+                    binding.btnOtpValidation.setOnClickListener { otpValidationForm() }
+                } else {
+                    binding.verifyLayout.visibility = View.VISIBLE
+                    binding.validationLayout.visibility = View.GONE
+                    binding.setPasswordLayout.visibility = View.GONE
+                }
+            }
         }
     }
 
-    private fun verifyPasswordForm() {
+    private fun observeOtpResult() {
+        loginViewModel.otpValidationResult.observe(this) { result ->
+            if (result!! != null) {
+                if (result!!.code=="000"){
+                    binding.verifyLayout.visibility = View.GONE
+                    binding.validationLayout.visibility = View.GONE
+                    binding.setPasswordLayout.visibility = View.VISIBLE
+
+                    binding.btnSetPassword.setOnClickListener { setPasswordForm() }
+                }else{
+
+                    binding.verifyLayout.visibility = View.GONE
+                    binding.validationLayout.visibility = View.VISIBLE
+                    binding.setPasswordLayout.visibility = View.GONE
+
+                    binding.otpVerifyMessage.text = result!!.data.toString()
+                    binding.otpVerifyMessage.setTextColor(Color.RED)
+                }
+            }
+        }
+    }
+
+    private fun observeSetPasswordResult() {
+        loginViewModel.setPasswordResult.observe(this) { result ->
+            if (result!! != null) {
+                if (result!!.code=="000"){
+                    binding.verifyLayout.visibility = View.VISIBLE
+                    binding.validationLayout.visibility = View.GONE
+                    binding.setPasswordLayout.visibility = View.GONE
+                    otp=="null"
+                    personId=="null"
+                    dismiss()
+                }else{
+                    binding.verifyLayout.visibility = View.GONE
+                    binding.validationLayout.visibility = View.GONE
+                    binding.setPasswordLayout.visibility = View.VISIBLE
+
+                    binding.setPasswordMessage.text = result!!.message.toString()
+                    binding.setPasswordMessage.setTextColor(Color.RED)
+                }
+            }
+        }
+    }
+
+    private fun passwordForm() {
+        if (changeValue) {
+            binding.emailContainer.helperText = validEmail()
+            val validEmail = binding.emailContainer.helperText == null
+            if (validEmail)
+                submitEmail()
+        } else if (!changeValue) {
+            binding.phoneNumberContainer.helperText = validPhone()
+            val validPhone = binding.phoneNumberContainer.helperText == null
+            if (validPhone)
+                submitMobile()
+        }
+    }
+
+    private fun submitEmail() {
         val email = binding.email.text.toString()
+
+        val forgotPasswordItem = ForgotPasswordItem(
+            isForgotByEmail = true,
+            phoneOrEmail = email
+        )
+        loginViewModel.forgotPassword(forgotPasswordItem)
+    }
+
+    private fun submitMobile() {
         val phoneNumber = binding.phoneNumber.text.toString()
 
-        dismiss()
+        val forgotPasswordItem = ForgotPasswordItem(
+            isForgotByEmail = true,
+            phoneOrEmail = phoneNumber
+        )
+        loginViewModel.forgotPassword(forgotPasswordItem)
+    }
 
+    private fun otpValidationForm() {
+        binding.otpContainer.helperText = validOtp()
+        val validOtp = binding.otpContainer.helperText == null
+        if (validOtp)
+            submitOtp()
+    }
+
+    private fun submitOtp() {
+        val otp = binding.otp.text.toString()
+
+        val otpValidationItem = OtpValidationItem(
+            otp = otp,
+            otpType = 2,
+            personId=personId.toInt()
+        )
+        loginViewModel.otpValidation(otpValidationItem)
+    }
+
+    private fun setPasswordForm() {
+        binding.newPasswordContainer.helperText = validNewPassword()
+        val validNewPassword = binding.newPasswordContainer.helperText == null
+        binding.confirmNewPasswordContainer.helperText = validConfirmNewPassword()
+        val validConfirmNewPassword = binding.confirmNewPasswordContainer.helperText == null
+        if (validNewPassword && validConfirmNewPassword){
+            submitNewPassword()
+        }
+    }
+    private fun submitNewPassword() {
+        val newPassword = binding.newPassword.text.toString()
+        val confirmNewPassword = binding.confirmNewPassword.text.toString()
+
+        val setPasswordItem = SetPasswordItem(
+            confirmNewPassword = confirmNewPassword,
+            newPassword = newPassword,
+            personId=personId.toInt()
+        )
+        loginViewModel.setPassword(setPasswordItem)
     }
 
     //Form validation
@@ -115,6 +299,78 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
         }
         if (phone.length != 11) {
             return "Must be 11 digits"
+        }
+        return null
+    }
+
+    private fun otpFocusListener() {
+        binding.otp.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.otpContainer.helperText = validOtp()
+            }
+        }
+    }
+
+    private fun validOtp(): String? {
+        val otp = binding.otp.text.toString()
+        if (otp.isEmpty()) {
+            return "Enter OTP number"
+        }
+        return null
+    }
+
+    private fun newPasswordFocusListener() {
+        binding.newPassword.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.newPasswordContainer.helperText = validNewPassword()
+            }
+        }
+    }
+
+    private fun validNewPassword(): String? {
+        val newPassword = binding.newPassword.text.toString()
+        if (newPassword.isEmpty()) {
+            return "Enter password"
+        }
+        if (newPassword.length < 8) {
+            return "Minimum 8 Character Password"
+        }
+        if (!newPassword.matches(".*[A-Z].*".toRegex())) {
+            return "Must Contain 1 Upper-case Character"
+        }
+        if (!newPassword.matches(".*[a-z].*".toRegex())) {
+            return "Must Contain 1 Lower-case Character"
+        }
+        if (!newPassword.matches(".*[@#\$%^&+=].*".toRegex())) {
+            return "Must Contain 1 Special Character (@#\$%^&+=)"
+        }
+        return null
+    }
+
+    private fun confirmNewPasswordFocusListener() {
+        binding.confirmNewPassword.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.confirmNewPasswordContainer.helperText = validConfirmNewPassword()
+            }
+        }
+    }
+
+    private fun validConfirmNewPassword(): String? {
+        val confirmNewPassword = binding.confirmNewPassword.text.toString()
+        if (confirmNewPassword.isEmpty()) {
+            return "Enter confirm password"
+        }
+        if (confirmNewPassword.length < 8) {
+            return "Minimum 8 Character Password"
+        }
+        if (!confirmNewPassword.matches(".*[A-Z].*".toRegex())) {
+            return "Must Contain 1 Upper-case Character"
+        }
+        if (!confirmNewPassword.matches(".*[a-z].*".toRegex())) {
+            return "Must Contain 1 Lower-case Character"
+        }
+        if (!confirmNewPassword.matches(".*[@#\$%^&+=].*".toRegex())) {
+            return "Must Contain 1 Special Character (@#\$%^&+=)"
         }
         return null
     }

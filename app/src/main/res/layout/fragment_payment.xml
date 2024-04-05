@@ -57,7 +57,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
-                android:weightSum="2">
+                android:weightSum="3">
 
                 <TextView
                     android:layout_width="0dp"
@@ -67,16 +67,33 @@
                     android:gravity="left"
                     android:text="Send amount"
                     android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/sendAmount"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/roboto_regular"
+                    android:layout_weight="2"
                     android:gravity="right"
-                    android:hint="GBP 0.0"
-                    android:textColor="@color/black" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/previousSendAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:hint="GBP 0.0"
+                        android:paddingRight="5dp"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/sendAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:hint="GBP 0.0"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -87,7 +104,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
-                android:weightSum="2">
+                android:weightSum="3">
 
                 <TextView
                     android:layout_width="0dp"
@@ -96,17 +113,35 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Transfer fee"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"/>
 
-                <TextView
-                    android:id="@+id/transferFee"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/roboto_regular"
+                    android:layout_weight="2"
                     android:gravity="right"
-                    android:hint="GBP 0.0"
-                    android:textColor="@color/black" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/previousTransferFee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:hint="GBP 0.0"
+                        android:paddingRight="5dp"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/transferFee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:hint="GBP 0.0"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -117,7 +152,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
-                android:weightSum="2">
+                android:weightSum="3">
 
                 <TextView
                     android:layout_width="0dp"
@@ -126,17 +161,35 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Total Amount"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"/>
 
-                <TextView
-                    android:id="@+id/totalAmount"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/roboto_regular"
+                    android:layout_weight="2"
                     android:gravity="right"
-                    android:hint="GBP 0.0"
-                    android:textColor="@color/black" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/previousTotalAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:hint="GBP 0.0"
+                        android:paddingRight="5dp"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/totalAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:hint="GBP 0.0"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -156,7 +209,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
                     android:text="Exchange rate"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -174,6 +227,16 @@
                         android:textColor="@color/black" />
 
                     <TextView
+                        android:id="@+id/previousRate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:hint=" BDT 0.0"
+                        android:paddingRight="5dp"
+                        android:textColor="@color/black" />
+
+                    <TextView
                         android:id="@+id/exchangeRate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -181,6 +244,7 @@
                         android:gravity="right"
                         android:hint=" BDT 0.0"
                         android:textColor="@color/black" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -192,7 +256,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
-                android:weightSum="2">
+                android:weightSum="3">
 
                 <TextView
                     android:layout_width="0dp"
@@ -203,15 +267,33 @@
                     android:text="Recipient amount"
                     android:textColor="@color/black" />
 
-                <TextView
-                    android:id="@+id/receiveAmount"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/roboto_regular"
+                    android:layout_weight="2"
                     android:gravity="right"
-                    android:hint="BDT 0.0"
-                    android:textColor="@color/black" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/previousReceiveAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:hint="BDT 0.0"
+                        android:paddingRight="5dp"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/receiveAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="right"
+                        android:hint="BDT 0.0"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -413,6 +495,43 @@
                         android:gravity="center"
                         android:text="Apply"
                         android:textAllCaps="true"
+                        android:textColor="@color/blue" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/promoLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/promo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:backgroundTint="@color/white"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center_vertical"
+                        android:inputType="text"
+                        android:textColor="@color/blue" />
+
+                    <TextView
+                        android:id="@+id/promoMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:backgroundTint="@color/white"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center_vertical"
+                        android:inputType="text"
                         android:textColor="@color/blue" />
 
                 </LinearLayout>

@@ -93,7 +93,7 @@
                     android:layout_weight="1.5"
                     android:fontFamily="@font/roboto_bold"
                     android:gravity="right"
-                    android:text="BRAC Saajan Exchange Ltd"
+                    android:hint="BRAC Saajan Exchange Ltd"
                     android:textColor="@color/blue" />
 
             </LinearLayout>
@@ -122,7 +122,7 @@
                     android:layout_weight="1.5"
                     android:fontFamily="@font/roboto_bold"
                     android:gravity="right"
-                    android:text="00000096"
+                    android:hint="00000096"
                     android:textColor="@color/blue" />
 
             </LinearLayout>
@@ -151,7 +151,7 @@
                     android:layout_weight="1.5"
                     android:fontFamily="@font/roboto_bold"
                     android:gravity="right"
-                    android:text="04 07 10"
+                    android:hint="04 07 10"
                     android:textColor="@color/blue" />
 
             </LinearLayout>
@@ -180,7 +180,7 @@
                     android:layout_weight="1.5"
                     android:fontFamily="@font/roboto_bold"
                     android:gravity="right"
-                    android:text="GB53CLRB040710000000096"
+                    android:hint="GB53CLRB040710000000096"
                     android:textColor="@color/blue" />
 
             </LinearLayout>
@@ -200,7 +200,7 @@
                     android:layout_height="match_parent"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="left"
-                    android:text="Once the payment is complete and reviewed by BRAC SAAJAN then you will be able to download the receipt from transaction history."
+                    android:hint="Once the payment is complete and reviewed by BRAC SAAJAN then you will be able to download the receipt from transaction history."
                     android:textColor="@color/black" />
 
                 <com.google.android.material.button.MaterialButton

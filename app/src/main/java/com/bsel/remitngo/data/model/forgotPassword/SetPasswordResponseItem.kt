@@ -1,13 +1,13 @@
-package com.bsel.remitngo.data.model.calculate_rate
+package com.bsel.remitngo.data.model.forgotPassword
 
 
 import com.google.gson.annotations.SerializedName
 
-data class CalculateRateResponseItem(
+data class SetPasswordResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: List<CalculateRateData?>?,
+    val `data`: Any?,
     @SerializedName("Message")
     val message: String?,
     @SerializedName("Token")

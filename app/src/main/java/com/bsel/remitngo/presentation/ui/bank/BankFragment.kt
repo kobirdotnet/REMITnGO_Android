@@ -254,33 +254,22 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val walletAccountName = binding.walletAccountName.text.toString()
         val phoneNumber = binding.phoneNumber.text.toString()
 
-        val bundle = Bundle().apply {
-            putString("paymentType", paymentType)
-            putString("orderType", orderType)
-            putString("sendAmount", sendAmount)
-            putString("receiveAmount", receiveAmount)
-            putString("exchangeRate", exchangeRate)
-            putString("commission", commission)
-
-            putString("bankId", bankId)
-            putString("branchId", branchId)
-            putString("bankName", bankName)
-            putString("payingAgentId", payingAgentId)
-
-            putString("beneficiaryId", beneficiaryId)
-            putString("beneficiaryName", beneficiaryName)
-            putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
-
-            putString("reasonId", reasonId)
-            putString("reasonName", reasonName)
-
-            putString("sourceOfIncomeId", sourceOfIncomeId)
-            putString("sourceOfIncomeName", sourceOfIncomeName)
-        }
-        findNavController().navigate(
-            R.id.action_nav_save_bank_to_nav_choose_bank,
-            bundle
+        val saveBankItem = SaveBankItem(
+            id = 0,
+            deviceId = deviceId,
+            userIPAddress = ipAddress.toString(),
+            orderType = orderType.toInt(),
+            cusBankInfoID = beneficiaryId.toInt(),
+            accountName = walletAccountName,
+            bankID = bankId.toInt(),
+            branchID = 0,
+            accountNo = phoneNumber,
+            isVersion113 = 0,
+            accountType = 0,
+            active = true
         )
+        bankViewModel.saveBank(saveBankItem)
+
     }
 
     //Form validation

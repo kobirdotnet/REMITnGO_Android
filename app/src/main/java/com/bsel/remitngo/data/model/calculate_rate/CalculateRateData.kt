@@ -13,7 +13,7 @@ data class CalculateRateData(
     @SerializedName("FromCurrencyId")
     val fromCurrencyId: Int?,
     @SerializedName("Msg")
-    val String: Any?,
+    val msg: Any?,
     @SerializedName("OrderTypeId")
     val orderTypeId: Int?,
     @SerializedName("PayeeBank")

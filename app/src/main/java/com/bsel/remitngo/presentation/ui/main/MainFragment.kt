@@ -247,18 +247,22 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             when (checkedId) {
                 R.id.bankAccount -> {
                     orderType = "3"
-                    calculateRate(
-                        deviceId,
-                        personId.toInt(),
-                        bankId.toInt(),
-                        payingAgentId.toInt(),
-                        orderType.toInt(),
-                        paymentType.toInt(),
-                        4,
-                        1,
-                        0,
-                        binding.sendAmount.text.toString()
-                    )
+                    try {
+                        calculateRate(
+                            deviceId,
+                            personId.toInt(),
+                            bankId.toInt(),
+                            payingAgentId.toInt(),
+                            orderType.toInt(),
+                            paymentType.toInt(),
+                            4,
+                            1,
+                            0,
+                            binding.sendAmount.text.toString()
+                        )
+                    }catch (e:NumberFormatException){
+                        e.message
+                    }
                     binding.bankAccount.isChecked = true
                     binding.instantCredit.isChecked = false
                     binding.cashPickup.isChecked = false

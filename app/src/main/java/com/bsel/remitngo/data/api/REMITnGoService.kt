@@ -44,6 +44,7 @@ import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.encript.EncryptResponseItem
+import com.bsel.remitngo.data.model.forgotPassword.*
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.gender.GenderResponseItem
 import com.bsel.remitngo.data.model.login.LoginItem
@@ -273,9 +274,15 @@ interface REMITnGoService {
     suspend fun percentage(@Body percentageItem: PercentageItem): Response<PercentageResponseItem>
     @POST("api/Transaction/ApplyPromo")
     suspend fun promo(@Body promoItem: PromoItem): Response<PromoResponseItem>
-
     @GET("Receipt/CreateReceipt")
     suspend fun createReceipt(@Query("TransactionId") transactionId: String): Response<CreateReceiptResponse>
+
+    @POST("api/Home/ForgotPassword")
+    suspend fun forgotPassword(@Body forgotPasswordItem: ForgotPasswordItem): Response<ForgotPasswordResponseItem>
+    @POST("api/Home/OtpValidation")
+    suspend fun otpValidation(@Body otpValidationItem: OtpValidationItem): Response<OtpValidationResponseItem>
+    @POST("api/Home/SetPassword")
+    suspend fun setPassword(@Body setPasswordItem: SetPasswordItem): Response<SetPasswordResponseItem>
 
 }
 

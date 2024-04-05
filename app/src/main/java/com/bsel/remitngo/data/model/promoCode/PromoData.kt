@@ -18,6 +18,8 @@ data class PromoData(
     val modifiedRate: Double?,
     @SerializedName("ModifiedSendAmount")
     val modifiedSendAmount: Double?,
+    @SerializedName("PromoMsg")
+    val promoMsg: String?,
     @SerializedName("Rate")
     val rate: Double?,
     @SerializedName("SendAmount")

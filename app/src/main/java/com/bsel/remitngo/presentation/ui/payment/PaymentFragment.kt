@@ -53,6 +53,7 @@ import com.emerchantpay.gateway.genesisandroid.api.models.threedsv2.ThreeDsV2Par
 import com.emerchantpay.gateway.genesisandroid.api.models.threedsv2.ThreeDsV2RecurringParams
 import com.emerchantpay.gateway.genesisandroid.api.ui.AlertDialogHandler
 import com.emerchantpay.gateway.genesisandroid.api.util.Configuration
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import retrofit2.Response
 import java.math.BigDecimal
@@ -125,6 +126,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     private val decimalFormat = DecimalFormat("#.##")
 
     private lateinit var transactionCode: String
+
+    private lateinit var promoCode: String
 
     private var rate = 0.0
     private var gbpValue = 0.0
@@ -319,7 +322,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             val totalAmountValue = binding.totalAmount.text.toString()
             val totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "")
 
-            if (paymentType == "null" || reasonId == "null" || sourceOfIncomeId == "null" || sendAmount == "null" || branchId == "null") {
+            if (paymentType == "null" || reasonId == "null" || sourceOfIncomeId == "null" || sendAmount == "null" || bankId == "null" || branchId == "null") {
                 val paymentItem = PaymentItem(
                     deviceId = deviceId,
                     userIPAddress = ipAddress,
@@ -336,11 +339,11 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                     beneficaryEmail = "",
                     beneficarymobile = "",
                     beneficaryAddress = "",
-                    bankId = bankId,
+                    bankId = "0",
                     bankName = bankName,
                     accountNo = "",
                     benBranchId = "0",
-                    collectionBankID = bankId,
+                    collectionBankID = "0",
                     collectionBankName = bankName,
                     sendAmount = "0.0",
                     receivableAmount = receiveAmount,
@@ -516,7 +519,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         paymentRequest = PaymentRequest(
             requireContext(),
             transactionCode,
-            BigDecimal(sendAmount),
+            BigDecimal(totalAmount),
             Currency.GBP,
             customerEmail,
             customerMobile,
@@ -905,12 +908,27 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     private fun applyPromo() {
         binding.btnAddPromoCode.visibility = View.VISIBLE
         binding.promoCodeLayout.visibility = View.GONE
+        binding.promoLayout.visibility = View.GONE
+
+        binding.previousSendAmount.visibility = View.GONE
+        binding.previousTransferFee.visibility = View.GONE
+        binding.previousTotalAmount.visibility = View.GONE
+        binding.previousRate.visibility = View.GONE
+        binding.previousReceiveAmount.visibility = View.GONE
+
         binding.btnAddPromoCode.setOnClickListener {
             binding.btnAddPromoCode.visibility = View.GONE
             binding.promoCodeLayout.visibility = View.VISIBLE
+            binding.promoLayout.visibility = View.GONE
+
+            binding.previousSendAmount.visibility = View.GONE
+            binding.previousTransferFee.visibility = View.GONE
+            binding.previousTotalAmount.visibility = View.GONE
+            binding.previousRate.visibility = View.GONE
+            binding.previousReceiveAmount.visibility = View.GONE
         }
         binding.applyPromoCode.setOnClickListener {
-            val promoCode = binding.promoCode.text.toString()
+            promoCode = binding.promoCode.text.toString()
 
             val sendAmountValue = binding.sendAmount.text.toString()
             val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
@@ -933,53 +951,119 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                 sendAmount = sendAmount.toDouble()
             )
             paymentViewModel.promo(promoItem)
-            observePromoResult()
         }
+
+        observePromoResult()
     }
 
     private fun observePromoResult() {
         paymentViewModel.promoResult.observe(this) { result ->
             try {
-                binding.btnAddPromoCode.visibility = View.VISIBLE
-                binding.promoCodeLayout.visibility = View.GONE
-                binding.promoCode.setText("")
-                if (result!!.promoResponseData!!.promoData != null) {
-                    sendAmount =
-                        result!!.promoResponseData!!.promoData!!.modifiedSendAmount.toString()
-                    commission =
-                        result!!.promoResponseData!!.promoData!!.modifiedCommision.toString()
-                    rate = result!!.promoResponseData!!.promoData!!.modifiedRate!!.toDouble()
-                    exchangeRate =
-                        result!!.promoResponseData!!.promoData!!.modifiedRate!!.toString()
-                    receiveAmount =
-                        result!!.promoResponseData!!.promoData!!.modifiedBeneAmount!!.toString()
+                if (result!!.promoResponseData!!.code == "0000") {
+                    binding.btnAddPromoCode.visibility = View.GONE
+                    binding.promoCodeLayout.visibility = View.GONE
+                    binding.promoLayout.visibility = View.VISIBLE
 
-                    if (sendAmount != "null") {
-                        gbpValue = sendAmount.toDouble()
-                        binding.sendAmount.text = "GBP $sendAmount"
-                    }
-                    if (commission != "null") {
-                        binding.transferFee.text = "GBP $commission"
-                    }
-                    if (sendAmount != "null" || commission != "null") {
-                        try {
-                            val sa = sendAmount.toDouble()
-                            val cm = commission.toDouble()
-                            totalAmount = sa + cm
-                            binding.totalAmount.text = "GBP $totalAmount"
-                        } catch (e: NumberFormatException) {
-                            e.message
+                    binding.previousSendAmount.visibility = View.GONE
+                    binding.previousTransferFee.visibility = View.GONE
+                    binding.previousTotalAmount.visibility = View.GONE
+                    binding.previousRate.visibility = View.GONE
+                    binding.previousReceiveAmount.visibility = View.GONE
+
+                    if (result!!.promoResponseData!!.promoData != null) {
+                        sendAmount =
+                            result!!.promoResponseData!!.promoData!!.modifiedSendAmount.toString()
+                        commission =
+                            result!!.promoResponseData!!.promoData!!.modifiedCommision.toString()
+                        rate = result!!.promoResponseData!!.promoData!!.modifiedRate!!.toDouble()
+
+                        exchangeRate =
+                            result!!.promoResponseData!!.promoData!!.modifiedRate!!.toString()
+
+                        receiveAmount =
+                            result!!.promoResponseData!!.promoData!!.modifiedBeneAmount!!.toString()
+
+                        if (sendAmount != "null") {
+                            gbpValue = sendAmount.toDouble()
+                            binding.sendAmount.text = "GBP $sendAmount"
                         }
-                    }
-                    if (exchangeRate != "null") {
-                        binding.exchangeRate.text = "GBP $exchangeRate"
-                    }
-                    if (receiveAmount != "null") {
-                        binding.receiveAmount.text = "BDT $receiveAmount"
+                        if (commission != "null") {
+                            binding.transferFee.text = "GBP $commission"
+                        }
+                        if (sendAmount != "null" || commission != "null") {
+                            try {
+                                val sa = sendAmount.toDouble()
+                                val cm = commission.toDouble()
+                                totalAmount = sa + cm
+                                binding.totalAmount.text = "GBP $totalAmount"
+                            } catch (e: NumberFormatException) {
+                                e.message
+                            }
+                        }
+                        if (exchangeRate != "null") {
+                            binding.exchangeRate.text = "BDT $exchangeRate"
+                        }
+                        if (receiveAmount != "null") {
+                            binding.receiveAmount.text = "BDT $receiveAmount"
+                        }
+
+                        val previousSendAmount =
+                            result!!.promoResponseData!!.promoData!!.sendAmount!!.toString()
+                        val previousTransferFee =
+                            result!!.promoResponseData!!.promoData!!.commision!!.toString()
+                        val previousRate =
+                            result!!.promoResponseData!!.promoData!!.rate!!.toString()
+                        val previousReceiveAmount =
+                            result!!.promoResponseData!!.promoData!!.beneAmount!!.toString()
+                        val promoMessage =
+                            result!!.promoResponseData!!.promoData!!.promoMsg!!.toString()
+
+                        if (previousSendAmount != "null") {
+                            binding.previousSendAmount.visibility = View.VISIBLE
+                            binding.previousSendAmount.hint = "GBP $previousSendAmount"
+                        }
+                        if (previousTransferFee != "null") {
+                            binding.previousTransferFee.visibility = View.VISIBLE
+                            binding.previousTransferFee.hint = "GBP $previousTransferFee"
+                        }
+                        if (previousRate != "null") {
+                            binding.previousRate.visibility = View.VISIBLE
+                            binding.previousRate.hint = "BDT $previousRate"
+                        }
+                        if (previousReceiveAmount != "null") {
+                            binding.previousReceiveAmount.visibility = View.VISIBLE
+                            binding.previousReceiveAmount.hint = "BDT $previousReceiveAmount"
+                        }
+
+                        if (promoMessage != "null") {
+                            binding.promoMessage.text = promoMessage
+                            binding.promo.text = "Your applied promo is: $promoCode"
+                        }
+
+
+                        updateValuesGBP()
                     }
 
-                    updateValuesGBP()
+                } else if (result!!.promoResponseData!!.code == "1111") {
+                    binding.btnAddPromoCode.visibility = View.GONE
+                    binding.promoCodeLayout.visibility = View.VISIBLE
+                    binding.promoLayout.visibility = View.GONE
+
+                    binding.previousSendAmount.visibility = View.GONE
+                    binding.previousTransferFee.visibility = View.GONE
+                    binding.previousTotalAmount.visibility = View.GONE
+                    binding.previousRate.visibility = View.GONE
+                    binding.previousReceiveAmount.visibility = View.GONE
+
+                    val snackbar =
+                        Snackbar.make(
+                            requireView(),
+                            result!!.promoResponseData!!.message.toString(),
+                            Snackbar.LENGTH_SHORT
+                        )
+                    snackbar.show()
                 }
+
             } catch (e: NullPointerException) {
                 e.message
             }

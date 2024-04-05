@@ -7,7 +7,7 @@ data class PromoResponseData(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Message")
-    val message: String?,
+    val message: Any?,
     @SerializedName("PromoData")
     val promoData: PromoData?
 )
