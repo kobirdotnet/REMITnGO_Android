@@ -148,13 +148,23 @@ class ChooseBankFragment : Fragment() {
             )
         }
 
-        val getBankItem = GetBankItem(
-            deviceId = deviceId,
-            params1 = beneficiaryId.toInt(),
-            params2 = orderType.toInt()
-        )
-        bankViewModel.getBank(getBankItem)
-        observeGetBankResult()
+        if (orderType=="null"){
+            val getBankItem = GetBankItem(
+                deviceId = deviceId,
+                params1 = beneficiaryId.toInt(),
+                params2 = 0
+            )
+            bankViewModel.getBank(getBankItem)
+            observeGetBankResult()
+        }else{
+            val getBankItem = GetBankItem(
+                deviceId = deviceId,
+                params1 = beneficiaryId.toInt(),
+                params2 = orderType.toInt()
+            )
+            bankViewModel.getBank(getBankItem)
+            observeGetBankResult()
+        }
     }
 
     private fun observeGetBankResult() {

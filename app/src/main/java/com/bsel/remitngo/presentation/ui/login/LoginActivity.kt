@@ -1,8 +1,10 @@
 package com.bsel.remitngo.presentation.ui.login
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -15,6 +17,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
@@ -54,6 +58,8 @@ class LoginActivity : AppCompatActivity() {
     lateinit var gso: GoogleSignInOptions
     lateinit var mAuth: FirebaseAuth
 
+    private val REQUEST_CONTACTS_PERMISSION = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
@@ -62,6 +68,8 @@ class LoginActivity : AppCompatActivity() {
         (application as Injector).createLoginSubComponent().inject(this)
         loginViewModel =
             ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
+
+        requestContactsPermission()
 
         preferenceManager = PreferenceManager(this@LoginActivity)
 
@@ -262,6 +270,40 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this@LoginActivity, "Login Failed: ", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    private fun requestContactsPermission() {
+        if (ContextCompat.checkSelfPermission(
+                this@LoginActivity,
+                Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(
+                this@LoginActivity,
+                arrayOf(Manifest.permission.READ_CONTACTS),
+                REQUEST_CONTACTS_PERMISSION
+            )
+        } else {
+            // Permission is already granted, proceed with your code
+//            retrieveAndDisplayContacts()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CONTACTS_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed with your code
+//                retrieveAndDisplayContacts()
+            } else {
+                // Permission denied, handle accordingly (e.g., show a message)
+            }
+        }
     }
 
     override fun onStart() {

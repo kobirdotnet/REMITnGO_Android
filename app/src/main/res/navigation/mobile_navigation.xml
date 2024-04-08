@@ -294,4 +294,11 @@
             app:destination="@id/nav_update_query" />
     </fragment>
 
+    <fragment
+        android:id="@+id/nav_notification"
+        android:name="com.bsel.remitngo.presentation.ui.notification.NotificationFragment"
+        android:label="@string/menu_notification"
+        tools:layout="@layout/fragment_notification" />
+
+
 </navigation>

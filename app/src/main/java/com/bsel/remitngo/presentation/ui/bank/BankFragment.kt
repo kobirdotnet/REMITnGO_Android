@@ -221,21 +221,39 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val branchName = binding.branchName.text.toString()
         val bankAccountNumber = binding.bankAccountNumber.text.toString()
 
-        val saveBankItem = SaveBankItem(
-            id = 0,
-            deviceId = deviceId,
-            userIPAddress = ipAddress.toString(),
-            orderType = orderType.toInt(),
-            cusBankInfoID = beneficiaryId.toInt(),
-            accountName = bankAccountName,
-            bankID = bankId.toInt(),
-            branchID = branchId.toInt(),
-            accountNo = bankAccountNumber,
-            isVersion113 = 0,
-            accountType = 0,
-            active = true
-        )
-        bankViewModel.saveBank(saveBankItem)
+        if (orderType=="null"){
+            val saveBankItem = SaveBankItem(
+                id = 0,
+                deviceId = deviceId,
+                userIPAddress = ipAddress.toString(),
+                orderType = 0,
+                cusBankInfoID = beneficiaryId.toInt(),
+                accountName = bankAccountName,
+                bankID = bankId.toInt(),
+                branchID = branchId.toInt(),
+                accountNo = bankAccountNumber,
+                isVersion113 = 0,
+                accountType = 0,
+                active = true
+            )
+            bankViewModel.saveBank(saveBankItem)
+        }else{
+            val saveBankItem = SaveBankItem(
+                id = 0,
+                deviceId = deviceId,
+                userIPAddress = ipAddress.toString(),
+                orderType = orderType.toInt(),
+                cusBankInfoID = beneficiaryId.toInt(),
+                accountName = bankAccountName,
+                bankID = bankId.toInt(),
+                branchID = branchId.toInt(),
+                accountNo = bankAccountNumber,
+                isVersion113 = 0,
+                accountType = 0,
+                active = true
+            )
+            bankViewModel.saveBank(saveBankItem)
+        }
     }
 
     private fun walletAccountForm() {

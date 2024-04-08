@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.nav_main,
                 R.id.nav_my_profile,
+                R.id.beneficiary,
                 R.id.nav_documents,
                 R.id.nav_transaction_history,
                 R.id.nav_cancellation,
@@ -87,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         val cancelRequest = headerView.findViewById<LinearLayout>(R.id.cancel_request)
         val generateQuery = headerView.findViewById<LinearLayout>(R.id.generate_query)
         val beneficiary = headerView.findViewById<LinearLayout>(R.id.beneficiary)
+        val notification = headerView.findViewById<LinearLayout>(R.id.notification)
         val settings = headerView.findViewById<LinearLayout>(R.id.settings)
         val support = headerView.findViewById<LinearLayout>(R.id.support)
         val logOut = headerView.findViewById<LinearLayout>(R.id.logOut)
@@ -123,6 +125,10 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.nav_my_profile)
             drawerLayout.close()
         }
+        beneficiary.setOnClickListener {
+            navController.navigate(R.id.nav_choose_beneficiary)
+            drawerLayout.close()
+        }
         kycDocument.setOnClickListener {
             navController.navigate(R.id.nav_documents)
             drawerLayout.close()
@@ -137,6 +143,10 @@ class MainActivity : AppCompatActivity() {
         }
         generateQuery.setOnClickListener {
             navController.navigate(R.id.nav_generate_query)
+            drawerLayout.close()
+        }
+        notification.setOnClickListener {
+            navController.navigate(R.id.nav_notification)
             drawerLayout.close()
         }
         settings.setOnClickListener {
