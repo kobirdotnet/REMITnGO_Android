@@ -454,12 +454,12 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             dialog.show()
         }
 
-        if (bankId != "null" || payingAgentId != "null") {
+        if (bankId == "null" || payingAgentId == "null") {
             calculateRate(
                 deviceId,
                 personId.toInt(),
-                bankId.toInt(),
-                payingAgentId.toInt(),
+                0,
+                0,
                 orderType.toInt(),
                 paymentType.toInt(),
                 4,
@@ -471,8 +471,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             calculateRate(
                 deviceId,
                 personId.toInt(),
-                0,
-                0,
+                bankId.toInt(),
+                payingAgentId.toInt(),
                 orderType.toInt(),
                 paymentType.toInt(),
                 4,
