@@ -1,6 +1,10 @@
 package com.bsel.remitngo.data.repository.profile.dataSourceImpl
 
 import com.bsel.remitngo.data.api.REMITnGoService
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordResponseItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationResponseItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -71,6 +75,14 @@ class ProfileRemoteDataSourceImpl(private val remitNgoService: REMITnGoService) 
 
     override suspend fun nationality(nationalityItem: NationalityItem): Response<NationalityResponseItem> {
         return remitNgoService.nationality(nationalityItem)
+    }
+
+    override suspend fun otpValidation(otpValidationItem: OtpValidationItem): Response<OtpValidationResponseItem> {
+        return remitNgoService.otpValidation(otpValidationItem)
+    }
+
+    override suspend fun phoneVerification(forgotPasswordItem: ForgotPasswordItem): Response<ForgotPasswordResponseItem> {
+        return remitNgoService.forgotPassword(forgotPasswordItem)
     }
 
 }

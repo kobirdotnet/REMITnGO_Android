@@ -1,5 +1,9 @@
 package com.bsel.remitngo.data.repository.profile.dataSource
 
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordResponseItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationResponseItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -42,6 +46,10 @@ interface ProfileRemoteDataSource {
     suspend fun occupation(occupationItem: OccupationItem): Response<OccupationResponseItem>
 
     suspend fun nationality(nationalityItem: NationalityItem): Response<NationalityResponseItem>
+
+    suspend fun otpValidation(otpValidationItem: OtpValidationItem): Response<OtpValidationResponseItem>
+
+    suspend fun phoneVerification(forgotPasswordItem: ForgotPasswordItem): Response<ForgotPasswordResponseItem>
 
 }
 

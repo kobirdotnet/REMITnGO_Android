@@ -1,5 +1,9 @@
 package com.bsel.remitngo.domain.repository
 
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordResponseItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationResponseItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -36,6 +40,8 @@ interface ProfileRepository {
     suspend fun occupationType(occupationTypeItem: OccupationTypeItem): OccupationTypeResponseItem?
     suspend fun occupation(occupationItem: OccupationItem): OccupationResponseItem?
     suspend fun nationality(nationalityItem: NationalityItem): NationalityResponseItem?
+    suspend fun otpValidation(otpValidationItem: OtpValidationItem): OtpValidationResponseItem?
+    suspend fun phoneVerification(forgotPasswordItem: ForgotPasswordItem): ForgotPasswordResponseItem?
 
 }
 

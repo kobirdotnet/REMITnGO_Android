@@ -4,6 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordResponseItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationResponseItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -138,6 +142,26 @@ class ProfileViewModel(private val profileUseCase: ProfileUseCase) : ViewModel()
         viewModelScope.launch {
             val result = profileUseCase.execute(nationalityItem)
             _nationalityResult.value = result
+        }
+    }
+
+    private val _otpValidationResult = MutableLiveData<OtpValidationResponseItem?>()
+    val otpValidationResult: LiveData<OtpValidationResponseItem?> = _otpValidationResult
+
+    fun otpValidation(otpValidationItem: OtpValidationItem) {
+        viewModelScope.launch {
+            val result = profileUseCase.execute(otpValidationItem)
+            _otpValidationResult.value = result
+        }
+    }
+
+    private val _phoneVerificationResult = MutableLiveData<ForgotPasswordResponseItem?>()
+    val phoneVerificationResult: LiveData<ForgotPasswordResponseItem?> = _phoneVerificationResult
+
+    fun phoneVerification(forgotPasswordItem: ForgotPasswordItem) {
+        viewModelScope.launch {
+            val result = profileUseCase.execute(forgotPasswordItem)
+            _phoneVerificationResult.value = result
         }
     }
 

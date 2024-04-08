@@ -6,7 +6,6 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -25,11 +24,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottomSheet.ChangePasswordBottomSheet
 import com.bsel.remitngo.databinding.ActivityMainBinding
 import com.bsel.remitngo.presentation.ui.login.LoginActivity
 import com.google.android.material.navigation.NavigationView
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,10 +36,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
-
-    private lateinit var changePassword: String
-
-    private val changePasswordBottomSheet: ChangePasswordBottomSheet by lazy { ChangePasswordBottomSheet() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -165,12 +158,6 @@ class MainActivity : AppCompatActivity() {
             builder.setNegativeButton("CANCEL") { _: DialogInterface, _: Int -> }
             val dialog = builder.create()
             dialog.show()
-        }
-
-        changePassword = intent.getStringExtra("changePassword").toString()
-        Log.i("info", "changePassword: $changePassword")
-        if (changePassword == "12345") {
-            changePasswordBottomSheet.show(supportFragmentManager, changePasswordBottomSheet.tag)
         }
     }
 

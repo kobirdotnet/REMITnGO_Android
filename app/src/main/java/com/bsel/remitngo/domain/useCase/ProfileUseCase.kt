@@ -1,5 +1,9 @@
 package com.bsel.remitngo.domain.useCase
 
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
+import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordResponseItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationResponseItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -64,6 +68,14 @@ class ProfileUseCase(private val profileRepository: ProfileRepository) {
 
     suspend fun execute(nationalityItem: NationalityItem): NationalityResponseItem? {
         return profileRepository.nationality(nationalityItem)
+    }
+
+    suspend fun execute(otpValidationItem: OtpValidationItem): OtpValidationResponseItem? {
+        return profileRepository.otpValidation(otpValidationItem)
+    }
+
+    suspend fun execute(forgotPasswordItem: ForgotPasswordItem): ForgotPasswordResponseItem? {
+        return profileRepository.phoneVerification(forgotPasswordItem)
     }
 
 }

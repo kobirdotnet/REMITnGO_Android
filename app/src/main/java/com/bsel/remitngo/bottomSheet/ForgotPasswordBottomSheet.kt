@@ -216,7 +216,7 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
         val phoneNumber = binding.phoneNumber.text.toString()
 
         val forgotPasswordItem = ForgotPasswordItem(
-            isForgotByEmail = true,
+            isForgotByEmail = false,
             phoneOrEmail = phoneNumber
         )
         loginViewModel.forgotPassword(forgotPasswordItem)

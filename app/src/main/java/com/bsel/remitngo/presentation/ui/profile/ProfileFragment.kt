@@ -368,7 +368,9 @@ class ProfileFragment : Fragment() {
                     binding.emailAddress.text = "$email"
 
                     isMobileOTPValidate = data!!.isMobileOTPValidate!!
+                    Log.i("info","isMobileOTPValidate: "+isMobileOTPValidate)
                     mobile = data!!.mobile.toString()
+                    Log.i("info","mobile: "+mobile)
                     binding.phoneNumber.text = "$mobile"
                     if (!isMobileOTPValidate) {
                         binding.mobileEdit.visibility = View.VISIBLE

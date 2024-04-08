@@ -284,5 +284,8 @@ interface REMITnGoService {
     @POST("api/Home/SetPassword")
     suspend fun setPassword(@Body setPasswordItem: SetPasswordItem): Response<SetPasswordResponseItem>
 
+    @POST("api/Home/ForgotPassword")
+    suspend fun phoneVerification(@Body forgotPasswordItem: ForgotPasswordItem): Response<ForgotPasswordResponseItem>
+
 }
 

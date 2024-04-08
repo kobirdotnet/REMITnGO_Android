@@ -35,8 +35,6 @@ class LoginActivity : AppCompatActivity() {
 
     private val forgotPasswordBottomSheet: ForgotPasswordBottomSheet by lazy { ForgotPasswordBottomSheet() }
 
-    private lateinit var changePassword: String
-
     private lateinit var deviceId: String
 
     private lateinit var preferenceManager: PreferenceManager
@@ -45,9 +43,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
-        binding.email.setText("mizan.se@outlook.com")
-        binding.password.setText("Nilasish@1994")
-
         preferenceManager = PreferenceManager(this@LoginActivity)
 
         (application as Injector).createLoginSubComponent().inject(this)
@@ -55,13 +50,15 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel =
             ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
 
+        deviceId = getDeviceId(applicationContext)
+
+        binding.email.setText("kobirdotnet@gmail.com")
+        binding.password.setText("Normal@123")
+
         emailFocusListener()
         passwordFocusListener()
 
-        binding.logIn.setOnClickListener { logInForm() }
-
         binding.btnForgotPassword.setOnClickListener {
-            changePassword = "12345"
             forgotPasswordBottomSheet.show(supportFragmentManager, forgotPasswordBottomSheet.tag)
         }
 
@@ -70,11 +67,11 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        changePassword = "null"
+        binding.logIn.setOnClickListener { logInForm() }
+
+        binding.logInWithGoogle.setOnClickListener { }
 
         observeLoginResult()
-
-        deviceId = getDeviceId(applicationContext)
     }
 
     private fun observeLoginResult() {
@@ -90,7 +87,6 @@ class LoginActivity : AppCompatActivity() {
                 }
                 TokenManager.setToken(result.token)
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                intent.putExtra("changePassword", changePassword)
                 startActivity(intent)
             } else {
                 val parentLayout: View = findViewById(android.R.id.content)
