@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
         setSupportActionBar(binding.appBarMain.toolbar)
 
         drawerLayout = binding.drawerLayout

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.bsel.remitngo.R
 import com.bsel.remitngo.databinding.ActivitySplashBinding
 import com.bsel.remitngo.presentation.ui.login.LoginActivity
@@ -17,6 +18,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val imgAnim = AnimationUtils.loadAnimation(
             applicationContext, R.anim.slide_fade_in
