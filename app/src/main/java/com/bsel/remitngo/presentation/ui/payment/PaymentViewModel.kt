@@ -18,6 +18,12 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyResponseItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
+import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
 import com.bsel.remitngo.data.model.promoCode.PromoItem
@@ -148,6 +154,36 @@ class PaymentViewModel(private val paymentUseCase: PaymentUseCase) : ViewModel()
         viewModelScope.launch {
             val result = paymentUseCase.executeCreateReceipt(transactionId)
             _createReceiptResult.value = result
+        }
+    }
+
+    private val _profileResult = MutableLiveData<ProfileResponseItem?>()
+    val profileResult: LiveData<ProfileResponseItem?> = _profileResult
+
+    fun profile(profileItem: ProfileItem) {
+        viewModelScope.launch {
+            val result = paymentUseCase.execute(profileItem)
+            _profileResult.value = result
+        }
+    }
+
+    private val _phoneVerifyResult = MutableLiveData<PhoneVerifyResponseItem?>()
+    val phoneVerifyResult: LiveData<PhoneVerifyResponseItem?> = _phoneVerifyResult
+
+    fun phoneVerify(phoneVerifyItem: PhoneVerifyItem) {
+        viewModelScope.launch {
+            val result = paymentUseCase.execute(phoneVerifyItem)
+            _phoneVerifyResult.value = result
+        }
+    }
+
+    private val _phoneOtpVerifyResult = MutableLiveData<PhoneOtpVerifyResponseItem?>()
+    val phoneOtpVerifyResult: LiveData<PhoneOtpVerifyResponseItem?> = _phoneOtpVerifyResult
+
+    fun phoneOtpVerify(phoneOtpVerifyItem: PhoneOtpVerifyItem) {
+        viewModelScope.launch {
+            val result = paymentUseCase.execute(phoneOtpVerifyItem)
+            _phoneOtpVerifyResult.value = result
         }
     }
 

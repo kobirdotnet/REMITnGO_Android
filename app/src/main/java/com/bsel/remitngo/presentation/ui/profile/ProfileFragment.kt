@@ -356,6 +356,7 @@ class ProfileFragment : Fragment() {
                     postCode = data!!.postCode.toString()
 
                     address = data!!.address.toString()
+                    Log.i("info","address: "+address)
                     binding.userAddress.text = "$address"
 
                     ukDivisionId = data!!.divisionId.toString()
@@ -370,7 +371,6 @@ class ProfileFragment : Fragment() {
                     isMobileOTPValidate = data!!.isMobileOTPValidate!!
                     Log.i("info","isMobileOTPValidate: "+isMobileOTPValidate)
                     mobile = data!!.mobile.toString()
-                    Log.i("info","mobile: "+mobile)
                     binding.phoneNumber.text = "$mobile"
                     if (!isMobileOTPValidate) {
                         binding.mobileEdit.visibility = View.VISIBLE

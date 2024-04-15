@@ -15,6 +15,12 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyResponseItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
+import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
 import com.bsel.remitngo.data.model.promoCode.PromoItem
@@ -75,6 +81,16 @@ class PaymentRemoteDataSourceImpl(private val remitNgoService: REMITnGoService) 
 
     override suspend fun createReceipt(transactionId: String): Response<CreateReceiptResponse> {
         return remitNgoService.createReceipt(transactionId)
+    }
+
+    override suspend fun profile(profileItem: ProfileItem): Response<ProfileResponseItem> {
+        return remitNgoService.profile(profileItem)
+    }
+    override suspend fun phoneVerify(phoneVerifyItem: PhoneVerifyItem): Response<PhoneVerifyResponseItem> {
+        return remitNgoService.phoneVerify(phoneVerifyItem)
+    }
+    override suspend fun phoneOtpVerify(phoneOtpVerifyItem: PhoneOtpVerifyItem): Response<PhoneOtpVerifyResponseItem> {
+        return remitNgoService.phoneOtpVerify(phoneOtpVerifyItem)
     }
 
 }

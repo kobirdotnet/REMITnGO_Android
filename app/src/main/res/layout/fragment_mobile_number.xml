@@ -75,7 +75,8 @@
                     android:layout_weight="2"
                     android:gravity="center_vertical"
                     android:hint="UK Code"
-                    app:helperTextTextColor="@android:color/holo_red_dark">
+                    app:helperTextTextColor="@android:color/holo_red_dark"
+                    android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/country_code"
@@ -93,10 +94,9 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/phone_number_container"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="8dp"
                     android:layout_weight="5"
                     android:gravity="center_vertical"
                     android:hint="Phone Number"

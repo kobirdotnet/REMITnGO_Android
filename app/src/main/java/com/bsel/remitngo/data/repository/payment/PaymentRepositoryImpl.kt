@@ -15,6 +15,12 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyResponseItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
+import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
 import com.bsel.remitngo.data.model.promoCode.PromoItem
@@ -217,6 +223,56 @@ class PaymentRepositoryImpl(private val paymentRemoteDataSource: PaymentRemoteDa
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error createReceipt: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun profile(profileItem: ProfileItem): ProfileResponseItem? {
+        return try {
+            val response = paymentRemoteDataSource.profile(profileItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to Profile: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error Profile: ${exception.message}", exception)
+            null
+        }
+    }
+    override suspend fun phoneVerify(phoneVerifyItem: PhoneVerifyItem): PhoneVerifyResponseItem? {
+        return try {
+            val response = paymentRemoteDataSource.phoneVerify(phoneVerifyItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to phoneVerify: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error phoneVerify: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun phoneOtpVerify(phoneOtpVerifyItem: PhoneOtpVerifyItem): PhoneOtpVerifyResponseItem? {
+        return try {
+            val response = paymentRemoteDataSource.phoneOtpVerify(phoneOtpVerifyItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to phoneOtpVerify: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error phoneOtpVerify: ${exception.message}", exception)
             null
         }
     }

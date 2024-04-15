@@ -5,6 +5,10 @@ import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
 import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordResponseItem
 import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
 import com.bsel.remitngo.data.model.forgotPassword.OtpValidationResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyResponseItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -250,6 +254,40 @@ class ProfileRepositoryImpl(private val profileRemoteDataSource: ProfileRemoteDa
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error phoneVerification: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun phoneVerify(phoneVerifyItem: PhoneVerifyItem): PhoneVerifyResponseItem? {
+        return try {
+            val response = profileRemoteDataSource.phoneVerify(phoneVerifyItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to phoneVerify: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error phoneVerify: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun phoneOtpVerify(phoneOtpVerifyItem: PhoneOtpVerifyItem): PhoneOtpVerifyResponseItem? {
+        return try {
+            val response = profileRemoteDataSource.phoneOtpVerify(phoneOtpVerifyItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to phoneOtpVerify: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error phoneOtpVerify: ${exception.message}", exception)
             null
         }
     }

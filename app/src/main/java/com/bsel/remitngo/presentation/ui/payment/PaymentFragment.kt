@@ -14,17 +14,17 @@ import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottomSheet.ReasonBottomSheet
 import com.bsel.remitngo.bottomSheet.SourceOfIncomeBottomSheet
+import com.bsel.remitngo.bottomSheet.TransactionOtpVerifyBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.api.RetrofitClient
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnPersonalInfoItemSelectedListener
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
-import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeData
 import com.bsel.remitngo.data.model.profile.nationality.NationalityData
 import com.bsel.remitngo.data.model.profile.occupation.OccupationData
@@ -55,7 +55,6 @@ import com.emerchantpay.gateway.genesisandroid.api.ui.AlertDialogHandler
 import com.emerchantpay.gateway.genesisandroid.api.util.Configuration
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
-import retrofit2.Response
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -74,6 +73,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
 
     private val reasonBottomSheet: ReasonBottomSheet by lazy { ReasonBottomSheet() }
     private val sourceOfIncomeBottomSheet: SourceOfIncomeBottomSheet by lazy { SourceOfIncomeBottomSheet() }
+    private val transactionOtpVerifyBottomSheet: TransactionOtpVerifyBottomSheet by lazy { TransactionOtpVerifyBottomSheet() }
 
     private lateinit var personId: String
     private lateinit var firstName: String
@@ -128,6 +128,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     private lateinit var transactionCode: String
 
     private lateinit var promoCode: String
+
+    private lateinit var address: String
 
     private var rate = 0.0
     private var gbpValue = 0.0
@@ -452,20 +454,13 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         paymentViewModel.encryptResult.observe(this) { result ->
             if (result!!.data != null) {
                 encryptCode = result.data.toString()
-                if (paymentType == "4") {
-                    cardPayment()
-                } else if (paymentType == "3") {
-                    val sendAmountValue = binding.sendAmount.text.toString()
-                    val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
-                    val bundle = Bundle().apply {
-                        putString("sendAmount", sendAmount)
-                        putString("transactionCode", transactionCode)
-                    }
-                    findNavController().navigate(
-                        R.id.action_nav_review_to_nav_complete_bank_transaction,
-                        bundle
-                    )
-                }
+
+                val profileItem = ProfileItem(
+                    deviceId = deviceId,
+                    personId = personId.toInt()
+                )
+                paymentViewModel.profile(profileItem)
+                observeProfileResult()
             }
         }
     }
@@ -1075,6 +1070,54 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             val bdtValue = gbpValue * rate
             val formattedBDT = decimalFormat.format(bdtValue)
             binding.receiveAmount.text = "BDT $formattedBDT"
+        }
+    }
+
+    private fun observeProfileResult() {
+        paymentViewModel.profileResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (data in result.data!!) {
+
+                    address = data!!.address.toString()
+                    if (::address.isInitialized && address != "null") {
+                        val bundle = Bundle().apply {
+                            putString("address", address)
+                        }
+                        findNavController().navigate(
+                            R.id.action_nav_review_to_nav_save_address,
+                            bundle
+                        )
+                    }
+
+                    val isMobileOTPValidate = data!!.isMobileOTPValidate!!
+                    val mobile = data!!.mobile.toString()
+                    if (!isMobileOTPValidate) {
+                        if (!transactionOtpVerifyBottomSheet.isAdded) {
+                            transactionOtpVerifyBottomSheet.setPhoneNumber(mobile)
+                            transactionOtpVerifyBottomSheet.show(
+                                childFragmentManager,
+                                transactionOtpVerifyBottomSheet.tag
+                            )
+                        }
+                    } else {
+                        if (paymentType == "4") {
+                            cardPayment()
+                        } else if (paymentType == "3") {
+                            val sendAmountValue = binding.sendAmount.text.toString()
+                            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+                            val bundle = Bundle().apply {
+                                putString("sendAmount", sendAmount)
+                                putString("transactionCode", transactionCode)
+                            }
+                            findNavController().navigate(
+                                R.id.action_nav_review_to_nav_complete_bank_transaction,
+                                bundle
+                            )
+                        }
+                    }
+
+                }
+            }
         }
     }
 

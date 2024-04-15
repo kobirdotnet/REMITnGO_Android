@@ -14,6 +14,12 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyResponseItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
+import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeResponseItem
 import com.bsel.remitngo.data.model.promoCode.PromoItem
@@ -39,6 +45,10 @@ interface PaymentRemoteDataSource {
     suspend fun sourceOfIncome(sourceOfIncomeItem: SourceOfIncomeItem): Response<SourceOfIncomeResponseItem>
     suspend fun promo(promoItem: PromoItem): Response<PromoResponseItem>
     suspend fun createReceipt(transactionId: String): Response<CreateReceiptResponse>
+
+    suspend fun profile(profileItem: ProfileItem): Response<ProfileResponseItem>
+    suspend fun phoneVerify(phoneVerifyItem: PhoneVerifyItem): Response<PhoneVerifyResponseItem>
+    suspend fun phoneOtpVerify(phoneOtpVerifyItem: PhoneOtpVerifyItem): Response<PhoneOtpVerifyResponseItem>
 
 }
 

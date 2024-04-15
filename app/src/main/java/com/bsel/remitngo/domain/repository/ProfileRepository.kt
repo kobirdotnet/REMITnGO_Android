@@ -4,6 +4,10 @@ import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
 import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordResponseItem
 import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
 import com.bsel.remitngo.data.model.forgotPassword.OtpValidationResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyResponseItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -42,6 +46,8 @@ interface ProfileRepository {
     suspend fun nationality(nationalityItem: NationalityItem): NationalityResponseItem?
     suspend fun otpValidation(otpValidationItem: OtpValidationItem): OtpValidationResponseItem?
     suspend fun phoneVerification(forgotPasswordItem: ForgotPasswordItem): ForgotPasswordResponseItem?
+    suspend fun phoneVerify(phoneVerifyItem: PhoneVerifyItem): PhoneVerifyResponseItem?
+    suspend fun phoneOtpVerify(phoneOtpVerifyItem: PhoneOtpVerifyItem): PhoneOtpVerifyResponseItem?
 
 }
 

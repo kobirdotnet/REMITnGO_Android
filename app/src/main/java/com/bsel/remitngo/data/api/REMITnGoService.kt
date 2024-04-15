@@ -58,6 +58,10 @@ import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
 import com.bsel.remitngo.data.model.percentage.PercentageItem
 import com.bsel.remitngo.data.model.percentage.PercentageResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyResponseItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyResponseItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeItem
@@ -286,6 +290,11 @@ interface REMITnGoService {
 
     @POST("api/Home/ForgotPassword")
     suspend fun phoneVerification(@Body forgotPasswordItem: ForgotPasswordItem): Response<ForgotPasswordResponseItem>
+
+    @POST("api/Home/GenerateOtpForMobileOrEmailVarify")
+    suspend fun phoneVerify(@Body phoneVerifyItem: PhoneVerifyItem): Response<PhoneVerifyResponseItem>
+    @POST("api/Home/MobileOrEmailVarificationUpdate")
+    suspend fun phoneOtpVerify(@Body phoneOtpVerifyItem: PhoneOtpVerifyItem): Response<PhoneOtpVerifyResponseItem>
 
 }
 

@@ -4,14 +4,12 @@ import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.view.View
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
-import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
 import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
 import com.bsel.remitngo.data.model.forgotPassword.SetPasswordItem
@@ -22,7 +20,6 @@ import com.bsel.remitngo.presentation.ui.login.LoginViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
@@ -35,6 +32,7 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
     private lateinit var binding: ForgotPasswordLayoutBinding
 
     private var changeValue: Boolean = true
+    private var otpSendBy: String = "Email"
 
     private lateinit var personId: String
     private lateinit var otp: String
@@ -91,6 +89,7 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
             binding.email.text = null
 
             changeValue = false
+            otpSendBy = "Phone"
         }
 
         binding.btnMobile.setOnClickListener {
@@ -101,6 +100,7 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
             binding.phoneNumber.text = null
 
             changeValue = true
+            otpSendBy = "Email"
         }
 
         binding.btnVerify.setOnClickListener { passwordForm() }
@@ -147,13 +147,13 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
     private fun observeOtpResult() {
         loginViewModel.otpValidationResult.observe(this) { result ->
             if (result!! != null) {
-                if (result!!.code=="000"){
+                if (result!!.code == "000") {
                     binding.verifyLayout.visibility = View.GONE
                     binding.validationLayout.visibility = View.GONE
                     binding.setPasswordLayout.visibility = View.VISIBLE
 
                     binding.btnSetPassword.setOnClickListener { setPasswordForm() }
-                }else{
+                } else {
 
                     binding.verifyLayout.visibility = View.GONE
                     binding.validationLayout.visibility = View.VISIBLE
@@ -169,14 +169,14 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
     private fun observeSetPasswordResult() {
         loginViewModel.setPasswordResult.observe(this) { result ->
             if (result!! != null) {
-                if (result!!.code=="000"){
+                if (result!!.code == "000") {
                     binding.verifyLayout.visibility = View.VISIBLE
                     binding.validationLayout.visibility = View.GONE
                     binding.setPasswordLayout.visibility = View.GONE
-                    otp=="null"
-                    personId=="null"
+                    otp == "null"
+                    personId == "null"
                     dismiss()
-                }else{
+                } else {
                     binding.verifyLayout.visibility = View.GONE
                     binding.validationLayout.visibility = View.GONE
                     binding.setPasswordLayout.visibility = View.VISIBLE
@@ -234,8 +234,9 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
 
         val otpValidationItem = OtpValidationItem(
             otp = otp,
+            otpSendBy = otpSendBy,
             otpType = 2,
-            personId=personId.toInt()
+            personId = personId.toInt()
         )
         loginViewModel.otpValidation(otpValidationItem)
     }
@@ -245,10 +246,11 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
         val validNewPassword = binding.newPasswordContainer.helperText == null
         binding.confirmNewPasswordContainer.helperText = validConfirmNewPassword()
         val validConfirmNewPassword = binding.confirmNewPasswordContainer.helperText == null
-        if (validNewPassword && validConfirmNewPassword){
+        if (validNewPassword && validConfirmNewPassword) {
             submitNewPassword()
         }
     }
+
     private fun submitNewPassword() {
         val newPassword = binding.newPassword.text.toString()
         val confirmNewPassword = binding.confirmNewPassword.text.toString()
@@ -256,7 +258,7 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
         val setPasswordItem = SetPasswordItem(
             confirmNewPassword = confirmNewPassword,
             newPassword = newPassword,
-            personId=personId.toInt()
+            personId = personId.toInt()
         )
         loginViewModel.setPassword(setPasswordItem)
     }

@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
     lateinit var gso: GoogleSignInOptions
     lateinit var mAuth: FirebaseAuth
 
-    private val REQUEST_CONTACTS_PERMISSION = 1
+    private val REQUEST_CONTACTS_AND_CAMERA_PERMISSIONS = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel =
             ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
 
-        requestContactsPermission()
+        requestContactsAndCameraPermissions()
 
         preferenceManager = PreferenceManager(this@LoginActivity)
 
@@ -154,6 +154,89 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    private fun googleLogin() {
+        val signInIntent = mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            Log.i("info", "loginTask email: ${task.result.email}")
+            Log.i("info", "loginTask id: ${task.result.id}")
+            Log.i("info", "loginTask idToken: ${task.result.idToken}")
+            Log.i("info", "loginTask displayName: ${task.result.displayName}")
+            Log.i("info", "loginTask familyName: ${task.result.familyName}")
+            Log.i("info", "loginTask account: ${task.result.account}")
+            val exception = task.exception
+            Log.i("info", "exception: $exception")
+
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)!!
+                Log.i("info", "loginAccount email: ${account.email}")
+                Log.i("info", "loginAccount id: ${account.id}")
+                Log.i("info", "loginAccount idToken: ${account.idToken}")
+                Log.i("info", "loginAccount displayName: ${account.displayName}")
+                Log.i("info", "loginAccount familyName: ${account.familyName}")
+                Log.i("info", "loginAccount account: ${account.account}")
+                firebaseAuthWithGoogle(account)
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Toast.makeText(this@LoginActivity, "Login Failed", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+
+        mAuth.signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Toast.makeText(this@LoginActivity, "Login Successful: ", Toast.LENGTH_SHORT).show()
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Toast.makeText(this@LoginActivity, "Login Failed: ", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun requestContactsAndCameraPermissions() {
+        val permissionsToRequest = mutableListOf<String>()
+
+        if (ContextCompat.checkSelfPermission(
+                this@LoginActivity,
+                Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsToRequest.add(Manifest.permission.READ_CONTACTS)
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                this@LoginActivity,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsToRequest.add(Manifest.permission.CAMERA)
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this@LoginActivity,
+                permissionsToRequest.toTypedArray(),
+                REQUEST_CONTACTS_AND_CAMERA_PERMISSIONS
+            )
+        }
+    }
+
+
+
     //Form validation
     private fun emailFocusListener() {
         binding.email.setOnFocusChangeListener { _, focused ->
@@ -217,93 +300,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         return deviceId
-    }
-
-    private fun googleLogin() {
-        val signInIntent = mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            Log.i("info", "loginTask email: ${task.result.email}")
-            Log.i("info", "loginTask id: ${task.result.id}")
-            Log.i("info", "loginTask idToken: ${task.result.idToken}")
-            Log.i("info", "loginTask displayName: ${task.result.displayName}")
-            Log.i("info", "loginTask familyName: ${task.result.familyName}")
-            Log.i("info", "loginTask account: ${task.result.account}")
-            val exception = task.exception
-            Log.i("info", "exception: $exception")
-
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)!!
-                Log.i("info", "loginAccount email: ${account.email}")
-                Log.i("info", "loginAccount id: ${account.id}")
-                Log.i("info", "loginAccount idToken: ${account.idToken}")
-                Log.i("info", "loginAccount displayName: ${account.displayName}")
-                Log.i("info", "loginAccount familyName: ${account.familyName}")
-                Log.i("info", "loginAccount account: ${account.account}")
-                firebaseAuthWithGoogle(account)
-            } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Toast.makeText(this@LoginActivity, "Login Failed", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-
-        mAuth.signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Toast.makeText(this@LoginActivity, "Login Successful: ", Toast.LENGTH_SHORT).show()
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(this@LoginActivity, "Login Failed: ", Toast.LENGTH_SHORT).show()
-                }
-            }
-    }
-
-    private fun requestContactsPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this@LoginActivity,
-                Manifest.permission.READ_CONTACTS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permission is not granted, request it
-            ActivityCompat.requestPermissions(
-                this@LoginActivity,
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                REQUEST_CONTACTS_PERMISSION
-            )
-        } else {
-            // Permission is already granted, proceed with your code
-//            retrieveAndDisplayContacts()
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CONTACTS_PERMISSION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, proceed with your code
-//                retrieveAndDisplayContacts()
-            } else {
-                // Permission denied, handle accordingly (e.g., show a message)
-            }
-        }
     }
 
     override fun onStart() {

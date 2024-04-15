@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_nav_review_to_nav_main"
             app:destination="@id/nav_main" />
+        <action
+            android:id="@+id/action_nav_review_to_nav_save_address"
+            app:destination="@id/nav_save_address" />
     </fragment>
 
     <fragment

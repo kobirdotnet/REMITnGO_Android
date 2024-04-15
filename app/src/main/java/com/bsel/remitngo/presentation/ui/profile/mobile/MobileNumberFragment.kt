@@ -1,24 +1,19 @@
 package com.bsel.remitngo.presentation.ui.profile.mobile
 
 import android.content.Context
-import android.graphics.Color
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
+import com.bsel.remitngo.bottomSheet.PhoneOtpVerifyBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.forgotPassword.ForgotPasswordItem
-import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
-import com.bsel.remitngo.data.model.profile.city.CityItem
-import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyItem
 import com.bsel.remitngo.databinding.FragmentMobileNumberBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
@@ -33,10 +28,13 @@ class MobileNumberFragment : Fragment() {
 
     private lateinit var binding: FragmentMobileNumberBinding
 
+    private val phoneOtpVerifyBottomSheet: PhoneOtpVerifyBottomSheet by lazy { PhoneOtpVerifyBottomSheet() }
+
     private lateinit var preferenceManager: PreferenceManager
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
+
     private lateinit var personId: String
 
     private lateinit var mobile: String
@@ -72,14 +70,12 @@ class MobileNumberFragment : Fragment() {
 
         binding.btnSave.setOnClickListener { phoneNumberForm() }
 
-        observePhoneVerificationResult()
-        observeOtpResult()
-        observeUpdateProfileResult()
+        observePhoneVerifyResult()
 
     }
 
-    private fun observePhoneVerificationResult() {
-        profileViewModel.phoneVerificationResult.observe(this) { result ->
+    private fun observePhoneVerifyResult() {
+        profileViewModel.phoneVerifyResult.observe(this) { result ->
             if (result!! != null) {
                 val resultMessage = result!!.message
                 val parts = resultMessage!!.split("*")
@@ -87,65 +83,15 @@ class MobileNumberFragment : Fragment() {
                     personId = parts[0]
                     otp = parts[1]
                     message = parts.subList(2, parts.size).joinToString("*")
+
+                    if (personId!="null"){
+                        phoneOtpVerifyBottomSheet.show(childFragmentManager, phoneOtpVerifyBottomSheet.tag)
+                    }
+
                 } else {
                     message = result!!.message.toString()
                 }
 
-                if (::otp.isInitialized) {
-                    val otpValidationItem = OtpValidationItem(
-                        otp = otp,
-                        otpType = 2,
-                        personId=personId.toInt()
-                    )
-                    profileViewModel.otpValidation(otpValidationItem)
-                }
-
-            }
-        }
-    }
-
-    private fun observeOtpResult() {
-        profileViewModel.otpValidationResult.observe(this) { result ->
-            if (result!! != null) {
-                if (result!!.code=="000"){
-                    val phoneNumber = binding.phoneNumber.text.toString()
-                    val updateProfileItem = UpdateProfileItem(
-                        deviceId = deviceId,
-                        personId = personId.toInt(),
-                        updateType = 3,
-                        firstname = "",
-                        lastname = "",
-                        mobile = phoneNumber,
-                        email = "",
-                        dob = "1999-03-02",
-                        gender = 0,
-                        nationality = 0,
-                        occupationTypeId = 0,
-                        occupationCode = 0,
-                        postcode = "",
-                        divisionId = 0,
-                        districtId = 0,
-                        thanaId = 0,
-                        buildingno = "",
-                        housename = "",
-                        address = "",
-                        annualNetIncomeId = 0,
-                        sourceOfIncomeId = 0,
-                        sourceOfFundId = 0,
-                        userIPAddress = ipAddress
-                    )
-                    profileViewModel.updateProfile(updateProfileItem)
-                }
-            }
-        }
-    }
-
-    private fun observeUpdateProfileResult() {
-        profileViewModel.updateProfileResult.observe(this) { result ->
-            if (result != null) {
-                findNavController().navigate(
-                    R.id.action_nav_mobile_number_to_nav_my_profile
-                )
             }
         }
     }
@@ -164,11 +110,11 @@ class MobileNumberFragment : Fragment() {
     private fun submitPhoneNumberForm() {
         val phoneNumber = binding.phoneNumber.text.toString()
 
-        val forgotPasswordItem = ForgotPasswordItem(
-            isForgotByEmail = false,
+        val phoneVerifyItem = PhoneVerifyItem(
+            isVerifiyEmail = false,
             phoneOrEmail = phoneNumber
         )
-        profileViewModel.phoneVerification(forgotPasswordItem)
+        profileViewModel.phoneVerify(phoneVerifyItem)
     }
 
     //Form validation
