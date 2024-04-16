@@ -7,6 +7,8 @@ import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseItem
 import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
@@ -51,6 +53,8 @@ interface PaymentRepository {
     suspend fun profile(profileItem: ProfileItem): ProfileResponseItem?
     suspend fun phoneVerify(phoneVerifyItem: PhoneVerifyItem): PhoneVerifyResponseItem?
     suspend fun phoneOtpVerify(phoneOtpVerifyItem: PhoneOtpVerifyItem): PhoneOtpVerifyResponseItem?
+
+    suspend fun requireDocument(requireDocumentItem: RequireDocumentItem): RequireDocumentResponseItem?
 
 }
 

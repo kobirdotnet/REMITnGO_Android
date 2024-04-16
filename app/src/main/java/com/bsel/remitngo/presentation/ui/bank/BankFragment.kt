@@ -62,6 +62,7 @@ class BankFragment : Fragment(), OnBankSelectedListener {
     private lateinit var bankName: String
     private lateinit var payingAgentId: String
 
+    private lateinit var benId: String
     private lateinit var beneficiaryId: String
     private lateinit var beneficiaryName: String
     private lateinit var beneficiaryPhoneNumber: String
@@ -113,6 +114,7 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         bankName = arguments?.getString("bankName").toString()
         payingAgentId = arguments?.getString("payingAgentId").toString()
 
+        benId = arguments?.getString("benId").toString()
         beneficiaryId = arguments?.getString("beneficiaryId").toString()
         beneficiaryName = arguments?.getString("beneficiaryName").toString()
         beneficiaryPhoneNumber = arguments?.getString("beneficiaryPhoneNumber").toString()
@@ -181,6 +183,7 @@ class BankFragment : Fragment(), OnBankSelectedListener {
                     putString("bankName", bankName)
                     putString("payingAgentId", payingAgentId)
 
+                    putString("benId", benId)
                     putString("beneficiaryId", beneficiaryId)
                     putString("beneficiaryName", beneficiaryName)
                     putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)

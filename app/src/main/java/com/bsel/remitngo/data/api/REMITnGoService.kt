@@ -33,6 +33,8 @@ import com.bsel.remitngo.data.model.district.DistrictItem
 import com.bsel.remitngo.data.model.district.DistrictResponseItem
 import com.bsel.remitngo.data.model.division.DivisionItem
 import com.bsel.remitngo.data.model.division.DivisionResponseItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
@@ -295,6 +297,8 @@ interface REMITnGoService {
     suspend fun phoneVerify(@Body phoneVerifyItem: PhoneVerifyItem): Response<PhoneVerifyResponseItem>
     @POST("api/Home/MobileOrEmailVarificationUpdate")
     suspend fun phoneOtpVerify(@Body phoneOtpVerifyItem: PhoneOtpVerifyItem): Response<PhoneOtpVerifyResponseItem>
+    @POST("api/General/IsRequireDocForTransaction")
+    suspend fun requireDocument(@Body requireDocumentItem: RequireDocumentItem): Response<RequireDocumentResponseItem>
 
 }
 

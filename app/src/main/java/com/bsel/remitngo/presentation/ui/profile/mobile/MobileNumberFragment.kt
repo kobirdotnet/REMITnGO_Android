@@ -38,7 +38,6 @@ class MobileNumberFragment : Fragment() {
     private lateinit var personId: String
 
     private lateinit var mobile: String
-    private lateinit var otp: String
     private lateinit var message: String
 
     override fun onCreateView(
@@ -77,21 +76,9 @@ class MobileNumberFragment : Fragment() {
     private fun observePhoneVerifyResult() {
         profileViewModel.phoneVerifyResult.observe(this) { result ->
             if (result!! != null) {
-                val resultMessage = result!!.message
-                val parts = resultMessage!!.split("*")
-                if (parts.size >= 3) {
-                    personId = parts[0]
-                    otp = parts[1]
-                    message = parts.subList(2, parts.size).joinToString("*")
+                message = result!!.message.toString()
 
-                    if (personId!="null"){
-                        phoneOtpVerifyBottomSheet.show(childFragmentManager, phoneOtpVerifyBottomSheet.tag)
-                    }
-
-                } else {
-                    message = result!!.message.toString()
-                }
-
+                phoneOtpVerifyBottomSheet.show(childFragmentManager, phoneOtpVerifyBottomSheet.tag)
             }
         }
     }

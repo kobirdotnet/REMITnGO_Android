@@ -1,5 +1,7 @@
 package com.bsel.remitngo.domain.repository
 
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
@@ -29,6 +31,8 @@ interface DocumentRepository {
         @Part("updateDate") updateDate: RequestBody,
         @Part file: MultipartBody.Part
     ): UploadDocumentResponseItem?
+
+    suspend fun requireDocument(requireDocumentItem: RequireDocumentItem): RequireDocumentResponseItem?
 
 }
 

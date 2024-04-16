@@ -26,6 +26,7 @@ interface ProfileSubComponent {
     fun inject(cityBottomSheet: CityBottomSheet)
     fun inject(phoneOtpVerifyBottomSheet: PhoneOtpVerifyBottomSheet)
     fun inject(transactionOtpVerifyBottomSheet: TransactionOtpVerifyBottomSheet)
+    fun inject(addressVerifyBottomSheet: AddressVerifyBottomSheet)
 
 
     @Subcomponent.Factory

@@ -147,22 +147,22 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSave"
-                    style="@style/Widget.MaterialComponents.Button"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:focusableInTouchMode="false"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
-
-                    android:text="Save"
+                    android:text="Send OTP"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/blue"
+                    android:textSize="18sp"  />
 
             </LinearLayout>
 

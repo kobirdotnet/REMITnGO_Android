@@ -8,19 +8,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottomSheet.ReasonBottomSheet
-import com.bsel.remitngo.bottomSheet.SourceOfIncomeBottomSheet
-import com.bsel.remitngo.bottomSheet.TransactionOtpVerifyBottomSheet
+import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnPersonalInfoItemSelectedListener
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
@@ -58,6 +58,8 @@ import kotlinx.coroutines.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -74,7 +76,10 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     private val reasonBottomSheet: ReasonBottomSheet by lazy { ReasonBottomSheet() }
     private val sourceOfIncomeBottomSheet: SourceOfIncomeBottomSheet by lazy { SourceOfIncomeBottomSheet() }
     private val transactionOtpVerifyBottomSheet: TransactionOtpVerifyBottomSheet by lazy { TransactionOtpVerifyBottomSheet() }
+    private val addressVerifyBottomSheet: AddressVerifyBottomSheet by lazy { AddressVerifyBottomSheet() }
+    private val requireDocumentBottomSheet: RequireDocumentBottomSheet by lazy { RequireDocumentBottomSheet() }
 
+    private lateinit var customerId: String
     private lateinit var personId: String
     private lateinit var firstName: String
     private lateinit var lastName: String
@@ -84,6 +89,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
+
+    private lateinit var currentDate: String
 
     private lateinit var paymentType: String
     private lateinit var orderType: String
@@ -99,6 +106,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     private lateinit var bankName: String
     private lateinit var payingAgentId: String
 
+    private lateinit var benId: String
     private lateinit var beneficiaryId: String
     private lateinit var beneficiaryName: String
     private lateinit var beneficiaryPhoneNumber: String
@@ -130,6 +138,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     private lateinit var promoCode: String
 
     private lateinit var address: String
+    private lateinit var mobile: String
+    private var isMobileOTPValidate: Boolean = true
 
     private var rate = 0.0
     private var gbpValue = 0.0
@@ -141,6 +151,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         return inflater.inflate(R.layout.fragment_payment, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentPaymentBinding.bind(view)
@@ -151,6 +162,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             ViewModelProvider(this, paymentViewModelFactory)[PaymentViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
+        customerId = preferenceManager.loadData("customerId").toString()
         personId = preferenceManager.loadData("personId").toString()
         firstName = preferenceManager.loadData("firstName").toString()
         lastName = preferenceManager.loadData("lastName").toString()
@@ -160,6 +172,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
+        currentDate = getCurrentDate(requireContext())
 
         paymentType = arguments?.getString("paymentType").toString()
         orderType = arguments?.getString("orderType").toString()
@@ -175,6 +188,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         bankName = arguments?.getString("bankName").toString()
         payingAgentId = arguments?.getString("payingAgentId").toString()
 
+        benId = arguments?.getString("benId").toString()
         beneficiaryId = arguments?.getString("beneficiaryId").toString()
         beneficiaryName = arguments?.getString("beneficiaryName").toString()
         beneficiaryPhoneNumber = arguments?.getString("beneficiaryPhoneNumber").toString()
@@ -249,6 +263,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
 
             val receiveAmountValue = binding.receiveAmount.text.toString()
             val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
+
             val bundle = Bundle().apply {
                 putString("paymentType", paymentType)
                 putString("orderType", orderType)
@@ -262,6 +277,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                 putString("bankName", bankName)
                 putString("payingAgentId", payingAgentId)
 
+                putString("benId", benId)
                 putString("beneficiaryId", beneficiaryId)
                 putString("beneficiaryName", beneficiaryName)
                 putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
@@ -298,6 +314,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                 putString("bankName", bankName)
                 putString("payingAgentId", payingAgentId)
 
+                putString("benId", benId)
                 putString("beneficiaryId", beneficiaryId)
                 putString("beneficiaryName", beneficiaryName)
                 putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
@@ -408,7 +425,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                 paymentViewModel.payment(paymentItem)
             }
         }
-        observePaymentResult()
 
         val reasonItem = ReasonItem(
             deviceId = deviceId,
@@ -427,6 +443,11 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
 
         sendAgain()
         applyPromo()
+
+        observePaymentResult()
+        observeEncryptResult()
+        observeProfileResult()
+//        observeRequireDocumentResult()
     }
 
     private fun observePaymentResult() {
@@ -436,12 +457,32 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                     transactionCode = result.data.toString()
                     transactionCodeWithChannel = "$transactionCode*1"
                     if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
+
                         val encryptItem = EncryptItem(
                             key = "bsel2024$#@!",
                             plainText = transactionCodeWithChannel
                         )
                         paymentViewModel.encrypt(encryptItem)
-                        observeEncryptResult()
+
+                        val profileItem = ProfileItem(
+                            deviceId = deviceId,
+                            personId = personId.toInt()
+                        )
+                        paymentViewModel.profile(profileItem)
+
+//                        val totalAmountValue = binding.totalAmount.text.toString()
+//                        val totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "")
+//                        val requireDocumentItem = RequireDocumentItem(
+//                            agentId = 8082,
+//                            amount = totalAmount.toDouble(),
+//                            beneficiaryId = benId.toInt(),
+//                            customerId = customerId.toInt(),
+//                            entryDate = currentDate,
+//                            purposeOfTransferId = reasonId.toInt(),
+//                            transactionType = 1
+//                        )
+//                        paymentViewModel.requireDocument(requireDocumentItem)
+
                     }
                 }
             } catch (e: NullPointerException) {
@@ -454,16 +495,79 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         paymentViewModel.encryptResult.observe(this) { result ->
             if (result!!.data != null) {
                 encryptCode = result.data.toString()
-
-                val profileItem = ProfileItem(
-                    deviceId = deviceId,
-                    personId = personId.toInt()
-                )
-                paymentViewModel.profile(profileItem)
-                observeProfileResult()
             }
         }
     }
+
+    private fun observeProfileResult() {
+        paymentViewModel.profileResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (data in result.data!!) {
+
+                    address = data!!.address.toString()
+                    isMobileOTPValidate = data!!.isMobileOTPValidate!!
+                    mobile = data!!.mobile.toString()
+
+                    if (!isMobileOTPValidate) {
+                        if (!transactionOtpVerifyBottomSheet.isAdded) {
+                            transactionOtpVerifyBottomSheet.setPhoneNumber(mobile)
+                            transactionOtpVerifyBottomSheet.show(
+                                childFragmentManager,
+                                transactionOtpVerifyBottomSheet.tag
+                            )
+                        }
+                    } else if (address == "" || address == "null") {
+                        if (!addressVerifyBottomSheet.isAdded) {
+                            addressVerifyBottomSheet.show(
+                                childFragmentManager,
+                                addressVerifyBottomSheet.tag
+                            )
+                        }
+                    } else if (address != "" && address != "null" && isMobileOTPValidate == true) {
+                        if (paymentType == "4") {
+                            cardPayment()
+                        } else if (paymentType == "3") {
+                            val sendAmountValue = binding.sendAmount.text.toString()
+                            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+                            val bundle = Bundle().apply {
+                                putString("sendAmount", sendAmount)
+                                putString("transactionCode", transactionCode)
+                            }
+                            findNavController().navigate(
+                                R.id.action_nav_review_to_nav_complete_bank_transaction,
+                                bundle
+                            )
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+//    private fun observeRequireDocumentResult() {
+//        paymentViewModel.requireDocumentResult.observe(this) { result ->
+//            if (result!!.code == "000") {
+//                if (result!!.data != null) {
+//                    val totalAmountValue = binding.totalAmount.text.toString()
+//                    val totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "")
+//                    if (!requireDocumentBottomSheet.isAdded) {
+//                        requireDocumentBottomSheet.requireDocument(
+//                            totalAmount,
+//                            benId,
+//                            customerId,
+//                            currentDate,
+//                            reasonId
+//                        )
+//                        requireDocumentBottomSheet.show(
+//                            childFragmentManager,
+//                            requireDocumentBottomSheet.tag
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private fun cardPayment() {
         // Generate unique Id
@@ -746,11 +850,9 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         binding.reason.setText(reasonName)
     }
 
-    override fun onOccupationTypeItemSelected(selectedItem: OccupationTypeData) {
-    }
+    override fun onOccupationTypeItemSelected(selectedItem: OccupationTypeData) {}
 
-    override fun onOccupationItemSelected(selectedItem: OccupationData) {
-    }
+    override fun onOccupationItemSelected(selectedItem: OccupationData) {}
 
     override fun onSourceOfIncomeItemSelected(selectedItem: SourceOfIncomeData) {
         sourceOfIncomeId = selectedItem.id.toString()
@@ -758,11 +860,9 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         binding.sourceOfIncome.setText(sourceOfIncomeName)
     }
 
-    override fun onAnnualIncomeItemSelected(selectedItem: AnnualIncomeData) {
-    }
+    override fun onAnnualIncomeItemSelected(selectedItem: AnnualIncomeData) {}
 
-    override fun onNationalityItemSelected(selectedItem: NationalityData) {
-    }
+    override fun onNationalityItemSelected(selectedItem: NationalityData) {}
 
     private fun observeReasonResult() {
         paymentViewModel.reasonResult.observe(this) { result ->
@@ -1073,54 +1173,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         }
     }
 
-    private fun observeProfileResult() {
-        paymentViewModel.profileResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (data in result.data!!) {
-
-                    address = data!!.address.toString()
-                    if (::address.isInitialized && address != "null") {
-                        val bundle = Bundle().apply {
-                            putString("address", address)
-                        }
-                        findNavController().navigate(
-                            R.id.action_nav_review_to_nav_save_address,
-                            bundle
-                        )
-                    }
-
-                    val isMobileOTPValidate = data!!.isMobileOTPValidate!!
-                    val mobile = data!!.mobile.toString()
-                    if (!isMobileOTPValidate) {
-                        if (!transactionOtpVerifyBottomSheet.isAdded) {
-                            transactionOtpVerifyBottomSheet.setPhoneNumber(mobile)
-                            transactionOtpVerifyBottomSheet.show(
-                                childFragmentManager,
-                                transactionOtpVerifyBottomSheet.tag
-                            )
-                        }
-                    } else {
-                        if (paymentType == "4") {
-                            cardPayment()
-                        } else if (paymentType == "3") {
-                            val sendAmountValue = binding.sendAmount.text.toString()
-                            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
-                            val bundle = Bundle().apply {
-                                putString("sendAmount", sendAmount)
-                                putString("transactionCode", transactionCode)
-                            }
-                            findNavController().navigate(
-                                R.id.action_nav_review_to_nav_complete_bank_transaction,
-                                bundle
-                            )
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 
@@ -1136,6 +1188,15 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         }
 
         return deviceId
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCurrentDate(context: Context): String {
+        currentDate = LocalDate.now().toString()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formattedDate = currentDate.format(formatter)
+
+        return formattedDate
     }
 
     private fun getIPAddress(context: Context): String? {

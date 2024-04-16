@@ -46,7 +46,7 @@ class AddressBottomSheet : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        val view = View.inflate(requireContext(), R.layout.address_layout, null)
+        val view = View.inflate(requireContext(), R.layout.address_varify_layout, null)
         binding = DataBindingUtil.bind(view)!!
 
         bottomSheet.setContentView(view)

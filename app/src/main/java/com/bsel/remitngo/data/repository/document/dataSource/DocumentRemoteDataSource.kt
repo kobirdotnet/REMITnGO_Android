@@ -1,5 +1,7 @@
 package com.bsel.remitngo.data.repository.document.dataSource
 
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
@@ -30,6 +32,8 @@ interface DocumentRemoteDataSource {
         @Part("updateDate") updateDate: RequestBody,
         @Part file: MultipartBody.Part
     ): Response<UploadDocumentResponseItem>
+
+    suspend fun requireDocument(requireDocumentItem: RequireDocumentItem): Response<RequireDocumentResponseItem>
 }
 
 

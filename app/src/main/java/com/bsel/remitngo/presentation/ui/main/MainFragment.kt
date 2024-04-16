@@ -74,6 +74,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     private lateinit var bankName: String
     private lateinit var payingAgentId: String
 
+    private lateinit var benId: String
     private lateinit var beneficiaryId: String
     private lateinit var beneficiaryName: String
     private lateinit var beneficiaryPhoneNumber: String
@@ -129,6 +130,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         bankName = arguments?.getString("bankName").toString()
         payingAgentId = arguments?.getString("payingAgentId").toString()
 
+        benId = arguments?.getString("benId").toString()
         beneficiaryId = arguments?.getString("beneficiaryId").toString()
         beneficiaryName = arguments?.getString("beneficiaryName").toString()
         beneficiaryPhoneNumber = arguments?.getString("beneficiaryPhoneNumber").toString()
@@ -426,6 +428,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 putString("bankName", bankName)
                 putString("payingAgentId", payingAgentId)
 
+                putString("benId", benId)
                 putString("beneficiaryId", beneficiaryId)
                 putString("beneficiaryName", beneficiaryName)
                 putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
@@ -483,14 +486,18 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         }
 
         if (bankId != "null" || payingAgentId != "null") {
-            val payingAgentItem = PayingAgentItem(
-                deviceId = deviceId,
-                fromCountryId = 4,
-                toCountryId = 1,
-                orderTypeId = orderType.toInt(),
-                amount = sendAmount.toInt()
-            )
-            calculationViewModel.payingAgent(payingAgentItem)
+            try {
+                val payingAgentItem = PayingAgentItem(
+                    deviceId = deviceId,
+                    fromCountryId = 4,
+                    toCountryId = 1,
+                    orderTypeId = orderType.toInt(),
+                    amount = sendAmount.toInt()
+                )
+                calculationViewModel.payingAgent(payingAgentItem)
+            }catch (e:NumberFormatException){
+                e.localizedMessage
+            }
         }
 
         observeCalculateRateResult()
@@ -499,14 +506,18 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
     private fun observeCalculateRateResult() {
         calculationViewModel.calculateRateResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (data in result.data!!) {
-                    commission = data!!.commission!!.toDouble().toString()
-                    rate = data!!.rate!!.toDouble()
-                    exchangeRate = data!!.rate!!.toDouble().toString()
-                    binding.exchangeRate.text = "BDT " + "$exchangeRate"
-                    updateValuesGBP()
+            try {
+                if (result!!.data != null) {
+                    for (data in result.data!!) {
+                        commission = data!!.commission!!.toDouble().toString()
+                        rate = data!!.rate!!.toDouble()
+                        exchangeRate = data!!.rate!!.toDouble().toString()
+                        binding.exchangeRate.text = "BDT " + "$exchangeRate"
+                        updateValuesGBP()
+                    }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

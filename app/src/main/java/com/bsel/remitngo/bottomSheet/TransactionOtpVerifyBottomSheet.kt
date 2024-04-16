@@ -42,7 +42,6 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var personId: String
 
-    private lateinit var otp: String
     private lateinit var message: String
 
     private var phoneNumber: String? = null
@@ -111,17 +110,10 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
     private fun observePhoneVerifyResult() {
         profileViewModel.phoneVerifyResult.observe(this) { result ->
             if (result!! != null) {
-                val resultMessage = result!!.message
-                val parts = resultMessage!!.split("*")
-                if (parts.size >= 3) {
-                    personId = parts[0]
-                    otp = parts[1]
-                    message = parts.subList(2, parts.size).joinToString("*")
-                } else {
-                    message = result!!.message.toString()
-                }
 
-                if (::personId.isInitialized && personId != "null" || ::otp.isInitialized && otp != "null") {
+                message = result!!.message.toString()
+
+                if (::personId.isInitialized && personId != "null") {
                     binding.verifyLayout.visibility = View.GONE
                     binding.validationLayout.visibility = View.VISIBLE
 

@@ -1,6 +1,8 @@
 package com.bsel.remitngo.data.repository.document
 
 import android.util.Log
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
@@ -104,6 +106,23 @@ class DocumentRepositoryImpl(private val documentRemoteDataSource: DocumentRemot
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error uploadDocument: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun requireDocument(requireDocumentItem: RequireDocumentItem): RequireDocumentResponseItem? {
+        return try {
+            val response = documentRemoteDataSource.requireDocument(requireDocumentItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to requireDocument: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error requireDocument: ${exception.message}", exception)
             null
         }
     }

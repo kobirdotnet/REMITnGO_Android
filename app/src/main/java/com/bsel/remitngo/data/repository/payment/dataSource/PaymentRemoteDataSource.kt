@@ -7,6 +7,8 @@ import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseItem
 import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
@@ -49,6 +51,8 @@ interface PaymentRemoteDataSource {
     suspend fun profile(profileItem: ProfileItem): Response<ProfileResponseItem>
     suspend fun phoneVerify(phoneVerifyItem: PhoneVerifyItem): Response<PhoneVerifyResponseItem>
     suspend fun phoneOtpVerify(phoneOtpVerifyItem: PhoneOtpVerifyItem): Response<PhoneOtpVerifyResponseItem>
+
+    suspend fun requireDocument(requireDocumentItem: RequireDocumentItem): Response<RequireDocumentResponseItem>
 
 }
 

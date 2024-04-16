@@ -1,5 +1,7 @@
 package com.bsel.remitngo.domain.useCase
 
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
@@ -51,6 +53,10 @@ class DocumentUseCase(private val documentRepository: DocumentRepository) {
             updateDate,
             file
         )
+    }
+
+    suspend fun execute(requireDocumentItem: RequireDocumentItem): RequireDocumentResponseItem? {
+        return documentRepository.requireDocument(requireDocumentItem)
     }
 
 }

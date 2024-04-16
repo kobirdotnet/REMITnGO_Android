@@ -108,6 +108,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this) { result ->
             if (result!!.data != null) {
                 for (data in result.data!!) {
+                    preferenceManager.saveData("customerId", data.id.toString())
                     preferenceManager.saveData("personId", data.personId.toString())
                     preferenceManager.saveData("firstName", data.firstName.toString())
                     preferenceManager.saveData("lastName", data.lastName.toString())

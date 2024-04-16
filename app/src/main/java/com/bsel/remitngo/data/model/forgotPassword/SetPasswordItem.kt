@@ -8,6 +8,8 @@ data class SetPasswordItem(
     val confirmNewPassword: String?,
     @SerializedName("newPassword")
     val newPassword: String?,
+    @SerializedName("otpType")
+    val otpType: Int?,
     @SerializedName("personId")
     val personId: Int?
 )

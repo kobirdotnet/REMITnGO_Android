@@ -35,7 +35,6 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
     private var otpSendBy: String = "Email"
 
     private lateinit var personId: String
-    private lateinit var otp: String
     private lateinit var message: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -119,15 +118,14 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
             if (result!! != null) {
                 val resultMessage = result!!.message
                 val parts = resultMessage!!.split("*")
-                if (parts.size >= 3) {
+                if (parts.size >= 2) {
                     personId = parts[0]
-                    otp = parts[1]
-                    message = parts.subList(2, parts.size).joinToString("*")
+                    message = parts.subList(1, parts.size).joinToString("*")
                 } else {
                     message = result!!.message.toString()
                 }
 
-                if (::personId.isInitialized && personId != "null" || ::otp.isInitialized && otp != "null") {
+                if (::personId.isInitialized && personId != "null") {
                     binding.verifyLayout.visibility = View.GONE
                     binding.validationLayout.visibility = View.VISIBLE
                     binding.setPasswordLayout.visibility = View.GONE
@@ -173,8 +171,6 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
                     binding.verifyLayout.visibility = View.VISIBLE
                     binding.validationLayout.visibility = View.GONE
                     binding.setPasswordLayout.visibility = View.GONE
-                    otp == "null"
-                    personId == "null"
                     dismiss()
                 } else {
                     binding.verifyLayout.visibility = View.GONE
@@ -258,6 +254,7 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
         val setPasswordItem = SetPasswordItem(
             confirmNewPassword = confirmNewPassword,
             newPassword = newPassword,
+            otpType = 2,
             personId = personId.toInt()
         )
         loginViewModel.setPassword(setPasswordItem)

@@ -8,6 +8,8 @@ import com.bsel.remitngo.data.model.consumer.consumer.ConsumerResponseItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseItem
 import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
@@ -273,6 +275,23 @@ class PaymentRepositoryImpl(private val paymentRemoteDataSource: PaymentRemoteDa
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error phoneOtpVerify: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun requireDocument(requireDocumentItem: RequireDocumentItem): RequireDocumentResponseItem? {
+        return try {
+            val response = paymentRemoteDataSource.requireDocument(requireDocumentItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to requireDocument: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error requireDocument: ${exception.message}", exception)
             null
         }
     }

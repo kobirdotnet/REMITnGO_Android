@@ -29,6 +29,7 @@
     <string name="menu_add_query">Add Query</string>
     <string name="menu_documents">Documents</string>
     <string name="menu_notification">Notification History</string>
+    <string name="menu_address_verify">Address Verification</string>
     <string name="menu_update_documents">Update Document</string>
     <string name="menu_sign_in_sign_up">REMITnGO</string>
     <string name="menu_login">Log in</string>
