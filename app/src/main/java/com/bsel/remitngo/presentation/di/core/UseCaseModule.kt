@@ -59,5 +59,13 @@ class UseCaseModule {
     fun provideSettingsUseCase(settingsRepository: SettingsRepository): SettingsUseCase {
         return SettingsUseCase(settingsRepository)
     }
+    @Provides
+    fun provideSupportUseCase(supportRepository: SupportRepository): SupportUseCase {
+        return SupportUseCase(supportRepository)
+    }
+    @Provides
+    fun provideNotificationUseCase(notificationRepository: NotificationRepository): NotificationUseCase {
+        return NotificationUseCase(notificationRepository)
+    }
 
 }

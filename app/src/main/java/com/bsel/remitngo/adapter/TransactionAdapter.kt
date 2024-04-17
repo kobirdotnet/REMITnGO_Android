@@ -72,10 +72,15 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
 
         val orderStatus = transactionItem.orderStatus.toString()
         Log.i("info", "orderStatus: $orderStatus")
+
         val paymentMode = transactionItem.paymentMode.toString()
         Log.i("info", "paymentMode: $paymentMode")
+
         val transactionCode = transactionItem.transactionCode.toString()
         Log.i("info", "transactionCode: $transactionCode")
+
+        val paymentStatus = transactionItem.paymentStatus.toString()
+        Log.i("info", "paymentStatus: $paymentStatus")
 
         if (orderStatus == "7" || orderStatus == "8" || orderStatus == "10" || orderStatus == "11") {
             binding.cancelStatus.visibility = View.VISIBLE

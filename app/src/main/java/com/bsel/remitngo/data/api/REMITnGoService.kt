@@ -6,6 +6,7 @@ import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankResponseItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankResponseItem
+import com.bsel.remitngo.data.model.bankTransactionMessage.BankTransactionMessage
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryResponseItem
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
@@ -45,7 +46,9 @@ import com.bsel.remitngo.data.model.document.uploadDocument.UploadDocumentRespon
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
+import com.bsel.remitngo.data.model.encript.EncryptItemForCreateReceipt
 import com.bsel.remitngo.data.model.encript.EncryptResponseItem
+import com.bsel.remitngo.data.model.encript.EncryptResponseItemForCreateReceipt
 import com.bsel.remitngo.data.model.forgotPassword.*
 import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.gender.GenderResponseItem
@@ -104,6 +107,7 @@ import com.bsel.remitngo.data.model.registration.RegistrationItem
 import com.bsel.remitngo.data.model.registration.RegistrationResponseItem
 import com.bsel.remitngo.data.model.relation.RelationItem
 import com.bsel.remitngo.data.model.relation.RelationResponseItem
+import com.bsel.remitngo.data.model.support.SupportResponseItem
 import com.bsel.remitngo.data.model.transaction.TransactionItem
 import com.bsel.remitngo.data.model.transaction.TransactionResponseItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
@@ -267,6 +271,9 @@ interface REMITnGoService {
     @POST("api/General/Encrypt")
     suspend fun encrypt(@Body encryptItem: EncryptItem): Response<EncryptResponseItem>
 
+    @POST("api/General/Encrypt")
+    suspend fun encryptForCreateReceipt(@Body encryptItemForCreateReceipt: EncryptItemForCreateReceipt): Response<EncryptResponseItemForCreateReceipt>
+
     @POST("api/Payment/EmerchantCreateTxnResponse")
     suspend fun emp(@Body empItem: EmpItem): Response<EmpResponseItem>
 
@@ -299,6 +306,11 @@ interface REMITnGoService {
     suspend fun phoneOtpVerify(@Body phoneOtpVerifyItem: PhoneOtpVerifyItem): Response<PhoneOtpVerifyResponseItem>
     @POST("api/General/IsRequireDocForTransaction")
     suspend fun requireDocument(@Body requireDocumentItem: RequireDocumentItem): Response<RequireDocumentResponseItem>
+
+    @GET("api/General/GetDynamicMsg/{message}")
+    suspend fun bankTransactionMessage(@Path("message") message: String): Response<BankTransactionMessage>
+    @GET("api/General/GetDynamicMsg/{message}")
+    suspend fun support(@Path("message") message: String): Response<SupportResponseItem>
 
 }
 

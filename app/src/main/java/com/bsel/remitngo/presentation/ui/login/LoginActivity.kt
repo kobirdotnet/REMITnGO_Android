@@ -143,10 +143,9 @@ class LoginActivity : AppCompatActivity() {
     private fun submitLogInForm() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
-        val channel = "Apps"
 
         val loginItem = LoginItem(
-            channel = channel,
+            channel = "Apps",
             deviceId = deviceId,
             password = password,
             userId = email
@@ -184,10 +183,13 @@ class LoginActivity : AppCompatActivity() {
                 Log.i("info", "loginAccount displayName: ${account.displayName}")
                 Log.i("info", "loginAccount familyName: ${account.familyName}")
                 Log.i("info", "loginAccount account: ${account.account}")
+
                 firebaseAuthWithGoogle(account)
             } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Toast.makeText(this@LoginActivity, "Login Failed", Toast.LENGTH_SHORT).show()
+                val parentLayout: View = findViewById(android.R.id.content)
+                val snackbar =
+                    Snackbar.make(parentLayout, "Login Failed: ... ", Snackbar.LENGTH_SHORT)
+                snackbar.show()
             }
 
         }
@@ -199,13 +201,28 @@ class LoginActivity : AppCompatActivity() {
         mAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Toast.makeText(this@LoginActivity, "Login Successful: ", Toast.LENGTH_SHORT).show()
+                    val parentLayout: View = findViewById(android.R.id.content)
+                    val snackbar =
+                        Snackbar.make(parentLayout, "Login Successful: ", Snackbar.LENGTH_SHORT)
+                    snackbar.show()
                 } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(this@LoginActivity, "Login Failed: ", Toast.LENGTH_SHORT).show()
+                    val parentLayout: View = findViewById(android.R.id.content)
+                    val snackbar =
+                        Snackbar.make(parentLayout, "Login Failed: ", Snackbar.LENGTH_SHORT)
+                    snackbar.show()
                 }
             }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val user = mAuth.currentUser
+        if (user != null) {
+            val parentLayout: View = findViewById(android.R.id.content)
+            val snackbar =
+                Snackbar.make(parentLayout, "Already signIn: ", Snackbar.LENGTH_SHORT)
+            snackbar.show()
+        }
     }
 
     private fun requestContactsAndCameraPermissions() {
@@ -235,8 +252,6 @@ class LoginActivity : AppCompatActivity() {
             )
         }
     }
-
-
 
     //Form validation
     private fun emailFocusListener() {
@@ -301,17 +316,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         return deviceId
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-//         Check if user is signed in (non-null) and update UI accordingly.
-
-        val user = mAuth.currentUser
-        if (user != null) {
-            Toast.makeText(this@LoginActivity, "already signIn: ", Toast.LENGTH_SHORT).show()
-        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {

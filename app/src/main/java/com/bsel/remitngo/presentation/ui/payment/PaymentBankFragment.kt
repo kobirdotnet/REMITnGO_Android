@@ -5,6 +5,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,19 +79,26 @@ class PaymentBankFragment : Fragment() {
             findNavController().navigate(R.id.action_nav_complete_bank_transaction_to_nav_transaction_history)
         }
 
+        paymentViewModel.bankTransactionMessage("2")
+
         payNow()
+
+        observeBankTransactionMessageResult()
+        observeTransactionDetailsResult()
 
     }
 
-    private fun payNow() {
-        if (::transactionCode.isInitialized && transactionCode != "null") {
-            val transactionDetailsItem = TransactionDetailsItem(
-                deviceId = deviceId,
-                params1 = personId.toInt(),
-                params2 = transactionCode
-            )
-            paymentViewModel.paymentTransaction(transactionDetailsItem)
-            observeTransactionDetailsResult()
+    private fun observeBankTransactionMessageResult() {
+        paymentViewModel.bankTransactionMessageResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (bankTransactionMessage in result.data!!) {
+                    binding.accountName.text = bankTransactionMessage!!.accountName.toString()
+                    binding.accountNo.text = bankTransactionMessage!!.accountNumber.toString()
+                    binding.shortCode.text = bankTransactionMessage!!.sortCode.toString()
+                    binding.iban.text = bankTransactionMessage!!.iBAN.toString()
+                    binding.message.text = bankTransactionMessage!!.message.toString()
+                }
+            }
         }
     }
 
@@ -111,6 +119,17 @@ class PaymentBankFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun payNow() {
+        if (::transactionCode.isInitialized && transactionCode != "null") {
+            val transactionDetailsItem = TransactionDetailsItem(
+                deviceId = deviceId,
+                params1 = personId.toInt(),
+                params2 = transactionCode
+            )
+            paymentViewModel.paymentTransaction(transactionDetailsItem)
         }
     }
 

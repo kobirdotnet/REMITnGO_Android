@@ -13,6 +13,8 @@ import com.bsel.remitngo.data.repository.document.dataSource.DocumentRemoteDataS
 import com.bsel.remitngo.data.repository.document.dataSourceImpl.DocumentRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.login.dataSource.LoginRemoteDataSource
 import com.bsel.remitngo.data.repository.login.dataSourceImpl.LoginRemoteDataSourceImpl
+import com.bsel.remitngo.data.repository.notification.dataSource.NotificationRemoteDataSource
+import com.bsel.remitngo.data.repository.notification.dataSourceImpl.NotificationRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.payment.dataSource.PaymentRemoteDataSource
 import com.bsel.remitngo.data.repository.payment.dataSourceImpl.PaymentRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.profile.dataSource.ProfileRemoteDataSource
@@ -23,6 +25,8 @@ import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRem
 import com.bsel.remitngo.data.repository.registration.dataSourceImpl.RegistrationRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.settings.dataSource.SettingsRemoteDataSource
 import com.bsel.remitngo.data.repository.settings.dataSourceImpl.SettingsRemoteDataSourceImpl
+import com.bsel.remitngo.data.repository.support.supportDataSource.SupportRemoteDataSource
+import com.bsel.remitngo.data.repository.support.supportDataSourceImpl.SupportRemoteDataSourceImpl
 import com.bsel.remitngo.data.repository.transaction.dataSource.TransactionRemoteDataSource
 import com.bsel.remitngo.data.repository.transaction.dataSourceImpl.TransactionRemoteDataSourceImpl
 import dagger.Module
@@ -96,6 +100,16 @@ class RemoteDataModule {
     @Provides
     fun provideSettingsRemoteDataSource(remitNgoService: REMITnGoService): SettingsRemoteDataSource {
         return SettingsRemoteDataSourceImpl(remitNgoService)
+    }
+    @Singleton
+    @Provides
+    fun provideSupportRemoteDataSource(remitNgoService: REMITnGoService): SupportRemoteDataSource {
+        return SupportRemoteDataSourceImpl(remitNgoService)
+    }
+    @Singleton
+    @Provides
+    fun provideNotificationRemoteDataSource(remitNgoService: REMITnGoService): NotificationRemoteDataSource {
+        return NotificationRemoteDataSourceImpl(remitNgoService)
     }
 
 }

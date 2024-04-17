@@ -11,11 +11,13 @@ import com.bsel.remitngo.presentation.di.cancel_request.CancelRequestSubComponen
 import com.bsel.remitngo.presentation.di.core.*
 import com.bsel.remitngo.presentation.di.document.DocumentSubComponent
 import com.bsel.remitngo.presentation.di.login.LoginSubComponent
+import com.bsel.remitngo.presentation.di.notification.NotificationSubComponent
 import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
 import com.bsel.remitngo.presentation.di.query.QuerySubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
 import com.bsel.remitngo.presentation.di.settings.SettingsSubComponent
+import com.bsel.remitngo.presentation.di.support.SupportSubComponent
 import com.bsel.remitngo.presentation.di.transaction.TransactionSubComponent
 
 class App : Application(), Injector {
@@ -70,6 +72,12 @@ class App : Application(), Injector {
     }
     override fun createSettingsSubComponent(): SettingsSubComponent {
         return appComponent.settingsSubComponent().create()
+    }
+    override fun createSupportSubComponent(): SupportSubComponent {
+        return appComponent.supportSubComponent().create()
+    }
+    override fun createNotificationSubComponent(): NotificationSubComponent {
+        return appComponent.notificationSubComponent().create()
     }
 
 }

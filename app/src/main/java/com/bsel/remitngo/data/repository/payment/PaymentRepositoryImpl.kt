@@ -1,6 +1,7 @@
 package com.bsel.remitngo.data.repository.payment
 
 import android.util.Log
+import com.bsel.remitngo.data.model.bankTransactionMessage.BankTransactionMessage
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
@@ -13,7 +14,9 @@ import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentRe
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
+import com.bsel.remitngo.data.model.encript.EncryptItemForCreateReceipt
 import com.bsel.remitngo.data.model.encript.EncryptResponseItem
+import com.bsel.remitngo.data.model.encript.EncryptResponseItemForCreateReceipt
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
@@ -292,6 +295,36 @@ class PaymentRepositoryImpl(private val paymentRemoteDataSource: PaymentRemoteDa
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error requireDocument: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun encryptForCreateReceipt(encryptItemForCreateReceipt: EncryptItemForCreateReceipt): EncryptResponseItemForCreateReceipt? {
+        return try {
+            val response = paymentRemoteDataSource.encryptForCreateReceipt(encryptItemForCreateReceipt)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                Log.e("MyTag", "Failed to encryptForCreateReceipt: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            Log.e("MyTag", "Error encryptForCreateReceipt: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun bankTransactionMessage(message: String): BankTransactionMessage? {
+        return try {
+            val response = paymentRemoteDataSource.bankTransactionMessage(message)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                Log.e("MyTag", "Failed to message: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            Log.e("MyTag", "Error message: ${exception.message}", exception)
             null
         }
     }

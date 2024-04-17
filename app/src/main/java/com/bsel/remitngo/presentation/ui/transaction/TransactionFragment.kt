@@ -26,6 +26,7 @@ import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
 import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
+import com.bsel.remitngo.data.model.encript.EncryptItemForCreateReceipt
 import com.bsel.remitngo.data.model.transaction.TransactionData
 import com.bsel.remitngo.data.model.transaction.TransactionItem
 import com.bsel.remitngo.databinding.FragmentTransactionBinding
@@ -145,6 +146,7 @@ class TransactionFragment : Fragment() {
             }
         }
 
+        observeEncryptForCreateReceiptResult()
     }
 
     private fun observeTransactionResult() {
@@ -434,46 +436,6 @@ class TransactionFragment : Fragment() {
 //                    bundle
 //                )
 
-//                Handler(Looper.getMainLooper()).postDelayed({
-//
-//                    val timerDuration = 60 * 1000
-//
-//                    val dialog = Dialog(requireContext())
-//                    dialog.setContentView(R.layout.fragment_payment_status)
-//                    dialog.setCancelable(false)
-//                    dialog.window?.setLayout(
-//                        WindowManager.LayoutParams.MATCH_PARENT,
-//                        WindowManager.LayoutParams.MATCH_PARENT
-//                    )
-//
-//                    val receiveName = dialog.findViewById<TextView>(R.id.recipient_name)
-//                    val receiveAmount = dialog.findViewById<TextView>(R.id.receive_amount)
-//                    val transactionId = dialog.findViewById<TextView>(R.id.transactionCode)
-//                    val timer = dialog.findViewById<TextView>(R.id.timerTxt)
-//
-//                    receiveName.text = "Your transfer to $recipientName is processing !"
-//                    receiveAmount.text = "BDT $receive_amount"
-//                    transactionId.text = "Your Transfer ID $transactionCode"
-//                    dialog.show()
-//
-//                    object : CountDownTimer(timerDuration.toLong(), 1000) {
-//                        override fun onTick(millisUntilFinished: Long) {
-//                            val secondsRemaining = millisUntilFinished / 1000
-//                            val minutes = secondsRemaining / 60
-//                            val seconds = secondsRemaining % 60
-//                            timer.text = String.format("%02d:%02d", minutes, seconds)
-//                        }
-//
-//                        override fun onFinish() {
-//                            dialog.dismiss()
-//                        }
-//                    }.start()
-//
-//                    Handler(Looper.getMainLooper()).postDelayed({
-//                        dialog.dismiss()
-//                    }, 30000)
-//                }, 30000)
-
             }
         }
 
@@ -509,7 +471,6 @@ class TransactionFragment : Fragment() {
         }
     }
 
-
     @OptIn(DelicateCoroutinesApi::class)
     fun checkApiCall(transactionCode: String) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -530,20 +491,43 @@ class TransactionFragment : Fragment() {
                     intent.data = Uri.parse(receiptUrl)
                     context?.startActivity(intent)
                 } else {
-                    val response: Response<CreateReceiptResponse> =
-                        RetrofitClient.apiService.createReceipt(transactionCode)
-                    if (response.isSuccessful) {
-                        val createReceiptResponse: CreateReceiptResponse? = response.body()
-                        Log.i("info", "createReceiptResponse: $createReceiptResponse")
-                        val receiptUrl =
-                            "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
-                        Log.i("info", "receiptUrl: $receiptUrl")
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(receiptUrl)
-                        context?.startActivity(intent)
-                    }
+                    val encryptForCreateReceiptItem = EncryptItemForCreateReceipt(
+                        key = "bsel2024$#@!",
+                        plainText = transactionCode
+                    )
+                    transactionViewModel.encryptForCreateReceipt(encryptForCreateReceiptItem)
                 }
                 connection.disconnect()
+            } catch (e: Exception) {
+                e.message
+            }
+        }
+    }
+
+    private fun observeEncryptForCreateReceiptResult() {
+        transactionViewModel.encryptForCreateReceiptResult.observe(this) { result ->
+            if (result!!.data != null) {
+                val createReceiptCode = result.data.toString()
+                createReceipt(createReceiptCode)
+            }
+        }
+    }
+
+    fun createReceipt(createReceiptCode: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val response: Response<CreateReceiptResponse> =
+                    RetrofitClient.apiService.createReceipt(createReceiptCode)
+                if (response.isSuccessful) {
+                    val createReceiptResponse: CreateReceiptResponse? = response.body()
+                    Log.i("info", "createReceiptResponse: $createReceiptResponse")
+                    val receiptUrl =
+                        "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
+                    Log.i("info", "receiptUrl: $receiptUrl")
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(receiptUrl)
+                    context?.startActivity(intent)
+                }
             } catch (e: Exception) {
                 e.message
             }

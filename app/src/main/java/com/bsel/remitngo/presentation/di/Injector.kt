@@ -6,11 +6,13 @@ import com.bsel.remitngo.presentation.di.calculation.CalculationSubComponent
 import com.bsel.remitngo.presentation.di.cancel_request.CancelRequestSubComponent
 import com.bsel.remitngo.presentation.di.document.DocumentSubComponent
 import com.bsel.remitngo.presentation.di.login.LoginSubComponent
+import com.bsel.remitngo.presentation.di.notification.NotificationSubComponent
 import com.bsel.remitngo.presentation.di.payment.PaymentSubComponent
 import com.bsel.remitngo.presentation.di.profile.ProfileSubComponent
 import com.bsel.remitngo.presentation.di.query.QuerySubComponent
 import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
 import com.bsel.remitngo.presentation.di.settings.SettingsSubComponent
+import com.bsel.remitngo.presentation.di.support.SupportSubComponent
 import com.bsel.remitngo.presentation.di.transaction.TransactionSubComponent
 
 interface Injector {
@@ -26,4 +28,6 @@ interface Injector {
     fun createCancelRequestSubComponent(): CancelRequestSubComponent
     fun createQuerySubComponent(): QuerySubComponent
     fun createSettingsSubComponent(): SettingsSubComponent
+    fun createSupportSubComponent(): SupportSubComponent
+    fun createNotificationSubComponent(): NotificationSubComponent
 }

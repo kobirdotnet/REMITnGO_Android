@@ -8,7 +8,9 @@ import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseI
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
+import com.bsel.remitngo.data.model.encript.EncryptItemForCreateReceipt
 import com.bsel.remitngo.data.model.encript.EncryptResponseItem
+import com.bsel.remitngo.data.model.encript.EncryptResponseItemForCreateReceipt
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.transaction.TransactionItem
@@ -43,6 +45,9 @@ class TransactionRemoteDataSourceImpl(private val remitNgoService: REMITnGoServi
 
     override suspend fun encrypt(encryptItem: EncryptItem): Response<EncryptResponseItem> {
         return remitNgoService.encrypt(encryptItem)
+    }
+    override suspend fun encryptForCreateReceipt(encryptItemForCreateReceipt: EncryptItemForCreateReceipt): Response<EncryptResponseItemForCreateReceipt> {
+        return remitNgoService.encryptForCreateReceipt(encryptItemForCreateReceipt)
     }
 
 }

@@ -12,6 +12,8 @@ import com.bsel.remitngo.data.repository.document.DocumentRepositoryImpl
 import com.bsel.remitngo.data.repository.document.dataSource.DocumentRemoteDataSource
 import com.bsel.remitngo.data.repository.login.LoginRepositoryImpl
 import com.bsel.remitngo.data.repository.login.dataSource.LoginRemoteDataSource
+import com.bsel.remitngo.data.repository.notification.NotificationRepositoryImpl
+import com.bsel.remitngo.data.repository.notification.dataSource.NotificationRemoteDataSource
 import com.bsel.remitngo.data.repository.payment.PaymentRepositoryImpl
 import com.bsel.remitngo.data.repository.payment.dataSource.PaymentRemoteDataSource
 import com.bsel.remitngo.data.repository.profile.ProfileRepositoryImpl
@@ -22,6 +24,8 @@ import com.bsel.remitngo.data.repository.registration.RegistrationRepositoryImpl
 import com.bsel.remitngo.data.repository.registration.dataSource.RegistrationRemoteDataSource
 import com.bsel.remitngo.data.repository.settings.SettingsRepositoryImpl
 import com.bsel.remitngo.data.repository.settings.dataSource.SettingsRemoteDataSource
+import com.bsel.remitngo.data.repository.support.SupportRepositoryImpl
+import com.bsel.remitngo.data.repository.support.supportDataSource.SupportRemoteDataSource
 import com.bsel.remitngo.data.repository.transaction.TransactionRepositoryImpl
 import com.bsel.remitngo.data.repository.transaction.dataSource.TransactionRemoteDataSource
 import com.bsel.remitngo.domain.repository.*
@@ -95,6 +99,16 @@ class RepositoryModule {
     @Provides
     fun provideSettingsRepository(settingsRemoteDataSource: SettingsRemoteDataSource): SettingsRepository {
         return SettingsRepositoryImpl(settingsRemoteDataSource)
+    }
+    @Singleton
+    @Provides
+    fun provideSupportRepository(supportRemoteDataSource: SupportRemoteDataSource): SupportRepository {
+        return SupportRepositoryImpl(supportRemoteDataSource)
+    }
+    @Singleton
+    @Provides
+    fun provideNotificationRepository(notificationRemoteDataSource: NotificationRemoteDataSource): NotificationRepository {
+        return NotificationRepositoryImpl(notificationRemoteDataSource)
     }
 
 }

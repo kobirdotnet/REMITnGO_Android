@@ -114,7 +114,7 @@
         tools:layout="@layout/fragment_payment_card">
         <action
             android:id="@+id/action_nav_complete_card_transaction_to_nav_main"
-            app:destination="@id/nav_main" />
+            app:destination="@id/nav_main" />>
     </fragment>
 
     <fragment

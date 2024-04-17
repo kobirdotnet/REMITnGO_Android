@@ -1,5 +1,6 @@
 package com.bsel.remitngo.presentation.ui.payment
 
+import android.app.Dialog
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.os.*
@@ -8,6 +9,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -379,7 +382,31 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                     isMobileTransfer = true,
                     isiOS = false,
                     latitude = "",
-                    longitude = ""
+                    longitude = "",
+//                    beneAccountName="",
+//                    beneAccountNo="",
+//                    beneAmount=0.0,
+//                    beneBankId=0,
+//                    beneBranchId=0,
+//                    beneId=0,
+//                    beneMobile="",
+//                    benePersonId=0,
+//                    beneWalletId=0,
+//                    beneWalletNo="",
+//                    channelId=0,
+//                    fromCountryId=0,
+//                    fromCurrencyId=0,
+//                    modifiedBeneAmount=0.0,
+//                    modifiedCommission=0.0,
+//                    modifiedRate=0.0,
+//                    modifiedSendAmount=0.0,
+//                    orderType=0,
+//                    payingAgentId=0,
+//                    personId=0,
+//                    promoCode="",
+//                    toCountryId=0,
+//                    toCurrencyId=0,
+//                    totalAmountGiven=0.0
                 )
                 paymentViewModel.payment(paymentItem)
             } else {
@@ -420,7 +447,31 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                     isMobileTransfer = true,
                     isiOS = false,
                     latitude = "",
-                    longitude = ""
+                    longitude = "",
+//                    beneAccountName="",
+//                    beneAccountNo="",
+//                    beneAmount=0.0,
+//                    beneBankId=0,
+//                    beneBranchId=0,
+//                    beneId=0,
+//                    beneMobile="",
+//                    benePersonId=0,
+//                    beneWalletId=0,
+//                    beneWalletNo="",
+//                    channelId=0,
+//                    fromCountryId=0,
+//                    fromCurrencyId=0,
+//                    modifiedBeneAmount=0.0,
+//                    modifiedCommission=0.0,
+//                    modifiedRate=0.0,
+//                    modifiedSendAmount=0.0,
+//                    orderType=0,
+//                    payingAgentId=0,
+//                    personId=0,
+//                    promoCode="",
+//                    toCountryId=0,
+//                    toCurrencyId=0,
+//                    totalAmountGiven=0.0
                 )
                 paymentViewModel.payment(paymentItem)
             }
@@ -527,10 +578,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                         if (paymentType == "4") {
                             cardPayment()
                         } else if (paymentType == "3") {
-                            val sendAmountValue = binding.sendAmount.text.toString()
-                            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
                             val bundle = Bundle().apply {
-                                putString("sendAmount", sendAmount)
+                                putString("sendAmount", totalAmount.toString())
                                 putString("transactionCode", transactionCode)
                             }
                             findNavController().navigate(
@@ -757,53 +806,13 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                 paymentViewModel.emp(encryptItem)
                 observeEmpResult()
 
-//                val bundle = Bundle().apply {
-//                    putString("transactionCode", transactionCode)
-//                }
-//                findNavController().navigate(
-//                    R.id.action_nav_review_to_nav_complete_card_transaction,
-//                    bundle
-//                )
-
-//                Handler(Looper.getMainLooper()).postDelayed({
-//
-//                    val timerDuration = 60 * 1000
-//
-//                    val dialog = Dialog(requireContext())
-//                    dialog.setContentView(R.layout.fragment_payment_status)
-//                    dialog.setCancelable(false)
-//                    dialog.window?.setLayout(
-//                        WindowManager.LayoutParams.MATCH_PARENT,
-//                        WindowManager.LayoutParams.MATCH_PARENT
-//                    )
-//
-//                    val receiveName = dialog.findViewById<TextView>(R.id.recipient_name)
-//                    val receiveAmount = dialog.findViewById<TextView>(R.id.receive_amount)
-//                    val transactionId = dialog.findViewById<TextView>(R.id.transactionCode)
-//                    val timer = dialog.findViewById<TextView>(R.id.timerTxt)
-//
-//                    receiveName.text = "Your transfer to $recipientName is processing !"
-//                    receiveAmount.text = "BDT $receive_amount"
-//                    transactionId.text = "Your Transfer ID $transactionCode"
-//                    dialog.show()
-//
-//                    object : CountDownTimer(timerDuration.toLong(), 1000) {
-//                        override fun onTick(millisUntilFinished: Long) {
-//                            val secondsRemaining = millisUntilFinished / 1000
-//                            val minutes = secondsRemaining / 60
-//                            val seconds = secondsRemaining % 60
-//                            timer.text = String.format("%02d:%02d", minutes, seconds)
-//                        }
-//
-//                        override fun onFinish() {
-//                            dialog.dismiss()
-//                        }
-//                    }.start()
-//
-//                    Handler(Looper.getMainLooper()).postDelayed({
-//                        dialog.dismiss()
-//                    }, 30000)
-//                }, 30000)
+                val bundle = Bundle().apply {
+                    putString("transactionCode", transactionCode)
+                }
+                findNavController().navigate(
+                    R.id.action_nav_review_to_nav_complete_card_transaction,
+                    bundle
+                )
 
             }
         }
@@ -835,7 +844,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     private fun observeEmpResult() {
         paymentViewModel.empResult.observe(this) { result ->
             if (result!!.data != null) {
-                Log.i("info", "save emp data: " + result.data.toString())
+                Log.i("info", "observeEmpResult: " + result.data.toString())
             }
         }
     }
@@ -1173,6 +1182,14 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCurrentDate(context: Context): String {
+        currentDate = LocalDate.now().toString()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formattedDate = currentDate.format(formatter)
+
+        return formattedDate
+    }
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 
@@ -1189,16 +1206,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
 
         return deviceId
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun getCurrentDate(context: Context): String {
-        currentDate = LocalDate.now().toString()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val formattedDate = currentDate.format(formatter)
-
-        return formattedDate
-    }
-
     private fun getIPAddress(context: Context): String? {
         val wifiManager =
             context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager

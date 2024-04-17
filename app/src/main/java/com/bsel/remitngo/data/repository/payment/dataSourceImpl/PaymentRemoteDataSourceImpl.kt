@@ -1,6 +1,7 @@
 package com.bsel.remitngo.data.repository.payment.dataSourceImpl
 
 import com.bsel.remitngo.data.api.REMITnGoService
+import com.bsel.remitngo.data.model.bankTransactionMessage.BankTransactionMessage
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
@@ -13,7 +14,9 @@ import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentRe
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
+import com.bsel.remitngo.data.model.encript.EncryptItemForCreateReceipt
 import com.bsel.remitngo.data.model.encript.EncryptResponseItem
+import com.bsel.remitngo.data.model.encript.EncryptResponseItemForCreateReceipt
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
 import com.bsel.remitngo.data.model.payment.PaymentStatusResponse
@@ -97,6 +100,14 @@ class PaymentRemoteDataSourceImpl(private val remitNgoService: REMITnGoService) 
 
     override suspend fun requireDocument(requireDocumentItem: RequireDocumentItem): Response<RequireDocumentResponseItem> {
         return remitNgoService.requireDocument(requireDocumentItem)
+    }
+
+    override suspend fun encryptForCreateReceipt(encryptItemForCreateReceipt: EncryptItemForCreateReceipt): Response<EncryptResponseItemForCreateReceipt> {
+        return remitNgoService.encryptForCreateReceipt(encryptItemForCreateReceipt)
+    }
+
+    override suspend fun bankTransactionMessage(message: String): Response<BankTransactionMessage> {
+        return remitNgoService.bankTransactionMessage(message)
     }
 
 }
