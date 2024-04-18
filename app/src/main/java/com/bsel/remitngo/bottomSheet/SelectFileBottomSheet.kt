@@ -65,9 +65,6 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
-
-        binding.cancelButton.setOnClickListener { dismiss() }
-
         binding.selectFile.setOnClickListener {
             pickFile()
         }

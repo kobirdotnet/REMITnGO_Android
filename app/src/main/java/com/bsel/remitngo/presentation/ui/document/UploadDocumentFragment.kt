@@ -81,10 +81,10 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
 
         categoryFocusListener()
         documentFocusListener()
-        documentNoFocusListener()
-        issueByFocusListener()
-        issueDateFocusListener()
-        expireDateFocusListener()
+//        documentNoFocusListener()
+//        issueByFocusListener()
+//        issueDateFocusListener()
+//        expireDateFocusListener()
 
         binding.documentCategory.setOnClickListener {
             documentCategoryBottomSheet.itemSelectedListener = this
@@ -184,9 +184,7 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         val validIssueDate = binding.issueDateContainer.helperText == null
         val validExpireDate = binding.expireDateContainer.helperText == null
 
-        if (validCategory && validDocument && validDocumentNo && validIssueBy
-            && validIssueDate && validExpireDate
-        ) {
+        if (validCategory && validDocument) {
             submitDocumentFrom()
         }
     }
@@ -211,11 +209,11 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                     documentCategoryId.toRequestBody(),
                     "0".toRequestBody(),
                     documentTypeId.toRequestBody(),
-                    documentNo.toRequestBody(),
-                    issueBy.toRequestBody(),
-                    issueDate.toRequestBody(),
-                    expireDate.toRequestBody(),
-                    issueDate.toRequestBody(),
+                    "0".toRequestBody(),
+                    "xyz".toRequestBody(),
+                    "2024-01-01".toRequestBody(),
+                    "2024-01-01".toRequestBody(),
+                    "2024-01-01".toRequestBody(),
                     filePart
                 )
             }

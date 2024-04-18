@@ -3,6 +3,7 @@ package com.bsel.remitngo.data.repository.document.dataSourceImpl
 import com.bsel.remitngo.data.api.REMITnGoService
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
+import com.bsel.remitngo.data.model.document.docForTransaction.docMsg.RequireDocMsg
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem

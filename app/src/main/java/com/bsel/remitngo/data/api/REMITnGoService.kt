@@ -36,6 +36,7 @@ import com.bsel.remitngo.data.model.division.DivisionItem
 import com.bsel.remitngo.data.model.division.DivisionResponseItem
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
+import com.bsel.remitngo.data.model.document.docForTransaction.docMsg.RequireDocMsg
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
@@ -309,8 +310,11 @@ interface REMITnGoService {
 
     @GET("api/General/GetDynamicMsg/{message}")
     suspend fun bankTransactionMessage(@Path("message") message: String): Response<BankTransactionMessage>
+
     @GET("api/General/GetDynamicMsg/{message}")
     suspend fun support(@Path("message") message: String): Response<SupportResponseItem>
+    @GET("api/General/GetDynamicMsg/{message}")
+    suspend fun requireDocMsg(@Path("message") message: String): Response<RequireDocMsg>
 
 }
 

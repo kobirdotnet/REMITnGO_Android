@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
+import com.bsel.remitngo.data.model.document.docForTransaction.docMsg.RequireDocMsg
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem

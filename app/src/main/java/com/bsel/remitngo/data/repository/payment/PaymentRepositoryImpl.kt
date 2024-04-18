@@ -11,6 +11,7 @@ import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseI
 import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
+import com.bsel.remitngo.data.model.document.docForTransaction.docMsg.RequireDocMsg
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
@@ -325,6 +326,23 @@ class PaymentRepositoryImpl(private val paymentRemoteDataSource: PaymentRemoteDa
             }
         } catch (exception: Exception) {
             Log.e("MyTag", "Error message: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun requireDocMsg(message: String): RequireDocMsg? {
+        return try {
+            val response = paymentRemoteDataSource.requireDocMsg(message)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to requireDocMsg: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error requireDocMsg: ${exception.message}", exception)
             null
         }
     }

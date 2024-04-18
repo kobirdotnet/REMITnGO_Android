@@ -104,10 +104,6 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
 
         categoryFocusListener()
         documentFocusListener()
-        documentNoFocusListener()
-        issueByFocusListener()
-        issueDateFocusListener()
-        expireDateFocusListener()
 
         binding.documentCategory.setOnClickListener {
             documentCategoryBottomSheet.itemSelectedListener = this
@@ -120,55 +116,6 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
                 documentTypeBottomSheet.itemSelectedListener = this
                 documentTypeBottomSheet.show(childFragmentManager, documentTypeBottomSheet.tag)
             }
-        }
-
-        binding.issueDate.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-            val datePickerDialog = DatePickerDialog(
-                requireContext(),
-                { _, selectedYear, selectedMonth, selectedDay ->
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.set(selectedYear, selectedMonth, selectedDay)
-                    if (!selectedDate.after(Calendar.getInstance())) {
-                        val formattedDate =
-                            "%04d-%02d-%02d".format(selectedYear, selectedMonth + 1, selectedDay)
-                        binding.issueDate.setText(formattedDate)
-                    }
-                },
-                year,
-                month,
-                day
-            )
-            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
-            datePickerDialog.show()
-
-        }
-
-        binding.expireDate.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-            val datePickerDialog = DatePickerDialog(
-                requireContext(),
-                { _, selectedYear, selectedMonth, selectedDay ->
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.set(selectedYear, selectedMonth, selectedDay)
-                    if (!selectedDate.before(Calendar.getInstance())) {
-                        val formattedDate =
-                            "%04d-%02d-%02d".format(selectedYear, selectedMonth + 1, selectedDay)
-                        binding.expireDate.setText(formattedDate)
-                    }
-                },
-                year,
-                month,
-                day
-            )
-            datePickerDialog.datePicker.minDate = System.currentTimeMillis()
-            datePickerDialog.show()
         }
 
         binding.selectFile.setOnClickListener {
@@ -195,21 +142,11 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
     private fun documentFrom() {
         binding.documentCategoryContainer.helperText = validCategory()
         binding.documentTypeContainer.helperText = validDocument()
-        binding.documentNoContainer.helperText = validDocumentNo()
-        binding.issueByContainer.helperText = validIssueBy()
-        binding.issueDateContainer.helperText = validIssueDate()
-        binding.expireDateContainer.helperText = validExpireDate()
 
         val validCategory = binding.documentCategoryContainer.helperText == null
         val validDocument = binding.documentTypeContainer.helperText == null
-        val validDocumentNo = binding.documentNoContainer.helperText == null
-        val validIssueBy = binding.issueByContainer.helperText == null
-        val validIssueDate = binding.issueDateContainer.helperText == null
-        val validExpireDate = binding.expireDateContainer.helperText == null
 
-        if (validCategory && validDocument && validDocumentNo && validIssueBy
-            && validIssueDate && validExpireDate
-        ) {
+        if (validCategory && validDocument) {
             submitDocumentFrom()
         }
     }
@@ -217,10 +154,6 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
     private fun submitDocumentFrom() {
         val category = binding.documentCategory.text.toString()
         val document = binding.documentType.text.toString()
-        val documentNo = binding.documentNo.text.toString()
-        val issueBy = binding.issueBy.text.toString()
-        val issueDate = binding.issueDate.text.toString()
-        val expireDate = binding.expireDate.text.toString()
 
         val fileUri = selectedFile
         if (fileUri != null) {
@@ -234,11 +167,11 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
                     documentCategoryId.toRequestBody(),
                     "0".toRequestBody(),
                     documentTypeId.toRequestBody(),
-                    documentNo.toRequestBody(),
-                    issueBy.toRequestBody(),
-                    issueDate.toRequestBody(),
-                    expireDate.toRequestBody(),
-                    issueDate.toRequestBody(),
+                    "0".toRequestBody(),
+                    "xyz".toRequestBody(),
+                    "2024-01-01".toRequestBody(),
+                    "2024-01-01".toRequestBody(),
+                    "2024-01-01".toRequestBody(),
                     filePart
                 )
             }
@@ -276,70 +209,6 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
         val document = binding.documentType.text.toString()
         if (document.isEmpty()) {
             return "select document"
-        }
-        return null
-    }
-
-    private fun documentNoFocusListener() {
-        binding.documentNo.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.documentNoContainer.helperText = validDocumentNo()
-            }
-        }
-    }
-
-    private fun validDocumentNo(): String? {
-        val documentNo = binding.documentNo.text.toString()
-        if (documentNo.isEmpty()) {
-            return "enter document no"
-        }
-        return null
-    }
-
-    private fun issueByFocusListener() {
-        binding.issueBy.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.issueByContainer.helperText = validIssueBy()
-            }
-        }
-    }
-
-    private fun validIssueBy(): String? {
-        val issueBy = binding.issueBy.text.toString()
-        if (issueBy.isEmpty()) {
-            return "enter issue by"
-        }
-        return null
-    }
-
-    private fun issueDateFocusListener() {
-        binding.issueDate.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.issueDateContainer.helperText = validIssueDate()
-            }
-        }
-    }
-
-    private fun validIssueDate(): String? {
-        val issueDate = binding.issueDate.text.toString()
-        if (issueDate.isEmpty()) {
-            return "enter issue date"
-        }
-        return null
-    }
-
-    private fun expireDateFocusListener() {
-        binding.expireDate.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.expireDateContainer.helperText = validExpireDate()
-            }
-        }
-    }
-
-    private fun validExpireDate(): String? {
-        val expireDate = binding.expireDate.text.toString()
-        if (expireDate.isEmpty()) {
-            return "enter expire date"
         }
         return null
     }

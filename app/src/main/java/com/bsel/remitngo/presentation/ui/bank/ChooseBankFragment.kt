@@ -5,6 +5,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -160,13 +161,25 @@ class ChooseBankFragment : Fragment() {
             bankViewModel.getBank(getBankItem)
             observeGetBankResult()
         }else{
-            val getBankItem = GetBankItem(
-                deviceId = deviceId,
-                params1 = beneficiaryId.toInt(),
-                params2 = orderType.toInt()
-            )
-            bankViewModel.getBank(getBankItem)
-            observeGetBankResult()
+            try {
+                val getBankItem = GetBankItem(
+                    deviceId = deviceId,
+                    params1 = beneficiaryId.toInt(),
+                    params2 = orderType.toInt()
+                )
+                bankViewModel.getBank(getBankItem)
+                observeGetBankResult()
+            }catch (e:NumberFormatException){
+                e.localizedMessage
+            }
+        }
+
+        if (orderType=="3"){
+            binding.accountTxt.text = "Bank Account"
+        }else if (orderType=="5"){
+            binding.accountTxt.text = "Bank Account"
+        }else if (orderType=="1"){
+            binding.accountTxt.text = "Wallet Account"
         }
     }
 

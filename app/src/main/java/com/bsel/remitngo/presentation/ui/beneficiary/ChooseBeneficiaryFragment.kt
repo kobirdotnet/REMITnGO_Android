@@ -137,7 +137,7 @@ class ChooseBeneficiaryFragment : Fragment() {
         sourceOfIncomeId = arguments?.getString("sourceOfIncomeId").toString()
         sourceOfIncomeName = arguments?.getString("sourceOfIncomeName").toString()
 
-        binding.btnBeneficiary.setOnClickListener {
+        binding.btnAddBeneficiary.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("paymentType", paymentType)
                 putString("orderType", orderType)
@@ -361,7 +361,7 @@ class ChooseBeneficiaryFragment : Fragment() {
             putString("sourceOfIncomeName", sourceOfIncomeName)
         }
         findNavController().navigate(
-            R.id.action_nav_choose_beneficiary_to_nav_choose_bank,
+            R.id.action_nav_choose_beneficiary_to_nav_save_beneficiary,
             bundle
         )
     }

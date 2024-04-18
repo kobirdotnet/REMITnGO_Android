@@ -126,6 +126,13 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         sourceOfIncomeId = arguments?.getString("sourceOfIncomeId").toString()
         sourceOfIncomeName = arguments?.getString("sourceOfIncomeName").toString()
 
+        if (beneficiaryName != "null") {
+            binding.recipientName.setText(beneficiaryName)
+        }
+        if (beneficiaryPhoneNumber != "null") {
+            binding.phoneNumber.setText(beneficiaryPhoneNumber)
+        }
+
 //        binding.relation.setOnClickListener {
 //            relationBottomSheet.itemSelectedListener = this
 //            relationBottomSheet.show(childFragmentManager, relationBottomSheet.tag)

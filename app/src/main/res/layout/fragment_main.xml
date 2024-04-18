@@ -483,12 +483,14 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
-                <EditText
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/extraPercentage"
-                    android:layout_width="wrap_content"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/white"
                     android:focusableInTouchMode="false"
+                    android:textAllCaps="false"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:hint="@string/extra_percentage"
@@ -628,14 +630,16 @@
                         android:gravity="center"
                         android:orientation="horizontal">
 
-                        <EditText
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/learnMore"
-                            android:layout_width="wrap_content"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/blue"
+                            android:backgroundTint="@color/white"
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
+                            android:textAllCaps="false"
                             android:hint="Learn more"
                             android:inputType="none"
                             android:textColor="@color/blue"

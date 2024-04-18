@@ -34,11 +34,11 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
 
     private val uploadRequireDocumentBottomSheet: UploadRequireDocumentBottomSheet by lazy { UploadRequireDocumentBottomSheet() }
 
-    private lateinit var totalAmount:String
-    private lateinit var benId:String
-    private lateinit var customerId:String
-    private lateinit var currentDate:String
-    private lateinit var reasonId:String
+    private lateinit var totalAmount: String
+    private lateinit var benId: String
+    private lateinit var customerId: String
+    private lateinit var currentDate: String
+    private lateinit var reasonId: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -74,7 +74,7 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
             ViewModelProvider(this, paymentViewModelFactory)[PaymentViewModel::class.java]
 
         binding.cancelButton.setOnClickListener { dismiss() }
-        binding.btnCancel.setOnClickListener { dismiss() }
+        binding.btnLater.setOnClickListener { dismiss() }
 
         binding.btnUpload.setOnClickListener {
             if (!uploadRequireDocumentBottomSheet.isAdded) {
@@ -84,6 +84,8 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
                 )
             }
         }
+
+        paymentViewModel.requireDocMsg("3")
 
         val requireDocumentItem = RequireDocumentItem(
             agentId = 8082,
@@ -95,6 +97,8 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
             transactionType = 1
         )
         paymentViewModel.requireDocument(requireDocumentItem)
+
+        observeRequireDocMsgResult()
         observeRequireDocumentResult()
 
         return bottomSheet
@@ -107,18 +111,36 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
         requireCurrentDate: String,
         requireReasonId: String
     ) {
-        totalAmount=requireAmount
-        benId=requireBenId
-        customerId=requireCustomerId
-        currentDate=requireCurrentDate
-        reasonId=requireReasonId
+        totalAmount = requireAmount
+        benId = requireBenId
+        customerId = requireCustomerId
+        currentDate = requireCurrentDate
+        reasonId = requireReasonId
+    }
+
+    private fun observeRequireDocMsgResult() {
+        paymentViewModel.requireDocMsgResult.observe(this) { result ->
+            if (result!!.code == "000") {
+                if (result!!.data != null) {
+                    for (msg in result!!.data!!) {
+                        if (msg!!.id == 1) {
+                            binding.msgOne.text = msg.name
+                        }
+                        if (msg!!.id == 2) {
+                            binding.msgTwo.text = msg.name
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun observeRequireDocumentResult() {
         paymentViewModel.requireDocumentResult.observe(this) { result ->
             if (result!!.code == "000") {
                 if (result!!.data != null) {
-                    binding.requireDocumentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    binding.requireDocumentRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
                     requireDocumentAdapter = RequireDocumentAdapter()
                     binding.requireDocumentRecyclerView.adapter = requireDocumentAdapter
                     requireDocumentAdapter.setList(result.data as List<RequireDocumentData>)

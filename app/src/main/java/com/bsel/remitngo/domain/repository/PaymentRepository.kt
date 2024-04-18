@@ -10,6 +10,7 @@ import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseI
 import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
+import com.bsel.remitngo.data.model.document.docForTransaction.docMsg.RequireDocMsg
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
@@ -62,5 +63,8 @@ interface PaymentRepository {
     suspend fun encryptForCreateReceipt(encryptItemForCreateReceipt: EncryptItemForCreateReceipt): EncryptResponseItemForCreateReceipt?
 
     suspend fun bankTransactionMessage(message: String): BankTransactionMessage?
+
+    suspend fun requireDocMsg(message: String): RequireDocMsg?
+
 }
 

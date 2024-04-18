@@ -45,6 +45,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/msgOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:gravity="center_vertical"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/blue" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/requireDocumentRecyclerView"
                 android:layout_width="match_parent"
@@ -57,59 +66,74 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="24dp"
             android:gravity="bottom"
-            android:orientation="horizontal"
-            android:padding="@dimen/activity_vertical_margin"
-            android:weightSum="2"
-            android:layout_marginTop="24dp">
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/msgTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:gravity="center_vertical"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/blue" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
                 android:orientation="horizontal"
-                android:paddingRight="@dimen/activity_vertical_margin">
+                android:weightSum="2">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCancel"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="center"
-                    android:inputType="none"
-                    android:text="Cancel"
-                    android:textAllCaps="false"
-                    android:textColor="@color/red"
-                    android:textSize="18sp"
-                    android:visibility="gone"/>
-            </LinearLayout>
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_vertical_margin">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_vertical_margin">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnUpload"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:inputType="none"
+                        android:text="Upload"
+                        android:textAllCaps="false"
+                        android:textColor="@color/blue"
+                        android:textSize="18sp" />
+                </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnUpload"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="center"
-                    android:inputType="none"
-                    android:text="Upload"
-                    android:textAllCaps="false"
-                    android:textColor="@color/blue"
-                    android:textSize="18sp" />
-            </LinearLayout>
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_vertical_margin">
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLater"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:inputType="none"
+                        android:text="Later"
+                        android:textAllCaps="false"
+                        android:textColor="@color/blue"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

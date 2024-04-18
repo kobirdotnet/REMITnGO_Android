@@ -113,7 +113,7 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
         }
 
         if(orderStatus == "21"){
-            binding.btnDownloadReceipt.text = "Pay Naw"
+            binding.btnDownloadReceipt.text = "Pay Now"
         }else{
             binding.btnDownloadReceipt.text = "Download Receipt"
         }

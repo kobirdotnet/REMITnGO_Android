@@ -10,6 +10,7 @@ import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerResponseI
 import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
+import com.bsel.remitngo.data.model.document.docForTransaction.docMsg.RequireDocMsg
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.emp.EmpResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
@@ -100,6 +101,10 @@ class PaymentUseCase(private val paymentRepository: PaymentRepository) {
 
     suspend fun executeBankTransactionMessage(message: String): BankTransactionMessage? {
         return paymentRepository.bankTransactionMessage(message)
+    }
+
+    suspend fun requireDocMsg(message: String): RequireDocMsg? {
+        return paymentRepository.requireDocMsg(message)
     }
 
 }
