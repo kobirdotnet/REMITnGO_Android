@@ -12,27 +12,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.GenderAdapter
-import com.bsel.remitngo.bottomSheet.ReasonBottomSheet
-import com.bsel.remitngo.bottomSheet.RelationBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
-import com.bsel.remitngo.data.model.gender.GenderItem
 import com.bsel.remitngo.data.model.reason.ReasonData
 import com.bsel.remitngo.data.model.relation.RelationData
-import com.bsel.remitngo.databinding.FragmentBeneficiaryBinding
-import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
+import com.bsel.remitngo.databinding.FragmentSaveRecipientBinding
 import com.bsel.remitngo.presentation.di.Injector
 import java.util.*
 import javax.inject.Inject
 
-class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
-
+class SaveRecipientFragment : Fragment(), OnBeneficiarySelectedListener {
     @Inject
     lateinit var beneficiaryViewModelFactory: BeneficiaryViewModelFactory
     private lateinit var beneficiaryViewModel: BeneficiaryViewModel
 
-    private lateinit var binding: FragmentBeneficiaryBinding
+    private lateinit var binding: FragmentSaveRecipientBinding
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -78,12 +73,12 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_beneficiary, container, false)
+        return inflater.inflate(R.layout.fragment_save_recipient, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentBeneficiaryBinding.bind(view)
+        binding = FragmentSaveRecipientBinding.bind(view)
 
         (requireActivity().application as Injector).createBeneficiarySubComponent().inject(this)
 
@@ -189,7 +184,7 @@ class BeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
                         putString("sourceOfIncomeName", sourceOfIncomeName)
                     }
                     findNavController().navigate(
-                        R.id.action_nav_save_beneficiary_to_nav_choose_beneficiary,
+                        R.id.action_nav_save_recipient_to_nav_choose_recipient,
                         bundle
                     )
                 }

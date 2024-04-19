@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -28,17 +29,17 @@ import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.ContactItem
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
-import com.bsel.remitngo.databinding.FragmentChooseBeneficiaryBinding
+import com.bsel.remitngo.databinding.FragmentBeneficiaryManagementBinding
 import com.bsel.remitngo.presentation.di.Injector
 import java.util.*
 import javax.inject.Inject
 
-class ChooseBeneficiaryFragment : Fragment() {
+class BeneficiaryManagementFragment : Fragment() {
     @Inject
     lateinit var beneficiaryViewModelFactory: BeneficiaryViewModelFactory
     private lateinit var beneficiaryViewModel: BeneficiaryViewModel
 
-    private lateinit var binding: FragmentChooseBeneficiaryBinding
+    private lateinit var binding: FragmentBeneficiaryManagementBinding
 
     private val REQUEST_CONTACTS_PERMISSION = 1
 
@@ -87,12 +88,12 @@ class ChooseBeneficiaryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_choose_beneficiary, container, false)
+        return inflater.inflate(R.layout.fragment_beneficiary_management, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentChooseBeneficiaryBinding.bind(view)
+        binding = FragmentBeneficiaryManagementBinding.bind(view)
 
         (requireActivity().application as Injector).createBeneficiarySubComponent().inject(this)
 
@@ -163,7 +164,7 @@ class ChooseBeneficiaryFragment : Fragment() {
                 putString("sourceOfIncomeName", sourceOfIncomeName)
             }
             findNavController().navigate(
-                R.id.action_nav_choose_beneficiary_to_nav_save_beneficiary,
+                R.id.action_nav_beneficiary_management_to_nav_save_beneficiary,
                 bundle
             )
         }
@@ -252,17 +253,17 @@ class ChooseBeneficiaryFragment : Fragment() {
             putString("sourceOfIncomeName", sourceOfIncomeName)
         }
 
-        if (orderType=="2"){
-            findNavController().navigate(
-                R.id.action_nav_choose_beneficiary_to_nav_review,
-                bundle
-            )
-        }else{
-            findNavController().navigate(
-                R.id.action_nav_choose_beneficiary_to_nav_choose_bank,
-                bundle
-            )
-        }
+//        if (orderType=="2"){
+//            findNavController().navigate(
+//                R.id.action_nav_choose_recipient_to_nav_review,
+//                bundle
+//            )
+//        }else{
+//            findNavController().navigate(
+//                R.id.action_nav_choose_recipient_to_nav_choose_bank,
+//                bundle
+//            )
+//        }
 
     }
 
@@ -361,7 +362,7 @@ class ChooseBeneficiaryFragment : Fragment() {
             putString("sourceOfIncomeName", sourceOfIncomeName)
         }
         findNavController().navigate(
-            R.id.action_nav_choose_beneficiary_to_nav_save_beneficiary,
+            R.id.action_nav_beneficiary_management_to_nav_save_beneficiary,
             bundle
         )
     }
@@ -460,6 +461,13 @@ class ChooseBeneficiaryFragment : Fragment() {
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.nav_main)
+        }
     }
 
 }

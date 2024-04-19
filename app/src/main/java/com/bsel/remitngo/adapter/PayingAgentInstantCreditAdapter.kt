@@ -9,18 +9,18 @@ import com.bsel.remitngo.R
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentData
 import com.bsel.remitngo.databinding.ItemPayingAgentBankBinding
 
-class PayingAgentBankNameAdapter(
+class PayingAgentInstantCreditAdapter(
     private val selectedItem: (PayingAgentData) -> Unit
-) : RecyclerView.Adapter<PayingAgentBankNameViewHolder>() {
+) : RecyclerView.Adapter<PayingAgentInstantCreditViewHolder>() {
 
     private val payingAgentItemList = ArrayList<PayingAgentData>()
     private var filteredPayingAgentItemList = ArrayList<PayingAgentData>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PayingAgentBankNameViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PayingAgentInstantCreditViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ItemPayingAgentBankBinding =
             DataBindingUtil.inflate(layoutInflater, R.layout.item_paying_agent_bank, parent, false)
-        return PayingAgentBankNameViewHolder(binding)
+        return PayingAgentInstantCreditViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -28,7 +28,7 @@ class PayingAgentBankNameAdapter(
     }
 
     override fun onBindViewHolder(
-        holder: PayingAgentBankNameViewHolder,
+        holder: PayingAgentInstantCreditViewHolder,
         @SuppressLint("RecyclerView") position: Int
     ) {
         holder.bind(filteredPayingAgentItemList[position], selectedItem)
@@ -52,7 +52,7 @@ class PayingAgentBankNameAdapter(
 
 }
 
-class PayingAgentBankNameViewHolder(val binding: ItemPayingAgentBankBinding) :
+class PayingAgentInstantCreditViewHolder(val binding: ItemPayingAgentBankBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
         payingAgentItem: PayingAgentData,

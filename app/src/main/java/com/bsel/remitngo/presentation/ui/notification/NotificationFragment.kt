@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
@@ -30,6 +32,13 @@ class NotificationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentNotificationBinding.bind(view)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.nav_main)
+        }
     }
 
 }

@@ -78,6 +78,13 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
 
         binding.btnUpload.setOnClickListener {
             if (!uploadRequireDocumentBottomSheet.isAdded) {
+                uploadRequireDocumentBottomSheet.requireDocument(
+                    totalAmount,
+                    benId,
+                    customerId,
+                    currentDate,
+                    reasonId
+                )
                 uploadRequireDocumentBottomSheet.show(
                     childFragmentManager,
                     uploadRequireDocumentBottomSheet.tag

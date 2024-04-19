@@ -6,7 +6,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -14,7 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.PayingAgentBankNameAdapter
+import com.bsel.remitngo.adapter.PayingAgentCashPickupAdapter
 import com.bsel.remitngo.data.interfaceses.OnCalculationSelectedListener
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentData
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
@@ -27,7 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 
-class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
+class PayingAgentCashPickupBottomSheet : BottomSheetDialogFragment() {
     @Inject
     lateinit var calculationViewModelFactory: CalculationViewModelFactory
     private lateinit var calculationViewModel: CalculationViewModel
@@ -38,7 +37,7 @@ class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var binding: PayingAgentBankNameLayoutBinding
 
-    private lateinit var payingAgentBankNameAdapter: PayingAgentBankNameAdapter
+    private lateinit var payingAgentCashPickupAdapter: PayingAgentCashPickupAdapter
 
     private lateinit var deviceId: String
 
@@ -104,15 +103,15 @@ class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
         calculationViewModel.payingAgentResult.observe(this) { result ->
             if (result!!.data != null) {
                 binding.payingAgentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                payingAgentBankNameAdapter = PayingAgentBankNameAdapter(
+                payingAgentCashPickupAdapter = PayingAgentCashPickupAdapter(
                     selectedItem = { selectedItem: PayingAgentData ->
                         payingAgentItem(selectedItem)
                         binding.payingAgentSearch.setQuery("", false)
                     }
                 )
-                binding.payingAgentRecyclerView.adapter = payingAgentBankNameAdapter
-                payingAgentBankNameAdapter.setList(result.data as List<PayingAgentData>)
-                payingAgentBankNameAdapter.notifyDataSetChanged()
+                binding.payingAgentRecyclerView.adapter = payingAgentCashPickupAdapter
+                payingAgentCashPickupAdapter.setList(result.data as List<PayingAgentData>)
+                payingAgentCashPickupAdapter.notifyDataSetChanged()
 
                 binding.payingAgentSearch.setOnQueryTextListener(object :
                     SearchView.OnQueryTextListener {
@@ -121,7 +120,7 @@ class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        payingAgentBankNameAdapter.filter(newText.orEmpty())
+                        payingAgentCashPickupAdapter.filter(newText.orEmpty())
                         return true
                     }
                 })
@@ -131,7 +130,7 @@ class PayingAgentBankBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun payingAgentItem(selectedItem: PayingAgentData) {
-        itemSelectedListener?.onPayingAgentBankItemSelected(selectedItem)
+        itemSelectedListener?.onPayingAgentCashPickupItemSelected(selectedItem)
         dismiss()
     }
 

@@ -1,6 +1,8 @@
 package com.bsel.remitngo.presentation.ui.profile
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -356,7 +359,6 @@ class ProfileFragment : Fragment() {
                     postCode = data!!.postCode.toString()
 
                     address = data!!.address.toString()
-                    Log.i("info","address: "+address)
                     binding.userAddress.text = "$address"
 
                     ukDivisionId = data!!.divisionId.toString()
@@ -369,7 +371,6 @@ class ProfileFragment : Fragment() {
                     binding.emailAddress.text = "$email"
 
                     isMobileOTPValidate = data!!.isMobileOTPValidate!!
-                    Log.i("info","isMobileOTPValidate: "+isMobileOTPValidate)
                     mobile = data!!.mobile.toString()
                     binding.phoneNumber.text = "$mobile"
                     if (!isMobileOTPValidate) {
@@ -388,13 +389,6 @@ class ProfileFragment : Fragment() {
                     }
                 }
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().navigate(R.id.nav_main)
         }
     }
 
@@ -427,6 +421,13 @@ class ProfileFragment : Fragment() {
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.nav_main)
+        }
     }
 
 }

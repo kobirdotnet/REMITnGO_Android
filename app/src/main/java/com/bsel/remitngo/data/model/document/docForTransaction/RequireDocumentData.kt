@@ -4,6 +4,8 @@ package com.bsel.remitngo.data.model.document.docForTransaction
 import com.google.gson.annotations.SerializedName
 
 data class RequireDocumentData(
+    @SerializedName("CategoryId")
+    val categoryId: Int?,
     @SerializedName("Description")
     val description: String?,
     @SerializedName("HitId")

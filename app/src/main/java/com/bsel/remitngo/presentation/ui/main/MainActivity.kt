@@ -1,6 +1,5 @@
 package com.bsel.remitngo.presentation.ui.main
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -14,8 +13,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -55,11 +52,12 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.nav_main,
                 R.id.nav_my_profile,
-                R.id.beneficiary,
+                R.id.nav_beneficiary_management,
                 R.id.nav_documents,
                 R.id.nav_transaction_history,
                 R.id.nav_cancellation,
                 R.id.nav_generate_query,
+                R.id.nav_notification,
                 R.id.nav_settings,
                 R.id.nav_support
             ), drawerLayout
@@ -126,7 +124,7 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.close()
         }
         beneficiary.setOnClickListener {
-            navController.navigate(R.id.nav_choose_beneficiary)
+            navController.navigate(R.id.nav_beneficiary_management)
             drawerLayout.close()
         }
         kycDocument.setOnClickListener {
@@ -177,26 +175,26 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        val drawerLayout: DrawerLayout = binding.drawerLayout
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            if (!isFinishing && !isDestroyed) {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("App termination")
-                builder.setMessage("Do you want to close the app?")
-                builder.setPositiveButton("EXIT") { _, _ ->
-                    ActivityCompat.finishAffinity(this)
-                }
-                builder.setNegativeButton("STAY") { _, _ ->
-                }
-                val dialog = builder.create()
-                dialog.show()
-            }
-        }
-    }
+//    @SuppressLint("MissingSuperCall")
+//    override fun onBackPressed() {
+//        val drawerLayout: DrawerLayout = binding.drawerLayout
+//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            drawerLayout.closeDrawer(GravityCompat.START)
+//        } else {
+//            if (!isFinishing && !isDestroyed) {
+//                val builder = AlertDialog.Builder(this)
+//                builder.setTitle("App termination")
+//                builder.setMessage("Do you want to close the app?")
+//                builder.setPositiveButton("EXIT") { _, _ ->
+//                    ActivityCompat.finishAffinity(this)
+//                }
+//                builder.setNegativeButton("STAY") { _, _ ->
+//                }
+//                val dialog = builder.create()
+//                dialog.show()
+//            }
+//        }
+//    }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         val v = currentFocus

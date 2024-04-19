@@ -1,9 +1,6 @@
 package com.bsel.remitngo.presentation.di.document
 
-import com.bsel.remitngo.bottomSheet.DocumentCategoryBottomSheet
-import com.bsel.remitngo.bottomSheet.DocumentTypeBottomSheet
-import com.bsel.remitngo.bottomSheet.RequireDocumentBottomSheet
-import com.bsel.remitngo.bottomSheet.UploadRequireDocumentBottomSheet
+import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.presentation.ui.document.DocumentFragment
 import com.bsel.remitngo.presentation.ui.document.UpdateDocumentFragment
 import com.bsel.remitngo.presentation.ui.document.UploadDocumentFragment
@@ -19,6 +16,7 @@ interface DocumentSubComponent {
     fun inject(documentCategoryBottomSheet: DocumentCategoryBottomSheet)
     fun inject(documentTypeBottomSheet: DocumentTypeBottomSheet)
     fun inject(uploadRequireDocumentBottomSheet: UploadRequireDocumentBottomSheet)
+    fun inject(requiredCategoryBottomSheet: RequiredCategoryBottomSheet)
 
     @Subcomponent.Factory
     interface Factory {

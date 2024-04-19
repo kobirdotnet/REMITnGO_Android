@@ -23,10 +23,10 @@
                 android:background="@color/grey"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom"
                 android:weightSum="7">
 
                 <LinearLayout
@@ -46,7 +46,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
-                        android:padding="8dp"
                         android:text="Bangladesh"
                         android:textColor="@color/black" />
                 </LinearLayout>
@@ -109,10 +108,10 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom"
                 android:weightSum="5">
 
                 <LinearLayout
@@ -140,8 +139,7 @@
                             android:layout_height="match_parent"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
-                            android:paddingLeft="8dp"
-                            android:text="GBP"
+                            android:text=" GBP"
                             android:textColor="@color/black" />
 
                     </LinearLayout>
@@ -149,7 +147,7 @@
                     <EditText
                         android:id="@+id/sendAmount"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:focusableInTouchMode="true"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
@@ -162,7 +160,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center">
 
@@ -192,8 +190,7 @@
                             android:layout_height="match_parent"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
-                            android:paddingRight="8dp"
-                            android:text="BDT"
+                            android:text="BDT "
                             android:textColor="@color/black" />
 
                         <ImageView
@@ -206,7 +203,7 @@
                     <EditText
                         android:id="@+id/receiveAmount"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:focusableInTouchMode="true"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
@@ -224,17 +221,17 @@
                 android:layout_height="wrap_content"
                 android:background="@color/grey"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="How will receiver get money ?"
+                    android:text="How will receiver get money?"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -243,17 +240,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_left">
 
                 <RadioGroup
                     android:id="@+id/orderModeRadioGroup"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="4">
@@ -261,8 +258,7 @@
                     <RadioButton
                         android:id="@+id/bankAccount"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="4dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
@@ -272,9 +268,7 @@
                     <RadioButton
                         android:id="@+id/instantCredit"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
@@ -284,9 +278,7 @@
                     <RadioButton
                         android:id="@+id/cashPickup"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
@@ -296,8 +288,7 @@
                     <RadioButton
                         android:id="@+id/mobileWallet"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
@@ -314,10 +305,10 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -332,7 +323,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
-                        android:completionThreshold="1"
                         android:fontFamily="@font/roboto_regular"
                         android:inputType="none"
                         android:textColor="@color/black" />
@@ -348,10 +338,10 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -366,7 +356,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
-                        android:completionThreshold="1"
                         android:fontFamily="@font/roboto_regular"
                         android:inputType="none"
                         android:textColor="@color/black" />
@@ -382,10 +371,10 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -400,7 +389,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
-                        android:completionThreshold="1"
                         android:fontFamily="@font/roboto_regular"
                         android:inputType="none"
                         android:textColor="@color/black" />
@@ -414,17 +402,17 @@
                 android:layout_height="wrap_content"
                 android:background="@color/grey"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="How will you pay ?"
+                    android:text="How will you pay?"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -433,17 +421,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right">
 
                 <RadioGroup
                     android:id="@+id/paymentModeRadioGroup"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="2">
@@ -451,8 +437,7 @@
                     <RadioButton
                         android:id="@+id/cardPayment"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="4dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
@@ -462,8 +447,7 @@
                     <RadioButton
                         android:id="@+id/bankPayment"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
@@ -480,8 +464,8 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/extraPercentage"
@@ -490,11 +474,11 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"
                     android:focusableInTouchMode="false"
-                    android:textAllCaps="false"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:hint="@string/extra_percentage"
                     android:inputType="none"
+                    android:textAllCaps="false"
                     android:textColor="@color/blue"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -503,16 +487,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:gravity="bottom"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnNext"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="@color/blue"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
@@ -527,34 +511,26 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
+
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
-                    android:padding="8dp"
-                    android:text="Sending money to Bangladesh is easy"
-                    android:textColor="@color/blue" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:text="Super fast, no fee transfers for cash pickup, mobile wallets, and banks"
-                    android:textColor="@color/black" />
+                    android:text="Sending money to Bangladesh is easy. Super fast, no fee transfers for cash pickup, mobile wallets, and banks"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -568,7 +544,7 @@
                             android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:padding="8dp"
+                            android:padding="6dp"
                             android:src="@drawable/bkash" />
 
                         <ImageView
@@ -576,7 +552,7 @@
                             android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:padding="8dp"
+                            android:padding="6dp"
                             android:src="@drawable/nagad" />
 
                         <ImageView
@@ -584,7 +560,7 @@
                             android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:padding="8dp"
+                            android:padding="6dp"
                             android:src="@drawable/rocket" />
 
                     </LinearLayout>
@@ -601,7 +577,7 @@
                             android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:padding="8dp"
+                            android:padding="6dp"
                             android:src="@drawable/brac_bank" />
 
                         <ImageView
@@ -609,7 +585,7 @@
                             android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:padding="8dp"
+                            android:padding="6dp"
                             android:src="@drawable/ab_bank" />
 
                         <TextView
@@ -618,9 +594,10 @@
                             android:layout_weight="1.5"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
-                            android:padding="8dp"
+                            android:padding="6dp"
                             android:text="and 53 more banks"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
@@ -639,9 +616,9 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
-                            android:textAllCaps="false"
                             android:hint="Learn more"
                             android:inputType="none"
+                            android:textAllCaps="false"
                             android:textColor="@color/blue"
                             android:textSize="12sp" />
 

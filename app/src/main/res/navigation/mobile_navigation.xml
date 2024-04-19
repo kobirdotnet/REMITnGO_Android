@@ -34,8 +34,8 @@
         android:label="@string/menu_confirm_transfer"
         tools:layout="@layout/fragment_payment">
         <action
-            android:id="@+id/action_nav_review_to_nav_choose_beneficiary"
-            app:destination="@id/nav_choose_beneficiary" />
+            android:id="@+id/action_nav_review_to_nav_choose_recipient"
+            app:destination="@id/nav_choose_recipient" />
         <action
             android:id="@+id/action_nav_review_to_nav_complete_bank_transaction"
             app:destination="@id/nav_complete_bank_transaction" />
@@ -48,28 +48,28 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_choose_beneficiary"
-        android:name="com.bsel.remitngo.presentation.ui.beneficiary.ChooseBeneficiaryFragment"
+        android:id="@+id/nav_choose_recipient"
+        android:name="com.bsel.remitngo.presentation.ui.beneficiary.ChooseRecipientFragment"
         android:label="@string/menu_choose_recipient"
-        tools:layout="@layout/fragment_choose_beneficiary">
+        tools:layout="@layout/fragment_choose_recipient">
         <action
-            android:id="@+id/action_nav_choose_beneficiary_to_nav_save_beneficiary"
-            app:destination="@id/nav_save_beneficiary" />
+            android:id="@+id/action_nav_choose_recipient_to_nav_save_recipient"
+            app:destination="@id/nav_save_recipient" />
         <action
-            android:id="@+id/action_nav_choose_beneficiary_to_nav_choose_bank"
+            android:id="@+id/action_nav_choose_recipient_to_nav_choose_bank"
             app:destination="@id/nav_choose_bank" />
         <action
-            android:id="@+id/action_nav_choose_beneficiary_to_nav_review"
+            android:id="@+id/action_nav_choose_recipient_to_nav_review"
             app:destination="@id/nav_review" />
     </fragment>
     <fragment
-        android:id="@+id/nav_save_beneficiary"
-        android:name="com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryFragment"
+        android:id="@+id/nav_save_recipient"
+        android:name="com.bsel.remitngo.presentation.ui.beneficiary.SaveRecipientFragment"
         android:label="@string/menu_recipient_details"
-        tools:layout="@layout/fragment_beneficiary">
+        tools:layout="@layout/fragment_save_recipient">
         <action
-            android:id="@+id/action_nav_save_beneficiary_to_nav_choose_beneficiary"
-            app:destination="@id/nav_choose_beneficiary" />
+            android:id="@+id/action_nav_save_recipient_to_nav_choose_recipient"
+            app:destination="@id/nav_choose_recipient" />
     </fragment>
 
     <fragment
@@ -87,7 +87,7 @@
     <fragment
         android:id="@+id/nav_save_bank"
         android:name="com.bsel.remitngo.presentation.ui.bank.BankFragment"
-        android:label="@string/menu_recipient_details"
+        android:label="@string/menu_bank_details"
         tools:layout="@layout/fragment_bank">
         <action
             android:id="@+id/action_nav_save_bank_to_nav_choose_bank"
@@ -299,6 +299,26 @@
         android:name="com.bsel.remitngo.presentation.ui.notification.NotificationFragment"
         android:label="@string/menu_notification"
         tools:layout="@layout/fragment_notification" />
+
+    <fragment
+        android:id="@+id/nav_beneficiary_management"
+        android:name="com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryManagementFragment"
+        android:label="@string/menu_beneficiary"
+        tools:layout="@layout/fragment_beneficiary_management" >
+        <action
+            android:id="@+id/action_nav_beneficiary_management_to_nav_save_beneficiary"
+            app:destination="@id/nav_save_beneficiary" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_save_beneficiary"
+        android:name="com.bsel.remitngo.presentation.ui.beneficiary.SaveBeneficiaryFragment"
+        android:label="@string/menu_save_beneficiary"
+        tools:layout="@layout/fragment_save_beneficiary">
+        <action
+            android:id="@+id/action_nav_save_beneficiary_to_nav_beneficiary_management"
+            app:destination="@id/nav_beneficiary_management" />
+    </fragment>
 
 
 </navigation>

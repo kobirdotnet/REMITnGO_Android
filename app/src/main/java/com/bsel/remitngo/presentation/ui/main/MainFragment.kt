@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +20,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottomSheet.PayingAgentBankBottomSheet
+import com.bsel.remitngo.bottomSheet.PayingAgentCashPickupBottomSheet
+import com.bsel.remitngo.bottomSheet.PayingAgentInstantCreditBottomSheet
 import com.bsel.remitngo.bottomSheet.PayingAgentWalletBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnCalculationSelectedListener
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
-import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentData
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
 import com.bsel.remitngo.data.model.percentage.PercentageItem
@@ -45,7 +44,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
     private lateinit var preferenceManager: PreferenceManager
 
-    private val payingAgentBankBottomSheet: PayingAgentBankBottomSheet by lazy { PayingAgentBankBottomSheet() }
+    private val payingAgentInstantCreditBottomSheet: PayingAgentInstantCreditBottomSheet by lazy { PayingAgentInstantCreditBottomSheet() }
+    private val payingAgentCashPickupBottomSheet: PayingAgentCashPickupBottomSheet by lazy { PayingAgentCashPickupBottomSheet() }
     private val payingAgentWalletBottomSheet: PayingAgentWalletBottomSheet by lazy { PayingAgentWalletBottomSheet() }
 
     private val decimalFormat = DecimalFormat("#.##")
@@ -149,11 +149,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.mobileWallet.isChecked = false
 
                 binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
-//                binding.collectionPointInstantCredit.text = null
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
-                binding.collectionPointCashPickUp.text = null
                 binding.collectionPointWalletLayout.visibility = View.GONE
-                binding.collectionPointWallet.text = null
             } else if (orderType == "2") {
                 binding.bankAccount.isChecked = false
                 binding.instantCredit.isChecked = false
@@ -161,9 +158,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.mobileWallet.isChecked = false
 
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
-                binding.collectionPointInstantCredit.text = null
                 binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
-//                binding.collectionPointCashPickUp.text = null
                 binding.collectionPointWalletLayout.visibility = View.GONE
                 binding.collectionPointWallet.text = null
             } else if (orderType == "1") {
@@ -173,11 +168,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.mobileWallet.isChecked = true
 
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
-                binding.collectionPointInstantCredit.text = null
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
-                binding.collectionPointCashPickUp.text = null
                 binding.collectionPointWalletLayout.visibility = View.VISIBLE
-//                binding.collectionPointWallet.text = null
             } else if (orderType == "3") {
                 binding.bankAccount.isChecked = true
                 binding.instantCredit.isChecked = false
@@ -185,11 +177,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.mobileWallet.isChecked = false
 
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
-                binding.collectionPointInstantCredit.text = null
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
-                binding.collectionPointCashPickUp.text = null
                 binding.collectionPointWalletLayout.visibility = View.GONE
-                binding.collectionPointWallet.text = null
             }
         } else {
             orderType = "3"
@@ -199,11 +188,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             binding.mobileWallet.isChecked = false
 
             binding.collectionPointInstantCreditLayout.visibility = View.GONE
-            binding.collectionPointInstantCredit.text = null
             binding.collectionPointCashPickUpLayout.visibility = View.GONE
-            binding.collectionPointCashPickUp.text = null
             binding.collectionPointWalletLayout.visibility = View.GONE
-            binding.collectionPointWallet.text = null
         }
 
         if (paymentType != "null") {
@@ -222,15 +208,27 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
 
         binding.collectionPointInstantCredit.setOnClickListener {
-            payingAgentBankBottomSheet.setSelectedOrderType("5", binding.sendAmount.text.toString())
-            payingAgentBankBottomSheet.itemSelectedListener = this
-            payingAgentBankBottomSheet.show(childFragmentManager, payingAgentBankBottomSheet.tag)
+            payingAgentInstantCreditBottomSheet.setSelectedOrderType(
+                "5",
+                binding.sendAmount.text.toString()
+            )
+            payingAgentInstantCreditBottomSheet.itemSelectedListener = this
+            payingAgentInstantCreditBottomSheet.show(
+                childFragmentManager,
+                payingAgentInstantCreditBottomSheet.tag
+            )
         }
 
         binding.collectionPointCashPickUp.setOnClickListener {
-            payingAgentBankBottomSheet.setSelectedOrderType("2", binding.sendAmount.text.toString())
-            payingAgentBankBottomSheet.itemSelectedListener = this
-            payingAgentBankBottomSheet.show(childFragmentManager, payingAgentBankBottomSheet.tag)
+            payingAgentCashPickupBottomSheet.setSelectedOrderType(
+                "2",
+                binding.sendAmount.text.toString()
+            )
+            payingAgentCashPickupBottomSheet.itemSelectedListener = this
+            payingAgentCashPickupBottomSheet.show(
+                childFragmentManager,
+                payingAgentCashPickupBottomSheet.tag
+            )
         }
 
         binding.collectionPointWallet.setOnClickListener {
@@ -262,7 +260,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                             0,
                             binding.sendAmount.text.toString()
                         )
-                    }catch (e:NumberFormatException){
+                    } catch (e: NumberFormatException) {
                         e.message
                     }
                     binding.bankAccount.isChecked = true
@@ -271,11 +269,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     binding.mobileWallet.isChecked = false
 
                     binding.collectionPointInstantCreditLayout.visibility = View.GONE
-                    binding.collectionPointInstantCredit.text = null
                     binding.collectionPointCashPickUpLayout.visibility = View.GONE
-                    binding.collectionPointCashPickUp.text = null
                     binding.collectionPointWalletLayout.visibility = View.GONE
-                    binding.collectionPointWallet.text = null
                 }
                 R.id.instantCredit -> {
                     orderType = "5"
@@ -286,11 +281,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     binding.mobileWallet.isChecked = false
 
                     binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
-                    binding.collectionPointInstantCredit.text = null
                     binding.collectionPointCashPickUpLayout.visibility = View.GONE
-                    binding.collectionPointCashPickUp.text = null
                     binding.collectionPointWalletLayout.visibility = View.GONE
-                    binding.collectionPointWallet.text = null
                 }
                 R.id.cashPickup -> {
                     orderType = "2"
@@ -301,11 +293,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     binding.mobileWallet.isChecked = false
 
                     binding.collectionPointInstantCreditLayout.visibility = View.GONE
-                    binding.collectionPointInstantCredit.text = null
                     binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
-                    binding.collectionPointCashPickUp.text = null
                     binding.collectionPointWalletLayout.visibility = View.GONE
-                    binding.collectionPointWallet.text = null
                 }
                 R.id.mobileWallet -> {
                     orderType = "1"
@@ -316,11 +305,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     binding.mobileWallet.isChecked = true
 
                     binding.collectionPointInstantCreditLayout.visibility = View.GONE
-                    binding.collectionPointInstantCredit.text = null
                     binding.collectionPointCashPickUpLayout.visibility = View.GONE
-                    binding.collectionPointCashPickUp.text = null
                     binding.collectionPointWalletLayout.visibility = View.VISIBLE
-                    binding.collectionPointWallet.text = null
                 }
             }
         }
@@ -388,27 +374,14 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             customerId = 0
         )
         calculationViewModel.percentage(percentageItem)
-        calculationViewModel.percentageResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (extraPercentage in result.data!!) {
-                    binding.extraPercentage.setText(extraPercentage?.campingMessage.toString())
-                    percentageUrl = extraPercentage?.url.toString()
-                }
-            }
-        }
-        binding.extraPercentage.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(percentageUrl))
-            startActivity(intent)
-        }
 
-        binding.learnMore.setText("Learn more!")
+        binding.learnMore.text = "Learn more!"
         binding.learnMore.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://bracsaajanexchange.com"))
             startActivity(intent)
         }
 
         binding.btnNext.setOnClickListener {
-
             val sendAmountValue = binding.sendAmount.text.toString()
             val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
 
@@ -443,18 +416,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 R.id.action_nav_main_to_nav_review,
                 bundle
             )
-        }
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("App termination")
-            builder.setMessage("Do you want to close the app?")
-            builder.setPositiveButton("EXIT") { _: DialogInterface, _: Int ->
-                ActivityCompat.finishAffinity(requireActivity())
-            }
-            builder.setNegativeButton("STAY") { _: DialogInterface, _: Int -> }
-            val dialog = builder.create()
-            dialog.show()
         }
 
         if (bankId == "null" || payingAgentId == "null") {
@@ -495,13 +456,33 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     amount = sendAmount.toInt()
                 )
                 calculationViewModel.payingAgent(payingAgentItem)
-            }catch (e:NumberFormatException){
+            } catch (e: NumberFormatException) {
                 e.localizedMessage
             }
         }
 
+        observeExtraPercentageResult()
         observeCalculateRateResult()
         observePayingAgentResult()
+    }
+
+    private fun observeExtraPercentageResult() {
+        calculationViewModel.percentageResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (extraPercentage in result.data!!) {
+                        binding.extraPercentage.text = extraPercentage?.campingMessage.toString()
+                        percentageUrl = extraPercentage?.url.toString()
+                    }
+                }
+                binding.extraPercentage.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(percentageUrl))
+                    startActivity(intent)
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
+            }
+        }
     }
 
     private fun observeCalculateRateResult() {
@@ -512,12 +493,26 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                         commission = data!!.commission!!.toDouble().toString()
                         rate = data!!.rate!!.toDouble()
                         exchangeRate = data!!.rate!!.toDouble().toString()
-                        binding.exchangeRate.text = "BDT " + "$exchangeRate"
+                        binding.exchangeRate.text = "BDT $exchangeRate"
                         updateValuesGBP()
                     }
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
+            }
+        }
+    }
+
+    private fun observePayingAgentResult() {
+        calculationViewModel.payingAgentResult.observe(this) { result ->
+            if (result!!.data != null) {
+                for (item in result.data!!) {
+                    if (item!!.bankId == bankId.toInt() && item.payingAgentId == payingAgentId.toInt()) {
+                        binding.collectionPointInstantCredit.setText(item.name)
+                        binding.collectionPointCashPickUp.setText(item.name)
+                        binding.collectionPointWallet.setText(item.name)
+                    }
+                }
             }
         }
     }
@@ -544,8 +539,27 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         }
     }
 
-    override fun onPayingAgentBankItemSelected(selectedItem: PayingAgentData) {
+    override fun onPayingAgentInstantCreditItemSelected(selectedItem: PayingAgentData) {
         binding.collectionPointInstantCredit.setText(selectedItem.name)
+        payingAgentId = selectedItem.payingAgentId!!.toString()
+        bankId = selectedItem.bankId!!.toString()
+
+        calculateRate(
+            deviceId,
+            personId.toInt(),
+            bankId.toInt(),
+            payingAgentId.toInt(),
+            orderType.toInt(),
+            paymentType.toInt(),
+            4,
+            1,
+            0,
+            binding.sendAmount.text.toString()
+        )
+
+    }
+
+    override fun onPayingAgentCashPickupItemSelected(selectedItem: PayingAgentData) {
         binding.collectionPointCashPickUp.setText(selectedItem.name)
         payingAgentId = selectedItem.payingAgentId!!.toString()
         bankId = selectedItem.bankId!!.toString()
@@ -582,20 +596,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             0,
             binding.sendAmount.text.toString()
         )
-    }
-
-    private fun observePayingAgentResult() {
-        calculationViewModel.payingAgentResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (item in result.data!!) {
-                    if (item!!.bankId == bankId.toInt() && item!!.payingAgentId == payingAgentId.toInt()) {
-                        binding.collectionPointInstantCredit.setText(item.name)
-                        binding.collectionPointCashPickUp.setText(item.name)
-                        binding.collectionPointWallet.setText(item.name)
-                    }
-                }
-            }
-        }
     }
 
     private fun calculateRate(
@@ -655,6 +655,21 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("App termination")
+            builder.setMessage("Do you want to close the app?")
+            builder.setPositiveButton("EXIT") { _: DialogInterface, _: Int ->
+                ActivityCompat.finishAffinity(requireActivity())
+            }
+            builder.setNegativeButton("STAY") { _: DialogInterface, _: Int -> }
+            val dialog = builder.create()
+            dialog.show()
+        }
     }
 
 }

@@ -290,7 +290,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                 putString("sourceOfIncomeName", sourceOfIncomeName)
             }
             findNavController().navigate(
-                R.id.action_nav_review_to_nav_choose_beneficiary,
+                R.id.action_nav_review_to_nav_choose_recipient,
                 bundle
             )
         }

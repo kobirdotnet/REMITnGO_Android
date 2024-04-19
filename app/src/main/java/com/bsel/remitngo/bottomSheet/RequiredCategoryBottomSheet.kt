@@ -21,6 +21,8 @@ import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryDa
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.databinding.DocumentCategoryLayoutBinding
 import com.bsel.remitngo.data.interfaceses.OnDocumentItemSelectedListener
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.databinding.RequiredCategoryLayoutBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.document.DocumentViewModel
 import com.bsel.remitngo.presentation.ui.document.DocumentViewModelFactory
@@ -30,7 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.*
 import javax.inject.Inject
 
-class DocumentCategoryBottomSheet : BottomSheetDialogFragment() {
+class RequiredCategoryBottomSheet : BottomSheetDialogFragment() {
     @Inject
     lateinit var documentViewModelFactory: DocumentViewModelFactory
     private lateinit var documentViewModel: DocumentViewModel
@@ -39,7 +41,7 @@ class DocumentCategoryBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var categoryBehavior: BottomSheetBehavior<*>
 
-    private lateinit var binding: DocumentCategoryLayoutBinding
+    private lateinit var binding: RequiredCategoryLayoutBinding
 
     private lateinit var documentCategoryAdapter: DocumentCategoryAdapter
 
@@ -50,9 +52,15 @@ class DocumentCategoryBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var personId: String
 
+    private lateinit var totalAmount: String
+    private lateinit var benId: String
+    private lateinit var customerId: String
+    private lateinit var currentDate: String
+    private lateinit var reasonId: String
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        val view = View.inflate(requireContext(), R.layout.document_category_layout, null)
+        val view = View.inflate(requireContext(), R.layout.required_category_layout, null)
         binding = DataBindingUtil.bind(view)!!
 
         bottomSheet.setContentView(view)
@@ -91,6 +99,18 @@ class DocumentCategoryBottomSheet : BottomSheetDialogFragment() {
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
+        val requireDocumentItem = RequireDocumentItem(
+            agentId = 8082,
+            amount = totalAmount.toDouble(),
+            beneficiaryId = benId.toInt(),
+            customerId = customerId.toInt(),
+            entryDate = currentDate,
+            purposeOfTransferId = reasonId.toInt(),
+            transactionType = 1
+        )
+        documentViewModel.requireDocument(requireDocumentItem)
+        observeRequireDocumentResult()
+
         val documentCategoryItem = DocumentCategoryItem(
             deviceId = deviceId,
             dropdownId = 20000,
@@ -98,36 +118,57 @@ class DocumentCategoryBottomSheet : BottomSheetDialogFragment() {
             param2 = 0
         )
         documentViewModel.documentCategory(documentCategoryItem)
-        observeDocumentCategoryResult()
 
         return bottomSheet
     }
 
-    private fun observeDocumentCategoryResult() {
-        documentViewModel.documentCategoryResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.documentCategoryRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                documentCategoryAdapter = DocumentCategoryAdapter(
-                    selectedItem = { selectedItem: DocumentCategoryData ->
-                        documentCategory(selectedItem)
-                        binding.documentCategorySearch.setQuery("", false)
-                    }
-                )
-                binding.documentCategoryRecyclerView.adapter = documentCategoryAdapter
-                documentCategoryAdapter.setList(result.data as List<DocumentCategoryData>)
-                documentCategoryAdapter.notifyDataSetChanged()
+    fun requireDocument(
+        requireAmount: String,
+        requireBenId: String,
+        requireCustomerId: String,
+        requireCurrentDate: String,
+        requireReasonId: String
+    ) {
+        totalAmount = requireAmount
+        benId = requireBenId
+        customerId = requireCustomerId
+        currentDate = requireCurrentDate
+        reasonId = requireReasonId
+    }
 
-                binding.documentCategorySearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+    private fun observeRequireDocumentResult() {
+        documentViewModel.requireDocumentResult.observe(this) { requireResult ->
+            if (requireResult?.code == "000" && requireResult.data != null) {
+                val requireCategoryIds = requireResult.data.map { it!!.categoryId }
+                documentViewModel.documentCategoryResult.observe(this) { categoryResult ->
+                    if (categoryResult?.data != null) {
+                        val filteredCategoryDataList = categoryResult.data.filter { it!!.id in requireCategoryIds }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        documentCategoryAdapter.filter(newText.orEmpty())
-                        return true
+                        binding.documentCategoryRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                        documentCategoryAdapter = DocumentCategoryAdapter(
+                            selectedItem = { selectedItem: DocumentCategoryData ->
+                                documentCategory(selectedItem)
+                                binding.documentCategorySearch.setQuery("", false)
+                            }
+                        )
+                        binding.documentCategoryRecyclerView.adapter = documentCategoryAdapter
+                        documentCategoryAdapter.setList(filteredCategoryDataList as List<DocumentCategoryData>)
+                        documentCategoryAdapter.notifyDataSetChanged()
+
+                        binding.documentCategorySearch.setOnQueryTextListener(object :
+                            SearchView.OnQueryTextListener {
+                            override fun onQueryTextSubmit(query: String?): Boolean {
+                                return false
+                            }
+
+                            override fun onQueryTextChange(newText: String?): Boolean {
+                                documentCategoryAdapter.filter(newText.orEmpty())
+                                return true
+                            }
+                        })
+
                     }
-                })
+                }
             }
         }
     }

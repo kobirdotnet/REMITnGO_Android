@@ -14,9 +14,13 @@ import android.view.View
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
+import com.bsel.remitngo.adapter.RequireDocumentAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnDocumentItemSelectedListener
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentData
+import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
 import com.bsel.remitngo.databinding.UploadRequireDocumentLayoutBinding
@@ -47,7 +51,7 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
 
     private lateinit var preferenceManager: PreferenceManager
 
-    private val documentCategoryBottomSheet: DocumentCategoryBottomSheet by lazy { DocumentCategoryBottomSheet() }
+    private val requiredCategoryBottomSheet: RequiredCategoryBottomSheet by lazy { RequiredCategoryBottomSheet() }
     private val documentTypeBottomSheet: DocumentTypeBottomSheet by lazy { DocumentTypeBottomSheet() }
     private val selectFileBottomSheet: SelectFileBottomSheet by lazy { SelectFileBottomSheet() }
 
@@ -60,6 +64,12 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
     private lateinit var documentTypeId: String
 
     private var selectedFile: Uri? = null
+
+    private lateinit var totalAmount: String
+    private lateinit var benId: String
+    private lateinit var customerId: String
+    private lateinit var currentDate: String
+    private lateinit var reasonId: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -106,8 +116,15 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
         documentFocusListener()
 
         binding.documentCategory.setOnClickListener {
-            documentCategoryBottomSheet.itemSelectedListener = this
-            documentCategoryBottomSheet.show(childFragmentManager, documentCategoryBottomSheet.tag)
+            requiredCategoryBottomSheet.itemSelectedListener = this
+            requiredCategoryBottomSheet.requireDocument(
+                totalAmount,
+                benId,
+                customerId,
+                currentDate,
+                reasonId
+            )
+            requiredCategoryBottomSheet.show(childFragmentManager, requiredCategoryBottomSheet.tag)
         }
 
         binding.documentType.setOnClickListener {
@@ -125,11 +142,49 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
 
         binding.btnUploadDocument.setOnClickListener { documentFrom() }
 
+        val requireDocumentItem = RequireDocumentItem(
+            agentId = 8082,
+            amount = totalAmount.toDouble(),
+            beneficiaryId = benId.toInt(),
+            customerId = customerId.toInt(),
+            entryDate = currentDate,
+            purposeOfTransferId = reasonId.toInt(),
+            transactionType = 1
+        )
+        documentViewModel.requireDocument(requireDocumentItem)
+        observeRequireDocumentResult()
+
         observeUploadDocumentResult()
 
         return bottomSheet
     }
 
+    fun requireDocument(
+        requireAmount: String,
+        requireBenId: String,
+        requireCustomerId: String,
+        requireCurrentDate: String,
+        requireReasonId: String
+    ) {
+        totalAmount = requireAmount
+        benId = requireBenId
+        customerId = requireCustomerId
+        currentDate = requireCurrentDate
+        reasonId = requireReasonId
+    }
+
+    private fun observeRequireDocumentResult() {
+        documentViewModel.requireDocumentResult.observe(this) { result ->
+            if (result!!.code == "000") {
+                if (result!!.data != null) {
+                    Log.i("info","requireCategory: "+result!!.data)
+                    for (reqCat in result!!.data!!){
+                        Log.i("info","requireCategoryId: "+reqCat!!.categoryId)
+                    }
+                }
+            }
+        }
+    }
 
     private fun observeUploadDocumentResult() {
         documentViewModel.uploadDocumentResult.observe(this) { result ->
