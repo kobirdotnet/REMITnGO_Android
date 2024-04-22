@@ -17,6 +17,7 @@ import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnPersonalInfoItemSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnRequireDocumentListener
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
 import com.bsel.remitngo.data.model.consumer.save_consumer.SaveConsumerItem
@@ -64,7 +65,7 @@ import java.util.*
 import javax.inject.Inject
 
 class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
-    OnPersonalInfoItemSelectedListener {
+    OnPersonalInfoItemSelectedListener, OnRequireDocumentListener {
     @Inject
     lateinit var paymentViewModelFactory: PaymentViewModelFactory
     private lateinit var paymentViewModel: PaymentViewModel
@@ -333,147 +334,13 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         }
 
         binding.btnSend.setOnClickListener {
-            val sendAmountValue = binding.sendAmount.text.toString()
-            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
-
-            val receiveAmountValue = binding.receiveAmount.text.toString()
-            val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
-
-            val totalAmountValue = binding.totalAmount.text.toString()
-            val totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "")
-
-            if (paymentType == "null" || reasonId == "null" || sourceOfIncomeId == "null" || sendAmount == "null" || bankId == "null" || branchId == "null") {
-                val paymentItem = PaymentItem(
-                    deviceId = deviceId,
-                    userIPAddress = ipAddress,
-                    personID = personId,
-                    customerName = "$firstName $lastName",
-                    customerEmail = customerEmail,
-                    customerMobile = customerMobile,
-                    customerdateOfBirth = customerDateOfBirth,
-                    fromCountryID = "4",
-                    fromCurrencyID = "96",
-                    fromCurrencyCode = "GBP",
-                    benPersonID = beneficiaryId,
-                    beneficiaryName = beneficiaryName,
-                    beneficaryEmail = "",
-                    beneficarymobile = "",
-                    beneficaryAddress = "",
-                    bankId = "0",
-                    bankName = bankName,
-                    accountNo = "",
-                    benBranchId = "0",
-                    collectionBankID = "0",
-                    collectionBankName = bankName,
-                    sendAmount = "0.0",
-                    receivableAmount = receiveAmount,
-                    rate = exchangeRate,
-                    commission = commission,
-                    total = totalAmount,
-                    toCountryID = "1",
-                    toCurrencyID = "6",
-                    toCurrencyCode = "BDT",
-                    orderTypeID = orderType,
-                    paymentMode = "0",
-                    purposeOfTransferId = "0",
-                    sourceOfFundId = "0",
-                    isMobileTransfer = true,
-                    isiOS = false,
-                    latitude = "",
-                    longitude = "",
-//                    beneAccountName="",
-//                    beneAccountNo="",
-//                    beneAmount=0.0,
-//                    beneBankId=0,
-//                    beneBranchId=0,
-//                    beneId=0,
-//                    beneMobile="",
-//                    benePersonId=0,
-//                    beneWalletId=0,
-//                    beneWalletNo="",
-//                    channelId=0,
-//                    fromCountryId=0,
-//                    fromCurrencyId=0,
-//                    modifiedBeneAmount=0.0,
-//                    modifiedCommission=0.0,
-//                    modifiedRate=0.0,
-//                    modifiedSendAmount=0.0,
-//                    orderType=0,
-//                    payingAgentId=0,
-//                    personId=0,
-//                    promoCode="",
-//                    toCountryId=0,
-//                    toCurrencyId=0,
-//                    totalAmountGiven=0.0
-                )
-                paymentViewModel.payment(paymentItem)
-            } else {
-                val paymentItem = PaymentItem(
-                    deviceId = deviceId,
-                    userIPAddress = ipAddress,
-                    personID = personId,
-                    customerName = "$firstName $lastName",
-                    customerEmail = customerEmail,
-                    customerMobile = customerMobile,
-                    customerdateOfBirth = customerDateOfBirth,
-                    fromCountryID = "4",
-                    fromCurrencyID = "96",
-                    fromCurrencyCode = "GBP",
-                    benPersonID = beneficiaryId,
-                    beneficiaryName = beneficiaryName,
-                    beneficaryEmail = "",
-                    beneficarymobile = "",
-                    beneficaryAddress = "",
-                    bankId = bankId,
-                    bankName = bankName,
-                    accountNo = "",
-                    benBranchId = branchId,
-                    collectionBankID = bankId,
-                    collectionBankName = bankName,
-                    sendAmount = sendAmount,
-                    receivableAmount = receiveAmount,
-                    rate = exchangeRate,
-                    commission = commission,
-                    total = totalAmount,
-                    toCountryID = "1",
-                    toCurrencyID = "6",
-                    toCurrencyCode = "BDT",
-                    orderTypeID = orderType,
-                    paymentMode = paymentType,
-                    purposeOfTransferId = reasonId,
-                    sourceOfFundId = sourceOfIncomeId,
-                    isMobileTransfer = true,
-                    isiOS = false,
-                    latitude = "",
-                    longitude = "",
-//                    beneAccountName="",
-//                    beneAccountNo="",
-//                    beneAmount=0.0,
-//                    beneBankId=0,
-//                    beneBranchId=0,
-//                    beneId=0,
-//                    beneMobile="",
-//                    benePersonId=0,
-//                    beneWalletId=0,
-//                    beneWalletNo="",
-//                    channelId=0,
-//                    fromCountryId=0,
-//                    fromCurrencyId=0,
-//                    modifiedBeneAmount=0.0,
-//                    modifiedCommission=0.0,
-//                    modifiedRate=0.0,
-//                    modifiedSendAmount=0.0,
-//                    orderType=0,
-//                    payingAgentId=0,
-//                    personId=0,
-//                    promoCode="",
-//                    toCountryId=0,
-//                    toCurrencyId=0,
-//                    totalAmountGiven=0.0
-                )
-                paymentViewModel.payment(paymentItem)
-            }
+            val profileItem = ProfileItem(
+                deviceId = deviceId,
+                personId = personId.toInt()
+            )
+            paymentViewModel.profile(profileItem)
         }
+        observeProfileResult()
 
         val reasonItem = ReasonItem(
             deviceId = deviceId,
@@ -495,74 +362,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
 
         observePaymentResult()
         observeEncryptResult()
-        observeProfileResult()
         observeRequireDocumentResult()
-    }
-
-    private fun payment() {
-        if (::address.isInitialized && address != "null" && isMobileOTPValidate == true && ::requireDoc.isInitialized && requireDoc == "null") {
-            if (paymentType == "4") {
-                cardPayment()
-            } else if (paymentType == "3") {
-                val bundle = Bundle().apply {
-                    putString("sendAmount", totalAmount.toString())
-                    putString("transactionCode", transactionCode)
-                }
-                findNavController().navigate(
-                    R.id.action_nav_review_to_nav_complete_bank_transaction,
-                    bundle
-                )
-            }
-        }
-    }
-
-    private fun observePaymentResult() {
-        paymentViewModel.paymentResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    transactionCode = result.data.toString()
-                    transactionCodeWithChannel = "$transactionCode*1"
-                    if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
-
-                        val encryptItem = EncryptItem(
-                            key = "bsel2024$#@!",
-                            plainText = transactionCodeWithChannel
-                        )
-                        paymentViewModel.encrypt(encryptItem)
-
-                        val profileItem = ProfileItem(
-                            deviceId = deviceId,
-                            personId = personId.toInt()
-                        )
-                        paymentViewModel.profile(profileItem)
-
-                        val totalAmountValue = binding.totalAmount.text.toString()
-                        val totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "")
-                        val requireDocumentItem = RequireDocumentItem(
-                            agentId = 8082,
-                            amount = totalAmount.toDouble(),
-                            beneficiaryId = benId.toInt(),
-                            customerId = customerId.toInt(),
-                            entryDate = currentDate,
-                            purposeOfTransferId = reasonId.toInt(),
-                            transactionType = 1
-                        )
-                        paymentViewModel.requireDocument(requireDocumentItem)
-
-                    }
-                }
-            } catch (e: NullPointerException) {
-                e.message
-            }
-        }
-    }
-
-    private fun observeEncryptResult() {
-        paymentViewModel.encryptResult.observe(this) { result ->
-            if (result!!.data != null) {
-                encryptCode = result.data.toString()
-            }
-        }
     }
 
     private fun observeProfileResult() {
@@ -574,7 +374,14 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                     isMobileOTPValidate = data!!.isMobileOTPValidate!!
                     mobile = data!!.mobile.toString()
 
-                    if (!isMobileOTPValidate) {
+                    if (address == "" || address == "null") {
+                        if (!addressVerifyBottomSheet.isAdded) {
+                            addressVerifyBottomSheet.show(
+                                childFragmentManager,
+                                addressVerifyBottomSheet.tag
+                            )
+                        }
+                    } else if (!isMobileOTPValidate) {
                         if (!transactionOtpVerifyBottomSheet.isAdded) {
                             transactionOtpVerifyBottomSheet.setPhoneNumber(mobile)
                             transactionOtpVerifyBottomSheet.show(
@@ -582,22 +389,191 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                                 transactionOtpVerifyBottomSheet.tag
                             )
                         }
-                    } else if (address == "" || address == "null") {
-                        if (!addressVerifyBottomSheet.isAdded) {
-                            addressVerifyBottomSheet.show(
-                                childFragmentManager,
-                                addressVerifyBottomSheet.tag
-                            )
-                        }
                     } else {
-                        payment()
+                        val sendAmountValue = binding.sendAmount.text.toString()
+                        val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+
+                        val receiveAmountValue = binding.receiveAmount.text.toString()
+                        val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
+
+                        val totalAmountValue = binding.totalAmount.text.toString()
+                        val totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "")
+
+                        if (paymentType == "null" || reasonId == "null" || sourceOfIncomeId == "null" || sendAmount == "null" || bankId == "null" || branchId == "null") {
+                            val paymentItem = PaymentItem(
+                                deviceId = deviceId,
+                                userIPAddress = ipAddress,
+                                personID = personId,
+                                customerName = "$firstName $lastName",
+                                customerEmail = customerEmail,
+                                customerMobile = customerMobile,
+                                customerdateOfBirth = customerDateOfBirth,
+                                fromCountryID = "4",
+                                fromCurrencyID = "96",
+                                fromCurrencyCode = "GBP",
+                                benPersonID = beneficiaryId,
+                                beneficiaryName = beneficiaryName,
+                                beneficaryEmail = "",
+                                beneficarymobile = "",
+                                beneficaryAddress = "",
+                                bankId = "0",
+                                bankName = bankName,
+                                accountNo = "",
+                                benBranchId = "0",
+                                collectionBankID = "0",
+                                collectionBankName = bankName,
+                                sendAmount = "0.0",
+                                receivableAmount = receiveAmount,
+                                rate = exchangeRate,
+                                commission = commission,
+                                total = totalAmount,
+                                toCountryID = "1",
+                                toCurrencyID = "6",
+                                toCurrencyCode = "BDT",
+                                orderTypeID = orderType,
+                                paymentMode = "0",
+                                purposeOfTransferId = "0",
+                                sourceOfFundId = "0",
+                                isMobileTransfer = true,
+                                isiOS = false,
+                                latitude = "",
+                                longitude = "",
+//                    beneAccountName="",
+//                    beneAccountNo="",
+//                    beneAmount=0.0,
+//                    beneBankId=0,
+//                    beneBranchId=0,
+//                    beneId=0,
+//                    beneMobile="",
+//                    benePersonId=0,
+//                    beneWalletId=0,
+//                    beneWalletNo="",
+//                    channelId=0,
+//                    fromCountryId=0,
+//                    fromCurrencyId=0,
+//                    modifiedBeneAmount=0.0,
+//                    modifiedCommission=0.0,
+//                    modifiedRate=0.0,
+//                    modifiedSendAmount=0.0,
+//                    orderType=0,
+//                    payingAgentId=0,
+//                    personId=0,
+//                    promoCode="",
+//                    toCountryId=0,
+//                    toCurrencyId=0,
+//                    totalAmountGiven=0.0
+                            )
+                            paymentViewModel.payment(paymentItem)
+                        } else {
+                            val paymentItem = PaymentItem(
+                                deviceId = deviceId,
+                                userIPAddress = ipAddress,
+                                personID = personId,
+                                customerName = "$firstName $lastName",
+                                customerEmail = customerEmail,
+                                customerMobile = customerMobile,
+                                customerdateOfBirth = customerDateOfBirth,
+                                fromCountryID = "4",
+                                fromCurrencyID = "96",
+                                fromCurrencyCode = "GBP",
+                                benPersonID = beneficiaryId,
+                                beneficiaryName = beneficiaryName,
+                                beneficaryEmail = "",
+                                beneficarymobile = "",
+                                beneficaryAddress = "",
+                                bankId = bankId,
+                                bankName = bankName,
+                                accountNo = "",
+                                benBranchId = branchId,
+                                collectionBankID = bankId,
+                                collectionBankName = bankName,
+                                sendAmount = sendAmount,
+                                receivableAmount = receiveAmount,
+                                rate = exchangeRate,
+                                commission = commission,
+                                total = totalAmount,
+                                toCountryID = "1",
+                                toCurrencyID = "6",
+                                toCurrencyCode = "BDT",
+                                orderTypeID = orderType,
+                                paymentMode = paymentType,
+                                purposeOfTransferId = reasonId,
+                                sourceOfFundId = sourceOfIncomeId,
+                                isMobileTransfer = true,
+                                isiOS = false,
+                                latitude = "",
+                                longitude = "",
+//                    beneAccountName="",
+//                    beneAccountNo="",
+//                    beneAmount=0.0,
+//                    beneBankId=0,
+//                    beneBranchId=0,
+//                    beneId=0,
+//                    beneMobile="",
+//                    benePersonId=0,
+//                    beneWalletId=0,
+//                    beneWalletNo="",
+//                    channelId=0,
+//                    fromCountryId=0,
+//                    fromCurrencyId=0,
+//                    modifiedBeneAmount=0.0,
+//                    modifiedCommission=0.0,
+//                    modifiedRate=0.0,
+//                    modifiedSendAmount=0.0,
+//                    orderType=0,
+//                    payingAgentId=0,
+//                    personId=0,
+//                    promoCode="",
+//                    toCountryId=0,
+//                    toCurrencyId=0,
+//                    totalAmountGiven=0.0
+                            )
+                            paymentViewModel.payment(paymentItem)
+                        }
                     }
 
                 }
             }
         }
     }
-
+    private fun observePaymentResult() {
+        paymentViewModel.paymentResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    transactionCode = result.data.toString()
+                    transactionCodeWithChannel = "$transactionCode*1"
+                    if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
+                        val encryptItem = EncryptItem(
+                            key = "bsel2024$#@!",
+                            plainText = transactionCodeWithChannel
+                        )
+                        paymentViewModel.encrypt(encryptItem)
+                    }
+                    val totalAmountValue = binding.totalAmount.text.toString()
+                    val totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "")
+                    val requireDocumentItem = RequireDocumentItem(
+                        agentId = 8082,
+                        amount = totalAmount.toDouble(),
+                        beneficiaryId = benId.toInt(),
+                        customerId = customerId.toInt(),
+                        entryDate = currentDate,
+                        purposeOfTransferId = reasonId.toInt(),
+                        transactionType = 1
+                    )
+                    paymentViewModel.requireDocument(requireDocumentItem)
+                }
+            } catch (e: NullPointerException) {
+                e.message
+            }
+        }
+    }
+    private fun observeEncryptResult() {
+        paymentViewModel.encryptResult.observe(this) { result ->
+            if (result!!.data != null) {
+                encryptCode = result.data.toString()
+            }
+        }
+    }
     private fun observeRequireDocumentResult() {
         paymentViewModel.requireDocumentResult.observe(this) { result ->
             if (result!!.code == "000") {
@@ -613,13 +589,27 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                             currentDate,
                             reasonId
                         )
+                        requireDocumentBottomSheet.itemSelectedListener = this
                         requireDocumentBottomSheet.show(
                             childFragmentManager,
                             requireDocumentBottomSheet.tag
                         )
                     }
                 } else {
-                    payment()
+                    if (::address.isInitialized && address != "null" && isMobileOTPValidate == true && ::requireDoc.isInitialized && requireDoc == "null") {
+                        if (paymentType == "4") {
+                            cardPayment()
+                        } else if (paymentType == "3") {
+                            val bundle = Bundle().apply {
+                                putString("sendAmount", totalAmount.toString())
+                                putString("transactionCode", transactionCode)
+                            }
+                            findNavController().navigate(
+                                R.id.action_nav_review_to_nav_complete_bank_transaction,
+                                bundle
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -1226,6 +1216,23 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
+    }
+
+    override fun onRequireDocumentSelected(selectedItem: String?) {
+        if (::address.isInitialized && address != "null" && isMobileOTPValidate == true) {
+            if (paymentType == "4") {
+                cardPayment()
+            } else if (paymentType == "3") {
+                val bundle = Bundle().apply {
+                    putString("sendAmount", totalAmount.toString())
+                    putString("transactionCode", transactionCode)
+                }
+                findNavController().navigate(
+                    R.id.action_nav_review_to_nav_complete_bank_transaction,
+                    bundle
+                )
+            }
+        }
     }
 
 }

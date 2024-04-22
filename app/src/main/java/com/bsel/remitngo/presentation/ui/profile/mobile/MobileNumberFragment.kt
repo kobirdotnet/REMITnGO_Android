@@ -40,6 +40,8 @@ class MobileNumberFragment : Fragment() {
     private lateinit var mobile: String
     private lateinit var message: String
 
+    private lateinit var phoneNumber: String
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,7 +79,7 @@ class MobileNumberFragment : Fragment() {
         profileViewModel.phoneVerifyResult.observe(this) { result ->
             if (result!! != null) {
                 message = result!!.message.toString()
-
+                phoneOtpVerifyBottomSheet.setPhoneNumber(phoneNumber)
                 phoneOtpVerifyBottomSheet.show(childFragmentManager, phoneOtpVerifyBottomSheet.tag)
             }
         }
@@ -95,7 +97,7 @@ class MobileNumberFragment : Fragment() {
     }
 
     private fun submitPhoneNumberForm() {
-        val phoneNumber = binding.phoneNumber.text.toString()
+        phoneNumber = binding.phoneNumber.text.toString()
 
         val phoneVerifyItem = PhoneVerifyItem(
             isVerifiyEmail = false,

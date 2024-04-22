@@ -106,24 +106,32 @@ class LoginActivity : AppCompatActivity() {
 
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (data in result.data!!) {
-                    preferenceManager.saveData("customerId", data.id.toString())
-                    preferenceManager.saveData("personId", data.personId.toString())
-                    preferenceManager.saveData("firstName", data.firstName.toString())
-                    preferenceManager.saveData("lastName", data.lastName.toString())
-                    preferenceManager.saveData("email", data.email.toString())
-                    preferenceManager.saveData("mobile", data.mobile.toString())
-                    preferenceManager.saveData("dob", data.dateOfBirth.toString())
+            try {
+                if (result!!.data != null) {
+                    for (data in result.data!!) {
+                        preferenceManager.saveData("customerId", data.id.toString())
+                        preferenceManager.saveData("personId", data.personId.toString())
+                        preferenceManager.saveData("firstName", data.firstName.toString())
+                        preferenceManager.saveData("lastName", data.lastName.toString())
+                        preferenceManager.saveData("email", data.email.toString())
+                        preferenceManager.saveData("mobile", data.mobile.toString())
+                        preferenceManager.saveData("dob", data.dateOfBirth.toString())
+                    }
+                    TokenManager.setToken(result.token)
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    val parentLayout: View = findViewById(android.R.id.content)
+                    val snackbar =
+                        Snackbar.make(
+                            parentLayout,
+                            result.message.toString(),
+                            Snackbar.LENGTH_SHORT
+                        )
+                    snackbar.show()
                 }
-                TokenManager.setToken(result.token)
-                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                startActivity(intent)
-            } else {
-                val parentLayout: View = findViewById(android.R.id.content)
-                val snackbar =
-                    Snackbar.make(parentLayout, result.message.toString(), Snackbar.LENGTH_SHORT)
-                snackbar.show()
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }

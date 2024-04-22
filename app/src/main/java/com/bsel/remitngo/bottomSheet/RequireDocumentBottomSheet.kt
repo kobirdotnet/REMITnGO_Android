@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.RequireDocumentAdapter
+import com.bsel.remitngo.data.interfaceses.OnRequireDocumentListener
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentData
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.databinding.RequireDocumentLayoutBinding
@@ -25,6 +26,8 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
     @Inject
     lateinit var paymentViewModelFactory: PaymentViewModelFactory
     private lateinit var paymentViewModel: PaymentViewModel
+
+    var itemSelectedListener: OnRequireDocumentListener? = null
 
     private lateinit var binding: RequireDocumentLayoutBinding
 
@@ -74,7 +77,7 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
             ViewModelProvider(this, paymentViewModelFactory)[PaymentViewModel::class.java]
 
         binding.cancelButton.setOnClickListener { dismiss() }
-        binding.btnLater.setOnClickListener { dismiss() }
+        binding.btnLater.setOnClickListener { paymentLater("paymentLater") }
 
         binding.btnUpload.setOnClickListener {
             if (!uploadRequireDocumentBottomSheet.isAdded) {
@@ -109,6 +112,11 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
         observeRequireDocumentResult()
 
         return bottomSheet
+    }
+
+    private fun paymentLater(paymentLater: String) {
+        itemSelectedListener?.onRequireDocumentSelected(paymentLater)
+        dismiss()
     }
 
     fun requireDocument(

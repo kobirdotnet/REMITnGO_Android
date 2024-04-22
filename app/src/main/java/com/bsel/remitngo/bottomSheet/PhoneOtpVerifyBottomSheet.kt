@@ -3,6 +3,8 @@ package com.bsel.remitngo.bottomSheet
 import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
@@ -11,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.phoneVerification.PhoneOtpVerifyItem
+import com.bsel.remitngo.data.model.phoneVerification.PhoneVerifyItem
 import com.bsel.remitngo.databinding.PhoneOtpVerifyLayoutBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
@@ -31,6 +34,10 @@ class PhoneOtpVerifyBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var personId: String
+
+    private var selectedPhoneNumber: String? = null
+
+    private lateinit var countDownTimer: CountDownTimer
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -75,21 +82,71 @@ class PhoneOtpVerifyBottomSheet : BottomSheetDialogFragment() {
         binding.btnOtpValidation.setOnClickListener { otpValidationForm() }
         observePhoneOtpVerifyResult()
 
+        observePhoneVerifyResult()
+
+        startCountDown()
+
         return bottomSheet
+    }
+
+    fun setPhoneNumber(phoneNumber: String) {
+        selectedPhoneNumber = phoneNumber
+    }
+
+    private fun observePhoneVerifyResult() {
+        profileViewModel.phoneVerifyResult.observe(this) { result ->
+            if (result!! != null) {
+                Log.i("info", "phoneVerifyResult: $result")
+                startCountDown()
+            }
+        }
     }
 
     private fun observePhoneOtpVerifyResult() {
         profileViewModel.phoneOtpVerifyResult.observe(this) { result ->
             if (result!! != null) {
-                if (result!!.code=="000"){
+                if (result!!.code == "000") {
                     dismiss()
                     findNavController().navigate(
                         R.id.action_nav_mobile_number_to_nav_my_profile
                     )
-                }else{
-                    binding.otpVerifyMessage.text = result!!.data.toString()
+                } else {
+                    binding.otpVerifyMessage.text = result.data.toString()
                 }
             }
+        }
+    }
+
+    private fun startCountDown() {
+        binding.otpTimeCounter.visibility = View.VISIBLE
+        binding.btnOtpSendAgain.visibility = View.GONE
+        countDownTimer = object : CountDownTimer(120000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsLeft = millisUntilFinished / 1000
+                val minutes = secondsLeft / 60
+                val seconds = secondsLeft % 60
+                binding.otpTimeCounter.text =
+                    "Resend OTP in ${String.format("%02d:%02d", minutes, seconds)} seconds"
+            }
+
+            override fun onFinish() {
+                binding.otpTimeCounter.visibility = View.GONE
+                binding.btnOtpSendAgain.visibility = View.VISIBLE
+                binding.btnOtpSendAgain.setOnClickListener {
+                    val phoneVerifyItem = PhoneVerifyItem(
+                        isVerifiyEmail = false,
+                        phoneOrEmail = selectedPhoneNumber
+                    )
+                    profileViewModel.phoneVerify(phoneVerifyItem)
+                }
+            }
+        }.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::countDownTimer.isInitialized){
+            countDownTimer.cancel()
         }
     }
 

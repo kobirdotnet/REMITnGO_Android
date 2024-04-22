@@ -192,30 +192,34 @@ class ChooseRecipientFragment : Fragment() {
 
     private fun observeGetBeneficiaryResult() {
         beneficiaryViewModel.getBeneficiaryResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.beneficiaryRecyclerView.layoutManager =
-                    LinearLayoutManager(requireActivity())
-                beneficiaryAdapter = BeneficiaryAdapter(
-                    selectedItem = { selectedItem: GetBeneficiaryData ->
-                        recipientItem(selectedItem)
-                        binding.beneficiarySearch.setQuery("", false)
-                    }
-                )
-                binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
-                beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
-                beneficiaryAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.beneficiaryRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    beneficiaryAdapter = BeneficiaryAdapter(
+                        selectedItem = { selectedItem: GetBeneficiaryData ->
+                            recipientItem(selectedItem)
+                            binding.beneficiarySearch.setQuery("", false)
+                        }
+                    )
+                    binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
+                    beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
+                    beneficiaryAdapter.notifyDataSetChanged()
 
-                binding.beneficiarySearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.beneficiarySearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        beneficiaryAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            beneficiaryAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

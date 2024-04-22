@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Patterns
 import android.view.View
 import androidx.annotation.NonNull
@@ -36,6 +37,11 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var personId: String
     private lateinit var message: String
+
+    private lateinit var emailAddress: String
+    private lateinit var phoneNumber: String
+
+    private lateinit var countDownTimer: CountDownTimer
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -133,6 +139,9 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
                     binding.otpVerifyMessage.text = message
 
                     binding.btnOtpValidation.setOnClickListener { otpValidationForm() }
+
+                    startCountDown()
+
                 } else {
                     binding.verifyLayout.visibility = View.VISIBLE
                     binding.validationLayout.visibility = View.GONE
@@ -145,7 +154,7 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
     private fun observeOtpResult() {
         loginViewModel.otpValidationResult.observe(this) { result ->
             if (result!! != null) {
-                if (result!!.code == "000") {
+                if (result.code == "000") {
                     binding.verifyLayout.visibility = View.GONE
                     binding.validationLayout.visibility = View.GONE
                     binding.setPasswordLayout.visibility = View.VISIBLE
@@ -184,6 +193,32 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    private fun startCountDown() {
+        binding.otpTimeCounter.visibility=View.VISIBLE
+        binding.btnOtpSendAgain.visibility=View.GONE
+        countDownTimer = object : CountDownTimer(120000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsLeft = millisUntilFinished / 1000
+                val minutes = secondsLeft / 60
+                val seconds = secondsLeft % 60
+                binding.otpTimeCounter.text = "Resend OTP in ${String.format("%02d:%02d", minutes, seconds)} seconds"
+            }
+
+            override fun onFinish() {
+                binding.otpTimeCounter.visibility=View.GONE
+                binding.btnOtpSendAgain.visibility=View.VISIBLE
+                binding.btnOtpSendAgain.setOnClickListener {passwordForm()}
+            }
+        }.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::countDownTimer.isInitialized){
+            countDownTimer.cancel()
+        }
+    }
+
     private fun passwordForm() {
         if (changeValue) {
             binding.emailContainer.helperText = validEmail()
@@ -199,17 +234,17 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun submitEmail() {
-        val email = binding.email.text.toString()
+        emailAddress = binding.email.text.toString()
 
         val forgotPasswordItem = ForgotPasswordItem(
             isForgotByEmail = true,
-            phoneOrEmail = email
+            phoneOrEmail = emailAddress
         )
         loginViewModel.forgotPassword(forgotPasswordItem)
     }
 
     private fun submitMobile() {
-        val phoneNumber = binding.phoneNumber.text.toString()
+        phoneNumber = binding.phoneNumber.text.toString()
 
         val forgotPasswordItem = ForgotPasswordItem(
             isForgotByEmail = false,

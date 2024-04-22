@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.Settings
 import android.view.View
 import androidx.annotation.NonNull
@@ -45,6 +46,8 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
     private lateinit var message: String
 
     private var phoneNumber: String? = null
+
+    private lateinit var countDownTimer: CountDownTimer
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -120,6 +123,9 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
                     binding.otpVerifyMessage.text = message
 
                     binding.btnOtpValidation.setOnClickListener { otpValidationForm() }
+
+                    startCountDown()
+
                 } else {
                     binding.verifyLayout.visibility = View.VISIBLE
                     binding.validationLayout.visibility = View.GONE
@@ -145,6 +151,39 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    private fun startCountDown() {
+        binding.otpTimeCounter.visibility = View.VISIBLE
+        binding.btnOtpSendAgain.visibility = View.GONE
+        countDownTimer = object : CountDownTimer(120000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsLeft = millisUntilFinished / 1000
+                val minutes = secondsLeft / 60
+                val seconds = secondsLeft % 60
+                binding.otpTimeCounter.text =
+                    "Resend OTP in ${String.format("%02d:%02d", minutes, seconds)} seconds"
+            }
+
+            override fun onFinish() {
+                binding.otpTimeCounter.visibility = View.GONE
+                binding.btnOtpSendAgain.visibility = View.VISIBLE
+                binding.btnOtpSendAgain.setOnClickListener {
+                    val phoneVerifyItem = PhoneVerifyItem(
+                        isVerifiyEmail = false,
+                        phoneOrEmail = phoneNumber
+                    )
+                    profileViewModel.phoneVerify(phoneVerifyItem)
+                }
+            }
+        }.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::countDownTimer.isInitialized){
+            countDownTimer.cancel()
+        }
+    }
+
     private fun phoneNumberForm() {
         binding.phoneNumberContainer.helperText = validPhone()
 
@@ -157,7 +196,7 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun submitPhoneNumberForm() {
-        val phoneNumber = binding.phoneNumber.text.toString()
+        phoneNumber = binding.phoneNumber.text.toString()
 
         val phoneVerifyItem = PhoneVerifyItem(
             isVerifiyEmail = false,

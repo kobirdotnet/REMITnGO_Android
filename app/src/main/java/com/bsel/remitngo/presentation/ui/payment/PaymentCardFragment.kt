@@ -57,16 +57,15 @@ class PaymentCardFragment : Fragment() {
         paymentViewModel =
             ViewModelProvider(this, paymentViewModelFactory)[PaymentViewModel::class.java]
 
-        binding.paymentSuccessful.visibility=View.GONE
-        binding.paymentFailed.visibility=View.GONE
-        binding.paymentCancel.visibility=View.GONE
-        binding.backToHomeLayout.visibility=View.GONE
+        binding.paymentSuccessful.visibility = View.GONE
+        binding.paymentFailed.visibility = View.GONE
+        binding.paymentCancel.visibility = View.GONE
+        binding.backToHomeLayout.visibility = View.GONE
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
         transactionCode = arguments?.getString("transactionCode").toString()
-        paymentViewModel.paymentStatus(transactionCode)
 
         observePaymentStatusResult()
         observeEncryptForCreateReceiptResult()
@@ -74,6 +73,7 @@ class PaymentCardFragment : Fragment() {
         binding.btnContinue.setOnClickListener {
             findNavController().navigate(R.id.action_nav_complete_card_transaction_to_nav_main)
         }
+
         binding.btnDownloadReceipt.setOnClickListener {
             checkApiCall(transactionCode)
         }
@@ -83,29 +83,29 @@ class PaymentCardFragment : Fragment() {
     private fun observePaymentStatusResult() {
         paymentViewModel.paymentStatusResult.observe(this) { result ->
             if (result!!.data == null) {
-                paymentViewModel.paymentStatus(transactionCode)
                 Log.i("info", "observePaymentStatusResult: ${result.data}")
-                binding.paymentSuccessful.visibility=View.GONE
-                binding.paymentFailed.visibility=View.GONE
-                binding.paymentCancel.visibility=View.GONE
-                binding.backToHomeLayout.visibility=View.GONE
-            }else{
+                binding.paymentSuccessful.visibility = View.GONE
+                binding.paymentFailed.visibility = View.GONE
+                binding.paymentCancel.visibility = View.VISIBLE
+                binding.backToHomeLayout.visibility = View.VISIBLE
+
+            } else {
                 Log.i("info", "observePaymentStatusResult: ${result.data}")
-                if (result.data=="Success"){
-                    binding.paymentSuccessful.visibility=View.VISIBLE
-                    binding.paymentFailed.visibility=View.GONE
-                    binding.paymentCancel.visibility=View.GONE
-                    binding.backToHomeLayout.visibility=View.VISIBLE
-                }else if (result.data=="Failed"){
-                    binding.paymentSuccessful.visibility=View.GONE
-                    binding.paymentFailed.visibility=View.VISIBLE
-                    binding.paymentCancel.visibility=View.GONE
-                    binding.backToHomeLayout.visibility=View.VISIBLE
-                }else if (result.data=="Cancel"){
-                    binding.paymentSuccessful.visibility=View.GONE
-                    binding.paymentFailed.visibility=View.GONE
-                    binding.paymentCancel.visibility=View.VISIBLE
-                    binding.backToHomeLayout.visibility=View.VISIBLE
+                if (result.data == "Success") {
+                    binding.paymentSuccessful.visibility = View.VISIBLE
+                    binding.paymentFailed.visibility = View.GONE
+                    binding.paymentCancel.visibility = View.GONE
+                    binding.backToHomeLayout.visibility = View.VISIBLE
+                } else if (result.data == "Failed") {
+                    binding.paymentSuccessful.visibility = View.GONE
+                    binding.paymentFailed.visibility = View.VISIBLE
+                    binding.paymentCancel.visibility = View.GONE
+                    binding.backToHomeLayout.visibility = View.VISIBLE
+                } else if (result.data == "Cancel") {
+                    binding.paymentSuccessful.visibility = View.GONE
+                    binding.paymentFailed.visibility = View.GONE
+                    binding.paymentCancel.visibility = View.VISIBLE
+                    binding.backToHomeLayout.visibility = View.VISIBLE
                 }
             }
         }
@@ -204,6 +204,17 @@ class PaymentCardFragment : Fragment() {
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("info", "onResume: " + "onResume")
+        paymentViewModel.paymentStatus(transactionCode)
+
+        binding.paymentSuccessful.visibility = View.GONE
+        binding.paymentFailed.visibility = View.GONE
+        binding.paymentCancel.visibility = View.VISIBLE
+        binding.backToHomeLayout.visibility = View.VISIBLE
     }
 
     //        Handler(Looper.getMainLooper()).postDelayed({
