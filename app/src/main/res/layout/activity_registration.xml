@@ -24,8 +24,8 @@
                 android:background="@color/grey"
                 android:gravity="right"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right"
                 android:visibility="gone">
 
                 <com.google.android.material.button.MaterialButton
@@ -36,7 +36,6 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:inputType="none"
-
                     android:text="Existing BSEL Customer"
                     android:textAllCaps="false"
                     android:textColor="@color/blue" />
@@ -49,10 +48,10 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/first_name_container"
@@ -86,9 +85,9 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/last_name_container"
@@ -121,9 +120,9 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/dob_container"
@@ -148,7 +147,6 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="datetime"
-
                         android:textColor="@color/black" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -161,9 +159,9 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/email_container"
@@ -197,9 +195,9 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom"
                 android:weightSum="9">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -231,7 +229,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/padding_left"
                     android:layout_weight="7"
                     android:gravity="center_vertical"
                     android:hint="Phone Number"
@@ -260,9 +258,9 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/password_container"
@@ -297,9 +295,46 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/confirm_password_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:hint="Confirm Password"
+                    app:helperTextTextColor="@android:color/holo_red_dark"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/blue">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/confirm_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:backgroundTint="@color/grey"
+                        android:focusableInTouchMode="true"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center_vertical"
+                        android:inputType="textPassword"
+                        android:maxLength="16"
+                        android:textColor="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right"
+                android:paddingBottom="@dimen/padding_bottom">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/referral_code_container"
@@ -330,18 +365,23 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:orientation="horizontal">
 
                 <CheckBox
                     android:id="@+id/termAndCondition"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
-                    android:gravity="top"
-                    android:text="@string/term_and_condition"
+                    android:gravity="center"
                     android:textColor="@color/text_color" />
+                <TextView
+                    android:id="@+id/termAndConditionTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/term_and_condition"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/blue" />
 
             </LinearLayout>
 
@@ -351,8 +391,8 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -370,8 +410,8 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingRight="@dimen/padding_right">
 
                 <RadioGroup
                     android:id="@+id/marketing_radio_group"
@@ -411,15 +451,16 @@
                 android:background="@color/white"
                 android:gravity="bottom"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingLeft="@dimen/padding_left"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingRight="@dimen/padding_right">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSignUp"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_left"
                     android:focusableInTouchMode="false"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"

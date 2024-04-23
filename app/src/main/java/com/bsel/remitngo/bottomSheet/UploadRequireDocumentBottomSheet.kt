@@ -1,6 +1,5 @@
 package com.bsel.remitngo.bottomSheet
 
-import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Resources
@@ -14,12 +13,9 @@ import android.view.View
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.RequireDocumentAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnDocumentItemSelectedListener
-import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentData
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
@@ -30,7 +26,6 @@ import com.bsel.remitngo.presentation.ui.document.DocumentViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -40,7 +35,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocumentItemSelectedListener {
+class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
+    OnDocumentItemSelectedListener {
     @Inject
     lateinit var documentViewModelFactory: DocumentViewModelFactory
     private lateinit var documentViewModel: DocumentViewModel
@@ -114,6 +110,7 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
 
         categoryFocusListener()
         documentFocusListener()
+        selectFileFocusListener()
 
         binding.documentCategory.setOnClickListener {
             requiredCategoryBottomSheet.itemSelectedListener = this
@@ -177,9 +174,9 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
         documentViewModel.requireDocumentResult.observe(this) { result ->
             if (result!!.code == "000") {
                 if (result!!.data != null) {
-                    Log.i("info","requireCategory: "+result!!.data)
-                    for (reqCat in result!!.data!!){
-                        Log.i("info","requireCategoryId: "+reqCat!!.categoryId)
+                    Log.i("info", "requireCategory: " + result!!.data)
+                    for (reqCat in result!!.data!!) {
+                        Log.i("info", "requireCategoryId: " + reqCat!!.categoryId)
                     }
                 }
             }
@@ -197,11 +194,13 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
     private fun documentFrom() {
         binding.documentCategoryContainer.helperText = validCategory()
         binding.documentTypeContainer.helperText = validDocument()
+        binding.selectFileContainer.helperText = validSelectFile()
 
         val validCategory = binding.documentCategoryContainer.helperText == null
         val validDocument = binding.documentTypeContainer.helperText == null
+        val validSelectFile = binding.selectFileContainer.helperText == null
 
-        if (validCategory && validDocument) {
+        if (validCategory && validDocument && validSelectFile) {
             submitDocumentFrom()
         }
     }
@@ -230,42 +229,7 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
                     filePart
                 )
             }
-        } else {
-            Snackbar.make(view!!, "Select your file.", Snackbar.LENGTH_SHORT).show()
         }
-    }
-
-    //Form validation
-    private fun categoryFocusListener() {
-        binding.documentCategory.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.documentCategoryContainer.helperText = validCategory()
-            }
-        }
-    }
-
-    private fun validCategory(): String? {
-        val category = binding.documentCategory.text.toString()
-        if (category.isEmpty()) {
-            return "select category"
-        }
-        return null
-    }
-
-    private fun documentFocusListener() {
-        binding.documentType.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.documentTypeContainer.helperText = validDocument()
-            }
-        }
-    }
-
-    private fun validDocument(): String? {
-        val document = binding.documentType.text.toString()
-        if (document.isEmpty()) {
-            return "select document"
-        }
-        return null
     }
 
     override fun onDocumentCategoryItemSelected(selectedItem: DocumentCategoryData) {
@@ -337,6 +301,55 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(), OnDocument
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
+    }
+
+    //Form validation
+    private fun categoryFocusListener() {
+        binding.documentCategory.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.documentCategoryContainer.helperText = validCategory()
+            }
+        }
+    }
+
+    private fun validCategory(): String? {
+        val category = binding.documentCategory.text.toString()
+        if (category.isEmpty()) {
+            return "select category"
+        }
+        return null
+    }
+
+    private fun documentFocusListener() {
+        binding.documentType.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.documentTypeContainer.helperText = validDocument()
+            }
+        }
+    }
+
+    private fun validDocument(): String? {
+        val document = binding.documentType.text.toString()
+        if (document.isEmpty()) {
+            return "select document"
+        }
+        return null
+    }
+
+    private fun selectFileFocusListener() {
+        binding.selectFile.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.selectFileContainer.helperText = validSelectFile()
+            }
+        }
+    }
+
+    private fun validSelectFile(): String? {
+        val selectFile = binding.selectFile.text.toString()
+        if (selectFile.isEmpty()) {
+            return "select files"
+        }
+        return null
     }
 
     override fun onStart() {

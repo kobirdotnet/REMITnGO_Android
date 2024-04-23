@@ -120,15 +120,6 @@ class LoginActivity : AppCompatActivity() {
                     TokenManager.setToken(result.token)
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
-                } else {
-                    val parentLayout: View = findViewById(android.R.id.content)
-                    val snackbar =
-                        Snackbar.make(
-                            parentLayout,
-                            result.message.toString(),
-                            Snackbar.LENGTH_SHORT
-                        )
-                    snackbar.show()
                 }
             } catch (e: NullPointerException) {
                 e.localizedMessage

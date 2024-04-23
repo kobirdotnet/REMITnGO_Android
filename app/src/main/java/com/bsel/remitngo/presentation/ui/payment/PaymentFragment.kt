@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -162,6 +163,12 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
 
         paymentViewModel =
             ViewModelProvider(this, paymentViewModelFactory)[PaymentViewModel::class.java]
+
+        receiverNameFocusListener()
+        receiverAccountFocusListener()
+        reasonFocusListener()
+        sourceOfIncomeFocusListener()
+        promoCodeFocusListener()
 
         preferenceManager = PreferenceManager(requireContext())
         customerId = preferenceManager.loadData("customerId").toString()
@@ -333,14 +340,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             )
         }
 
-        binding.btnSend.setOnClickListener {
-            val profileItem = ProfileItem(
-                deviceId = deviceId,
-                personId = personId.toInt()
-            )
-            paymentViewModel.profile(profileItem)
-        }
-        observeProfileResult()
+        binding.btnSend.setOnClickListener { paymentFrom() }
 
         val reasonItem = ReasonItem(
             deviceId = deviceId,
@@ -360,9 +360,36 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         sendAgain()
         applyPromo()
 
+        observeProfileResult()
         observePaymentResult()
         observeEncryptResult()
         observeRequireDocumentResult()
+    }
+
+    private fun paymentFrom() {
+        binding.receiverNameContainer.helperText = validReceiverName()
+        binding.reasonContainer.helperText = validReason()
+        binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
+
+        val validReceiverName = binding.receiverNameContainer.helperText == null
+        val validReason = binding.reasonContainer.helperText == null
+        val validSourceOfIncome = binding.sourceOfIncomeContainer.helperText == null
+
+        if (validReceiverName && validReason && validSourceOfIncome) {
+            submitPaymentFrom()
+        }
+
+    }
+
+    private fun submitPaymentFrom() {
+        val reason = binding.reason.text.toString()
+        val sourceOfIncome = binding.sourceOfIncome.text.toString()
+
+        val profileItem = ProfileItem(
+            deviceId = deviceId,
+            personId = personId.toInt()
+        )
+        paymentViewModel.profile(profileItem)
     }
 
     private fun observeProfileResult() {
@@ -536,6 +563,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             }
         }
     }
+
     private fun observePaymentResult() {
         paymentViewModel.paymentResult.observe(this) { result ->
             try {
@@ -567,6 +595,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             }
         }
     }
+
     private fun observeEncryptResult() {
         paymentViewModel.encryptResult.observe(this) { result ->
             if (result!!.data != null) {
@@ -574,6 +603,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             }
         }
     }
+
     private fun observeRequireDocumentResult() {
         paymentViewModel.requireDocumentResult.observe(this) { result ->
             if (result!!.code == "000") {
@@ -1026,32 +1056,44 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
             binding.previousRate.visibility = View.GONE
             binding.previousReceiveAmount.visibility = View.GONE
         }
-        binding.applyPromoCode.setOnClickListener {
-            promoCode = binding.promoCode.text.toString()
 
-            val sendAmountValue = binding.sendAmount.text.toString()
-            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+        binding.applyPromoCode.setOnClickListener { promoCodeFrom() }
+    }
 
-            val receiveAmountValue = binding.receiveAmount.text.toString()
-            val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
+    private fun promoCodeFrom() {
+        binding.promoCodeContainer.helperText = validPromoCode()
 
-            val commissionValue = binding.transferFee.text.toString()
-            val commission = commissionValue.replace(Regex("[^\\d.]"), "")
+        val validPromoCode = binding.promoCodeContainer.helperText == null
 
-            val rateValue = binding.exchangeRate.text.toString()
-            val exchangeRate = rateValue.replace(Regex("[^\\d.]"), "")
-
-            val promoItem = PromoItem(
-                beneAmount = receiveAmount.toDouble(),
-                commision = commission.toDouble(),
-                personId = 0,
-                promoCode = promoCode,
-                rate = exchangeRate.toDouble(),
-                sendAmount = sendAmount.toDouble()
-            )
-            paymentViewModel.promo(promoItem)
+        if (validPromoCode) {
+            submitPromoCodeFrom()
         }
+    }
 
+    private fun submitPromoCodeFrom() {
+        promoCode = binding.promoCode.text.toString()
+
+        val sendAmountValue = binding.sendAmount.text.toString()
+        val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+
+        val receiveAmountValue = binding.receiveAmount.text.toString()
+        val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
+
+        val commissionValue = binding.transferFee.text.toString()
+        val commission = commissionValue.replace(Regex("[^\\d.]"), "")
+
+        val rateValue = binding.exchangeRate.text.toString()
+        val exchangeRate = rateValue.replace(Regex("[^\\d.]"), "")
+
+        val promoItem = PromoItem(
+            beneAmount = receiveAmount.toDouble(),
+            commision = commission.toDouble(),
+            personId = 0,
+            promoCode = promoCode,
+            rate = exchangeRate.toDouble(),
+            sendAmount = sendAmount.toDouble()
+        )
+        paymentViewModel.promo(promoItem)
         observePromoResult()
     }
 
@@ -1154,13 +1196,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                     binding.previousRate.visibility = View.GONE
                     binding.previousReceiveAmount.visibility = View.GONE
 
-                    val snackbar =
-                        Snackbar.make(
-                            requireView(),
-                            result!!.promoResponseData!!.message.toString(),
-                            Snackbar.LENGTH_SHORT
-                        )
-                    snackbar.show()
+                    binding.invalidPromoMessage.text =
+                        result!!.promoResponseData!!.message.toString()
                 }
 
             } catch (e: NullPointerException) {
@@ -1232,6 +1269,94 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                     bundle
                 )
             }
+        }
+    }
+
+    //Form validation
+    private fun reasonFocusListener() {
+        binding.reason.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.reasonContainer.helperText = validReason()
+            }
+        }
+    }
+
+    private fun validReason(): String? {
+        val reason = binding.reason.text.toString()
+        if (reason.isEmpty()) {
+            return "select purpose of transfer"
+        }
+        return null
+    }
+
+    private fun sourceOfIncomeFocusListener() {
+        binding.sourceOfIncome.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
+            }
+        }
+    }
+
+    private fun validSourceOfIncome(): String? {
+        val sourceOfIncome = binding.sourceOfIncome.text.toString()
+        if (sourceOfIncome.isEmpty()) {
+            return "select source of income"
+        }
+        return null
+    }
+
+    private fun receiverNameFocusListener() {
+        binding.receiverName.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.receiverNameContainer.helperText = validReceiverName()
+            }
+        }
+    }
+
+    private fun validReceiverName(): String? {
+        val receiverName = binding.receiverName.text.toString()
+        if (receiverName.isEmpty()) {
+            return "Choose receiver"
+        }
+        return null
+    }
+
+    private fun receiverAccountFocusListener() {
+        binding.receiverAccount.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.receiverAccountContainer.helperText = validReceiverAccount()
+            }
+        }
+    }
+
+    private fun validReceiverAccount(): String? {
+        val receiverAccount = binding.receiverAccount.text.toString()
+        if (receiverAccount.isEmpty()) {
+            return "Choose receiver account"
+        }
+        return null
+    }
+
+    private fun promoCodeFocusListener() {
+        binding.promoCode.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.promoCodeContainer.helperText = validPromoCode()
+            }
+        }
+    }
+
+    private fun validPromoCode(): String? {
+        val promoCode = binding.promoCode.text.toString()
+        if (promoCode.isEmpty()) {
+            return "Enter your promo code"
+        }
+        return null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.nav_main)
         }
     }
 

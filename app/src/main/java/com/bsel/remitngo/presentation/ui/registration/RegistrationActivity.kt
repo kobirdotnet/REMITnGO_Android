@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -78,6 +79,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         emailFocusListener()
         phoneFocusListener()
         passwordFocusListener()
+        confirmPasswordFocusListener()
 
         binding.dobContainer.setEndIconOnClickListener {
             val calendar = Calendar.getInstance()
@@ -112,6 +114,10 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         checkedValue = false
         binding.termAndCondition.setOnCheckedChangeListener { checkBox, isChecked ->
             checkedValue = isChecked
+        }
+        binding.termAndConditionTxt.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://bracsaajanexchange.com"))
+            startActivity(intent)
         }
 
         binding.marketingRadioGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -190,6 +196,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         binding.emailContainer.helperText = validEmail()
         binding.phoneNumberContainer.helperText = validPhone()
         binding.passwordContainer.helperText = validPassword()
+        binding.confirmPasswordContainer.helperText = validConfirmPassword()
 
         val validFirstName = binding.firstNameContainer.helperText == null
         val validLastName = binding.lastNameContainer.helperText == null
@@ -197,8 +204,9 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         val validEmail = binding.emailContainer.helperText == null
         val validPhone = binding.phoneNumberContainer.helperText == null
         val validPassword = binding.passwordContainer.helperText == null
+        val validConfirmPassword = binding.confirmPasswordContainer.helperText == null
 
-        if (validFirstName && validLastName && validDob && validEmail && validPhone && validPassword) {
+        if (validFirstName && validLastName && validDob && validEmail && validPhone && validPassword && validConfirmPassword) {
             submitSignUpForm()
         }
     }
@@ -346,6 +354,34 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
             return "Must Contain 1 Lower-case Character"
         }
         if (!password.matches(".*[@#\$%^&+=].*".toRegex())) {
+            return "Must Contain 1 Special Character (@#\$%^&+=)"
+        }
+        return null
+    }
+
+    private fun confirmPasswordFocusListener() {
+        binding.confirmPassword.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.confirmPasswordContainer.helperText = validConfirmPassword()
+            }
+        }
+    }
+
+    private fun validConfirmPassword(): String? {
+        val confirmPassword = binding.confirmPassword.text.toString()
+        if (confirmPassword.isEmpty()) {
+            return "Enter confirm password"
+        }
+        if (confirmPassword.length < 8) {
+            return "Minimum 8 Character Password"
+        }
+        if (!confirmPassword.matches(".*[A-Z].*".toRegex())) {
+            return "Must Contain 1 Upper-case Character"
+        }
+        if (!confirmPassword.matches(".*[a-z].*".toRegex())) {
+            return "Must Contain 1 Lower-case Character"
+        }
+        if (!confirmPassword.matches(".*[@#\$%^&+=].*".toRegex())) {
             return "Must Contain 1 Special Character (@#\$%^&+=)"
         }
         return null
