@@ -176,7 +176,7 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
                 if (result!!.data != null) {
                     Log.i("info", "requireCategory: " + result!!.data)
                     for (reqCat in result!!.data!!) {
-                        Log.i("info", "requireCategoryId: " + reqCat!!.categoryId)
+                        Log.i("info", "requireCategoryId: " + reqCat!!.id)
                     }
                 }
             }

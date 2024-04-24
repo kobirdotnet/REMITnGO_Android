@@ -1,6 +1,7 @@
 package com.bsel.remitngo.presentation
 
 import android.app.Application
+import android.util.Log
 import com.bsel.remitngo.BuildConfig
 import com.bsel.remitngo.data.api.Config
 import com.bsel.remitngo.presentation.di.Injector
@@ -19,8 +20,29 @@ import com.bsel.remitngo.presentation.di.registration.RegistrationSubComponent
 import com.bsel.remitngo.presentation.di.settings.SettingsSubComponent
 import com.bsel.remitngo.presentation.di.support.SupportSubComponent
 import com.bsel.remitngo.presentation.di.transaction.TransactionSubComponent
+import com.google.firebase.messaging.FirebaseMessaging
 
+const val TOPIC_NEWS = "news"
 class App : Application(), Injector {
+    companion object {
+        private const val TAG = "App"
+    }
+    override fun onCreate() {
+        super.onCreate()
+        subscribeToTopic(TOPIC_NEWS)
+    }
+    // Subscribe to a topic
+    private fun subscribeToTopic(topic: String) {
+        FirebaseMessaging.getInstance().subscribeToTopic(topic)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Subscribed to topic: $topic")
+                } else {
+                    Log.e(TAG, "Subscription to topic $topic failed", task.exception)
+                }
+            }
+    }
+
     private val appComponent: AppComponent by lazy {
         DaggerAppComponent.builder()
             .appModule(AppModule(applicationContext))
@@ -30,23 +52,18 @@ class App : Application(), Injector {
             .remoteDataModule(RemoteDataModule())
             .build()
     }
-
     override fun createRegistrationSubComponent(): RegistrationSubComponent {
         return appComponent.registrationSubComponent().create()
     }
-
     override fun createLoginSubComponent(): LoginSubComponent {
         return appComponent.loginSubComponent().create()
     }
-
     override fun createBeneficiarySubComponent(): BeneficiarySubComponent {
         return appComponent.beneficiarySubComponent().create()
     }
-
     override fun createBankSubComponent(): BankSubComponent {
         return appComponent.bankSubComponent().create()
     }
-
     override fun createCalculationSubComponent(): CalculationSubComponent {
         return appComponent.calculationSubComponent().create()
     }
@@ -56,14 +73,12 @@ class App : Application(), Injector {
     override fun createProfileSubComponent(): ProfileSubComponent {
         return appComponent.profileSubComponent().create()
     }
-
     override fun createDocumentSubComponent(): DocumentSubComponent {
         return appComponent.documentSubComponent().create()
     }
     override fun createTransactionSubComponent(): TransactionSubComponent {
         return appComponent.transactionSubComponent().create()
     }
-
     override fun createCancelRequestSubComponent(): CancelRequestSubComponent {
         return appComponent.cancelRequestSubComponent().create()
     }
@@ -79,5 +94,4 @@ class App : Application(), Injector {
     override fun createNotificationSubComponent(): NotificationSubComponent {
         return appComponent.notificationSubComponent().create()
     }
-
 }

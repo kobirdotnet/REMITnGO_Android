@@ -139,7 +139,7 @@ class RequiredCategoryBottomSheet : BottomSheetDialogFragment() {
     private fun observeRequireDocumentResult() {
         documentViewModel.requireDocumentResult.observe(this) { requireResult ->
             if (requireResult?.code == "000" && requireResult.data != null) {
-                val requireCategoryIds = requireResult.data.map { it!!.categoryId }
+                val requireCategoryIds = requireResult.data.map { it!!.id }
                 documentViewModel.documentCategoryResult.observe(this) { categoryResult ->
                     if (categoryResult?.data != null) {
                         val filteredCategoryDataList = categoryResult.data.filter { it!!.id in requireCategoryIds }

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -50,9 +51,9 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
     private lateinit var deviceId: String
 
-    private lateinit var preferenceManager: PreferenceManager
+    var termAndConditionChange = false
 
-    var checkedValue = false
+    private lateinit var preferenceManager: PreferenceManager
 
     var rdoEmail = false
     var rdoSMS = false
@@ -111,9 +112,8 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
             )
         }
 
-        checkedValue = false
-        binding.termAndCondition.setOnCheckedChangeListener { checkBox, isChecked ->
-            checkedValue = isChecked
+        binding.termAndCondition.setOnCheckedChangeListener { buttonView, isChecked ->
+            termAndConditionChange = isChecked
         }
         binding.termAndConditionTxt.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://bracsaajanexchange.com"))
@@ -124,7 +124,12 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
             when (checkedId) {
                 R.id.marketing_check -> {
                     if (!marketingBottomSheet.isAdded) {
-                        marketingBottomSheet.setSelectedMarketing(rdoEmail, rdoSMS, rdoPhone, rdoPost)
+                        marketingBottomSheet.setSelectedMarketing(
+                            rdoEmail,
+                            rdoSMS,
+                            rdoPhone,
+                            rdoPost
+                        )
                         marketingBottomSheet.itemSelectedListener = this@RegistrationActivity
                         marketingBottomSheet.show(supportFragmentManager, marketingBottomSheet.tag)
                     }
@@ -206,7 +211,11 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         val validPassword = binding.passwordContainer.helperText == null
         val validConfirmPassword = binding.confirmPasswordContainer.helperText == null
 
-        if (validFirstName && validLastName && validDob && validEmail && validPhone && validPassword && validConfirmPassword) {
+        if (!termAndConditionChange){
+            Log.i("info", "termAndConditionChange: $termAndConditionChange")
+        }
+
+        if (validFirstName && validLastName && validDob && validEmail && validPhone && validPassword && validConfirmPassword && termAndConditionChange) {
             submitSignUpForm()
         }
     }

@@ -14,7 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
+import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
 import com.bsel.remitngo.data.model.reason.ReasonData
 import com.bsel.remitngo.data.model.relation.RelationData
 import com.bsel.remitngo.databinding.FragmentSaveBeneficiaryBinding
@@ -376,14 +378,17 @@ class SaveBeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         return if (parts.size >= 2) parts[1] else null
     }
 
-    override fun onRelationItemSelected(selectedItem: RelationData) {
-        binding.relation.setText(selectedItem.name)
-//        relationId = selectedItem.id.toString()
+    override fun onChooseRecipientItemSelected(selectedItem: GetBeneficiaryData) {
+
     }
 
-    override fun onReasonItemSelected(selectedItem: ReasonData) {
+    override fun onPurposeOfTransferItemSelected(selectedItem: ReasonData) {
         binding.reason.setText(selectedItem.name)
 //        reasonId = selectedItem.id.toString()
+    }
+
+    override fun onSourceOfFundItemSelected(selectedItem: SourceOfIncomeData) {
+
     }
 
     private fun getDeviceId(context: Context): String {

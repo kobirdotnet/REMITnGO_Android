@@ -12,11 +12,13 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.bsel.remitngo.R
 import com.bsel.remitngo.presentation.ui.main.MainActivity
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 const val channelId = "notification_channel"
 const val channelName = "com.bsel.remitngo"
+const val TOPIC_NEWS = "news"
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -27,58 +29,42 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         // Handle token refresh
         Log.d(TAG, "Refreshed token: $token")
-//        sendRegistrationToServer(token)
+        // You can send the token to your server here if needed
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Handle incoming messages here
         Log.d(TAG, "From: ${remoteMessage.from}")
 
-        // Check if message contains a data payload
-        remoteMessage.data.isNotEmpty().let {
-            Log.d(TAG, "Message data payload: " + remoteMessage.data)
-        }
-
         // Check if message contains a notification payload
         remoteMessage.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
+            // Display the notification
+            generateNotification(it.title ?: "", it.body ?: "")
         }
 
-        // Handle data payload if needed
+        // Check if message contains a data payload
         remoteMessage.data.isNotEmpty().let {
-            // Handle data payload
-//            handleDataPayload(remoteMessage.data)
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
+            // Handle data payload if needed
         }
-
-        // Handle the notification message in the foreground
-        if (remoteMessage.notification != null) {
-            if (remoteMessage.notification != null) {
-                generateNotification(
-                    remoteMessage.notification!!.title!!,
-                    remoteMessage.notification!!.body!!
-                )
-            }
-        }
-
     }
 
     @SuppressLint("RemoteViewLayout")
-    fun getRemoteView(title: String, message: String): RemoteViews {
-        val remoteView = RemoteViews("com.bsel.remitngo", R.layout.notification)
+    private fun getRemoteView(title: String, message: String): RemoteViews {
+        val remoteView = RemoteViews(packageName, R.layout.notification)
         remoteView.setTextViewText(R.id.title, title)
         remoteView.setTextViewText(R.id.message, message)
         remoteView.setImageViewResource(R.id.notificationIcon, R.drawable.img)
         return remoteView
     }
 
-    fun generateNotification(title: String, message: String) {
+    private fun generateNotification(title: String, message: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
-        //channel id ,channel name
         var builder: NotificationCompat.Builder = NotificationCompat.Builder(
             applicationContext,
             channelId
@@ -99,6 +85,30 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(notificationChannel)
         }
         notificationManager.notify(0, builder.build())
+    }
+
+    // Subscribe to a topic
+    private fun subscribeToTopic(topic: String) {
+        FirebaseMessaging.getInstance().subscribeToTopic(topic)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Subscribed to topic: $topic")
+                } else {
+                    Log.e(TAG, "Subscription to topic $topic failed", task.exception)
+                }
+            }
+    }
+
+    // Unsubscribe from a topic
+    private fun unsubscribeFromTopic(topic: String) {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Unsubscribed from topic: $topic")
+                } else {
+                    Log.e(TAG, "Unsubscription from topic $topic failed", task.exception)
+                }
+            }
     }
 
 }

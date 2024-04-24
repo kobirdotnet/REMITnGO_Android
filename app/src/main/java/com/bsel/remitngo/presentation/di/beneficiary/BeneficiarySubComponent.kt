@@ -1,7 +1,7 @@
 package com.bsel.remitngo.presentation.di.beneficiary
 
-import com.bsel.remitngo.bottomSheet.ReasonBottomSheet
-import com.bsel.remitngo.bottomSheet.RelationBottomSheet
+import com.bsel.remitngo.bottomSheet.ChooseRecipientBottomSheet
+import com.bsel.remitngo.bottomSheet.PurposeOfTransferBottomSheet
 import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryManagementFragment
 import com.bsel.remitngo.presentation.ui.beneficiary.SaveRecipientFragment
 import com.bsel.remitngo.presentation.ui.beneficiary.ChooseRecipientFragment
@@ -16,8 +16,8 @@ interface BeneficiarySubComponent {
     fun inject(saveBeneficiaryFragment: SaveBeneficiaryFragment)
     fun inject(chooseRecipientFragment: ChooseRecipientFragment)
     fun inject(saveRecipientFragment: SaveRecipientFragment)
-    fun inject(relationBottomSheet: RelationBottomSheet)
-    fun inject(reasonBottomSheet: ReasonBottomSheet)
+    fun inject(purposeOfTransferBottomSheet: PurposeOfTransferBottomSheet)
+    fun inject(chooseRecipientBottomSheet: ChooseRecipientBottomSheet)
 
     @Subcomponent.Factory
     interface Factory {

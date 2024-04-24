@@ -366,7 +366,6 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
-
                 <CheckBox
                     android:id="@+id/termAndCondition"
                     android:layout_width="wrap_content"
@@ -374,6 +373,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
                     android:textColor="@color/text_color" />
+
                 <TextView
                     android:id="@+id/termAndConditionTxt"
                     android:layout_width="wrap_content"
