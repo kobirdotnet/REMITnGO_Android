@@ -4,10 +4,12 @@ package com.bsel.remitngo.data.model.bank.bank_account
 import com.google.gson.annotations.SerializedName
 
 data class GetBankItem(
-    @SerializedName("deviceId")
-    val deviceId: String?,
-    @SerializedName("params1")
-    val params1: Int?,
-    @SerializedName("params2")
-    val params2: Int?
+    @SerializedName("benePersonId")
+    val benePersonId: Int?,
+    @SerializedName("accountType")
+    val accountType: Int?,
+    @SerializedName("walletId")
+    val walletId: Int?,
+    @SerializedName("bankId")
+    val bankId: Int?
 )

@@ -58,26 +58,13 @@ class BankViewHolder(val binding: ItemGetBankBinding) :
         bankItem: GetBankData,
         selectedItem: (GetBankData) -> Unit
     ) {
-
-//        val randomColor = getRandomColor()
-//        val backgroundDrawable = GradientDrawable()
-//        backgroundDrawable.shape = GradientDrawable.OVAL
-//        backgroundDrawable.setColor(randomColor)
-
-//        binding.firstLetterBackground.background = backgroundDrawable
-//        binding.firstLetterName.setTextColor(getRandomColor())
-//        binding.firstLetterName.text = recipientItem.firstLetter
-
+        binding.accountName.text = bankItem.accountName.toString()
         binding.bankName.text = bankItem.bankName.toString()
-        binding.bankAccount.text = bankItem.accountNo.toString()
+        binding.accountNo.text = bankItem.accountNo.toString()
+        binding.branchName.text = bankItem.branchName.toString()
         binding.itemGetBankLayout.setOnClickListener {
             selectedItem(bankItem)
         }
     }
-
-//    private fun getRandomColor(): Int {
-//        val random = Random.Default
-//        return Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256))
-//    }
 
 }

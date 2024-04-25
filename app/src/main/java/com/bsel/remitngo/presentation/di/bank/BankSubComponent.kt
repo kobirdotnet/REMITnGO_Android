@@ -1,9 +1,6 @@
 package com.bsel.remitngo.presentation.di.bank
 
-import com.bsel.remitngo.bottomSheet.BankBottomSheet
-import com.bsel.remitngo.bottomSheet.BranchBottomSheet
-import com.bsel.remitngo.bottomSheet.DistrictBottomSheet
-import com.bsel.remitngo.bottomSheet.DivisionBottomSheet
+import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.presentation.ui.bank.BankFragment
 import com.bsel.remitngo.presentation.ui.bank.ChooseBankFragment
 import dagger.Subcomponent
@@ -13,6 +10,7 @@ import dagger.Subcomponent
 interface BankSubComponent {
 
     fun inject(chooseBankFragment: ChooseBankFragment)
+    fun inject(chooseBankBottomSheet: ChooseBankBottomSheet)
     fun inject(bankFragment: BankFragment)
 
     fun inject(bankBottomSheet: BankBottomSheet)

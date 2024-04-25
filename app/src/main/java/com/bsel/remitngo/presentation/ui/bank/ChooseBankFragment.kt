@@ -69,6 +69,9 @@ class ChooseBankFragment : Fragment() {
     private lateinit var sourceOfIncomeId: String
     private lateinit var sourceOfIncomeName: String
 
+    private var benePersonId: Int = 0
+    private var walletId: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -154,18 +157,20 @@ class ChooseBankFragment : Fragment() {
 
         if (orderType=="null"){
             val getBankItem = GetBankItem(
-                deviceId = deviceId,
-                params1 = beneficiaryId.toInt(),
-                params2 = 0
+                benePersonId = benePersonId,
+                accountType = orderType.toInt(),
+                walletId = walletId,
+                bankId=bankId.toInt()
             )
             bankViewModel.getBank(getBankItem)
             observeGetBankResult()
         }else{
             try {
                 val getBankItem = GetBankItem(
-                    deviceId = deviceId,
-                    params1 = beneficiaryId.toInt(),
-                    params2 = orderType.toInt()
+                    benePersonId = benePersonId,
+                    accountType = orderType.toInt(),
+                    walletId = walletId,
+                    bankId=bankId.toInt()
                 )
                 bankViewModel.getBank(getBankItem)
                 observeGetBankResult()

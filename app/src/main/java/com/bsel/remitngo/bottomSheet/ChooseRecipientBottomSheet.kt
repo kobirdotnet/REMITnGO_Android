@@ -2,9 +2,11 @@ package com.bsel.remitngo.bottomSheet
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.database.Cursor
@@ -13,6 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -26,6 +29,7 @@ import com.bsel.remitngo.adapter.BeneficiaryAdapter
 import com.bsel.remitngo.adapter.ContactsAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
+import com.bsel.remitngo.data.interfaceses.OnSaveBeneficiarySelectedListener
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.ContactItem
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
@@ -39,7 +43,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.*
 import javax.inject.Inject
 
-class ChooseRecipientBottomSheet : BottomSheetDialogFragment() {
+class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiarySelectedListener {
     @Inject
     lateinit var beneficiaryViewModelFactory: BeneficiaryViewModelFactory
     private lateinit var beneficiaryViewModel: BeneficiaryViewModel
@@ -50,6 +54,9 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var chooseRecipientBehavior: BottomSheetBehavior<*>
 
+    private val saveRecipientBottomSheet: SaveRecipientBottomSheet by lazy { SaveRecipientBottomSheet() }
+    private val chooseBankBottomSheet: ChooseBankBottomSheet by lazy { ChooseBankBottomSheet() }
+
     private val REQUEST_CONTACTS_PERMISSION = 1
 
     private lateinit var preferenceManager: PreferenceManager
@@ -59,11 +66,16 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment() {
     private lateinit var beneficiaryAdapter: BeneficiaryAdapter
 
     private lateinit var personId: String
+    private lateinit var customerId: String
+    private var benePersonId: Int = 0
+    private var beneId: Int = 0
+    private var beneAccountName: String? = null
+    private var beneMobile: String? = null
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private var orderType: Int=0
+    private var orderType: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -104,19 +116,20 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment() {
 
         preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
+        customerId = preferenceManager.loadData("customerId").toString()
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
         binding.btnAddBeneficiary.setOnClickListener {
-
+            saveRecipientBottomSheet.itemSelectedListener = this
+            saveRecipientBottomSheet.setOrderType(orderType, "", "")
+            saveRecipientBottomSheet.show(childFragmentManager, saveRecipientBottomSheet.tag)
         }
 
         val getBeneficiaryItem = GetBeneficiaryItem(
-            deviceId = deviceId,
-            personId = personId.toInt(),
-            orderType = orderType,
-            countryId = 1
+            customerId = customerId.toInt(),
+            countryId = 1,
         )
         beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)
         observeGetBeneficiaryResult()
@@ -125,47 +138,69 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment() {
     }
 
     fun setOrderType(orderType: Int) {
-        this.orderType =orderType
+        this.orderType = orderType
     }
 
     private fun observeGetBeneficiaryResult() {
         beneficiaryViewModel.getBeneficiaryResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    binding.beneficiaryRecyclerView.layoutManager =
-                        LinearLayoutManager(requireActivity())
-                    beneficiaryAdapter = BeneficiaryAdapter(
-                        selectedItem = { selectedItem: GetBeneficiaryData ->
-                            recipientItem(selectedItem)
-                            binding.beneficiarySearch.setQuery("", false)
-                        }
-                    )
-                    binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
-                    beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
-                    beneficiaryAdapter.notifyDataSetChanged()
-
-                    binding.beneficiarySearch.setOnQueryTextListener(object :
-                        SearchView.OnQueryTextListener {
-                        override fun onQueryTextSubmit(query: String?): Boolean {
-                            return false
-                        }
-
-                        override fun onQueryTextChange(newText: String?): Boolean {
-                            beneficiaryAdapter.filter(newText.orEmpty())
-                            return true
-                        }
-                    })
+            if (result == null) {
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setIcon(R.drawable.warning)
+                builder.setTitle("Warning!")
+                builder.setMessage("Recipient not loading properly.")
+                builder.setPositiveButton("Close") { _: DialogInterface, _: Int ->
+                    dismiss()
                 }
-            }catch (e:NullPointerException){
-                e.localizedMessage
+                val dialog = builder.create()
+                dialog.show()
+            }else{
+                try {
+                    if (result!!.data != null) {
+                        binding.beneficiaryRecyclerView.layoutManager =
+                            LinearLayoutManager(requireActivity())
+                        beneficiaryAdapter = BeneficiaryAdapter(
+                            selectedItem = { selectedItem: GetBeneficiaryData ->
+                                recipientItem(selectedItem)
+                                binding.beneficiarySearch.setQuery("", false)
+                            }
+                        )
+                        binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
+                        beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
+                        beneficiaryAdapter.notifyDataSetChanged()
+
+                        binding.beneficiarySearch.setOnQueryTextListener(object :
+                            SearchView.OnQueryTextListener {
+                            override fun onQueryTextSubmit(query: String?): Boolean {
+                                return false
+                            }
+
+                            override fun onQueryTextChange(newText: String?): Boolean {
+                                beneficiaryAdapter.filter(newText.orEmpty())
+                                return true
+                            }
+                        })
+                    }
+                } catch (e: NullPointerException) {
+                    e.localizedMessage
+                }
             }
         }
     }
 
     private fun recipientItem(selectedItem: GetBeneficiaryData) {
-        itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
-        dismiss()
-
+        benePersonId = selectedItem.benePersonId!!
+        beneId = selectedItem.beneficiaryId!!
+        beneAccountName = selectedItem.beneName.toString()
+        beneMobile = selectedItem.mobile.toString()
+        if (orderType == 2) {
+            itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
+            dismiss()
+        } else {
+            chooseBankBottomSheet.setOrderType(orderType, benePersonId)
+            chooseBankBottomSheet.show(childFragmentManager, chooseBankBottomSheet.tag)
+//            itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
+//            dismiss()
+        }
     }
 
     private fun requestContactsPermission() {
@@ -235,7 +270,12 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun contactItem(selectedItem: ContactItem) {
+        beneAccountName = selectedItem.name
+        beneMobile = selectedItem.phoneNumber
 
+        saveRecipientBottomSheet.itemSelectedListener = this
+        saveRecipientBottomSheet.setOrderType(orderType, beneAccountName, beneMobile)
+        saveRecipientBottomSheet.show(childFragmentManager, saveRecipientBottomSheet.tag)
     }
 
     @SuppressLint("Range")
@@ -332,6 +372,14 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment() {
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
+    }
+
+    override fun onSaveBeneficiaryItemSelected(selectedItem: String) {
+        val getBeneficiaryItem = GetBeneficiaryItem(
+            customerId = customerId.toInt(),
+            countryId = 1,
+        )
+        beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)
     }
 
     override fun onStart() {

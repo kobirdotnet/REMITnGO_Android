@@ -143,7 +143,7 @@ interface REMITnGoService {
     @POST("api/General/Dropdown")
     suspend fun city(@Body cityItem: CityItem): Response<CityResponseItem>
 
-    @POST("api/Beneficiary/BenificiaryListWithBankDetails")
+    @POST("api/Beneficiary/BeneficiaryList")
     suspend fun getBeneficiary(@Body getBeneficiaryItem: GetBeneficiaryItem): Response<GetBeneficiaryResponseItem>
 
     @POST("api/Beneficiary/AddBeneficiary")

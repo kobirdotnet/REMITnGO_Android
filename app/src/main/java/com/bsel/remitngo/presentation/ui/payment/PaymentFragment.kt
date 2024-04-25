@@ -17,7 +17,6 @@ import com.bsel.remitngo.R
 import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
-import com.bsel.remitngo.data.interfaceses.OnPersonalInfoItemSelectedListener
 import com.bsel.remitngo.data.interfaceses.OnRequireDocumentListener
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
@@ -28,10 +27,6 @@ import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
-import com.bsel.remitngo.data.model.profile.annualIncome.AnnualIncomeData
-import com.bsel.remitngo.data.model.profile.nationality.NationalityData
-import com.bsel.remitngo.data.model.profile.occupation.OccupationData
-import com.bsel.remitngo.data.model.profile.occupationType.OccupationTypeData
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
 import com.bsel.remitngo.data.model.promoCode.PromoItem
@@ -81,7 +76,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     private val addressVerifyBottomSheet: AddressVerifyBottomSheet by lazy { AddressVerifyBottomSheet() }
     private val requireDocumentBottomSheet: RequireDocumentBottomSheet by lazy { RequireDocumentBottomSheet() }
 
-    private lateinit var customerId: String
+    private var customerId: Int = 0
     private var personId: Int = 0
     private lateinit var firstName: String
     private lateinit var lastName: String
@@ -176,7 +171,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         promoCodeFocusListener()
 
         preferenceManager = PreferenceManager(requireContext())
-        customerId = preferenceManager.loadData("customerId").toString()
+        customerId = preferenceManager.loadData("customerId").toString().toInt()
         personId = preferenceManager.loadData("personId").toString().toInt()
         firstName = preferenceManager.loadData("firstName").toString()
         lastName = preferenceManager.loadData("lastName").toString()
@@ -204,7 +199,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
-
         try {
             beneBankId = arguments?.getString("bankId").toString().toInt()
         } catch (e: NumberFormatException) {
@@ -231,24 +225,20 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
-
         beneAccountName = arguments?.getString("beneficiaryName").toString()
         beneMobile = arguments?.getString("beneficiaryPhoneNumber").toString()
-
         try {
             purposeOfTransferId = arguments?.getString("reasonId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
         purposeOfTransferName = arguments?.getString("reasonName").toString()
-
         try {
             sourceOfFundId = arguments?.getString("sourceOfIncomeId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
         sourceOfFundName = arguments?.getString("sourceOfIncomeName").toString()
-
         if (sendAmount.toString() != "null") {
             binding.sendAmount.text = "GBP $sendAmount"
         }
@@ -308,6 +298,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
         }
 
         binding.chooseReceiver.setOnClickListener {
+            chooseRecipientBottomSheet.itemSelectedListener = this
             chooseRecipientBottomSheet.setOrderType(orderType)
             chooseRecipientBottomSheet.show(childFragmentManager, chooseRecipientBottomSheet.tag)
         }
@@ -519,7 +510,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                         agentId = 8082,
                         amount = totalAmount.toDouble(),
                         beneficiaryId = benePersonId,
-                        customerId = customerId.toInt(),
+                        customerId = customerId,
                         entryDate = currentDate,
                         purposeOfTransferId = purposeOfTransferId,
                         transactionType = 1
@@ -551,7 +542,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
                         requireDocumentBottomSheet.requireDocument(
                             totalAmountGiven.toString(),
                             benePersonId.toString(),
-                            customerId,
+                            customerId.toString(),
                             currentDate,
                             purposeOfTransferId.toString()
                         )
@@ -808,10 +799,11 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener,
     }
 
     override fun onChooseRecipientItemSelected(selectedItem: GetBeneficiaryData) {
-        benePersonId = selectedItem.id!!
+        benePersonId = selectedItem.benePersonId!!
         beneId = selectedItem.beneficiaryId!!
-        beneAccountName = selectedItem.name.toString()
+        beneAccountName = selectedItem.beneName.toString()
         beneMobile = selectedItem.mobile.toString()
+        binding.receiverName.text = beneAccountName
     }
 
     override fun onPurposeOfTransferItemSelected(selectedItem: ReasonData) {

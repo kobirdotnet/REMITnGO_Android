@@ -3,7 +3,7 @@ package com.bsel.remitngo.data.model.bank.bank_account
 
 import com.google.gson.annotations.SerializedName
 
-data class GetBankData(
+data class eer(
     @SerializedName("AccountName")
     val accountName: String?,
     @SerializedName("AccountNo")
@@ -21,5 +21,5 @@ data class GetBankData(
     @SerializedName("WalletId")
     val walletId: Int?,
     @SerializedName("WalletName")
-    val walletName: String?
+    val walletName: Any?
 )

@@ -49,6 +49,7 @@ class ChooseRecipientFragment : Fragment() {
     private lateinit var beneficiaryAdapter: BeneficiaryAdapter
 
     private lateinit var personId: String
+    private lateinit var customerId: String
     private lateinit var firstName: String
     private lateinit var lastName: String
     private lateinit var customerEmail: String
@@ -103,6 +104,7 @@ class ChooseRecipientFragment : Fragment() {
 
         preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
+        customerId = preferenceManager.loadData("personId").toString()
         firstName = preferenceManager.loadData("firstName").toString()
         lastName = preferenceManager.loadData("lastName").toString()
         customerEmail = preferenceManager.loadData("email").toString()
@@ -170,19 +172,15 @@ class ChooseRecipientFragment : Fragment() {
 
         if (orderType=="null"){
             val getBeneficiaryItem = GetBeneficiaryItem(
-                deviceId = deviceId,
-                personId = personId.toInt(),
-                orderType = 0,
-                countryId = 1
+                customerId = customerId.toInt(),
+                countryId = 1,
             )
             beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)
             observeGetBeneficiaryResult()
         }else{
             val getBeneficiaryItem = GetBeneficiaryItem(
-                deviceId = deviceId,
-                personId = personId.toInt(),
-                orderType = orderType.toInt(),
-                countryId = 1
+                customerId = customerId.toInt(),
+                countryId = 1,
             )
             beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)
             observeGetBeneficiaryResult()
@@ -227,8 +225,8 @@ class ChooseRecipientFragment : Fragment() {
     private fun recipientItem(selectedItem: GetBeneficiaryData) {
 
         benId=selectedItem.beneficiaryId.toString()
-        beneficiaryId=selectedItem.id.toString()
-        beneficiaryName=selectedItem.name.toString()
+        beneficiaryId=selectedItem.benePersonId.toString()
+        beneficiaryName=selectedItem.beneName.toString()
         beneficiaryPhoneNumber=selectedItem.mobile.toString()
 
         val bundle = Bundle().apply {

@@ -43,7 +43,7 @@ class BeneficiaryAdapter(
     fun filter(query: String) {
         filteredBeneficiaryList.clear()
         for (beneficiaries in beneficiaryList) {
-            if (beneficiaries.name!!.contains(query, ignoreCase = true)) {
+            if (beneficiaries.beneName!!.contains(query, ignoreCase = true)) {
                 filteredBeneficiaryList.add(beneficiaries)
             }
         }
@@ -58,26 +58,10 @@ class BeneficiaryViewHolder(val binding: ItemBeneficiaryBinding) :
         beneficiaryItem: GetBeneficiaryData,
         selectedItem: (GetBeneficiaryData) -> Unit
     ) {
-
-//        val randomColor = getRandomColor()
-//        val backgroundDrawable = GradientDrawable()
-//        backgroundDrawable.shape = GradientDrawable.OVAL
-//        backgroundDrawable.setColor(randomColor)
-
-//        binding.firstLetterBackground.background = backgroundDrawable
-//        binding.firstLetterName.setTextColor(getRandomColor())
-//        binding.firstLetterName.text = recipientItem.firstLetter
-
-        binding.beneficiaryName.text = beneficiaryItem.name.toString()
+        binding.beneficiaryName.text = beneficiaryItem.beneName.toString()
         binding.beneficiaryPhone.text = beneficiaryItem.mobile.toString()
         binding.itemBeneficiaryLayout.setOnClickListener {
             selectedItem(beneficiaryItem)
         }
     }
-
-//    private fun getRandomColor(): Int {
-//        val random = Random.Default
-//        return Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256))
-//    }
-
 }

@@ -21,30 +21,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/grey"
-                android:gravity="right"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/padding_left"
-                android:paddingRight="@dimen/padding_right"
-                android:visibility="gone">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnExistingCustomer"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="center"
-                    android:inputType="none"
-                    android:text="Existing BSEL Customer"
-                    android:textAllCaps="false"
-                    android:textColor="@color/blue" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -119,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:paddingLeft="@dimen/padding_left"
                 android:paddingRight="@dimen/padding_right"
                 android:paddingBottom="@dimen/padding_bottom">
@@ -150,6 +126,7 @@
                         android:textColor="@color/black" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
 
             </LinearLayout>
 
@@ -183,7 +160,6 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="textEmailAddress"
-
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
 

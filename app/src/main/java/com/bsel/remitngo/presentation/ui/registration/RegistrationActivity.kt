@@ -2,6 +2,7 @@ package com.bsel.remitngo.presentation.ui.registration
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -14,7 +15,9 @@ import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
+import android.widget.NumberPicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
@@ -35,6 +38,7 @@ import com.bsel.remitngo.presentation.ui.main.MainActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -44,8 +48,6 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
     private lateinit var registrationViewModel: RegistrationViewModel
 
     private lateinit var binding: ActivityRegistrationBinding
-
-    private val existingCustomerBottomSheet: ExistingCustomerBottomSheet by lazy { ExistingCustomerBottomSheet() }
 
     private val marketingBottomSheet: MarketingBottomSheet by lazy { MarketingBottomSheet() }
 
@@ -87,29 +89,65 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
             val currentYear = calendar.get(Calendar.YEAR)
             val currentMonth = calendar.get(Calendar.MONTH)
             val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
-            val defaultYear = currentYear - 25
-            val maxDate = Calendar.getInstance()
-            maxDate.set(defaultYear, currentMonth, currentDay)
-            val datePickerDialog = DatePickerDialog(
-                this@RegistrationActivity, { _, selectedYear, selectedMonth, selectedDay ->
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.set(selectedYear, selectedMonth, selectedDay)
-                    if (!selectedDate.after(Calendar.getInstance())) {
-                        val formattedDate =
-                            "%04d-%02d-%02d".format(selectedYear, selectedMonth + 1, selectedDay)
-                        binding.dob.setText(formattedDate)
-                    }
-                }, defaultYear, currentMonth, currentDay
-            )
-            datePickerDialog.datePicker.maxDate = maxDate.timeInMillis
-            datePickerDialog.show()
-        }
+            val defaultYear = currentYear - 18
 
-        binding.btnExistingCustomer.setOnClickListener {
-            existingCustomerBottomSheet.show(
-                supportFragmentManager,
-                existingCustomerBottomSheet.tag
+            val maxDate = Calendar.getInstance()
+            maxDate.set(currentYear - 18, currentMonth, currentDay)
+
+            val datePickerDialog = Dialog(this@RegistrationActivity)
+            datePickerDialog.setContentView(R.layout.custom_date_picker_dialog)
+
+            val dayPicker = datePickerDialog.findViewById<NumberPicker>(R.id.dayPicker)
+            val monthPicker = datePickerDialog.findViewById<NumberPicker>(R.id.monthPicker)
+            val yearPicker = datePickerDialog.findViewById<NumberPicker>(R.id.yearPicker)
+            val okButton = datePickerDialog.findViewById<Button>(R.id.okButton)
+            val cancelButton = datePickerDialog.findViewById<Button>(R.id.cancelButton)
+
+            dayPicker.minValue = 1
+            dayPicker.maxValue = 31
+            dayPicker.value = currentDay
+
+            monthPicker.minValue = 1
+            monthPicker.maxValue = 12
+            monthPicker.displayedValues = arrayOf(
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
             )
+            monthPicker.value = currentMonth + 1
+
+            yearPicker.minValue = currentYear - 100
+            yearPicker.maxValue = currentYear
+            yearPicker.value = defaultYear
+
+            // Set the maximum date
+            val maxDateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(maxDate.time)
+            val minDateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().time)
+
+            val minTimestamp = SimpleDateFormat("yyyy-MM-dd").parse(minDateString)?.time ?: 0
+            val maxTimestamp = SimpleDateFormat("yyyy-MM-dd").parse(maxDateString)?.time ?: 0
+
+            dayPicker.maxValue = maxDate.getActualMaximum(Calendar.DAY_OF_MONTH)
+            monthPicker.maxValue = maxDate.getActualMaximum(Calendar.MONTH) + 1
+            yearPicker.maxValue = maxDate.get(Calendar.YEAR)
+
+            dayPicker.setOnValueChangedListener { _, _, _ -> }
+            monthPicker.setOnValueChangedListener { _, _, _ -> }
+            yearPicker.setOnValueChangedListener { _, _, _ -> }
+
+            okButton.setOnClickListener {
+                val selectedDay = dayPicker.value
+                val selectedMonth = monthPicker.value
+                val selectedYear = yearPicker.value
+                val formattedDate = "%04d-%02d-%02d".format(selectedYear, selectedMonth, selectedDay)
+                binding.dob.setText(formattedDate)
+                datePickerDialog.dismiss()
+            }
+
+            cancelButton.setOnClickListener {
+                datePickerDialog.dismiss()
+            }
+
+            datePickerDialog.show()
         }
 
         binding.termAndCondition.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -232,9 +270,8 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
         val registrationItem = RegistrationItem(
             deviceId = deviceId,
-            channel = "Apps",
+            channel = "1",
             firstname = firstName,
-            middlename = "",
             lastname = lastName,
             dob = dob,
             email = email,
@@ -377,21 +414,13 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
     }
 
     private fun validConfirmPassword(): String? {
+        val password = binding.password.text.toString()
         val confirmPassword = binding.confirmPassword.text.toString()
         if (confirmPassword.isEmpty()) {
             return "Enter confirm password"
         }
-        if (confirmPassword.length < 8) {
-            return "Minimum 8 Character Password"
-        }
-        if (!confirmPassword.matches(".*[A-Z].*".toRegex())) {
-            return "Must Contain 1 Upper-case Character"
-        }
-        if (!confirmPassword.matches(".*[a-z].*".toRegex())) {
-            return "Must Contain 1 Lower-case Character"
-        }
-        if (!confirmPassword.matches(".*[@#\$%^&+=].*".toRegex())) {
-            return "Must Contain 1 Special Character (@#\$%^&+=)"
+        if (!password.equals(confirmPassword)) {
+            return "Password not matched."
         }
         return null
     }

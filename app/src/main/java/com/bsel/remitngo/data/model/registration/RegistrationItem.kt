@@ -9,8 +9,6 @@ data class RegistrationItem(
     val channel: String?,
     @SerializedName("firstname")
     val firstname: String?,
-    @SerializedName("middlename")
-    val middlename: String?,
     @SerializedName("lastname")
     val lastname: String?,
     @SerializedName("dob")
