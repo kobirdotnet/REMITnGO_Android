@@ -54,18 +54,18 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var personId: String
+    private var personId: Int = 0
 
-    private lateinit var documentCategoryId: String
-    private lateinit var documentTypeId: String
+    private var documentCategoryId: Int = 0
+    private var documentTypeId: Int = 0
 
     private var selectedFile: Uri? = null
 
-    private lateinit var totalAmount: String
-    private lateinit var benId: String
-    private lateinit var customerId: String
-    private lateinit var currentDate: String
-    private lateinit var reasonId: String
+    private var totalAmount: Double = 0.0
+    private var benePersonId: Int = 0
+    private var customerId: Int = 0
+    private var currentDate: String? = null
+    private var purposeOfTransferId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -103,7 +103,11 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
             ViewModelProvider(this, documentViewModelFactory)[DocumentViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
@@ -116,20 +120,18 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
             requiredCategoryBottomSheet.itemSelectedListener = this
             requiredCategoryBottomSheet.requireDocument(
                 totalAmount,
-                benId,
+                benePersonId,
                 customerId,
-                currentDate,
-                reasonId
+                currentDate!!,
+                purposeOfTransferId
             )
             requiredCategoryBottomSheet.show(childFragmentManager, requiredCategoryBottomSheet.tag)
         }
 
         binding.documentType.setOnClickListener {
-            if (::documentCategoryId.isInitialized) {
-                documentTypeBottomSheet.setSelectedDocumentType(documentCategoryId)
-                documentTypeBottomSheet.itemSelectedListener = this
-                documentTypeBottomSheet.show(childFragmentManager, documentTypeBottomSheet.tag)
-            }
+            documentTypeBottomSheet.setDocumentCategoryId(documentCategoryId)
+            documentTypeBottomSheet.itemSelectedListener = this
+            documentTypeBottomSheet.show(childFragmentManager, documentTypeBottomSheet.tag)
         }
 
         binding.selectFile.setOnClickListener {
@@ -141,52 +143,58 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
 
         val requireDocumentItem = RequireDocumentItem(
             agentId = 8082,
-            amount = totalAmount.toDouble(),
-            beneficiaryId = benId.toInt(),
-            customerId = customerId.toInt(),
+            amount = totalAmount,
+            beneficiaryId = benePersonId,
+            customerId = customerId,
             entryDate = currentDate,
-            purposeOfTransferId = reasonId.toInt(),
+            purposeOfTransferId = purposeOfTransferId,
             transactionType = 1
         )
         documentViewModel.requireDocument(requireDocumentItem)
-        observeRequireDocumentResult()
 
+        observeRequireDocumentResult()
         observeUploadDocumentResult()
 
         return bottomSheet
     }
 
     fun requireDocument(
-        requireAmount: String,
-        requireBenId: String,
-        requireCustomerId: String,
-        requireCurrentDate: String,
-        requireReasonId: String
+        totalAmount: Double,
+        benePersonId: Int,
+        customerId: Int,
+        currentDate: String,
+        purposeOfTransferId: Int
     ) {
-        totalAmount = requireAmount
-        benId = requireBenId
-        customerId = requireCustomerId
-        currentDate = requireCurrentDate
-        reasonId = requireReasonId
+        this.totalAmount = totalAmount
+        this.benePersonId = benePersonId
+        this.customerId = customerId
+        this.currentDate = currentDate
+        this.purposeOfTransferId = purposeOfTransferId
     }
 
     private fun observeRequireDocumentResult() {
         documentViewModel.requireDocumentResult.observe(this) { result ->
-            if (result!!.code == "000") {
-                if (result!!.data != null) {
-                    Log.i("info", "requireCategory: " + result!!.data)
-                    for (reqCat in result!!.data!!) {
-                        Log.i("info", "requireCategoryId: " + reqCat!!.id)
+            try {
+                if (result!!.code == "000") {
+                    if (result!!.data != null) {
+                        Log.i("info", "requireCategory: " + result!!.data)
+                        for (reqCat in result!!.data!!) {
+                            Log.i("info", "requireCategoryId: " + reqCat!!.id)
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeUploadDocumentResult() {
         documentViewModel.uploadDocumentResult.observe(this) { result ->
-            if (result != null) {
+            try {
                 dismiss()
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -217,10 +225,10 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
                 val filePart = MultipartBody.Part.createFormData("file", file.name, fileRequestBody)
                 documentViewModel.uploadDocument(
                     deviceId.toRequestBody(),
-                    personId.toRequestBody(),
-                    documentCategoryId.toRequestBody(),
+                    personId.toString().toRequestBody(),
+                    documentCategoryId.toString().toRequestBody(),
                     "0".toRequestBody(),
-                    documentTypeId.toRequestBody(),
+                    documentTypeId.toString().toRequestBody(),
                     "0".toRequestBody(),
                     "xyz".toRequestBody(),
                     "2024-01-01".toRequestBody(),
@@ -234,12 +242,12 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
 
     override fun onDocumentCategoryItemSelected(selectedItem: DocumentCategoryData) {
         binding.documentCategory.setText(selectedItem.name)
-        documentCategoryId = selectedItem.id.toString()
+        documentCategoryId = selectedItem.id.toString().toInt()
     }
 
     override fun onDocumentTypeItemSelected(selectedItem: DocumentTypeData) {
         binding.documentType.setText(selectedItem.name)
-        documentTypeId = selectedItem.id.toString()
+        documentTypeId = selectedItem.id.toString().toInt()
     }
 
     override fun onDocumentFileItemSelected(selectedItem: Uri?) {

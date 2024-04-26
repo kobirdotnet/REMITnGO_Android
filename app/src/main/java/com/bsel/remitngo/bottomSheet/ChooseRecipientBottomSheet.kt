@@ -15,7 +15,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -65,8 +64,8 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
 
     private lateinit var beneficiaryAdapter: BeneficiaryAdapter
 
-    private lateinit var personId: String
-    private lateinit var customerId: String
+    private var personId: Int = 0
+    private var customerId: Int = 0
     private var benePersonId: Int = 0
     private var beneId: Int = 0
     private var beneAccountName: String? = null
@@ -76,6 +75,8 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
     private lateinit var deviceId: String
 
     private var orderType: Int = 0
+    private var beneBankId: Int = 0
+    private var beneWalletId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -115,8 +116,16 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
         requestContactsPermission()
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
-        customerId = preferenceManager.loadData("customerId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
+        try {
+            customerId = preferenceManager.loadData("customerId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
@@ -128,7 +137,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
         }
 
         val getBeneficiaryItem = GetBeneficiaryItem(
-            customerId = customerId.toInt(),
+            customerId = customerId,
             countryId = 1,
         )
         beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)
@@ -137,8 +146,11 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
         return bottomSheet
     }
 
-    fun setOrderType(orderType: Int) {
+    fun setOrderType(orderType: Int, benePersonId: Int, beneBankId: Int, beneWalletId: Int) {
         this.orderType = orderType
+        this.benePersonId = benePersonId
+        this.beneBankId = beneBankId
+        this.beneWalletId = beneWalletId
     }
 
     private fun observeGetBeneficiaryResult() {
@@ -153,7 +165,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
                 }
                 val dialog = builder.create()
                 dialog.show()
-            }else{
+            } else {
                 try {
                     if (result!!.data != null) {
                         binding.beneficiaryRecyclerView.layoutManager =
@@ -262,7 +274,6 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
                         return true
                     }
                 })
-
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -376,7 +387,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
 
     override fun onSaveBeneficiaryItemSelected(selectedItem: String) {
         val getBeneficiaryItem = GetBeneficiaryItem(
-            customerId = customerId.toInt(),
+            customerId = customerId,
             countryId = 1,
         )
         beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)

@@ -92,33 +92,36 @@ class PurposeOfTransferBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeReasonResult() {
         beneficiaryViewModel.reasonResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (data in result.data!!) {
-                    binding.reasonRecyclerView.layoutManager =
-                        LinearLayoutManager(requireActivity())
-                    reasonNameAdapter = ReasonNameAdapter(
-                        selectedItem = { selectedItem: ReasonData ->
-                            reasonItem(selectedItem)
-                            binding.reasonSearch.setQuery("", false)
-                        }
-                    )
-                    binding.reasonRecyclerView.adapter = reasonNameAdapter
-                    reasonNameAdapter.setList(result.data as List<ReasonData>)
-                    reasonNameAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    for (data in result.data!!) {
+                        binding.reasonRecyclerView.layoutManager =
+                            LinearLayoutManager(requireActivity())
+                        reasonNameAdapter = ReasonNameAdapter(
+                            selectedItem = { selectedItem: ReasonData ->
+                                reasonItem(selectedItem)
+                                binding.reasonSearch.setQuery("", false)
+                            }
+                        )
+                        binding.reasonRecyclerView.adapter = reasonNameAdapter
+                        reasonNameAdapter.setList(result.data as List<ReasonData>)
+                        reasonNameAdapter.notifyDataSetChanged()
 
-                    binding.reasonSearch.setOnQueryTextListener(object :
-                        SearchView.OnQueryTextListener {
-                        override fun onQueryTextSubmit(query: String?): Boolean {
-                            return false
-                        }
+                        binding.reasonSearch.setOnQueryTextListener(object :
+                            SearchView.OnQueryTextListener {
+                            override fun onQueryTextSubmit(query: String?): Boolean {
+                                return false
+                            }
 
-                        override fun onQueryTextChange(newText: String?): Boolean {
-                            reasonNameAdapter.filter(newText.orEmpty())
-                            return true
-                        }
-                    })
+                            override fun onQueryTextChange(newText: String?): Boolean {
+                                reasonNameAdapter.filter(newText.orEmpty())
+                                return true
+                            }
+                        })
+                    }
                 }
-
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

@@ -6,7 +6,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -15,10 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.UkDivisionAdapter
+import com.bsel.remitngo.data.interfaceses.OnAddressItemSelectedListener
 import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionData
 import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
 import com.bsel.remitngo.databinding.UkDivisionLayoutBinding
-import com.bsel.remitngo.data.interfaceses.OnAddressItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModelFactory
@@ -42,7 +41,7 @@ class UkDivisionBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var deviceId: String
 
-    private var selectedUkDivision: String? = null
+    private var countryId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -82,8 +81,8 @@ class UkDivisionBottomSheet : BottomSheetDialogFragment() {
         deviceId = getDeviceId(requireContext())
         val ukDivisionItem = UkDivisionItem(
             deviceId = deviceId,
-            dropdownId=2,
-            param1 = selectedUkDivision!!.toInt(),
+            dropdownId = 2,
+            param1 = countryId,
             param2 = 0
         )
         profileViewModel.ukDivision(ukDivisionItem)
@@ -92,37 +91,40 @@ class UkDivisionBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    fun setSelectedUkDivision(ukDivision: String) {
-        selectedUkDivision = ukDivision
+    fun setCountry(countryId: Int) {
+        this.countryId = countryId
     }
 
     private fun observeUkDivisionResult() {
         profileViewModel.ukDivisionResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.ukDivisionRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                ukDivisionAdapter = UkDivisionAdapter(
-                    selectedItem = { selectedItem: UkDivisionData ->
-                        ukDivision(selectedItem)
-                        binding.ukDivisionSearch.setQuery("", false)
-                    }
-                )
-                binding.ukDivisionRecyclerView.adapter = ukDivisionAdapter
-                ukDivisionAdapter.setList(result.data as List<UkDivisionData>)
-                ukDivisionAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.ukDivisionRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    ukDivisionAdapter = UkDivisionAdapter(
+                        selectedItem = { selectedItem: UkDivisionData ->
+                            ukDivision(selectedItem)
+                            binding.ukDivisionSearch.setQuery("", false)
+                        }
+                    )
+                    binding.ukDivisionRecyclerView.adapter = ukDivisionAdapter
+                    ukDivisionAdapter.setList(result.data as List<UkDivisionData>)
+                    ukDivisionAdapter.notifyDataSetChanged()
 
-                binding.ukDivisionSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.ukDivisionSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        ukDivisionAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-            } else {
-                Log.i("info", "division failed")
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            ukDivisionAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }

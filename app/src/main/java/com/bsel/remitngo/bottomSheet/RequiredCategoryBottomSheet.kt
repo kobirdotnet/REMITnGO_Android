@@ -7,7 +7,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -17,11 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.DocumentCategoryAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
-import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
-import com.bsel.remitngo.databinding.DocumentCategoryLayoutBinding
 import com.bsel.remitngo.data.interfaceses.OnDocumentItemSelectedListener
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
+import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.databinding.RequiredCategoryLayoutBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.document.DocumentViewModel
@@ -50,13 +48,13 @@ class RequiredCategoryBottomSheet : BottomSheetDialogFragment() {
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var personId: String
+    private var personId: Int = 0
 
-    private lateinit var totalAmount: String
-    private lateinit var benId: String
-    private lateinit var customerId: String
-    private lateinit var currentDate: String
-    private lateinit var reasonId: String
+    private var totalAmount: Double = 0.0
+    private var benePersonId: Int = 0
+    private var customerId: Int = 0
+    private var currentDate: String? = null
+    private var purposeOfTransferId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -92,7 +90,11 @@ class RequiredCategoryBottomSheet : BottomSheetDialogFragment() {
             ViewModelProvider(this, documentViewModelFactory)[DocumentViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
@@ -101,11 +103,11 @@ class RequiredCategoryBottomSheet : BottomSheetDialogFragment() {
 
         val requireDocumentItem = RequireDocumentItem(
             agentId = 8082,
-            amount = totalAmount.toDouble(),
-            beneficiaryId = benId.toInt(),
-            customerId = customerId.toInt(),
+            amount = totalAmount,
+            beneficiaryId = benePersonId,
+            customerId = customerId,
             entryDate = currentDate,
-            purposeOfTransferId = reasonId.toInt(),
+            purposeOfTransferId = purposeOfTransferId,
             transactionType = 1
         )
         documentViewModel.requireDocument(requireDocumentItem)
@@ -123,52 +125,57 @@ class RequiredCategoryBottomSheet : BottomSheetDialogFragment() {
     }
 
     fun requireDocument(
-        requireAmount: String,
-        requireBenId: String,
-        requireCustomerId: String,
-        requireCurrentDate: String,
-        requireReasonId: String
+        totalAmount: Double,
+        benePersonId: Int,
+        customerId: Int,
+        currentDate: String,
+        purposeOfTransferId: Int
     ) {
-        totalAmount = requireAmount
-        benId = requireBenId
-        customerId = requireCustomerId
-        currentDate = requireCurrentDate
-        reasonId = requireReasonId
+        this.totalAmount = totalAmount
+        this.benePersonId = benePersonId
+        this.customerId = customerId
+        this.currentDate = currentDate
+        this.purposeOfTransferId = purposeOfTransferId
     }
 
     private fun observeRequireDocumentResult() {
         documentViewModel.requireDocumentResult.observe(this) { requireResult ->
-            if (requireResult?.code == "000" && requireResult.data != null) {
-                val requireCategoryIds = requireResult.data.map { it!!.id }
-                documentViewModel.documentCategoryResult.observe(this) { categoryResult ->
-                    if (categoryResult?.data != null) {
-                        val filteredCategoryDataList = categoryResult.data.filter { it!!.id in requireCategoryIds }
+            try {
+                if (requireResult?.code == "000" && requireResult.data != null) {
+                    val requireCategoryIds = requireResult.data.map { it!!.id }
+                    documentViewModel.documentCategoryResult.observe(this) { categoryResult ->
+                        if (categoryResult?.data != null) {
+                            val filteredCategoryDataList =
+                                categoryResult.data.filter { it!!.id in requireCategoryIds }
 
-                        binding.documentCategoryRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                        documentCategoryAdapter = DocumentCategoryAdapter(
-                            selectedItem = { selectedItem: DocumentCategoryData ->
-                                documentCategory(selectedItem)
-                                binding.documentCategorySearch.setQuery("", false)
-                            }
-                        )
-                        binding.documentCategoryRecyclerView.adapter = documentCategoryAdapter
-                        documentCategoryAdapter.setList(filteredCategoryDataList as List<DocumentCategoryData>)
-                        documentCategoryAdapter.notifyDataSetChanged()
+                            binding.documentCategoryRecyclerView.layoutManager =
+                                LinearLayoutManager(requireActivity())
+                            documentCategoryAdapter = DocumentCategoryAdapter(
+                                selectedItem = { selectedItem: DocumentCategoryData ->
+                                    documentCategory(selectedItem)
+                                    binding.documentCategorySearch.setQuery("", false)
+                                }
+                            )
+                            binding.documentCategoryRecyclerView.adapter = documentCategoryAdapter
+                            documentCategoryAdapter.setList(filteredCategoryDataList as List<DocumentCategoryData>)
+                            documentCategoryAdapter.notifyDataSetChanged()
 
-                        binding.documentCategorySearch.setOnQueryTextListener(object :
-                            SearchView.OnQueryTextListener {
-                            override fun onQueryTextSubmit(query: String?): Boolean {
-                                return false
-                            }
+                            binding.documentCategorySearch.setOnQueryTextListener(object :
+                                SearchView.OnQueryTextListener {
+                                override fun onQueryTextSubmit(query: String?): Boolean {
+                                    return false
+                                }
 
-                            override fun onQueryTextChange(newText: String?): Boolean {
-                                documentCategoryAdapter.filter(newText.orEmpty())
-                                return true
-                            }
-                        })
-
+                                override fun onQueryTextChange(newText: String?): Boolean {
+                                    documentCategoryAdapter.filter(newText.orEmpty())
+                                    return true
+                                }
+                            })
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

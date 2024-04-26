@@ -6,8 +6,10 @@ import com.google.gson.annotations.SerializedName
 data class PayingAgentData(
     @SerializedName("BankId")
     val bankId: Int?,
-    @SerializedName("Name")
-    val name: String?,
+    @SerializedName("WalletId")
+    val walletId: Int?,
     @SerializedName("PayingAgentId")
-    val payingAgentId: Int?
+    val payingAgentId: Int?,
+    @SerializedName("Name")
+    val name: String?
 )

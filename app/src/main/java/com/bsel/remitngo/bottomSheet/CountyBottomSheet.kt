@@ -6,7 +6,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -15,10 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.CountyAdapter
+import com.bsel.remitngo.data.interfaceses.OnAddressItemSelectedListener
 import com.bsel.remitngo.data.model.profile.county.CountyData
 import com.bsel.remitngo.data.model.profile.county.CountyItem
 import com.bsel.remitngo.databinding.CountyLayoutBinding
-import com.bsel.remitngo.data.interfaceses.OnAddressItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModelFactory
@@ -42,7 +41,7 @@ class CountyBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var deviceId: String
 
-    private var selectedCounty: String? = null
+    private var countId: Int=0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -83,7 +82,7 @@ class CountyBottomSheet : BottomSheetDialogFragment() {
         val countyItem = CountyItem(
             deviceId = deviceId,
             dropdownId=3,
-            param1 = selectedCounty!!.toInt(),
+            param1 = countId,
             param2 = 0
         )
         profileViewModel.county(countyItem)
@@ -92,37 +91,39 @@ class CountyBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    fun setSelectedCounty(county: String) {
-        selectedCounty = county
+    fun setSelectedCounty(countId: Int) {
+        this.countId = countId
     }
 
     private fun observeCountyResult() {
         profileViewModel.countyResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.countyRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                countyAdapter = CountyAdapter(
-                    selectedItem = { selectedItem: CountyData ->
-                        county(selectedItem)
-                        binding.countySearch.setQuery("", false)
-                    }
-                )
-                binding.countyRecyclerView.adapter = countyAdapter
-                countyAdapter.setList(result.data as List<CountyData>)
-                countyAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.countyRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    countyAdapter = CountyAdapter(
+                        selectedItem = { selectedItem: CountyData ->
+                            county(selectedItem)
+                            binding.countySearch.setQuery("", false)
+                        }
+                    )
+                    binding.countyRecyclerView.adapter = countyAdapter
+                    countyAdapter.setList(result.data as List<CountyData>)
+                    countyAdapter.notifyDataSetChanged()
 
-                binding.countySearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.countySearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        countyAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-            } else {
-                Log.i("info", "county failed")
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            countyAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

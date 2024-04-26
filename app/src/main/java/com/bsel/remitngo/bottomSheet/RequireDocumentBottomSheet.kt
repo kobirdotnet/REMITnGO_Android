@@ -37,11 +37,11 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
 
     private val uploadRequireDocumentBottomSheet: UploadRequireDocumentBottomSheet by lazy { UploadRequireDocumentBottomSheet() }
 
-    private lateinit var totalAmount: String
-    private lateinit var benId: String
-    private lateinit var customerId: String
-    private lateinit var currentDate: String
-    private lateinit var reasonId: String
+    private var totalAmount: Double = 0.0
+    private var benePersonId: Int = 0
+    private var customerId: Int = 0
+    private var currentDate: String? = null
+    private var purposeOfTransferId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -83,10 +83,10 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
             if (!uploadRequireDocumentBottomSheet.isAdded) {
                 uploadRequireDocumentBottomSheet.requireDocument(
                     totalAmount,
-                    benId,
+                    benePersonId,
                     customerId,
-                    currentDate,
-                    reasonId
+                    currentDate!!,
+                    purposeOfTransferId
                 )
                 uploadRequireDocumentBottomSheet.show(
                     childFragmentManager,
@@ -99,11 +99,11 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
 
         val requireDocumentItem = RequireDocumentItem(
             agentId = 8082,
-            amount = totalAmount.toDouble(),
-            beneficiaryId = benId.toInt(),
-            customerId = customerId.toInt(),
+            amount = totalAmount,
+            beneficiaryId = benePersonId,
+            customerId = customerId,
             entryDate = currentDate,
-            purposeOfTransferId = reasonId.toInt(),
+            purposeOfTransferId = purposeOfTransferId,
             transactionType = 1
         )
         paymentViewModel.requireDocument(requireDocumentItem)
@@ -120,47 +120,55 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
     }
 
     fun requireDocument(
-        requireAmount: String,
-        requireBenId: String,
-        requireCustomerId: String,
-        requireCurrentDate: String,
-        requireReasonId: String
+        totalAmount: Double,
+        benePersonId: Int,
+        customerId: Int,
+        currentDate: String,
+        purposeOfTransferId: Int
     ) {
-        totalAmount = requireAmount
-        benId = requireBenId
-        customerId = requireCustomerId
-        currentDate = requireCurrentDate
-        reasonId = requireReasonId
+        this.totalAmount = totalAmount
+        this.benePersonId = benePersonId
+        this.customerId = customerId
+        this.currentDate = currentDate
+        this.purposeOfTransferId = purposeOfTransferId
     }
 
     private fun observeRequireDocMsgResult() {
         paymentViewModel.requireDocMsgResult.observe(this) { result ->
-            if (result!!.code == "000") {
-                if (result!!.data != null) {
-                    for (msg in result!!.data!!) {
-                        if (msg!!.id == 1) {
-                            binding.msgOne.text = msg.name
-                        }
-                        if (msg!!.id == 2) {
-                            binding.msgTwo.text = msg.name
+            try {
+                if (result!!.code == "000") {
+                    if (result.data != null) {
+                        for (msg in result.data) {
+                            if (msg!!.id == 1) {
+                                binding.msgOne.text = msg.name
+                            }
+                            if (msg.id == 2) {
+                                binding.msgTwo.text = msg.name
+                            }
                         }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeRequireDocumentResult() {
         paymentViewModel.requireDocumentResult.observe(this) { result ->
-            if (result!!.code == "000") {
-                if (result!!.data != null) {
-                    binding.requireDocumentRecyclerView.layoutManager =
-                        LinearLayoutManager(requireActivity())
-                    requireDocumentAdapter = RequireDocumentAdapter()
-                    binding.requireDocumentRecyclerView.adapter = requireDocumentAdapter
-                    requireDocumentAdapter.setList(result.data as List<RequireDocumentData>)
-                    requireDocumentAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.code == "000") {
+                    if (result.data != null) {
+                        binding.requireDocumentRecyclerView.layoutManager =
+                            LinearLayoutManager(requireActivity())
+                        requireDocumentAdapter = RequireDocumentAdapter()
+                        binding.requireDocumentRecyclerView.adapter = requireDocumentAdapter
+                        requireDocumentAdapter.setList(result.data as List<RequireDocumentData>)
+                        requireDocumentAdapter.notifyDataSetChanged()
+                    }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

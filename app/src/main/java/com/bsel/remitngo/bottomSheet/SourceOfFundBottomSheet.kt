@@ -89,29 +89,33 @@ class SourceOfFundBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeSourceOfIncomeResult() {
         profileViewModel.sourceOfIncomeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.sourceOfIncomeRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                sourceOfIncomeAdapter = SourceOfIncomeAdapter(
-                    selectedItem = { selectedItem: SourceOfIncomeData ->
-                        sourceOfIncome(selectedItem)
-                        binding.sourceOfIncomeSearch.setQuery("", false)
-                    }
-                )
-                binding.sourceOfIncomeRecyclerView.adapter = sourceOfIncomeAdapter
-                sourceOfIncomeAdapter.setList(result.data as List<SourceOfIncomeData>)
-                sourceOfIncomeAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.sourceOfIncomeRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    sourceOfIncomeAdapter = SourceOfIncomeAdapter(
+                        selectedItem = { selectedItem: SourceOfIncomeData ->
+                            sourceOfIncome(selectedItem)
+                            binding.sourceOfIncomeSearch.setQuery("", false)
+                        }
+                    )
+                    binding.sourceOfIncomeRecyclerView.adapter = sourceOfIncomeAdapter
+                    sourceOfIncomeAdapter.setList(result.data as List<SourceOfIncomeData>)
+                    sourceOfIncomeAdapter.notifyDataSetChanged()
 
-                binding.sourceOfIncomeSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.sourceOfIncomeSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        sourceOfIncomeAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            sourceOfIncomeAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

@@ -41,8 +41,8 @@ class PayingAgentInstantCreditBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var deviceId: String
 
-    private var selectedOrderType: String? = null
-    private var selectedAmount: String? = null
+    private var orderType: Int = 0
+    private var beneAmount: Double = 0.0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -84,8 +84,8 @@ class PayingAgentInstantCreditBottomSheet : BottomSheetDialogFragment() {
             deviceId = deviceId,
             fromCountryId = 4,
             toCountryId = 1,
-            orderTypeId = selectedOrderType!!.toInt(),
-            amount = selectedAmount!!.toInt()
+            orderTypeId = orderType,
+            amount = beneAmount.toInt()
         )
         calculationViewModel.payingAgent(payingAgentItem)
 
@@ -94,37 +94,41 @@ class PayingAgentInstantCreditBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    fun setSelectedOrderType(orderType: String,amount:String) {
-        selectedOrderType = orderType
-        selectedAmount = amount
+    fun setSelectedOrderType(orderType: Int, beneAmount: String) {
+        this.orderType = orderType
+        this.beneAmount = beneAmount.toDouble()
     }
 
     private fun observePayingAgentResult() {
         calculationViewModel.payingAgentResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.payingAgentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                payingAgentInstantCreditAdapter = PayingAgentInstantCreditAdapter(
-                    selectedItem = { selectedItem: PayingAgentData ->
-                        payingAgentItem(selectedItem)
-                        binding.payingAgentSearch.setQuery("", false)
-                    }
-                )
-                binding.payingAgentRecyclerView.adapter = payingAgentInstantCreditAdapter
-                payingAgentInstantCreditAdapter.setList(result.data as List<PayingAgentData>)
-                payingAgentInstantCreditAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.payingAgentRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    payingAgentInstantCreditAdapter = PayingAgentInstantCreditAdapter(
+                        selectedItem = { selectedItem: PayingAgentData ->
+                            payingAgentItem(selectedItem)
+                            binding.payingAgentSearch.setQuery("", false)
+                        }
+                    )
+                    binding.payingAgentRecyclerView.adapter = payingAgentInstantCreditAdapter
+                    payingAgentInstantCreditAdapter.setList(result.data as List<PayingAgentData>)
+                    payingAgentInstantCreditAdapter.notifyDataSetChanged()
 
-                binding.payingAgentSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.payingAgentSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        payingAgentInstantCreditAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            payingAgentInstantCreditAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

@@ -6,7 +6,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -15,10 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.CityAdapter
+import com.bsel.remitngo.data.interfaceses.OnAddressItemSelectedListener
 import com.bsel.remitngo.data.model.profile.city.CityData
 import com.bsel.remitngo.data.model.profile.city.CityItem
 import com.bsel.remitngo.databinding.CityLayoutBinding
-import com.bsel.remitngo.data.interfaceses.OnAddressItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
 import com.bsel.remitngo.presentation.ui.profile.ProfileViewModelFactory
@@ -42,7 +41,7 @@ class CityBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var deviceId: String
 
-    private var selectedCity: String? = null
+    private var cityId: Int=0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -83,7 +82,7 @@ class CityBottomSheet : BottomSheetDialogFragment() {
         val cityItem = CityItem(
             deviceId = deviceId,
             dropdownId=4,
-            param1 = selectedCity!!.toInt(),
+            param1 = cityId,
             param2 = 0
         )
         profileViewModel.city(cityItem)
@@ -92,37 +91,39 @@ class CityBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    fun setSelectedCity(city: String) {
-        selectedCity = city
+    fun setSelectedCity(cityId: Int) {
+        this.cityId = cityId
     }
 
     private fun observeCityResult() {
         profileViewModel.cityResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.cityRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                cityAdapter = CityAdapter(
-                    selectedItem = { selectedItem: CityData ->
-                        city(selectedItem)
-                        binding.citySearch.setQuery("", false)
-                    }
-                )
-                binding.cityRecyclerView.adapter = cityAdapter
-                cityAdapter.setList(result.data as List<CityData>)
-                cityAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.cityRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    cityAdapter = CityAdapter(
+                        selectedItem = { selectedItem: CityData ->
+                            city(selectedItem)
+                            binding.citySearch.setQuery("", false)
+                        }
+                    )
+                    binding.cityRecyclerView.adapter = cityAdapter
+                    cityAdapter.setList(result.data as List<CityData>)
+                    cityAdapter.notifyDataSetChanged()
 
-                binding.citySearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.citySearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        cityAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-            } else {
-                Log.i("info", "city failed")
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            cityAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

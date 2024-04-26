@@ -7,7 +7,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -17,10 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.DocumentTypeAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.interfaceses.OnDocumentItemSelectedListener
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
 import com.bsel.remitngo.databinding.DocumentTypeLayoutBinding
-import com.bsel.remitngo.data.interfaceses.OnDocumentItemSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.document.DocumentViewModel
 import com.bsel.remitngo.presentation.ui.document.DocumentViewModelFactory
@@ -48,9 +47,9 @@ class DocumentTypeBottomSheet : BottomSheetDialogFragment() {
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var personId: String
+    private var personId: Int=0
 
-    private var selectedDocumentType: String? = null
+    private var documentCategoryId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -86,7 +85,11 @@ class DocumentTypeBottomSheet : BottomSheetDialogFragment() {
             ViewModelProvider(this, documentViewModelFactory)[DocumentViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
@@ -95,7 +98,7 @@ class DocumentTypeBottomSheet : BottomSheetDialogFragment() {
 
         val documentTypeItem = DocumentTypeItem(
             deviceId = deviceId,
-            params1 = selectedDocumentType!!.toInt(),
+            params1 = documentCategoryId,
             params2 = 0
         )
         documentViewModel.documentType(documentTypeItem)
@@ -104,37 +107,39 @@ class DocumentTypeBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    fun setSelectedDocumentType(documentType: String) {
-        selectedDocumentType = documentType
+    fun setDocumentCategoryId(documentCategoryId: Int) {
+        this.documentCategoryId = documentCategoryId
     }
 
     private fun observeDocumentTypeResult() {
         documentViewModel.documentTypeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.documentTypeRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                documentTypeAdapter = DocumentTypeAdapter(
-                    selectedItem = { selectedItem: DocumentTypeData ->
-                        documentType(selectedItem)
-                        binding.documentTypeSearch.setQuery("", false)
-                    }
-                )
-                binding.documentTypeRecyclerView.adapter = documentTypeAdapter
-                documentTypeAdapter.setList(result.data as List<DocumentTypeData>)
-                documentTypeAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.documentTypeRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    documentTypeAdapter = DocumentTypeAdapter(
+                        selectedItem = { selectedItem: DocumentTypeData ->
+                            documentType(selectedItem)
+                            binding.documentTypeSearch.setQuery("", false)
+                        }
+                    )
+                    binding.documentTypeRecyclerView.adapter = documentTypeAdapter
+                    documentTypeAdapter.setList(result.data as List<DocumentTypeData>)
+                    documentTypeAdapter.notifyDataSetChanged()
 
-                binding.documentTypeSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.documentTypeSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        documentTypeAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-            } else {
-                Log.i("info", "document type failed")
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            documentTypeAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

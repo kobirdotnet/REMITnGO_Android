@@ -6,7 +6,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -42,8 +41,8 @@ class PayingAgentWalletBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var deviceId: String
 
-    private var selectedOrderType: String? = null
-    private var selectedAmount: String? = null
+    private var orderType:Int=0
+    private var beneAmount: Double=0.0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -88,47 +87,48 @@ class PayingAgentWalletBottomSheet : BottomSheetDialogFragment() {
             deviceId = deviceId,
             fromCountryId = 4,
             toCountryId = 1,
-            orderTypeId = selectedOrderType!!.toInt(),
-            amount = selectedAmount!!.toInt()
+            orderTypeId = orderType,
+            amount = beneAmount.toInt()
         )
         calculationViewModel.payingAgent(payingAgentItem)
 
         return bottomSheet
     }
 
-    fun setSelectedOrderType(orderType: String,amount:String) {
-        selectedOrderType = orderType
-        selectedAmount = amount
+    fun setSelectedOrderType(orderType: Int,beneAmount:String) {
+        this.orderType = orderType
+        this.beneAmount = beneAmount.toDouble()
     }
 
     private fun observePayingAgentResult() {
         calculationViewModel.payingAgentResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.payingAgentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                payingAgentWalletNameAdapter = PayingAgentWalletNameAdapter(
-                    selectedItem = { selectedItem: PayingAgentData ->
-                        payingAgentItem(selectedItem)
-                        binding.payingAgentSearch.setQuery("", false)
-                    }
-                )
-                binding.payingAgentRecyclerView.adapter = payingAgentWalletNameAdapter
-                payingAgentWalletNameAdapter.setList(result.data as List<PayingAgentData>)
-                payingAgentWalletNameAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.payingAgentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    payingAgentWalletNameAdapter = PayingAgentWalletNameAdapter(
+                        selectedItem = { selectedItem: PayingAgentData ->
+                            payingAgentItem(selectedItem)
+                            binding.payingAgentSearch.setQuery("", false)
+                        }
+                    )
+                    binding.payingAgentRecyclerView.adapter = payingAgentWalletNameAdapter
+                    payingAgentWalletNameAdapter.setList(result.data as List<PayingAgentData>)
+                    payingAgentWalletNameAdapter.notifyDataSetChanged()
 
-                binding.payingAgentSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.payingAgentSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        payingAgentWalletNameAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-
-            } else {
-                Log.i("info", "paying agent failed")
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            payingAgentWalletNameAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

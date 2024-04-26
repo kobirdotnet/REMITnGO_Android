@@ -48,44 +48,44 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     private val payingAgentCashPickupBottomSheet: PayingAgentCashPickupBottomSheet by lazy { PayingAgentCashPickupBottomSheet() }
     private val payingAgentWalletBottomSheet: PayingAgentWalletBottomSheet by lazy { PayingAgentWalletBottomSheet() }
 
-    private val decimalFormat = DecimalFormat("#.##")
-
-    private lateinit var personId: String
-    private lateinit var firstName: String
-    private lateinit var lastName: String
-    private lateinit var customerEmail: String
-    private lateinit var customerMobile: String
-    private lateinit var customerDateOfBirth: String
+    private var customerId: Int = 0
+    private var personId: Int = 0
+    private var customerEmail: String? = null
+    private var customerMobile: String? = null
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var paymentType: String
-    private lateinit var orderType: String
+    private val decimalFormat = DecimalFormat("#.##")
 
-    private lateinit var sendAmount: String
-    private lateinit var receiveAmount: String
+    private var paymentMode: Int = 4
+    private var orderType: Int = 3
 
-    private lateinit var exchangeRate: String
-    private lateinit var commission: String
+    private var sendAmount: Double = 100.0
+    private var beneAmount: Double = 0.0
 
-    private lateinit var bankId: String
-    private lateinit var branchId: String
-    private lateinit var bankName: String
-    private lateinit var payingAgentId: String
+    private var rate: Double = 0.0
+    private var commission: Double = 0.0
 
-    private lateinit var benId: String
-    private lateinit var beneficiaryId: String
-    private lateinit var beneficiaryName: String
-    private lateinit var beneficiaryPhoneNumber: String
+    private var beneWalletId: Int = 0
+    private var beneBankId: Int = 0
+    private var beneBranchId: Int = 0
+    private var beneBankName: String? = null
+    private var beneAccountNo: String? = null
+    private var payingAgentId: Int = 0
 
-    private lateinit var reasonId: String
-    private lateinit var reasonName: String
+    private var benePersonId: Int = 0
+    private var beneId: Int = 0
+    private var beneAccountName: String? = null
+    private var beneMobile: String? = null
 
-    private lateinit var sourceOfIncomeId: String
-    private lateinit var sourceOfIncomeName: String
+    private var purposeOfTransferId: Int = 0
+    private var purposeOfTransferName: String? = null
 
-    private var rate = 0.0
+    private var sourceOfFundId: Int = 0
+    private var sourceOfFundName: String? = null
+
+    private var calculateRate = 0.0
 
     private lateinit var percentageUrl: String
 
@@ -106,43 +106,93 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             ViewModelProvider(this, calculationViewModelFactory)[CalculationViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
-        firstName = preferenceManager.loadData("firstName").toString()
-        lastName = preferenceManager.loadData("lastName").toString()
-        customerEmail = preferenceManager.loadData("email").toString()
-        customerMobile = preferenceManager.loadData("mobile").toString()
-        customerDateOfBirth = preferenceManager.loadData("dob").toString()
+        personId = preferenceManager.loadData("personId").toString().toInt()
+        customerId = preferenceManager.loadData("customerId").toString().toInt()
+        customerEmail = preferenceManager.loadData("customerEmail").toString()
+        customerMobile = preferenceManager.loadData("customerMobile").toString()
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        paymentType = arguments?.getString("paymentType").toString()
-        orderType = arguments?.getString("orderType").toString()
+        try {
+            paymentMode = arguments?.getString("paymentType").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            orderType = arguments?.getString("orderType").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            sendAmount = arguments?.getString("sendAmount").toString().toDouble()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            beneAmount = arguments?.getString("receiveAmount").toString().toDouble()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            rate = arguments?.getString("exchangeRate").toString().toDouble()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            commission = arguments?.getString("commission").toString().toDouble()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            beneBankId = arguments?.getString("bankId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            beneWalletId = arguments?.getString("walletId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            beneBranchId = arguments?.getString("branchId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            payingAgentId = arguments?.getString("payingAgentId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        beneBankName = arguments?.getString("bankName").toString()
+        beneAccountNo = arguments?.getString("bankName").toString()
+        try {
+            benePersonId = arguments?.getString("benId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            beneId = arguments?.getString("beneficiaryId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        beneAccountName = arguments?.getString("beneficiaryName").toString()
+        beneMobile = arguments?.getString("beneficiaryPhoneNumber").toString()
+        try {
+            purposeOfTransferId = arguments?.getString("reasonId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        purposeOfTransferName = arguments?.getString("reasonName").toString()
+        try {
+            sourceOfFundId = arguments?.getString("sourceOfIncomeId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        sourceOfFundName = arguments?.getString("sourceOfIncomeName").toString()
 
-        sendAmount = arguments?.getString("sendAmount").toString()
-        receiveAmount = arguments?.getString("receiveAmount").toString()
-
-        exchangeRate = arguments?.getString("exchangeRate").toString()
-        commission = arguments?.getString("commission").toString()
-
-        bankId = arguments?.getString("bankId").toString()
-        branchId = arguments?.getString("branchId").toString()
-        bankName = arguments?.getString("bankName").toString()
-        payingAgentId = arguments?.getString("payingAgentId").toString()
-
-        benId = arguments?.getString("benId").toString()
-        beneficiaryId = arguments?.getString("beneficiaryId").toString()
-        beneficiaryName = arguments?.getString("beneficiaryName").toString()
-        beneficiaryPhoneNumber = arguments?.getString("beneficiaryPhoneNumber").toString()
-
-        reasonId = arguments?.getString("reasonId").toString()
-        reasonName = arguments?.getString("reasonName").toString()
-
-        sourceOfIncomeId = arguments?.getString("sourceOfIncomeId").toString()
-        sourceOfIncomeName = arguments?.getString("sourceOfIncomeName").toString()
-
-        if (orderType != "null") {
-            if (orderType == "5") {
+        when (orderType) {
+            5 -> {
                 binding.bankAccount.isChecked = false
                 binding.instantCredit.isChecked = true
                 binding.cashPickup.isChecked = false
@@ -151,7 +201,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
                 binding.collectionPointWalletLayout.visibility = View.GONE
-            } else if (orderType == "2") {
+            }
+            2 -> {
                 binding.bankAccount.isChecked = false
                 binding.instantCredit.isChecked = false
                 binding.cashPickup.isChecked = true
@@ -161,7 +212,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
                 binding.collectionPointWalletLayout.visibility = View.GONE
                 binding.collectionPointWallet.text = null
-            } else if (orderType == "1") {
+            }
+            1 -> {
                 binding.bankAccount.isChecked = false
                 binding.instantCredit.isChecked = false
                 binding.cashPickup.isChecked = false
@@ -170,7 +222,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
                 binding.collectionPointWalletLayout.visibility = View.VISIBLE
-            } else if (orderType == "3") {
+            }
+            3 -> {
                 binding.bankAccount.isChecked = true
                 binding.instantCredit.isChecked = false
                 binding.cashPickup.isChecked = false
@@ -180,36 +233,22 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
                 binding.collectionPointWalletLayout.visibility = View.GONE
             }
-        } else {
-            orderType = "3"
-            binding.bankAccount.isChecked = true
-            binding.instantCredit.isChecked = false
-            binding.cashPickup.isChecked = false
-            binding.mobileWallet.isChecked = false
-
-            binding.collectionPointInstantCreditLayout.visibility = View.GONE
-            binding.collectionPointCashPickUpLayout.visibility = View.GONE
-            binding.collectionPointWalletLayout.visibility = View.GONE
         }
 
-        if (paymentType != "null") {
-            if (paymentType == "4") {
+        when (paymentMode) {
+            4 -> {
                 binding.cardPayment.isChecked = true
                 binding.bankPayment.isChecked = false
-            } else if (paymentType == "3") {
+            }
+            3 -> {
                 binding.cardPayment.isChecked = false
                 binding.bankPayment.isChecked = true
             }
-        } else {
-            paymentType = "4"
-            binding.cardPayment.isChecked = true
-            binding.bankPayment.isChecked = false
         }
-
 
         binding.collectionPointInstantCredit.setOnClickListener {
             payingAgentInstantCreditBottomSheet.setSelectedOrderType(
-                "5",
+                5,
                 binding.sendAmount.text.toString()
             )
             payingAgentInstantCreditBottomSheet.itemSelectedListener = this
@@ -221,7 +260,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         binding.collectionPointCashPickUp.setOnClickListener {
             payingAgentCashPickupBottomSheet.setSelectedOrderType(
-                "2",
+                2,
                 binding.sendAmount.text.toString()
             )
             payingAgentCashPickupBottomSheet.itemSelectedListener = this
@@ -233,7 +272,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         binding.collectionPointWallet.setOnClickListener {
             payingAgentWalletBottomSheet.setSelectedOrderType(
-                "1",
+                1,
                 binding.sendAmount.text.toString()
             )
             payingAgentWalletBottomSheet.itemSelectedListener = this
@@ -246,23 +285,19 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         binding.orderModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.bankAccount -> {
-                    orderType = "3"
-                    try {
-                        calculateRate(
-                            deviceId,
-                            personId.toInt(),
-                            bankId.toInt(),
-                            payingAgentId.toInt(),
-                            orderType.toInt(),
-                            paymentType.toInt(),
-                            4,
-                            1,
-                            0,
-                            binding.sendAmount.text.toString()
-                        )
-                    } catch (e: NumberFormatException) {
-                        e.message
-                    }
+                    orderType = 3
+                    calculateRate(
+                        deviceId,
+                        personId,
+                        beneBankId,
+                        payingAgentId,
+                        orderType,
+                        paymentMode,
+                        4,
+                        1,
+                        0,
+                        binding.sendAmount.text.toString()
+                    )
                     binding.bankAccount.isChecked = true
                     binding.instantCredit.isChecked = false
                     binding.cashPickup.isChecked = false
@@ -273,7 +308,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     binding.collectionPointWalletLayout.visibility = View.GONE
                 }
                 R.id.instantCredit -> {
-                    orderType = "5"
+                    orderType = 5
 
                     binding.bankAccount.isChecked = false
                     binding.instantCredit.isChecked = true
@@ -285,7 +320,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     binding.collectionPointWalletLayout.visibility = View.GONE
                 }
                 R.id.cashPickup -> {
-                    orderType = "2"
+                    orderType = 2
 
                     binding.bankAccount.isChecked = false
                     binding.instantCredit.isChecked = false
@@ -297,7 +332,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     binding.collectionPointWalletLayout.visibility = View.GONE
                 }
                 R.id.mobileWallet -> {
-                    orderType = "1"
+                    orderType = 1
 
                     binding.bankAccount.isChecked = false
                     binding.instantCredit.isChecked = false
@@ -314,13 +349,13 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         binding.paymentModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.cardPayment -> {
-                    paymentType = "4"
+                    paymentMode = 4
 
                     binding.cardPayment.isChecked = true
                     binding.bankPayment.isChecked = false
                 }
                 R.id.bankPayment -> {
-                    paymentType = "3"
+                    paymentMode = 3
 
                     binding.cardPayment.isChecked = false
                     binding.bankPayment.isChecked = true
@@ -328,12 +363,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             }
         }
 
-        if (sendAmount != "null") {
-            binding.sendAmount.setText(sendAmount)
-        } else {
-            binding.sendAmount.setText("100")
-        }
-
+        binding.sendAmount.setText(sendAmount.toString())
         updateValuesGBP()
         binding.sendAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
@@ -351,7 +381,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 updateValuesGBP()
             }
         })
-
         binding.receiveAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
@@ -383,34 +412,35 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         binding.btnNext.setOnClickListener {
             val sendAmountValue = binding.sendAmount.text.toString()
-            val sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "")
+            sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
             val receiveAmountValue = binding.receiveAmount.text.toString()
-            val receiveAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "")
+            beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
             val bundle = Bundle().apply {
-                putString("paymentType", paymentType)
-                putString("orderType", orderType)
-                putString("sendAmount", sendAmount)
-                putString("receiveAmount", receiveAmount)
-                putString("exchangeRate", exchangeRate)
-                putString("commission", commission)
+                putString("paymentType", paymentMode.toString())
+                putString("orderType", orderType.toString())
+                putString("sendAmount", sendAmount.toString())
+                putString("receiveAmount", beneAmount.toString())
+                putString("exchangeRate", rate.toString())
+                putString("commission", commission.toString())
 
-                putString("bankId", bankId)
-                putString("branchId", branchId)
-                putString("bankName", bankName)
-                putString("payingAgentId", payingAgentId)
+                putString("bankId", beneBankId.toString())
+                putString("walletId", beneWalletId.toString())
+                putString("branchId", beneBranchId.toString())
+                putString("bankName", beneBankName)
+                putString("beneAccountNo", beneAccountNo)
+                putString("payingAgentId", payingAgentId.toString())
 
-                putString("benId", benId)
-                putString("beneficiaryId", beneficiaryId)
-                putString("beneficiaryName", beneficiaryName)
-                putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
+                putString("benId", benePersonId.toString())
+                putString("beneficiaryId", beneId.toString())
+                putString("beneficiaryName", beneAccountName)
+                putString("beneficiaryPhoneNumber", beneMobile)
 
-                putString("reasonId", reasonId)
-                putString("reasonName", reasonName)
-
-                putString("sourceOfIncomeId", sourceOfIncomeId)
-                putString("sourceOfIncomeName", sourceOfIncomeName)
+                putString("reasonId", purposeOfTransferId.toString())
+                putString("reasonName", purposeOfTransferName)
+                putString("sourceOfIncomeId", sourceOfFundId.toString())
+                putString("sourceOfIncomeName", sourceOfFundName)
             }
             findNavController().navigate(
                 R.id.action_nav_main_to_nav_review,
@@ -418,48 +448,27 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             )
         }
 
-        if (bankId == "null" || payingAgentId == "null") {
-            calculateRate(
-                deviceId,
-                personId.toInt(),
-                0,
-                0,
-                orderType.toInt(),
-                paymentType.toInt(),
-                4,
-                1,
-                0,
-                binding.sendAmount.text.toString()
-            )
-        } else {
-            calculateRate(
-                deviceId,
-                personId.toInt(),
-                bankId.toInt(),
-                payingAgentId.toInt(),
-                orderType.toInt(),
-                paymentType.toInt(),
-                4,
-                1,
-                0,
-                binding.sendAmount.text.toString()
-            )
-        }
+        calculateRate(
+            deviceId,
+            personId,
+            beneBankId,
+            payingAgentId,
+            orderType,
+            paymentMode,
+            4,
+            1,
+            0,
+            binding.sendAmount.text.toString()
+        )
 
-        if (bankId != "null" || payingAgentId != "null") {
-            try {
-                val payingAgentItem = PayingAgentItem(
-                    deviceId = deviceId,
-                    fromCountryId = 4,
-                    toCountryId = 1,
-                    orderTypeId = orderType.toInt(),
-                    amount = sendAmount.toInt()
-                )
-                calculationViewModel.payingAgent(payingAgentItem)
-            } catch (e: NumberFormatException) {
-                e.localizedMessage
-            }
-        }
+        val payingAgentItem = PayingAgentItem(
+            deviceId = deviceId,
+            fromCountryId = 4,
+            toCountryId = 1,
+            orderTypeId = orderType,
+            amount = sendAmount.toInt()
+        )
+        calculationViewModel.payingAgent(payingAgentItem)
 
         observeExtraPercentageResult()
         observeCalculateRateResult()
@@ -490,10 +499,10 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             try {
                 if (result!!.data != null) {
                     for (data in result.data!!) {
-                        commission = data!!.commission!!.toDouble().toString()
-                        rate = data!!.rate!!.toDouble()
-                        exchangeRate = data!!.rate!!.toDouble().toString()
-                        binding.exchangeRate.text = "BDT $exchangeRate"
+                        commission = data!!.commission.toString().toDouble()
+                        calculateRate = data.rate!!.toDouble()
+                        rate = data.rate!!.toDouble().toString().toDouble()
+                        binding.exchangeRate.text = "BDT $rate"
                         updateValuesGBP()
                     }
                 }
@@ -505,14 +514,18 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
     private fun observePayingAgentResult() {
         calculationViewModel.payingAgentResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (item in result.data!!) {
-                    if (item!!.bankId == bankId.toInt() && item.payingAgentId == payingAgentId.toInt()) {
-                        binding.collectionPointInstantCredit.setText(item.name)
-                        binding.collectionPointCashPickUp.setText(item.name)
-                        binding.collectionPointWallet.setText(item.name)
+            try {
+                if (result!!.data != null) {
+                    for (item in result.data!!) {
+                        if (item!!.bankId == beneBankId && item.walletId == beneWalletId && item.payingAgentId == payingAgentId) {
+                            binding.collectionPointInstantCredit.setText(item.name)
+                            binding.collectionPointCashPickUp.setText(item.name)
+                            binding.collectionPointWallet.setText(item.name)
+                        }
                     }
                 }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
@@ -520,7 +533,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     fun updateValuesBDT() {
         val bdtValue = binding.receiveAmount.text.toString().toDoubleOrNull()
         if (bdtValue != null) {
-            val gbpValue = bdtValue / rate
+            val gbpValue = bdtValue / calculateRate
             val formattedGBP = decimalFormat.format(gbpValue)
             binding.sendAmount.setText(formattedGBP.toString())
         } else {
@@ -531,7 +544,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     fun updateValuesGBP() {
         val gbpValue = binding.sendAmount.text.toString().toDoubleOrNull()
         if (gbpValue != null) {
-            val bdtValue = gbpValue * rate
+            val bdtValue = gbpValue * calculateRate
             val formattedBDT = decimalFormat.format(bdtValue)
             binding.receiveAmount.setText(formattedBDT.toString())
         } else {
@@ -541,56 +554,57 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
     override fun onPayingAgentInstantCreditItemSelected(selectedItem: PayingAgentData) {
         binding.collectionPointInstantCredit.setText(selectedItem.name)
-        payingAgentId = selectedItem.payingAgentId!!.toString()
-        bankId = selectedItem.bankId!!.toString()
+        payingAgentId = selectedItem.payingAgentId!!.toString().toInt()
+        beneBankId = selectedItem.bankId!!.toString().toInt()
+        beneWalletId = selectedItem.walletId!!.toString().toInt()
 
         calculateRate(
             deviceId,
-            personId.toInt(),
-            bankId.toInt(),
-            payingAgentId.toInt(),
-            orderType.toInt(),
-            paymentType.toInt(),
+            personId,
+            beneBankId,
+            payingAgentId,
+            orderType,
+            paymentMode,
             4,
             1,
             0,
             binding.sendAmount.text.toString()
         )
-
     }
 
     override fun onPayingAgentCashPickupItemSelected(selectedItem: PayingAgentData) {
         binding.collectionPointCashPickUp.setText(selectedItem.name)
-        payingAgentId = selectedItem.payingAgentId!!.toString()
-        bankId = selectedItem.bankId!!.toString()
+        payingAgentId = selectedItem.payingAgentId!!.toString().toInt()
+        beneBankId = selectedItem.bankId!!.toString().toInt()
+        beneWalletId = selectedItem.walletId!!.toString().toInt()
 
         calculateRate(
             deviceId,
-            personId.toInt(),
-            bankId.toInt(),
-            payingAgentId.toInt(),
-            orderType.toInt(),
-            paymentType.toInt(),
+            personId,
+            beneBankId,
+            payingAgentId,
+            orderType,
+            paymentMode,
             4,
             1,
             0,
             binding.sendAmount.text.toString()
         )
-
     }
 
     override fun onPayingAgentWalletItemSelected(selectedItem: PayingAgentData) {
         binding.collectionPointWallet.setText(selectedItem.name)
-        payingAgentId = selectedItem.payingAgentId!!.toString()
-        bankId = selectedItem.bankId!!.toString()
+        payingAgentId = selectedItem.payingAgentId!!.toString().toInt()
+        beneBankId = selectedItem.bankId!!.toString().toInt()
+        beneWalletId = selectedItem.walletId!!.toString().toInt()
 
         calculateRate(
             deviceId,
-            personId.toInt(),
-            bankId.toInt(),
-            payingAgentId.toInt(),
-            orderType.toInt(),
-            paymentType.toInt(),
+            personId,
+            beneBankId,
+            payingAgentId,
+            orderType,
+            paymentMode,
             4,
             1,
             0,

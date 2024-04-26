@@ -41,9 +41,9 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var personId: String
+    private var personId: Int = 0
 
-    private lateinit var message: String
+    private var message: String? = null
 
     private var phoneNumber: String? = null
 
@@ -83,7 +83,11 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
             ViewModelProvider(this, profileViewModelFactory)[ProfileViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
@@ -106,47 +110,41 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    fun setPhoneNumber(phone: String) {
-        phoneNumber = phone
+    fun setPhoneNumber(phoneNumber: String) {
+        this.phoneNumber = phoneNumber
     }
 
     private fun observePhoneVerifyResult() {
         profileViewModel.phoneVerifyResult.observe(this) { result ->
-            if (result!! != null) {
-
+            try {
                 message = result!!.message.toString()
-
-                if (::personId.isInitialized && personId != "null") {
-                    binding.verifyLayout.visibility = View.GONE
-                    binding.validationLayout.visibility = View.VISIBLE
-
-                    binding.otpVerifyMessage.text = message
-
-                    binding.btnOtpValidation.setOnClickListener { otpValidationForm() }
-
-                    startCountDown()
-
-                } else {
-                    binding.verifyLayout.visibility = View.VISIBLE
-                    binding.validationLayout.visibility = View.GONE
-                }
-
+                binding.verifyLayout.visibility = View.GONE
+                binding.validationLayout.visibility = View.VISIBLE
+                binding.otpVerifyMessage.text = message
+                binding.btnOtpValidation.setOnClickListener { otpValidationForm() }
+                startCountDown()
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observePhoneOtpVerifyResult() {
         profileViewModel.phoneOtpVerifyResult.observe(this) { result ->
-            if (result!!.code == "000") {
-                dismiss()
-                binding.verifyLayout.visibility = View.GONE
-                binding.validationLayout.visibility = View.GONE
-            } else {
-                binding.verifyLayout.visibility = View.GONE
-                binding.validationLayout.visibility = View.VISIBLE
+            try {
+                if (result!!.code == "000") {
+                    dismiss()
+                    binding.verifyLayout.visibility = View.GONE
+                    binding.validationLayout.visibility = View.GONE
+                } else {
+                    binding.verifyLayout.visibility = View.GONE
+                    binding.validationLayout.visibility = View.VISIBLE
 
-                binding.otpVerifyMessage.text = result!!.data.toString()
-                binding.otpVerifyMessage.setTextColor(Color.RED)
+                    binding.otpVerifyMessage.text = result!!.data.toString()
+                    binding.otpVerifyMessage.setTextColor(Color.RED)
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -179,7 +177,7 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::countDownTimer.isInitialized){
+        if (::countDownTimer.isInitialized) {
             countDownTimer.cancel()
         }
     }
@@ -217,7 +215,7 @@ class TransactionOtpVerifyBottomSheet : BottomSheetDialogFragment() {
         val phoneOtpVerifyItem = PhoneOtpVerifyItem(
             isVerifiyEmail = false,
             otp = otp,
-            personId = personId.toInt()
+            personId = personId
         )
         profileViewModel.phoneOtpVerify(phoneOtpVerifyItem)
     }

@@ -7,25 +7,18 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
-import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.AddressAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.profile.postCode.PostCodeData
-import com.bsel.remitngo.data.model.profile.postCode.PostCodeItem
-import com.bsel.remitngo.databinding.AddressLayoutBinding
 import com.bsel.remitngo.data.interfaceses.OnAddressItemSelectedListener
 import com.bsel.remitngo.data.model.profile.city.CityData
 import com.bsel.remitngo.data.model.profile.city.CityItem
 import com.bsel.remitngo.data.model.profile.county.CountyData
 import com.bsel.remitngo.data.model.profile.county.CountyItem
+import com.bsel.remitngo.data.model.profile.postCode.PostCodeData
 import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionData
 import com.bsel.remitngo.data.model.profile.uk_division.UkDivisionItem
 import com.bsel.remitngo.data.model.profile.updateProfile.UpdateProfileItem
@@ -57,16 +50,16 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
-    private lateinit var personId: String
+    private var personId: Int = 0
 
-    private lateinit var ukDivisionId: String
-    private lateinit var ukDivision: String
+    private var ukDivisionId: Int = 0
+    private var ukDivision: String? = null
 
-    private lateinit var countyId: String
-    private lateinit var county: String
+    private var countyId: Int = 0
+    private var county: String? = null
 
-    private lateinit var cityId: String
-    private lateinit var city: String
+    private var cityId: Int = 0
+    private var city: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -111,7 +104,11 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
         cityFocusListener()
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
@@ -119,23 +116,19 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
         binding.btnSearch.setOnClickListener { postCodeForm() }
 
         binding.division.setOnClickListener {
-            ukDivisionBottomSheet.setSelectedUkDivision("4")
+            ukDivisionBottomSheet.setCountry(4)
             ukDivisionBottomSheet.itemSelectedListener = this
             ukDivisionBottomSheet.show(childFragmentManager, ukDivisionBottomSheet.tag)
         }
         binding.county.setOnClickListener {
-            if (::ukDivisionId.isInitialized) {
-                countyBottomSheet.setSelectedCounty(ukDivisionId)
-                countyBottomSheet.itemSelectedListener = this
-                countyBottomSheet.show(childFragmentManager, countyBottomSheet.tag)
-            }
+            countyBottomSheet.setSelectedCounty(ukDivisionId)
+            countyBottomSheet.itemSelectedListener = this
+            countyBottomSheet.show(childFragmentManager, countyBottomSheet.tag)
         }
         binding.city.setOnClickListener {
-            if (::countyId.isInitialized) {
-                cityBottomSheet.setSelectedCity(countyId)
-                cityBottomSheet.itemSelectedListener = this
-                cityBottomSheet.show(childFragmentManager, cityBottomSheet.tag)
-            }
+            cityBottomSheet.setSelectedCity(countyId)
+            cityBottomSheet.itemSelectedListener = this
+            cityBottomSheet.show(childFragmentManager, cityBottomSheet.tag)
         }
 
         binding.btnSave.setOnClickListener { addressForm() }
@@ -147,38 +140,26 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
             param2 = 0
         )
         profileViewModel.ukDivision(ukDivisionItem)
+
+        val countyItem = CountyItem(
+            deviceId = deviceId,
+            dropdownId = 3,
+            param1 = ukDivisionId,
+            param2 = 0
+        )
+        profileViewModel.county(countyItem)
+
+        val cityItem = CityItem(
+            deviceId = deviceId,
+            dropdownId = 4,
+            param1 = countyId,
+            param2 = 0
+        )
+        profileViewModel.city(cityItem)
+
         observeUkDivisionResult()
-
-        if (::ukDivisionId.isInitialized) {
-            try {
-                val countyItem = CountyItem(
-                    deviceId = deviceId,
-                    dropdownId = 3,
-                    param1 = ukDivisionId.toInt(),
-                    param2 = 0
-                )
-                profileViewModel.county(countyItem)
-                observeCountyResult()
-            } catch (e: NumberFormatException) {
-                e.localizedMessage
-            }
-        }
-
-        if (::countyId.isInitialized) {
-            try {
-                val cityItem = CityItem(
-                    deviceId = deviceId,
-                    dropdownId = 4,
-                    param1 = countyId.toInt(),
-                    param2 = 0
-                )
-                profileViewModel.city(cityItem)
-                observeCityResult()
-            } catch (e: NumberFormatException) {
-                e.localizedMessage
-            }
-        }
-
+        observeCountyResult()
+        observeCityResult()
         observeUpdateProfileResult()
 
         return bottomSheet
@@ -186,49 +167,63 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
 
     private fun observeUkDivisionResult() {
         profileViewModel.ukDivisionResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (ukDivisionData in result.data!!) {
-                    if (::ukDivisionId.isInitialized && ukDivisionId == ukDivisionData!!.id.toString()) {
-                        ukDivision = ukDivisionData!!.name.toString()
-                        binding.division.setText(ukDivision)
+            try {
+                if (result!!.data != null) {
+                    for (ukDivisionData in result.data!!) {
+                        if (ukDivisionId == ukDivisionData!!.id) {
+                            ukDivision = ukDivisionData.name
+                            binding.division.setText(ukDivision)
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeCountyResult() {
         profileViewModel.countyResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (countyData in result.data!!) {
-                    if (::countyId.isInitialized && countyId == countyData!!.id.toString()) {
-                        county = countyData!!.name.toString()
-                        binding.county.setText(county)
+            try {
+                if (result!!.data != null) {
+                    for (countyData in result.data!!) {
+                        if (countyId == countyData!!.id) {
+                            county = countyData.name
+                            binding.county.setText(county)
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeCityResult() {
         profileViewModel.cityResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (cityData in result.data!!) {
-                    if (::cityId.isInitialized && cityId == cityData!!.id.toString()) {
-                        city = cityData!!.name.toString()
-                        binding.city.setText(city)
+            try {
+                if (result!!.data != null) {
+                    for (cityData in result.data!!) {
+                        if (cityId == cityData!!.id) {
+                            city = cityData!!.name
+                            binding.city.setText(city)
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeUpdateProfileResult() {
         profileViewModel.updateProfileResult.observe(this) { result ->
-            if (result != null) {
-                if (result.code=="000"){
+            try {
+                if (result!!.code == "000") {
                     dismiss()
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -263,7 +258,7 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
 
         val updateProfileItem = UpdateProfileItem(
             deviceId = deviceId,
-            personId = personId.toInt(),
+            personId = personId,
             updateType = 2,
             firstname = "",
             lastname = "",
@@ -275,9 +270,9 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
             occupationTypeId = 0,
             occupationCode = 0,
             postcode = postCode,
-            divisionId = ukDivisionId.toInt(),
-            districtId = countyId.toInt(),
-            thanaId = cityId.toInt(),
+            divisionId = ukDivisionId,
+            districtId = countyId,
+            thanaId = cityId,
             buildingno = "",
             housename = "",
             address = address,
@@ -407,17 +402,17 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
 
     override fun onUkDivisionItemSelected(selectedItem: UkDivisionData) {
         binding.division.setText(selectedItem.name)
-        ukDivisionId = selectedItem.id.toString()
+        ukDivisionId = selectedItem.id.toString().toInt()
     }
 
     override fun onCountyItemSelected(selectedItem: CountyData) {
         binding.county.setText(selectedItem.name)
-        countyId = selectedItem.id.toString()
+        countyId = selectedItem.id.toString().toInt()
     }
 
     override fun onCityItemSelected(selectedItem: CityData) {
         binding.city.setText(selectedItem.name)
-        cityId = selectedItem.id.toString()
+        cityId = selectedItem.id.toString().toInt()
     }
 
     private fun getDeviceId(context: Context): String {
