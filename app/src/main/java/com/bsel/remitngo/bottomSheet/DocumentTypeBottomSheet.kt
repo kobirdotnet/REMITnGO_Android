@@ -98,8 +98,9 @@ class DocumentTypeBottomSheet : BottomSheetDialogFragment() {
 
         val documentTypeItem = DocumentTypeItem(
             deviceId = deviceId,
-            params1 = documentCategoryId,
-            params2 = 0
+            dropdownId=308,
+            param1 = documentCategoryId,
+            param2 = 0
         )
         documentViewModel.documentType(documentTypeItem)
         observeDocumentTypeResult()

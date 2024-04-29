@@ -377,6 +377,17 @@
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
                     <TextView
+                        android:id="@+id/receiverBankName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:backgroundTint="@color/white"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center_vertical"
+                        android:inputType="none"
+                        android:textColor="@color/black" />
+                    <TextView
                         android:id="@+id/receiverAccount"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

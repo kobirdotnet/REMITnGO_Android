@@ -9,12 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
 import com.bsel.remitngo.databinding.FragmentPaymentBankBinding
 import com.bsel.remitngo.presentation.di.Injector
@@ -90,6 +90,7 @@ class PaymentBankFragment : Fragment() {
 
     private fun observeBankTransactionMessageResult() {
         paymentViewModel.bankTransactionMessageResult.observe(this) { result ->
+            Log.i("info","result: "+result)
             if (result!!.data != null) {
                 for (bankTransactionMessage in result.data!!) {
                     binding.accountName.text = bankTransactionMessage!!.accountName.toString()
@@ -163,6 +164,13 @@ class PaymentBankFragment : Fragment() {
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_nav_complete_bank_transaction_to_nav_main)
+        }
     }
 
 }

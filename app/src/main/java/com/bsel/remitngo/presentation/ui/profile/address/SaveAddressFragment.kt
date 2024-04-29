@@ -49,19 +49,19 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
-    private lateinit var personId: String
+    private var personId: Int=0
 
-    private lateinit var postCode: String
-    private lateinit var address: String
+    private var postCode: String? = null
+    private var address: String? = null
 
-    private lateinit var ukDivisionId: String
-    private lateinit var ukDivision: String
+    private var ukDivisionId: Int=0
+    private var ukDivision: String? = null
 
-    private lateinit var countyId: String
-    private lateinit var county: String
+    private var countyId: Int=0
+    private var county: String? = null
 
-    private lateinit var cityId: String
-    private lateinit var city: String
+    private var cityId: Int=0
+    private var city: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -87,41 +87,60 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         cityFocusListener()
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        postCode = arguments?.getString("postCode").toString()
-        binding.postCode.setText(postCode)
+        try {
+            postCode = arguments?.getString("postCode").toString()
+            binding.postCode.setText(postCode)
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
+        try {
+            address = arguments?.getString("address").toString()
+            binding.address.setText(address)
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
 
-        address = arguments?.getString("address").toString()
-        binding.address.setText(address)
-
-        ukDivisionId = arguments?.getString("ukDivisionId").toString()
-        countyId = arguments?.getString("countyId").toString()
-        cityId = arguments?.getString("cityId").toString()
+        try {
+            ukDivisionId = arguments?.getString("ukDivisionId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
+        try {
+            countyId = arguments?.getString("countyId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
+        try {
+            cityId = arguments?.getString("cityId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         binding.btnSearch.setOnClickListener { postCodeForm() }
 
         binding.division.setOnClickListener {
-            ukDivisionBottomSheet.setSelectedUkDivision("4")
+            ukDivisionBottomSheet.setCountry(4)
             ukDivisionBottomSheet.itemSelectedListener = this
             ukDivisionBottomSheet.show(childFragmentManager, ukDivisionBottomSheet.tag)
         }
         binding.county.setOnClickListener {
-            if (::ukDivisionId.isInitialized) {
-                countyBottomSheet.setSelectedCounty(ukDivisionId)
-                countyBottomSheet.itemSelectedListener = this
-                countyBottomSheet.show(childFragmentManager, countyBottomSheet.tag)
-            }
+            countyBottomSheet.setSelectedCounty(ukDivisionId)
+            countyBottomSheet.itemSelectedListener = this
+            countyBottomSheet.show(childFragmentManager, countyBottomSheet.tag)
         }
         binding.city.setOnClickListener {
-            if (::countyId.isInitialized) {
-                cityBottomSheet.setSelectedCity(countyId)
-                cityBottomSheet.itemSelectedListener = this
-                cityBottomSheet.show(childFragmentManager, cityBottomSheet.tag)
-            }
+            cityBottomSheet.setSelectedCity(countyId)
+            cityBottomSheet.itemSelectedListener = this
+            cityBottomSheet.show(childFragmentManager, cityBottomSheet.tag)
         }
 
         binding.btnSave.setOnClickListener { addressForm() }
@@ -135,27 +154,23 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         profileViewModel.ukDivision(ukDivisionItem)
         observeUkDivisionResult()
 
-        if (::ukDivisionId.isInitialized) {
-            val countyItem = CountyItem(
-                deviceId = deviceId,
-                dropdownId = 3,
-                param1 = ukDivisionId!!.toInt(),
-                param2 = 0
-            )
-            profileViewModel.county(countyItem)
-            observeCountyResult()
-        }
+        val countyItem = CountyItem(
+            deviceId = deviceId,
+            dropdownId = 3,
+            param1 = ukDivisionId!!.toInt(),
+            param2 = 0
+        )
+        profileViewModel.county(countyItem)
+        observeCountyResult()
 
-        if (::countyId.isInitialized) {
-            val cityItem = CityItem(
-                deviceId = deviceId,
-                dropdownId = 4,
-                param1 = countyId!!.toInt(),
-                param2 = 0
-            )
-            profileViewModel.city(cityItem)
-            observeCityResult()
-        }
+        val cityItem = CityItem(
+            deviceId = deviceId,
+            dropdownId = 4,
+            param1 = countyId!!.toInt(),
+            param2 = 0
+        )
+        profileViewModel.city(cityItem)
+        observeCityResult()
 
         observeUpdateProfileResult()
 
@@ -163,49 +178,63 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
 
     private fun observeUkDivisionResult() {
         profileViewModel.ukDivisionResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (ukDivisionData in result.data!!) {
-                    if (::ukDivisionId.isInitialized && ukDivisionId == ukDivisionData!!.id.toString()) {
-                        ukDivision = ukDivisionData!!.name.toString()
-                        binding.division.setText(ukDivision)
+            try {
+                if (result!!.data != null) {
+                    for (ukDivisionData in result.data!!) {
+                        if (ukDivisionId == ukDivisionData!!.id!!) {
+                            ukDivision = ukDivisionData!!.name.toString()
+                            binding.division.setText(ukDivision)
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeCountyResult() {
         profileViewModel.countyResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (countyData in result.data!!) {
-                    if (::countyId.isInitialized && countyId == countyData!!.id.toString()) {
-                        county = countyData!!.name.toString()
-                        binding.county.setText(county)
+            try {
+                if (result!!.data != null) {
+                    for (countyData in result.data!!) {
+                        if (countyId == countyData!!.id!!) {
+                            county = countyData!!.name.toString()
+                            binding.county.setText(county)
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeCityResult() {
         profileViewModel.cityResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (cityData in result.data!!) {
-                    if (::cityId.isInitialized && cityId == cityData!!.id.toString()) {
-                        city = cityData!!.name.toString()
-                        binding.city.setText(city)
+            try {
+                if (result!!.data != null) {
+                    for (cityData in result.data!!) {
+                        if (cityId == cityData!!.id!!) {
+                            city = cityData!!.name.toString()
+                            binding.city.setText(city)
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeUpdateProfileResult() {
         profileViewModel.updateProfileResult.observe(this) { result ->
-            if (result != null) {
+            try {
                 findNavController().navigate(
                     R.id.action_nav_save_address_to_nav_my_profile
                 )
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -240,7 +269,7 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
 
         val updateProfileItem = UpdateProfileItem(
             deviceId = deviceId,
-            personId = personId.toInt(),
+            personId = personId,
             updateType = 2,
             firstname = "",
             lastname = "",
@@ -252,9 +281,9 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
             occupationTypeId = 0,
             occupationCode = 0,
             postcode = postCode,
-            divisionId = ukDivisionId.toInt(),
-            districtId = countyId.toInt(),
-            thanaId = cityId.toInt(),
+            divisionId = ukDivisionId,
+            districtId = countyId,
+            thanaId = cityId,
             buildingno = "",
             housename = "",
             address = address,
@@ -384,17 +413,17 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
 
     override fun onUkDivisionItemSelected(selectedItem: UkDivisionData) {
         binding.division.setText(selectedItem.name)
-        ukDivisionId = selectedItem.id.toString()
+        ukDivisionId = selectedItem.id!!
     }
 
     override fun onCountyItemSelected(selectedItem: CountyData) {
         binding.county.setText(selectedItem.name)
-        countyId = selectedItem.id.toString()
+        countyId = selectedItem.id!!
     }
 
     override fun onCityItemSelected(selectedItem: CityData) {
         binding.city.setText(selectedItem.name)
-        cityId = selectedItem.id.toString()
+        cityId = selectedItem.id!!
     }
 
     private fun getDeviceId(context: Context): String {

@@ -50,10 +50,10 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var personId: String
+    private var personId: Int = 0
 
-    private lateinit var documentCategoryId: String
-    private lateinit var documentTypeId: String
+    private var documentCategoryId: Int = 0
+    private var documentTypeId: Int = 0
 
     private var selectedFile: Uri? = null
 
@@ -74,17 +74,17 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
             ViewModelProvider(this, documentViewModelFactory)[DocumentViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
         categoryFocusListener()
         documentFocusListener()
-//        documentNoFocusListener()
-//        issueByFocusListener()
-//        issueDateFocusListener()
-//        expireDateFocusListener()
 
         binding.documentCategory.setOnClickListener {
             documentCategoryBottomSheet.itemSelectedListener = this
@@ -92,11 +92,9 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         }
 
         binding.documentType.setOnClickListener {
-            if (::documentCategoryId.isInitialized) {
-                documentTypeBottomSheet.setSelectedDocumentType(documentCategoryId)
-                documentTypeBottomSheet.itemSelectedListener = this
-                documentTypeBottomSheet.show(childFragmentManager, documentTypeBottomSheet.tag)
-            }
+            documentTypeBottomSheet.setDocumentCategoryId(documentCategoryId)
+            documentTypeBottomSheet.itemSelectedListener = this
+            documentTypeBottomSheet.show(childFragmentManager, documentTypeBottomSheet.tag)
         }
 
         binding.issueDate.setOnClickListener {
@@ -161,10 +159,12 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
 
     private fun observeUploadDocumentResult() {
         documentViewModel.uploadDocumentResult.observe(this) { result ->
-            if (result != null) {
+            try {
                 findNavController().navigate(
                     R.id.action_nav_upload_documents_to_nav_documents
                 )
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -172,17 +172,9 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
     private fun documentFrom() {
         binding.documentCategoryContainer.helperText = validCategory()
         binding.documentTypeContainer.helperText = validDocument()
-        binding.documentNoContainer.helperText = validDocumentNo()
-        binding.issueByContainer.helperText = validIssueBy()
-        binding.issueDateContainer.helperText = validIssueDate()
-        binding.expireDateContainer.helperText = validExpireDate()
 
         val validCategory = binding.documentCategoryContainer.helperText == null
         val validDocument = binding.documentTypeContainer.helperText == null
-        val validDocumentNo = binding.documentNoContainer.helperText == null
-        val validIssueBy = binding.issueByContainer.helperText == null
-        val validIssueDate = binding.issueDateContainer.helperText == null
-        val validExpireDate = binding.expireDateContainer.helperText == null
 
         if (validCategory && validDocument) {
             submitDocumentFrom()
@@ -205,10 +197,10 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                 val filePart = MultipartBody.Part.createFormData("file", file.name, fileRequestBody)
                 documentViewModel.uploadDocument(
                     deviceId.toRequestBody(),
-                    personId.toRequestBody(),
-                    documentCategoryId.toRequestBody(),
+                    personId.toString().toRequestBody(),
+                    documentCategoryId.toString().toRequestBody(),
                     "0".toRequestBody(),
-                    documentTypeId.toRequestBody(),
+                    documentTypeId.toString().toRequestBody(),
                     "0".toRequestBody(),
                     "xyz".toRequestBody(),
                     "2024-01-01".toRequestBody(),
@@ -217,8 +209,6 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                     filePart
                 )
             }
-        } else {
-            Snackbar.make(view!!, "Select your file.", Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -255,78 +245,14 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         return null
     }
 
-    private fun documentNoFocusListener() {
-        binding.documentNo.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.documentNoContainer.helperText = validDocumentNo()
-            }
-        }
-    }
-
-    private fun validDocumentNo(): String? {
-        val documentNo = binding.documentNo.text.toString()
-        if (documentNo.isEmpty()) {
-            return "enter document no"
-        }
-        return null
-    }
-
-    private fun issueByFocusListener() {
-        binding.issueBy.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.issueByContainer.helperText = validIssueBy()
-            }
-        }
-    }
-
-    private fun validIssueBy(): String? {
-        val issueBy = binding.issueBy.text.toString()
-        if (issueBy.isEmpty()) {
-            return "enter issue by"
-        }
-        return null
-    }
-
-    private fun issueDateFocusListener() {
-        binding.issueDate.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.issueDateContainer.helperText = validIssueDate()
-            }
-        }
-    }
-
-    private fun validIssueDate(): String? {
-        val issueDate = binding.issueDate.text.toString()
-        if (issueDate.isEmpty()) {
-            return "enter issue date"
-        }
-        return null
-    }
-
-    private fun expireDateFocusListener() {
-        binding.expireDate.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.expireDateContainer.helperText = validExpireDate()
-            }
-        }
-    }
-
-    private fun validExpireDate(): String? {
-        val expireDate = binding.expireDate.text.toString()
-        if (expireDate.isEmpty()) {
-            return "enter expire date"
-        }
-        return null
-    }
-
     override fun onDocumentCategoryItemSelected(selectedItem: DocumentCategoryData) {
         binding.documentCategory.setText(selectedItem.name)
-        documentCategoryId = selectedItem.id.toString()
+        documentCategoryId = selectedItem.id!!
     }
 
     override fun onDocumentTypeItemSelected(selectedItem: DocumentTypeData) {
         binding.documentType.setText(selectedItem.name)
-        documentTypeId = selectedItem.id.toString()
+        documentTypeId = selectedItem.id!!
     }
 
     override fun onDocumentFileItemSelected(selectedItem: Uri?) {

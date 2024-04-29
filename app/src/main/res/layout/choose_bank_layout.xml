@@ -110,7 +110,7 @@
                         android:id="@+id/bankRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:listitem="@layout/item_beneficiary" />
+                        tools:listitem="@layout/item_get_bank" />
                 </LinearLayout>
 
             </LinearLayout>

@@ -122,7 +122,7 @@ class DivisionBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun divisionItem(selectedItem: DivisionData) {
-        itemSelectedListener?.onDivisionItemSelected(selectedItem)
+//        itemSelectedListener?.onDivisionItemSelected(selectedItem)
         dismiss()
     }
 

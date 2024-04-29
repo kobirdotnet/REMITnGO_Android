@@ -79,7 +79,10 @@ class SourceOfFundBottomSheet : BottomSheetDialogFragment() {
 
         deviceId = getDeviceId(requireContext())
         val sourceOfIncomeItem = SourceOfIncomeItem(
-            deviceId = deviceId
+            deviceId = deviceId,
+            dropdownId = 307,
+            param1 = 0,
+            param2 = 0
         )
         profileViewModel.sourceOfIncome(sourceOfIncomeItem)
         observeSourceOfIncomeResult()

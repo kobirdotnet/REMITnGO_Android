@@ -11,6 +11,7 @@ interface BankSubComponent {
 
     fun inject(chooseBankFragment: ChooseBankFragment)
     fun inject(chooseBankBottomSheet: ChooseBankBottomSheet)
+    fun inject(saveBankAndWalletBottomSheet: SaveBankAndWalletBottomSheet)
     fun inject(bankFragment: BankFragment)
 
     fun inject(bankBottomSheet: BankBottomSheet)

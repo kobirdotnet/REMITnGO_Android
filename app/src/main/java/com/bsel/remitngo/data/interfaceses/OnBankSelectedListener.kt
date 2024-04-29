@@ -7,7 +7,5 @@ import com.bsel.remitngo.data.model.division.DivisionData
 
 interface OnBankSelectedListener {
     fun onBankItemSelected(selectedItem: BankData)
-    fun onDivisionItemSelected(selectedItem: DivisionData)
-    fun onDistrictItemSelected(selectedItem: DistrictData)
     fun onBranchItemSelected(selectedItem: BranchData)
 }

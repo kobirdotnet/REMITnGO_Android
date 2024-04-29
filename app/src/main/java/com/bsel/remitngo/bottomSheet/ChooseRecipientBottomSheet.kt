@@ -27,8 +27,10 @@ import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BeneficiaryAdapter
 import com.bsel.remitngo.adapter.ContactsAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.interfaceses.OnBankAndWalletSelectedListener
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnSaveBeneficiarySelectedListener
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.ContactItem
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
@@ -42,7 +44,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.*
 import javax.inject.Inject
 
-class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiarySelectedListener {
+class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
+    OnBankAndWalletSelectedListener, OnSaveBeneficiarySelectedListener {
     @Inject
     lateinit var beneficiaryViewModelFactory: BeneficiaryViewModelFactory
     private lateinit var beneficiaryViewModel: BeneficiaryViewModel
@@ -64,19 +67,32 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
 
     private lateinit var beneficiaryAdapter: BeneficiaryAdapter
 
-    private var personId: Int = 0
-    private var customerId: Int = 0
-    private var benePersonId: Int = 0
-    private var beneId: Int = 0
-    private var beneAccountName: String? = null
-    private var beneMobile: String? = null
-
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
+    private var customerId: Int = 0
+    private var personId: Int = 0
+    private var customerEmail: String? = null
+    private var customerMobile: String? = null
+
+    private var beneId: Int = 0
+    private var benePersonId: Int = 0
+
     private var orderType: Int = 0
+
     private var beneBankId: Int = 0
+    private var beneBankName: String? = null
+
+    private var beneBranchId: Int = 0
+    private var beneBranchName: String? = null
+
     private var beneWalletId: Int = 0
+    private var beneWalletName: String? = null
+
+    private var beneAccountName: String? = null
+    private var beneAccountNo: String? = null
+
+    private var beneMobile: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -118,12 +134,22 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
         preferenceManager = PreferenceManager(requireContext())
         try {
             personId = preferenceManager.loadData("personId").toString().toInt()
-        }catch (e:NumberFormatException){
+        } catch (e: NumberFormatException) {
             e.localizedMessage
         }
         try {
             customerId = preferenceManager.loadData("customerId").toString().toInt()
-        }catch (e:NumberFormatException){
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            customerEmail = preferenceManager.loadData("customerEmail").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+        try {
+            customerMobile = preferenceManager.loadData("customerMobile").toString()
+        } catch (e: NullPointerException) {
             e.localizedMessage
         }
 
@@ -132,7 +158,20 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
 
         binding.btnAddBeneficiary.setOnClickListener {
             saveRecipientBottomSheet.itemSelectedListener = this
-            saveRecipientBottomSheet.setOrderType(orderType, "", "")
+            saveRecipientBottomSheet.setOrderType(
+                orderType,
+                beneBankId,
+                beneBankName,
+                beneBranchId,
+                beneBranchName,
+                beneWalletId,
+                beneWalletName,
+                beneId,
+                benePersonId,
+                beneAccountName,
+                beneAccountNo,
+                beneMobile
+            )
             saveRecipientBottomSheet.show(childFragmentManager, saveRecipientBottomSheet.tag)
         }
 
@@ -146,11 +185,32 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
         return bottomSheet
     }
 
-    fun setOrderType(orderType: Int, benePersonId: Int, beneBankId: Int, beneWalletId: Int) {
+    fun setOrderType(
+        orderType: Int,
+        beneBankId: Int,
+        beneBankName: String?,
+        beneBranchId: Int,
+        beneBranchName: String?,
+        beneWalletId: Int,
+        beneWalletName: String?,
+        beneId: Int,
+        benePersonId: Int,
+        beneAccountName: String?,
+        beneAccountNo: String?,
+        beneMobile: String?
+    ) {
         this.orderType = orderType
-        this.benePersonId = benePersonId
         this.beneBankId = beneBankId
+        this.beneBankName = beneBankName
+        this.beneBranchId = beneBranchId
+        this.beneBranchName = beneBranchName
         this.beneWalletId = beneWalletId
+        this.beneWalletName = beneWalletName
+        this.beneId = beneId
+        this.benePersonId = benePersonId
+        this.beneAccountName = beneAccountName
+        this.beneAccountNo = beneAccountNo
+        this.beneMobile = beneMobile
     }
 
     private fun observeGetBeneficiaryResult() {
@@ -208,10 +268,22 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
             itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
             dismiss()
         } else {
-            chooseBankBottomSheet.setOrderType(orderType, benePersonId)
+            chooseBankBottomSheet.itemSelectedListener = this
+            chooseBankBottomSheet.setOrderType(
+                orderType,
+                beneBankId,
+                beneBankName,
+                beneBranchId,
+                beneBranchName,
+                beneWalletId,
+                beneWalletName,
+                beneId,
+                benePersonId,
+                beneAccountName,
+                beneAccountNo,
+                beneMobile
+            )
             chooseBankBottomSheet.show(childFragmentManager, chooseBankBottomSheet.tag)
-//            itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
-//            dismiss()
         }
     }
 
@@ -285,7 +357,20 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
         beneMobile = selectedItem.phoneNumber
 
         saveRecipientBottomSheet.itemSelectedListener = this
-        saveRecipientBottomSheet.setOrderType(orderType, beneAccountName, beneMobile)
+        saveRecipientBottomSheet.setOrderType(
+            orderType,
+            beneBankId,
+            beneBankName,
+            beneBranchId,
+            beneBranchName,
+            beneWalletId,
+            beneWalletName,
+            beneId,
+            benePersonId,
+            beneAccountName,
+            beneAccountNo,
+            beneMobile
+        )
         saveRecipientBottomSheet.show(childFragmentManager, saveRecipientBottomSheet.tag)
     }
 
@@ -393,10 +478,14 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(), OnSaveBeneficiar
         beneficiaryViewModel.getBeneficiary(getBeneficiaryItem)
     }
 
+    override fun onBankAndWalletItemSelected(selectedItem: GetBankData) {
+        itemSelectedListener?.onBankAndWalletItemSelected(selectedItem)
+        dismiss()
+    }
+
     override fun onStart() {
         super.onStart()
         chooseRecipientBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
-
 
 }

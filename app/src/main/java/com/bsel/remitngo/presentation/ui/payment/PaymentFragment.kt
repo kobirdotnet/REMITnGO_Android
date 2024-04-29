@@ -16,8 +16,10 @@ import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.interfaceses.OnBankAndWalletSelectedListener
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnRequireDocumentListener
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
@@ -101,13 +103,11 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
     private val decimalFormat = DecimalFormat("#.##")
 
-    private var transactionCode: Int = 0
-
+    private lateinit var transactionCode: String
     private var address: String? = null
     private var mobile: String? = null
     private var requireDoc: String? = null
     private var isMobileOTPValidate: Boolean = true
-
     private var gbpValue = 0.0
 
     private var beneAccountName: String? = null
@@ -116,10 +116,12 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private var beneAmount: Double = 0.0
     private var beneBankId: Int = 0
     private var beneBranchId: Int = 0
+    private var beneBranchName: String? = null
     private var beneId: Int = 0
     private var beneMobile: String? = null
     private var benePersonId: Int = 0
     private var beneWalletId: Int = 0
+    private var beneWalletName: String? = null
     private var beneWalletNo: String? = null
     private var channelId: Int = 0
     private var commission: Double = 0.0
@@ -168,10 +170,26 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         promoCodeFocusListener()
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString().toInt()
-        customerId = preferenceManager.loadData("customerId").toString().toInt()
-        customerEmail = preferenceManager.loadData("customerEmail").toString()
-        customerMobile = preferenceManager.loadData("customerMobile").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            customerId = preferenceManager.loadData("customerId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            customerEmail = preferenceManager.loadData("customerEmail").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+        try {
+            customerMobile = preferenceManager.loadData("customerMobile").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
@@ -300,9 +318,17 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             chooseRecipientBottomSheet.itemSelectedListener = this
             chooseRecipientBottomSheet.setOrderType(
                 orderType,
-                benePersonId,
                 beneBankId,
-                beneWalletId
+                beneBankName,
+                beneBranchId,
+                beneBranchName,
+                beneWalletId,
+                beneWalletName,
+                beneId,
+                benePersonId,
+                beneAccountName,
+                beneAccountNo,
+                beneMobile
             )
             chooseRecipientBottomSheet.show(childFragmentManager, chooseRecipientBottomSheet.tag)
         }
@@ -353,7 +379,10 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         observeReasonResult()
 
         val sourceOfIncomeItem = SourceOfIncomeItem(
-            deviceId = deviceId
+            deviceId = deviceId,
+            dropdownId = 307,
+            param1 = 0,
+            param2 = 0
         )
         paymentViewModel.sourceOfIncome(sourceOfIncomeItem)
         observeSourceOfIncomeResult()
@@ -365,6 +394,34 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         observePaymentResult()
         observeEncryptResult()
         observeRequireDocumentResult()
+    }
+
+    fun setOrderType(
+        orderType: Int,
+        beneBankId: Int,
+        beneBankName: String?,
+        beneBranchId: Int,
+        beneBranchName: String?,
+        beneWalletId: Int,
+        beneWalletName: String?,
+        beneId: Int,
+        benePersonId: Int,
+        beneAccountName: String?,
+        beneAccountNo: String?,
+        beneMobile: String?
+    ) {
+        this.orderType = orderType
+        this.beneBankId = beneBankId
+        this.beneBankName = beneBankName
+        this.beneBranchId = beneBranchId
+        this.beneBranchName = beneBranchName
+        this.beneWalletId = beneWalletId
+        this.beneWalletName = beneWalletName
+        this.beneId = beneId
+        this.benePersonId = benePersonId
+        this.beneAccountName = beneAccountName
+        this.beneAccountNo = beneAccountNo
+        this.beneMobile = beneMobile
     }
 
     private fun paymentFrom() {
@@ -498,7 +555,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         paymentViewModel.paymentResult.observe(this) { result ->
             try {
                 if (result!!.data != null) {
-                    transactionCode = result.data.toString().toInt()
+                    transactionCode = result.data!!.toString()
+                    transactionCode = result.data.toString()
                     transactionCodeWithChannel = "$transactionCode*1"
                     if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
                         val encryptItem = EncryptItem(
@@ -568,7 +626,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                             } else if (paymentMode == 3) {
                                 val bundle = Bundle().apply {
                                     putString("sendAmount", totalAmountGiven.toString())
-                                    putString("transactionCode", transactionCode.toString())
+                                    putString("transactionCode", transactionCode)
                                 }
                                 findNavController().navigate(
                                     R.id.action_nav_review_to_nav_complete_bank_transaction, bundle
@@ -631,7 +689,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         // Init WPF API request
         paymentRequest = PaymentRequest(
             requireContext(),
-            transactionCode.toString(),
+            transactionCode,
             BigDecimal(totalAmountGiven),
             Currency.GBP,
             customerEmail,
@@ -770,7 +828,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 observeEmpResult()
 
                 val bundle = Bundle().apply {
-                    putString("transactionCode", transactionCode.toString())
+                    putString("transactionCode", transactionCode)
                 }
                 findNavController().navigate(
                     R.id.action_nav_review_to_nav_complete_card_transaction, bundle
@@ -827,6 +885,20 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         binding.receiverName.text = beneAccountName
     }
 
+    override fun onBankAndWalletItemSelected(selectedItem: GetBankData) {
+        beneBankId = selectedItem.bankId!!
+        beneBranchId = selectedItem.branchId!!
+
+        beneAccountName = selectedItem.accountName.toString()
+        binding.receiverName.text = beneAccountName
+
+        beneBankName = selectedItem.bankName!!
+        binding.receiverBankName.text = beneBankName
+
+        beneAccountNo = selectedItem.accountNo.toString()
+        binding.receiverAccount.text = beneAccountNo
+    }
+
     override fun onPurposeOfTransferItemSelected(selectedItem: ReasonData) {
         purposeOfTransferId = selectedItem.id.toString().toInt()
         purposeOfTransferName = selectedItem.name.toString()
@@ -873,7 +945,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
     private fun sendAgain() {
         try {
-            transactionCode = arguments?.getString("transactionCode").toString().toInt()
+            transactionCode = arguments?.getString("transactionCode").toString()
             val transactionDetailsItem = TransactionDetailsItem(
                 deviceId = deviceId, params1 = personId, params2 = transactionCode.toString()
             )
@@ -1199,18 +1271,16 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     }
 
     override fun onRequireDocumentSelected(selectedItem: String?) {
-        if (!address.equals(null) && isMobileOTPValidate) {
-            if (paymentMode == 4) {
-                cardPayment()
-            } else if (paymentMode == 3) {
-                val bundle = Bundle().apply {
-                    putString("sendAmount", totalAmountGiven.toString())
-                    putString("transactionCode", transactionCode.toString())
-                }
-                findNavController().navigate(
-                    R.id.action_nav_review_to_nav_complete_bank_transaction, bundle
-                )
+        if (paymentMode == 4) {
+            cardPayment()
+        } else if (paymentMode == 3) {
+            val bundle = Bundle().apply {
+                putString("sendAmount", totalAmountGiven.toString())
+                putString("transactionCode", transactionCode)
             }
+            findNavController().navigate(
+                R.id.action_nav_review_to_nav_complete_bank_transaction, bundle
+            )
         }
     }
 

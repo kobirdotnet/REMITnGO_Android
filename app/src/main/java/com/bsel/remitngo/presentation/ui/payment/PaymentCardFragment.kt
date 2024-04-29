@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -215,6 +216,11 @@ class PaymentCardFragment : Fragment() {
         binding.paymentFailed.visibility = View.GONE
         binding.paymentCancel.visibility = View.VISIBLE
         binding.backToHomeLayout.visibility = View.VISIBLE
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_nav_complete_card_transaction_to_nav_main)
+        }
+
     }
 
     //        Handler(Looper.getMainLooper()).postDelayed({

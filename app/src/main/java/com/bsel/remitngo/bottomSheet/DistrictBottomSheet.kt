@@ -134,7 +134,7 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun districtItem(selectedItem: DistrictData) {
-        itemSelectedListener?.onDistrictItemSelected(selectedItem)
+//        itemSelectedListener?.onDistrictItemSelected(selectedItem)
         dismiss()
     }
 

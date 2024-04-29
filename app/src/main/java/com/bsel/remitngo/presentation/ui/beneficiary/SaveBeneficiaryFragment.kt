@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
@@ -379,6 +380,10 @@ class SaveBeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
     }
 
     override fun onChooseRecipientItemSelected(selectedItem: GetBeneficiaryData) {
+
+    }
+
+    override fun onBankAndWalletItemSelected(selectedItem: GetBankData) {
 
     }
 

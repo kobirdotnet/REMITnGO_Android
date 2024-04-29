@@ -41,7 +41,8 @@ class BankBottomSheet : BottomSheetDialogFragment() {
     private lateinit var bankNameAdapter: BankNameAdapter
 
     private lateinit var deviceId: String
-    private var selectedBankId: String? = null
+
+    private var beneBankId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -80,58 +81,51 @@ class BankBottomSheet : BottomSheetDialogFragment() {
 
         deviceId = getDeviceId(requireContext())
 
-        if (selectedBankId !="null"){
-            val bankItem = BankItem(
-                deviceId = deviceId,
-                dropdownId = 5,
-                param1 = 1,
-                param2 = selectedBankId!!.toInt()
-            )
-            bankViewModel.bank(bankItem)
-        }else{
-            val bankItem = BankItem(
-                deviceId = deviceId,
-                dropdownId = 5,
-                param1 = 1,
-                param2 = 0
-            )
-            bankViewModel.bank(bankItem)
-        }
-
+        val bankItem = BankItem(
+            deviceId = deviceId,
+            dropdownId = 5,
+            param1 = 1,
+            param2 = beneBankId
+        )
+        bankViewModel.bank(bankItem)
         observeBankResult()
 
         return bottomSheet
     }
 
-    fun setSelectedBank(bankId: String) {
-        selectedBankId = bankId
+    fun setSelectedBank(beneBankId: Int) {
+        this.beneBankId = beneBankId
     }
 
     private fun observeBankResult() {
         bankViewModel.bankResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.bankRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                bankNameAdapter = BankNameAdapter(
-                    selectedItem = { selectedItem: BankData ->
-                        bankItem(selectedItem)
-                        binding.bankSearch.setQuery("", false)
-                    }
-                )
-                binding.bankRecyclerView.adapter = bankNameAdapter
-                bankNameAdapter.setList(result.data as List<BankData>)
-                bankNameAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.bankRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    bankNameAdapter = BankNameAdapter(
+                        selectedItem = { selectedItem: BankData ->
+                            bankItem(selectedItem)
+                            binding.bankSearch.setQuery("", false)
+                        }
+                    )
+                    binding.bankRecyclerView.adapter = bankNameAdapter
+                    bankNameAdapter.setList(result.data as List<BankData>)
+                    bankNameAdapter.notifyDataSetChanged()
 
-                binding.bankSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.bankSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        bankNameAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            bankNameAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

@@ -6,8 +6,10 @@ import com.google.gson.annotations.SerializedName
 data class DocumentTypeItem(
     @SerializedName("deviceId")
     val deviceId: String?,
-    @SerializedName("params1")
-    val params1: Int?,
-    @SerializedName("params2")
-    val params2: Int?
+    @SerializedName("dropdownId")
+    val dropdownId: Int?,
+    @SerializedName("param1")
+    val param1: Int?,
+    @SerializedName("param2")
+    val param2: Int?
 )

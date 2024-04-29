@@ -113,8 +113,8 @@ class LoginActivity : AppCompatActivity() {
                         preferenceManager.saveData("personId", data.personId.toString())
                         preferenceManager.saveData("firstName", data.firstName.toString())
                         preferenceManager.saveData("lastName", data.lastName.toString())
-                        preferenceManager.saveData("email", data.email.toString())
-                        preferenceManager.saveData("mobile", data.mobile.toString())
+                        preferenceManager.saveData("customerEmail", data.email.toString())
+                        preferenceManager.saveData("customerMobile", data.mobile.toString())
                         preferenceManager.saveData("dob", data.dateOfBirth.toString())
                     }
                     TokenManager.setToken(result.token)

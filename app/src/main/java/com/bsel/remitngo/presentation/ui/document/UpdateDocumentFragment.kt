@@ -55,22 +55,22 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private lateinit var personId: String
+    private var personId: Int = 0
 
     private lateinit var status: String
-    private lateinit var docId: String
+    private var docId: Int = 0
 
-    private lateinit var documentCategoryId: String
-    private lateinit var documentCategory: String
+    private var documentCategoryId: Int = 0
+    private var documentCategory: String? = null
 
-    private lateinit var documentTypeId: String
-    private lateinit var documentType: String
+    private var documentTypeId: Int = 0
+    private var documentType: String? = null
 
-    private lateinit var docNo: String
-    private lateinit var issueBy: String
-    private lateinit var issueDate: String
-    private lateinit var expireDate: String
-    private lateinit var fileName: String
+    private var docNo: String? = null
+    private var issueBy: String? = null
+    private var issueDate: String? = null
+    private var expireDate: String? = null
+    private var fileName: String? = null
 
     private var selectedFile: Uri? = null
 
@@ -92,41 +92,83 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
             ViewModelProvider(this, documentViewModelFactory)[DocumentViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        personId = arguments?.getString("personId").toString()
+        try {
+            personId = arguments?.getString("personId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
-        status = arguments?.getString("status").toString()
-        docId = arguments?.getString("iD").toString()
+        try {
+            status = arguments?.getString("status").toString()
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
 
-        documentCategoryId = arguments?.getString("documentCategoryId").toString()
-        documentTypeId = arguments?.getString("documentTypeId").toString()
+        try {
+            docId = arguments?.getString("iD").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
+        try {
+            documentCategoryId = arguments?.getString("documentCategoryId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
+        try {
+            documentTypeId = arguments?.getString("documentTypeId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
-        docNo = arguments?.getString("docNo").toString()
-        binding.documentNo.setText(docNo)
+        try {
+            docNo = arguments?.getString("docNo").toString()
+            binding.documentNo.setText(docNo)
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
 
-        issueBy = arguments?.getString("issueBy").toString()
-        binding.issueBy.setText(issueBy)
+        try {
+            issueBy = arguments?.getString("issueBy").toString()
+            binding.issueBy.setText(issueBy)
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
+        try {
+            issueDate = arguments?.getString("issueDate").toString()
+            val dateTime =
+                LocalDateTime.parse(issueDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            val date = dateTime.toLocalDate()
+            val issueDate = date.format(DateTimeFormatter.ISO_DATE)
+            binding.issueDate.setText(issueDate)
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
+        try {
+            expireDate = arguments?.getString("expireDate").toString()
+            val dateTimeExpireDate =
+                LocalDateTime.parse(expireDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            val dateExpireDate = dateTimeExpireDate.toLocalDate()
+            val expireDate = dateExpireDate.format(DateTimeFormatter.ISO_DATE)
+            binding.expireDate.setText(expireDate)
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
+        try {
+            fileName = arguments?.getString("fileName").toString()
+            binding.selectFile.text = "$fileName"
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
 
-        issueDate = arguments?.getString("issueDate").toString()
-        val dateTime =
-            LocalDateTime.parse(issueDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        val date = dateTime.toLocalDate()
-        val issueDate = date.format(DateTimeFormatter.ISO_DATE)
-        binding.issueDate.setText(issueDate)
-
-        expireDate = arguments?.getString("expireDate").toString()
-        val dateTimeExpireDate =
-            LocalDateTime.parse(expireDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        val dateExpireDate = dateTimeExpireDate.toLocalDate()
-        val expireDate = dateExpireDate.format(DateTimeFormatter.ISO_DATE)
-        binding.expireDate.setText(expireDate)
-
-        fileName = arguments?.getString("fileName").toString()
-        binding.selectFile.text = "$fileName"
 
         categoryFocusListener()
         documentFocusListener()
@@ -141,11 +183,9 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         }
 
         binding.documentType.setOnClickListener {
-            if (::documentCategoryId.isInitialized) {
-                documentTypeBottomSheet.setSelectedDocumentType(documentCategoryId)
-                documentTypeBottomSheet.itemSelectedListener = this
-                documentTypeBottomSheet.show(childFragmentManager, documentTypeBottomSheet.tag)
-            }
+            documentTypeBottomSheet.setDocumentCategoryId(documentCategoryId)
+            documentTypeBottomSheet.itemSelectedListener = this
+            documentTypeBottomSheet.show(childFragmentManager, documentTypeBottomSheet.tag)
         }
 
         binding.issueDate.setOnClickListener {
@@ -170,7 +210,6 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
             )
             datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
             datePickerDialog.show()
-
         }
 
         binding.expireDate.setOnClickListener {
@@ -215,50 +254,58 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         documentViewModel.documentCategory(documentCategoryItem)
         observeDocumentCategoryResult()
 
-        if (::documentCategoryId.isInitialized) {
-            val documentTypeItem = DocumentTypeItem(
-                deviceId = deviceId,
-                params1 = documentCategoryId!!.toInt(),
-                params2 = 0
-            )
-            documentViewModel.documentType(documentTypeItem)
-            observeDocumentTypeResult()
-        }
-
+        val documentTypeItem = DocumentTypeItem(
+            deviceId = deviceId,
+            dropdownId=308,
+            param1 = documentCategoryId,
+            param2 = 0
+        )
+        documentViewModel.documentType(documentTypeItem)
+        observeDocumentTypeResult()
     }
 
     private fun observeDocumentCategoryResult() {
         documentViewModel.documentCategoryResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (categoryData in result!!.data!!) {
-                    if (::documentCategoryId.isInitialized && documentCategoryId == categoryData!!.id.toString()) {
-                        documentCategory = categoryData!!.name.toString()
-                        binding.documentCategory.setText(documentCategory)
+            try {
+                if (result!!.data != null) {
+                    for (categoryData in result!!.data!!) {
+                        if (documentCategoryId == categoryData!!.id!!) {
+                            documentCategory = categoryData!!.name.toString()
+                            binding.documentCategory.setText(documentCategory)
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeDocumentTypeResult() {
         documentViewModel.documentTypeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (typeData in result!!.data!!) {
-                    if (::documentTypeId.isInitialized && documentTypeId == typeData!!.id.toString()) {
-                        documentType = typeData!!.name.toString()
-                        binding.documentType.setText(documentType)
+            try {
+                if (result!!.data != null) {
+                    for (typeData in result!!.data!!) {
+                        if (documentTypeId == typeData!!.id!!) {
+                            documentType = typeData!!.name.toString()
+                            binding.documentType.setText(documentType)
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeUploadDocumentResult() {
         documentViewModel.uploadDocumentResult.observe(this) { result ->
-            if (result != null) {
+            try {
                 findNavController().navigate(
                     R.id.action_nav_update_documents_to_nav_documents
                 )
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -301,10 +348,10 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                 val filePart = MultipartBody.Part.createFormData("file", file.name, fileRequestBody)
                 documentViewModel.uploadDocument(
                     deviceId.toRequestBody(),
-                    personId.toRequestBody(),
-                    documentCategoryId.toRequestBody(),
-                    docId.toRequestBody(),
-                    documentTypeId.toRequestBody(),
+                    personId.toString().toRequestBody(),
+                    documentCategoryId.toString().toRequestBody(),
+                    docId.toString().toRequestBody(),
+                    documentTypeId.toString().toRequestBody(),
                     documentNo.toRequestBody(),
                     issueBy.toRequestBody(),
                     issueDate.toRequestBody(),
@@ -313,8 +360,6 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                     filePart
                 )
             }
-        } else {
-            Snackbar.make(view!!, "Select your file.", Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -417,12 +462,12 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
 
     override fun onDocumentCategoryItemSelected(selectedItem: DocumentCategoryData) {
         binding.documentCategory.setText(selectedItem.name)
-        documentCategoryId = selectedItem.id.toString()
+        documentCategoryId = selectedItem.id.toString().toInt()
     }
 
     override fun onDocumentTypeItemSelected(selectedItem: DocumentTypeData) {
         binding.documentType.setText(selectedItem.name)
-        documentTypeId = selectedItem.id.toString()
+        documentTypeId = selectedItem.id.toString().toInt()
     }
 
     override fun onDocumentFileItemSelected(selectedItem: Uri?) {

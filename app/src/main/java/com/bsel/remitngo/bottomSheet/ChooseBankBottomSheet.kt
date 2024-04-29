@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
@@ -15,6 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BankAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.interfaceses.OnBankAndWalletSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
+import com.bsel.remitngo.data.interfaceses.OnSaveBankAndWalletSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnSaveBeneficiarySelectedListener
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.databinding.ChooseBankLayoutBinding
@@ -27,32 +32,49 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.*
 import javax.inject.Inject
 
-class ChooseBankBottomSheet : BottomSheetDialogFragment() {
+class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSelectedListener {
     @Inject
     lateinit var bankViewModelFactory: BankViewModelFactory
     private lateinit var bankViewModel: BankViewModel
 
     private lateinit var binding: ChooseBankLayoutBinding
 
+    var itemSelectedListener: OnBankAndWalletSelectedListener? = null
+
     private lateinit var chooseBankBehavior: BottomSheetBehavior<*>
 
-    private lateinit var preferenceManager: PreferenceManager
+    private val saveBankAndWalletBottomSheet: SaveBankAndWalletBottomSheet by lazy { SaveBankAndWalletBottomSheet() }
 
     private lateinit var bankAdapter: BankAdapter
 
-    private lateinit var personId: String
-    private var benePersonId: Int = 0
-    private var bankId: Int = 0
-    private var walletId: Int = 0
-
-    private var beneId: Int = 0
-    private var beneAccountName: String? = null
-    private var beneMobile: String? = null
+    private lateinit var preferenceManager: PreferenceManager
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private var orderType: Int=0
+    private var customerId: Int = 0
+    private var personId: Int = 0
+    private var customerEmail: String? = null
+    private var customerMobile: String? = null
+
+    private var beneId: Int = 0
+    private var benePersonId: Int = 0
+
+    private var orderType: Int = 0
+
+    private var beneBankId: Int = 0
+    private var beneBankName: String? = null
+
+    private var beneBranchId: Int = 0
+    private var beneBranchName: String? = null
+
+    private var beneWalletId: Int = 0
+    private var beneWalletName: String? = null
+
+    private var beneAccountName: String? = null
+    private var beneAccountNo: String? = null
+
+    private var beneMobile: String? = null
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -91,7 +113,26 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment() {
         binding.cancelButton.setOnClickListener { dismiss() }
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            customerId = preferenceManager.loadData("customerId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            customerEmail = preferenceManager.loadData("customerEmail").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+        try {
+            customerMobile = preferenceManager.loadData("customerMobile").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
@@ -108,36 +149,80 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        binding.btnBank.setOnClickListener {
-
-        }
-
-        if (orderType==1){
+        if (orderType == 1) {
             val getBankItem = GetBankItem(
                 benePersonId = benePersonId,
                 accountType = orderType,
-                walletId = walletId,
-                bankId=bankId
+                walletId = beneWalletId,
+                bankId = beneBankId
             )
             bankViewModel.getBank(getBankItem)
-        }else{
+        } else {
             val getBankItem = GetBankItem(
                 benePersonId = benePersonId,
                 accountType = 2,
-                walletId = walletId,
-                bankId=bankId
+                walletId = beneWalletId,
+                bankId = beneBankId
             )
             bankViewModel.getBank(getBankItem)
         }
 
         observeGetBankResult()
 
+        Log.i("info","beneAccountName: "+beneAccountName)
+        Log.i("info","beneAccountNo: "+beneAccountNo)
+
+        binding.btnBank.setOnClickListener {
+            saveBankAndWalletBottomSheet.itemSelectedListener = this
+            saveBankAndWalletBottomSheet.setOrderType(
+                orderType,
+                beneBankId,
+                beneBankName,
+                beneBranchId,
+                beneBranchName,
+                beneWalletId,
+                beneWalletName,
+                beneId,
+                benePersonId,
+                beneAccountName,
+                beneAccountNo,
+                beneMobile
+            )
+            saveBankAndWalletBottomSheet.show(
+                childFragmentManager,
+                saveBankAndWalletBottomSheet.tag
+            )
+        }
+
         return bottomSheet
     }
 
-    fun setOrderType(orderType: Int, benePersonId: Int) {
-        this.orderType =orderType
-        this.benePersonId =benePersonId
+    fun setOrderType(
+        orderType: Int,
+        beneBankId: Int,
+        beneBankName: String?,
+        beneBranchId: Int,
+        beneBranchName: String?,
+        beneWalletId: Int,
+        beneWalletName: String?,
+        beneId: Int,
+        benePersonId: Int,
+        beneAccountName: String?,
+        beneAccountNo: String?,
+        beneMobile: String?,
+    ) {
+        this.orderType = orderType
+        this.beneBankId = beneBankId
+        this.beneBankName = beneBankName
+        this.beneBranchId = beneBranchId
+        this.beneBranchName = beneBranchName
+        this.beneWalletId = beneWalletId
+        this.beneWalletName = beneWalletName
+        this.beneId = beneId
+        this.benePersonId = benePersonId
+        this.beneAccountName = beneAccountName
+        this.beneAccountNo = beneAccountNo
+        this.beneMobile = beneMobile
     }
 
     private fun observeGetBankResult() {
@@ -156,14 +241,31 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment() {
                     bankAdapter.setList(result.data as List<GetBankData>)
                     bankAdapter.notifyDataSetChanged()
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }
     }
 
     private fun bankItem(selectedItem: GetBankData) {
+        beneBankId = selectedItem.bankId!!
+        beneBankName = selectedItem.bankName!!
 
+        beneBranchId = selectedItem.branchId!!
+        beneBranchName = selectedItem.branchName!!
+
+        beneWalletId = selectedItem.walletId!!
+        try {
+            beneWalletName = selectedItem.walletName!!
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        beneAccountName = selectedItem.accountName.toString()
+        beneAccountNo = selectedItem.accountNo.toString()
+
+        itemSelectedListener?.onBankAndWalletItemSelected(selectedItem)
+        dismiss()
     }
 
     private fun getDeviceId(context: Context): String {
@@ -203,5 +305,8 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment() {
         chooseBankBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
+    override fun onSaveBankAndWalletItemSelected(selectedItem: String) {
+        TODO("Not yet implemented")
+    }
 
 }

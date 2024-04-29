@@ -42,10 +42,9 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var branchNameAdapter: BranchNameAdapter
 
-    private lateinit var preferenceManager: PreferenceManager
-
     private lateinit var deviceId: String
-    private var selectedBankId: String? = null
+
+    private var beneBankId: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -87,18 +86,17 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
         val branchItem = BranchItem(
             deviceId = deviceId,
             dropdownId = 304,
-            param1 = selectedBankId!!.toInt(),
+            param1 = beneBankId,
             param2 = 0
         )
         bankViewModel.branch(branchItem)
-
         observeBranchResult()
 
         return bottomSheet
     }
 
-    fun setSelectedBank(bankId: String) {
-        selectedBankId = bankId
+    fun setSelectedBank(beneBankId: Int) {
+        this.beneBankId = beneBankId
     }
 
     private fun observeBranchResult() {
@@ -126,7 +124,6 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
                         return true
                     }
                 })
-
             }
         }
     }

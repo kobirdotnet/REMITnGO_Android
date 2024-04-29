@@ -128,13 +128,19 @@ class ProfileFragment : Fragment() {
         observeOccupationResult()
 
         val sourceOfIncomeItem = SourceOfIncomeItem(
-            deviceId = deviceId
+            deviceId = deviceId,
+            dropdownId = 307,
+            param1 = 0,
+            param2 = 0
         )
         profileViewModel.sourceOfIncome(sourceOfIncomeItem)
         observeSourceOfIncomeResult()
 
         val annualIncomeItem = AnnualIncomeItem(
-            deviceId = deviceId
+            deviceId = deviceId,
+            dropdownId = 309,
+            param1 = 0,
+            param2 = 0
         )
         profileViewModel.annualIncome(annualIncomeItem)
         observeAnnualIncomeResult()

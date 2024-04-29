@@ -146,14 +146,14 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         }
 
         binding.bankName.setOnClickListener {
-            bankBottomSheet.setSelectedBank(bankId)
+            bankBottomSheet.setSelectedBank(bankId.toInt())
             bankBottomSheet.itemSelectedListener = this
             bankBottomSheet.show(childFragmentManager, bankBottomSheet.tag)
         }
 
         binding.branchName.setOnClickListener {
             if (::bankId.isInitialized && !bankId.isNullOrEmpty()) {
-                bankBranchBottomSheet.setSelectedBank(bankId)
+                bankBranchBottomSheet.setSelectedBank(bankId.toInt())
                 bankBranchBottomSheet.itemSelectedListener = this
                 bankBranchBottomSheet.show(childFragmentManager, bankBranchBottomSheet.tag)
             }
@@ -393,12 +393,6 @@ class BankFragment : Fragment(), OnBankSelectedListener {
     override fun onBankItemSelected(selectedItem: BankData) {
         binding.bankName.setText(selectedItem.name)
         bankId = selectedItem.id.toString()
-    }
-
-    override fun onDivisionItemSelected(selectedItem: DivisionData) {
-    }
-
-    override fun onDistrictItemSelected(selectedItem: DistrictData) {
     }
 
     override fun onBranchItemSelected(selectedItem: BranchData) {

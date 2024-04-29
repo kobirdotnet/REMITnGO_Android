@@ -7,14 +7,12 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnSaveBeneficiarySelectedListener
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.databinding.SaveRecipientLayoutBinding
@@ -39,15 +37,34 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
     private lateinit var saveRecipientBehavior: BottomSheetBehavior<*>
 
     private lateinit var preferenceManager: PreferenceManager
-    private lateinit var personId: String
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
+    private var customerId: Int = 0
+    private var personId: Int = 0
+    private var customerEmail: String? = null
+    private var customerMobile: String? = null
+
+    private var beneId: Int = 0
+    private var benePersonId: Int = 0
+
+    private var orderType: Int = 0
+
+    private var beneBankId: Int = 0
+    private var beneBankName: String? = null
+
+    private var beneBranchId: Int = 0
+    private var beneBranchName: String? = null
+
+    private var beneWalletId: Int = 0
+    private var beneWalletName: String? = null
+
     private var beneAccountName: String? = null
+    private var beneAccountNo: String? = null
+
     private var beneMobile: String? = null
 
-    private var orderType: Int=0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -85,7 +102,26 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
         binding.cancelButton.setOnClickListener { dismiss() }
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            customerId = preferenceManager.loadData("customerId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            customerEmail = preferenceManager.loadData("customerEmail").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+        try {
+            customerMobile = preferenceManager.loadData("customerMobile").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
@@ -115,10 +151,32 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    fun setOrderType(orderType: Int, beneAccountName: String?, beneMobile: String?) {
-        this.orderType =orderType
-        this.beneAccountName =beneAccountName
-        this.beneMobile =beneMobile
+    fun setOrderType(
+        orderType: Int,
+        beneBankId: Int,
+        beneBankName: String?,
+        beneBranchId: Int,
+        beneBranchName: String?,
+        beneWalletId: Int,
+        beneWalletName: String?,
+        beneId: Int,
+        benePersonId: Int,
+        beneAccountName: String?,
+        beneAccountNo: String?,
+        beneMobile: String?
+    ) {
+        this.orderType = orderType
+        this.beneBankId = beneBankId
+        this.beneBankName = beneBankName
+        this.beneBranchId = beneBranchId
+        this.beneBranchName = beneBranchName
+        this.beneWalletId = beneWalletId
+        this.beneWalletName = beneWalletName
+        this.beneId = beneId
+        this.benePersonId = benePersonId
+        this.beneAccountName = beneAccountName
+        this.beneAccountNo = beneAccountNo
+        this.beneMobile = beneMobile
     }
 
     private fun recipientForm() {
@@ -170,8 +228,12 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeSaveBeneficiaryResult() {
         beneficiaryViewModel.beneficiaryResult.observe(this) { result ->
-            if (result?.data != null) {
-                saveRecipient(result?.data.toString())
+            try {
+                if (result?.data != null) {
+                    saveRecipient(result?.data.toString())
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

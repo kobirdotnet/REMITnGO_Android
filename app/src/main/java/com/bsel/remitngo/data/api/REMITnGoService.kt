@@ -190,10 +190,10 @@ interface REMITnGoService {
     @GET("api/Payment/GetPaymentStatusByTransactioncode/{transactionCode}")
     suspend fun paymentStatus(@Path("transactionCode") transactionCode: String): Response<PaymentStatusResponse>
 
-    @POST("api/General/LoadAnnualNetIncome")
+    @POST("api/General/Dropdown")
     suspend fun annualIncome(@Body annualIncomeItem: AnnualIncomeItem): Response<AnnualIncomeResponseItem>
 
-    @POST("api/General/LoadSourceOfIncome")
+    @POST("api/General/Dropdown")
     suspend fun sourceOfIncome(@Body sourceOfIncomeItem: SourceOfIncomeItem): Response<SourceOfIncomeResponseItem>
 
     @POST("api/General/Dropdown")
@@ -208,7 +208,7 @@ interface REMITnGoService {
     @POST("api/General/Dropdown")
     suspend fun documentCategory(@Body documentCategoryItem: DocumentCategoryItem): Response<DocumentCategoryResponseItem>
 
-    @POST("api/General/LoadDocumentTypeByCategoryId")
+    @POST("api/General/Dropdown")
     suspend fun documentType(@Body documentTypeItem: DocumentTypeItem): Response<DocumentTypeResponseItem>
 
     @POST("api/General/PopulateCustomerDocumentList")
