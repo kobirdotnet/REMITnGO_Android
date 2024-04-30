@@ -94,10 +94,10 @@ class PaymentBankFragment : Fragment() {
             if (result!!.data != null) {
                 for (bankTransactionMessage in result.data!!) {
                     binding.accountName.text = bankTransactionMessage!!.accountName.toString()
-                    binding.accountNo.text = bankTransactionMessage!!.accountNumber.toString()
-                    binding.shortCode.text = bankTransactionMessage!!.sortCode.toString()
-                    binding.iban.text = bankTransactionMessage!!.iBAN.toString()
-                    binding.message.text = bankTransactionMessage!!.message.toString()
+                    binding.accountNo.text = bankTransactionMessage.accountNumber.toString()
+                    binding.shortCode.text = bankTransactionMessage.sortCode.toString()
+                    binding.iban.text = bankTransactionMessage.iBAN.toString()
+                    binding.message.text = bankTransactionMessage.message.toString()
                 }
             }
         }

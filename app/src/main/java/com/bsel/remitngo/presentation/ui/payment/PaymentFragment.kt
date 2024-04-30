@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.interfaceses.OnBankAndWalletSelectedListener
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnRequireDocumentListener
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
@@ -123,10 +122,10 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private var beneWalletId: Int = 0
     private var beneWalletName: String? = null
     private var beneWalletNo: String? = null
-    private var channelId: Int = 0
+    private var channelId: Int = 1
     private var commission: Double = 0.0
-    private var fromCountryId: Int = 0
-    private var fromCurrencyId: Int = 0
+    private var fromCountryId: Int = 4
+    private var fromCurrencyId: Int = 96
     private var latitude: String? = null
     private var longitude: String? = null
     private var modifiedBeneAmount: Double = 0.0
@@ -143,8 +142,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private var sendAmount: Double = 0.0
     private var sourceOfFundId: Int = 0
     private var sourceOfFundName: String? = null
-    private var toCountryId: Int = 0
-    private var toCurrencyId: Int = 0
+    private var toCountryId: Int = 1
+    private var toCurrencyId: Int = 6
     private var totalAmountGiven: Double = 0.0
 
     override fun onCreateView(
@@ -623,7 +622,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                         ) {
                             if (paymentMode == 4) {
                                 cardPayment()
-                            } else if (paymentMode == 3) {
+                            } else if (paymentMode == 5) {
                                 val bundle = Bundle().apply {
                                     putString("sendAmount", totalAmountGiven.toString())
                                     putString("transactionCode", transactionCode)
@@ -1203,7 +1202,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                             binding.promo.text = "Your applied promo is: $promoCode"
                         }
 
-
                         updateValuesGBP()
                     }
 
@@ -1273,7 +1271,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     override fun onRequireDocumentSelected(selectedItem: String?) {
         if (paymentMode == 4) {
             cardPayment()
-        } else if (paymentMode == 3) {
+        } else if (paymentMode == 5) {
             val bundle = Bundle().apply {
                 putString("sendAmount", totalAmountGiven.toString())
                 putString("transactionCode", transactionCode)

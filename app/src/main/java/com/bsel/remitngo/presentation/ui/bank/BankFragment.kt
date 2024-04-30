@@ -224,39 +224,39 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val branchName = binding.branchName.text.toString()
         val bankAccountNumber = binding.bankAccountNumber.text.toString()
 
-        if (orderType=="null"){
-            val saveBankItem = SaveBankItem(
-                id = 0,
-                deviceId = deviceId,
-                userIPAddress = ipAddress.toString(),
-                orderType = 0,
-                cusBankInfoID = beneficiaryId.toInt(),
-                accountName = bankAccountName,
-                bankID = bankId.toInt(),
-                branchID = branchId.toInt(),
-                accountNo = bankAccountNumber,
-                isVersion113 = 0,
-                accountType = 0,
-                active = true
-            )
-            bankViewModel.saveBank(saveBankItem)
-        }else{
-            val saveBankItem = SaveBankItem(
-                id = 0,
-                deviceId = deviceId,
-                userIPAddress = ipAddress.toString(),
-                orderType = orderType.toInt(),
-                cusBankInfoID = beneficiaryId.toInt(),
-                accountName = bankAccountName,
-                bankID = bankId.toInt(),
-                branchID = branchId.toInt(),
-                accountNo = bankAccountNumber,
-                isVersion113 = 0,
-                accountType = 0,
-                active = true
-            )
-            bankViewModel.saveBank(saveBankItem)
-        }
+//        if (orderType=="null"){
+//            val saveBankItem = SaveBankItem(
+//                accountName = beneAccountName,
+//                accountNo = beneAccountNo,
+//                accountType = 0,
+//                active = true,
+//                bankID = beneBankId,
+//                benePersonId = benePersonId,
+//                branchID = beneBranchId,
+//                deviceId = deviceId,
+//                id = 0,
+//                orderType = orderType,
+//                userIPAddress = ipAddress,
+//                walletId = beneWalletId
+//            )
+//            bankViewModel.saveBank(saveBankItem)
+//        }else{
+//            val saveBankItem = SaveBankItem(
+//                accountName = beneAccountName,
+//                accountNo = beneAccountNo,
+//                accountType = 0,
+//                active = true,
+//                bankID = beneBankId,
+//                benePersonId = benePersonId,
+//                branchID = beneBranchId,
+//                deviceId = deviceId,
+//                id = 0,
+//                orderType = orderType,
+//                userIPAddress = ipAddress,
+//                walletId = beneWalletId
+//            )
+//            bankViewModel.saveBank(saveBankItem)
+//        }
     }
 
     private fun walletAccountForm() {
@@ -275,21 +275,21 @@ class BankFragment : Fragment(), OnBankSelectedListener {
         val walletAccountName = binding.walletAccountName.text.toString()
         val phoneNumber = binding.phoneNumber.text.toString()
 
-        val saveBankItem = SaveBankItem(
-            id = 0,
-            deviceId = deviceId,
-            userIPAddress = ipAddress.toString(),
-            orderType = orderType.toInt(),
-            cusBankInfoID = beneficiaryId.toInt(),
-            accountName = walletAccountName,
-            bankID = bankId.toInt(),
-            branchID = 0,
-            accountNo = phoneNumber,
-            isVersion113 = 0,
-            accountType = 0,
-            active = true
-        )
-        bankViewModel.saveBank(saveBankItem)
+//        val saveBankItem = SaveBankItem(
+//            accountName = beneAccountName,
+//            accountNo = beneAccountNo,
+//            accountType = 0,
+//            active = true,
+//            bankID = beneBankId,
+//            benePersonId = benePersonId,
+//            branchID = beneBranchId,
+//            deviceId = deviceId,
+//            id = 0,
+//            orderType = orderType,
+//            userIPAddress = ipAddress,
+//            walletId = beneWalletId
+//        )
+//        bankViewModel.saveBank(saveBankItem)
 
     }
 

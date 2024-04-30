@@ -1,13 +1,13 @@
-package com.bsel.remitngo.data.model.bank.save_bank_account
+package com.bsel.remitngo.data.model.registration
 
 
 import com.google.gson.annotations.SerializedName
 
-data class SaveBankResponseItem(
+data class ErrorResponse(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: String?,
+    val `data`: List<ErrorResponseData?>?,
     @SerializedName("Message")
     val message: String?,
     @SerializedName("Token")

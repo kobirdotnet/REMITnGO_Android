@@ -12,26 +12,17 @@ import android.view.View
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBankSelectedListener
-import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnSaveBankAndWalletSelectedListener
-import com.bsel.remitngo.data.interfaceses.OnSaveBeneficiarySelectedListener
 import com.bsel.remitngo.data.model.bank.BankData
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
-import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.branch.BranchData
-import com.bsel.remitngo.data.model.district.DistrictData
-import com.bsel.remitngo.data.model.division.DivisionData
 import com.bsel.remitngo.databinding.SaveBankAndWalletLayoutBinding
-import com.bsel.remitngo.databinding.SaveRecipientLayoutBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.bank.BankViewModel
 import com.bsel.remitngo.presentation.ui.bank.BankViewModelFactory
-import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModel
-import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -219,11 +210,18 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
     private fun observeSaveBankResult() {
         bankViewModel.saveBankResult.observe(this) { result ->
             try {
-                Log.i("info", "result: $result")
-            } catch (e: NullPointerException) {
+                if (result?.data != null) {
+                    saveBankAndWallet(result?.data.toString())
+                }
+            }catch (e:NullPointerException){
                 e.localizedMessage
             }
         }
+    }
+
+    private fun saveBankAndWallet(selectedItem: String) {
+        itemSelectedListener?.onSaveBankAndWalletItemSelected(selectedItem)
+        dismiss()
     }
 
     private fun bankAccountForm() {
@@ -249,18 +247,18 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
         beneAccountNo = binding.bankAccountNumber.text.toString()
 
         val saveBankItem = SaveBankItem(
-            id = 0,
-            deviceId = deviceId,
-            userIPAddress = ipAddress.toString(),
-            orderType = orderType,
-            cusBankInfoID = benePersonId,
             accountName = beneAccountName,
-            bankID = beneBankId,
-            branchID = beneBranchId,
             accountNo = beneAccountNo,
-            isVersion113 = 0,
-            accountType = 2,
-            active = true
+            accountType = 0,
+            active = true,
+            bankID = beneBankId,
+            benePersonId = benePersonId,
+            branchID = beneBranchId,
+            deviceId = deviceId,
+            id = 0,
+            orderType = orderType,
+            userIPAddress = ipAddress,
+            walletId = beneWalletId
         )
         bankViewModel.saveBank(saveBankItem)
     }
@@ -282,21 +280,20 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
         beneAccountNo = binding.walletAccountNumber.text.toString()
 
         val saveBankItem = SaveBankItem(
-            id = 0,
-            deviceId = deviceId,
-            userIPAddress = ipAddress.toString(),
-            orderType = orderType,
-            cusBankInfoID = benePersonId,
             accountName = beneAccountName,
-            bankID = beneBankId,
-            branchID = beneBranchId,
             accountNo = beneAccountNo,
-            isVersion113 = 0,
-            accountType = 1,
-            active = true
+            accountType = 0,
+            active = true,
+            bankID = beneBankId,
+            benePersonId = benePersonId,
+            branchID = beneBranchId,
+            deviceId = deviceId,
+            id = 0,
+            orderType = orderType,
+            userIPAddress = ipAddress,
+            walletId = beneWalletId
         )
         bankViewModel.saveBank(saveBankItem)
-
     }
 
     //Form validation
@@ -421,7 +418,6 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
                 Settings.Secure.ANDROID_ID
             )
         }
-
         return deviceId
     }
 

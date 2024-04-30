@@ -1,11 +1,9 @@
 package com.bsel.remitngo.presentation.ui.registration
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.util.Patterns
 import android.view.MotionEvent
-import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -23,21 +21,18 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
-import com.bsel.remitngo.bottomSheet.ExistingCustomerBottomSheet
 import com.bsel.remitngo.bottomSheet.MarketingBottomSheet
+import com.bsel.remitngo.bottomSheet.RegistrationDialog
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.api.TokenManager
 import com.bsel.remitngo.data.interfaceses.OnMarketingItemSelectedListener
-import com.bsel.remitngo.data.model.marketing.MarketingResponseItem
 import com.bsel.remitngo.data.model.marketing.MarketingValue
-import com.bsel.remitngo.data.model.registration.RegistrationData
+import com.bsel.remitngo.data.model.registration.ErrorResponseData
 import com.bsel.remitngo.data.model.registration.RegistrationItem
+import com.bsel.remitngo.data.model.registration.RegistrationResponseItem
 import com.bsel.remitngo.databinding.ActivityRegistrationBinding
 import com.bsel.remitngo.presentation.di.Injector
-import com.bsel.remitngo.presentation.ui.main.MainActivity
-import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.bsel.remitngo.presentation.ui.login.LoginActivity
+import org.json.JSONArray
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -50,6 +45,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
     private lateinit var binding: ActivityRegistrationBinding
 
     private val marketingBottomSheet: MarketingBottomSheet by lazy { MarketingBottomSheet() }
+    private val registrationDialog: RegistrationDialog by lazy { RegistrationDialog() }
 
     private lateinit var deviceId: String
 
@@ -120,8 +116,12 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
             yearPicker.value = defaultYear
 
             // Set the maximum date
-            val maxDateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(maxDate.time)
-            val minDateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().time)
+            val maxDateString =
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(maxDate.time)
+            val minDateString = SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale.getDefault()
+            ).format(Calendar.getInstance().time)
 
             val minTimestamp = SimpleDateFormat("yyyy-MM-dd").parse(minDateString)?.time ?: 0
             val maxTimestamp = SimpleDateFormat("yyyy-MM-dd").parse(maxDateString)?.time ?: 0
@@ -138,7 +138,8 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
                 val selectedDay = dayPicker.value
                 val selectedMonth = monthPicker.value
                 val selectedYear = yearPicker.value
-                val formattedDate = "%04d-%02d-%02d".format(selectedYear, selectedMonth, selectedDay)
+                val formattedDate =
+                    "%04d-%02d-%02d".format(selectedYear, selectedMonth, selectedDay)
                 binding.dob.setText(formattedDate)
                 datePickerDialog.dismiss()
             }
@@ -181,6 +182,9 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
         binding.btnSignUp.setOnClickListener { signUpForm() }
 
+        binding.password.setText("Normal@222")
+        binding.confirmPassword.setText("Normal@222")
+
         observeRegistrationResult()
 
     }
@@ -189,42 +193,34 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         registrationViewModel.registrationResult.observe(this) { result ->
             result?.let { registrationResponse ->
                 if (registrationResponse.code == "000") {
-                    val data = registrationResponse.data
-                    if (data is List<*>) {
-                        val gson = Gson()
-                        val registrationDataList = gson.fromJson<List<RegistrationData>>(
-                            gson.toJsonTree(data),
-                            object : TypeToken<List<RegistrationData>>() {}.type
+                    val data = registrationResponse.data.toString()
+                    if (!registrationDialog.isAdded) {
+                        registrationDialog.setSelectedMessage(data)
+                        registrationDialog.dialog?.window?.setLayout(
+                            WindowManager.LayoutParams.MATCH_PARENT,
+                            WindowManager.LayoutParams.MATCH_PARENT
                         )
-                        registrationDataList.forEach { registrationData ->
-                            registrationData?.let {
-                                preferenceManager.saveData(
-                                    "personId",
-                                    it.personId?.toString() ?: ""
-                                )
-                                preferenceManager.saveData("firstName", it.firstName ?: "")
-                                preferenceManager.saveData("lastName", it.lastName ?: "")
-                                preferenceManager.saveData("email", it.email ?: "")
-                                preferenceManager.saveData("mobile", it.mobile ?: "")
-                                preferenceManager.saveData("dob", it.dateOfBirth ?: "")
-                            }
-                        }
-                    } else {
-                        Log.e("error", "Invalid data type for 'Data'")
+                        registrationDialog.show(supportFragmentManager, registrationDialog.tag)
                     }
-                    registrationResponse.token?.let { TokenManager.setToken(it) }
-                    val intent = Intent(this@RegistrationActivity, MainActivity::class.java)
-                    startActivity(intent)
+//                    val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
+//                    startActivity(intent)
                 } else {
-                    Log.i("info", "Registration not successful. Code: ${registrationResponse.data}")
-                    val parentLayout: View = findViewById(android.R.id.content)
-                    val snackbar =
-                        Snackbar.make(
-                            parentLayout,
-                            registrationResponse.data.toString(),
-                            Snackbar.LENGTH_SHORT
-                        )
-                    snackbar.show()
+                    val data = registrationResponse.data
+
+                    if (data is List<*>) {
+                        val messages = data.filterIsInstance<ErrorResponseData>().mapNotNull { it.message }
+                        val message = messages.joinToString(separator = "\n")
+
+                        if (!registrationDialog.isAdded) {
+                            registrationDialog.setSelectedMessage(message.ifEmpty { "Unknown error" })
+                            registrationDialog.dialog?.window?.setLayout(
+                                WindowManager.LayoutParams.MATCH_PARENT,
+                                WindowManager.LayoutParams.MATCH_PARENT
+                            )
+                            registrationDialog.show(supportFragmentManager, registrationDialog.tag)
+                        }
+                    }
+
                 }
             } ?: run {
                 Log.e("error", "Null response received")
@@ -248,10 +244,6 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         val validPhone = binding.phoneNumberContainer.helperText == null
         val validPassword = binding.passwordContainer.helperText == null
         val validConfirmPassword = binding.confirmPasswordContainer.helperText == null
-
-        if (!termAndConditionChange){
-            Log.i("info", "termAndConditionChange: $termAndConditionChange")
-        }
 
         if (validFirstName && validLastName && validDob && validEmail && validPhone && validPassword && validConfirmPassword && termAndConditionChange) {
             submitSignUpForm()

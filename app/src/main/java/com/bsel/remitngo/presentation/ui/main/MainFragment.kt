@@ -355,7 +355,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     binding.bankPayment.isChecked = false
                 }
                 R.id.bankPayment -> {
-                    paymentMode = 3
+                    paymentMode = 5
 
                     binding.cardPayment.isChecked = false
                     binding.bankPayment.isChecked = true

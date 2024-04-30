@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -35,6 +36,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -70,6 +72,7 @@ class LoginActivity : AppCompatActivity() {
             ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
 
         requestContactsAndCameraPermissions()
+        checkLocationPermissions()
 
         preferenceManager = PreferenceManager(this@LoginActivity)
 
@@ -341,5 +344,83 @@ class LoginActivity : AppCompatActivity() {
             imm.hideSoftInputFromWindow(activity.window.decorView.windowToken, 0)
         }
     }
+
+    private val REQUEST_LOCATION_PERMISSION_CODE = 1001
+    private fun checkLocationPermissions() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                REQUEST_LOCATION_PERMISSION_CODE
+            )
+        } else {
+            // Permissions already granted
+            fetchLocation()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_LOCATION_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                fetchLocation()
+            } else {
+                // Permission denied
+                // Handle the denial
+            }
+        }
+    }
+
+    private fun fetchLocation() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission not granted, handle it accordingly
+            return
+        }
+
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    // Do something with latitude and longitude
+                    Log.i("LocationInfo", "Latitude: $latitude, Longitude: $longitude")
+                } else {
+                    Log.e("LocationInfo", "Last known location is null")
+
+                    // Handle the case where the last known location is null,
+                    // prompt the user to enable location services or provide a fallback mechanism.
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("LocationInfo", "Error getting location: ${e.message}")
+                // Handle failure
+            }
+    }
+
 
 }

@@ -17,9 +17,7 @@ import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BankAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBankAndWalletSelectedListener
-import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnSaveBankAndWalletSelectedListener
-import com.bsel.remitngo.data.interfaceses.OnSaveBeneficiarySelectedListener
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.databinding.ChooseBankLayoutBinding
@@ -169,9 +167,6 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
 
         observeGetBankResult()
 
-        Log.i("info","beneAccountName: "+beneAccountName)
-        Log.i("info","beneAccountNo: "+beneAccountNo)
-
         binding.btnBank.setOnClickListener {
             saveBankAndWalletBottomSheet.itemSelectedListener = this
             saveBankAndWalletBottomSheet.setOrderType(
@@ -268,6 +263,26 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
         dismiss()
     }
 
+    override fun onSaveBankAndWalletItemSelected(selectedItem: String) {
+        if (orderType == 1) {
+            val getBankItem = GetBankItem(
+                benePersonId = benePersonId,
+                accountType = orderType,
+                walletId = beneWalletId,
+                bankId = beneBankId
+            )
+            bankViewModel.getBank(getBankItem)
+        } else {
+            val getBankItem = GetBankItem(
+                benePersonId = benePersonId,
+                accountType = 2,
+                walletId = beneWalletId,
+                bankId = beneBankId
+            )
+            bankViewModel.getBank(getBankItem)
+        }
+    }
+
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 
@@ -303,10 +318,6 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
     override fun onStart() {
         super.onStart()
         chooseBankBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
-    override fun onSaveBankAndWalletItemSelected(selectedItem: String) {
-        TODO("Not yet implemented")
     }
 
 }

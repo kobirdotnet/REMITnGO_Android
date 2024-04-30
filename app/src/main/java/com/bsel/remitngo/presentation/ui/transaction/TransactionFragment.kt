@@ -292,8 +292,8 @@ class TransactionFragment : Fragment() {
             transactionCode,
             BigDecimal(sendAmount),
             Currency.GBP,
-            customerEmail,
-            customerMobile,
+            "mizan.se@outlook.com",
+            "0789392016",
             billingAddress,
             "https://emptest.remitngo.com/emerchantpay/emernotificationresponse",
             transactionTypes

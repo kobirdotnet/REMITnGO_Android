@@ -268,6 +268,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
             itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
             dismiss()
         } else {
+            itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
             chooseBankBottomSheet.itemSelectedListener = this
             chooseBankBottomSheet.setOrderType(
                 orderType,
