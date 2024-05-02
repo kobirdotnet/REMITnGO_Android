@@ -92,21 +92,25 @@ class PaymentCardFragment : Fragment() {
 
             } else {
                 Log.i("info", "observePaymentStatusResult: ${result.data}")
-                if (result.data == "Success") {
-                    binding.paymentSuccessful.visibility = View.VISIBLE
-                    binding.paymentFailed.visibility = View.GONE
-                    binding.paymentCancel.visibility = View.GONE
-                    binding.backToHomeLayout.visibility = View.VISIBLE
-                } else if (result.data == "Failed") {
-                    binding.paymentSuccessful.visibility = View.GONE
-                    binding.paymentFailed.visibility = View.VISIBLE
-                    binding.paymentCancel.visibility = View.GONE
-                    binding.backToHomeLayout.visibility = View.VISIBLE
-                } else if (result.data == "Cancel") {
-                    binding.paymentSuccessful.visibility = View.GONE
-                    binding.paymentFailed.visibility = View.GONE
-                    binding.paymentCancel.visibility = View.VISIBLE
-                    binding.backToHomeLayout.visibility = View.VISIBLE
+                when (result.data) {
+                    "Success" -> {
+                        binding.paymentSuccessful.visibility = View.VISIBLE
+                        binding.paymentFailed.visibility = View.GONE
+                        binding.paymentCancel.visibility = View.GONE
+                        binding.backToHomeLayout.visibility = View.VISIBLE
+                    }
+                    "Failed" -> {
+                        binding.paymentSuccessful.visibility = View.GONE
+                        binding.paymentFailed.visibility = View.VISIBLE
+                        binding.paymentCancel.visibility = View.GONE
+                        binding.backToHomeLayout.visibility = View.VISIBLE
+                    }
+                    "Cancel" -> {
+                        binding.paymentSuccessful.visibility = View.GONE
+                        binding.paymentFailed.visibility = View.GONE
+                        binding.paymentCancel.visibility = View.VISIBLE
+                        binding.backToHomeLayout.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -175,6 +179,15 @@ class PaymentCardFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        paymentViewModel.paymentStatus(transactionCode)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_nav_complete_card_transaction_to_nav_main)
+        }
+    }
+
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 
@@ -205,22 +218,6 @@ class PaymentCardFragment : Fragment() {
             ipAddress shr 16 and 0xff,
             ipAddress shr 24 and 0xff
         )
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.i("info", "onResume: " + "onResume")
-        paymentViewModel.paymentStatus(transactionCode)
-
-        binding.paymentSuccessful.visibility = View.GONE
-        binding.paymentFailed.visibility = View.GONE
-        binding.paymentCancel.visibility = View.VISIBLE
-        binding.backToHomeLayout.visibility = View.VISIBLE
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_nav_complete_card_transaction_to_nav_main)
-        }
-
     }
 
     //        Handler(Looper.getMainLooper()).postDelayed({

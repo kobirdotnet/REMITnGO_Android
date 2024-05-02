@@ -12,6 +12,8 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptResponseItemForCreateReceipt
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
+import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.transaction.TransactionItem
 import com.bsel.remitngo.data.model.transaction.TransactionResponseItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
@@ -20,12 +22,10 @@ import retrofit2.Response
 
 interface TransactionRemoteDataSource {
 
+    suspend fun profile(profileItem: ProfileItem): Response<ProfileResponseItem>
     suspend fun consumer(consumerItem: ConsumerItem): Response<ConsumerResponseItem>
-
     suspend fun saveConsumer(saveConsumerItem: SaveConsumerItem): Response<SaveConsumerResponseItem>
-
     suspend fun emp(empItem: EmpItem): Response<EmpResponseItem>
-
     suspend fun transaction(transactionItem: TransactionItem): Response<TransactionResponseItem>
     suspend fun transactionDetails(transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem>
     suspend fun encrypt(encryptItem: EncryptItem): Response<EncryptResponseItem>

@@ -78,8 +78,16 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
     private var customerId: Int = 0
     private var personId: Int = 0
+    private var customerPostCode: String? = null
+    private var customerFirstName: String? = null
+    private var customerLastName: String? = null
+    private var customerAddress: String? = null
+    private var customerState: String? = null
+    private var customerCity: String? = null
     private var customerEmail: String? = null
     private var customerMobile: String? = null
+    private var isMobileOTPValidate: Boolean = true
+    private var requireDoc: String? = null
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
@@ -103,16 +111,13 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private val decimalFormat = DecimalFormat("#.##")
 
     private lateinit var transactionCode: String
-    private var address: String? = null
-    private var mobile: String? = null
-    private var requireDoc: String? = null
-    private var isMobileOTPValidate: Boolean = true
     private var gbpValue = 0.0
 
     private var beneAccountName: String? = null
     private var beneBankName: String? = null
     private var beneAccountNo: String? = null
     private var beneAmount: Double = 0.0
+    private var modifiedBeneAmount: Double = 0.0
     private var beneBankId: Int = 0
     private var beneBranchId: Int = 0
     private var beneBranchName: String? = null
@@ -128,7 +133,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private var fromCurrencyId: Int = 96
     private var latitude: String? = null
     private var longitude: String? = null
-    private var modifiedBeneAmount: Double = 0.0
+
     private var modifiedCommission: Double = 0.0
     private var modifiedRate: Double = 0.0
     private var modifiedSendAmount: Double = 0.0
@@ -144,7 +149,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private var sourceOfFundName: String? = null
     private var toCountryId: Int = 1
     private var toCurrencyId: Int = 6
-    private var totalAmountGiven: Double = 0.0
+    private var totalAmount: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -174,19 +179,10 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
             customerId = preferenceManager.loadData("customerId").toString().toInt()
         } catch (e: NumberFormatException) {
-            e.localizedMessage
-        }
-        try {
-            customerEmail = preferenceManager.loadData("customerEmail").toString()
-        } catch (e: NullPointerException) {
-            e.localizedMessage
-        }
-        try {
-            customerMobile = preferenceManager.loadData("customerMobile").toString()
-        } catch (e: NullPointerException) {
             e.localizedMessage
         }
 
@@ -194,110 +190,181 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         ipAddress = getIPAddress(requireContext())
         currentDate = getCurrentDate(requireContext())
 
-        paymentMode = arguments?.getString("paymentType").toString().toInt()
-        orderType = arguments?.getString("orderType").toString().toInt()
-
-        sendAmount = arguments?.getString("sendAmount").toString().toDouble()
-        beneAmount = arguments?.getString("receiveAmount").toString().toDouble()
 
         try {
-            rate = arguments?.getString("exchangeRate").toString().toDouble()
+            paymentMode = arguments?.getString("paymentMode").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
+        try {
+            orderType = arguments?.getString("orderType").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+
+        try {
+            sendAmount = arguments?.getString("sendAmount").toString().toDouble()
+            if (sendAmount.toString() != "null") {
+                binding.sendAmount.text = "GBP $sendAmount"
+            }
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+
+        try {
+            beneAmount = arguments?.getString("beneAmount").toString().toDouble()
+            if (beneAmount.toString() != "null") {
+                binding.receiveAmount.text = "BDT $beneAmount"
+            }
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+
+        try {
+            rate = arguments?.getString("rate").toString().toDouble()
+            if (rate.toString() != "null") {
+                binding.exchangeRate.text = "GBP $rate"
+            }
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+
         try {
             commission = arguments?.getString("commission").toString().toDouble()
+            if (commission.toString() != "null") {
+                binding.transferFee.text = "GBP $commission"
+            }
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            beneBankId = arguments?.getString("bankId").toString().toInt()
+            beneBankId = arguments?.getString("beneBankId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            beneWalletId = arguments?.getString("walletId").toString().toInt()
-        } catch (e: NumberFormatException) {
+            beneBankName = arguments?.getString("beneBankName").toString()
+            if (beneBankName != "null") {
+                binding.receiverBankName.text = beneBankName!!
+            }
+        } catch (e: NullPointerException) {
             e.localizedMessage
         }
-        beneBankName = arguments?.getString("bankName").toString()
-        beneAccountNo = arguments?.getString("bankName").toString()
+
         try {
-            beneBranchId = arguments?.getString("branchId").toString().toInt()
+            beneBranchId = arguments?.getString("beneBranchId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
+        try {
+            beneBranchName = arguments?.getString("beneBranchName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            beneWalletId = arguments?.getString("beneWalletId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+
+        try {
+            beneWalletName = arguments?.getString("beneWalletName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            beneAccountNo = arguments?.getString("beneAccountNo").toString()
+            if (beneAccountNo != "null") {
+                binding.receiverAccount.text = beneAccountNo!!
+            }
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
         try {
             payingAgentId = arguments?.getString("payingAgentId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            benePersonId = arguments?.getString("benId").toString().toInt()
+            benePersonId = arguments?.getString("benePersonId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            beneId = arguments?.getString("beneficiaryId").toString().toInt()
+            beneId = arguments?.getString("beneId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
-        beneAccountName = arguments?.getString("beneficiaryName").toString()
-        beneMobile = arguments?.getString("beneficiaryPhoneNumber").toString()
+
         try {
-            purposeOfTransferId = arguments?.getString("reasonId").toString().toInt()
-        } catch (e: NumberFormatException) {
-            e.localizedMessage
-        }
-        purposeOfTransferName = arguments?.getString("reasonName").toString()
-        try {
-            sourceOfFundId = arguments?.getString("sourceOfIncomeId").toString().toInt()
-        } catch (e: NumberFormatException) {
-            e.localizedMessage
-        }
-        sourceOfFundName = arguments?.getString("sourceOfIncomeName").toString()
-        if (sendAmount.toString() != "null") {
-            binding.sendAmount.text = "GBP $sendAmount"
-        }
-        if (commission.toString() != "null") {
-            binding.transferFee.text = "GBP $commission"
-        }
-        if (sendAmount.toString() != "null" || commission.toString() != "null") {
-            try {
-                val sa = sendAmount
-                val cm = commission
-                totalAmountGiven = sa + cm
-                binding.totalAmount.text = "GBP $totalAmountGiven"
-            } catch (e: NumberFormatException) {
-                e.message
+            beneAccountName = arguments?.getString("beneAccountName").toString()
+            if (beneAccountName != "null") {
+                binding.receiverName.text = beneAccountName!!
             }
+        } catch (e: NullPointerException) {
+            e.localizedMessage
         }
-        if (rate.toString() != "null") {
-            binding.exchangeRate.text = "GBP $rate"
+
+        try {
+            beneMobile = arguments?.getString("beneMobile").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
         }
-        if (beneAmount.toString() != "null") {
-            binding.receiveAmount.text = "BDT $beneAmount"
+
+        try {
+            purposeOfTransferId = arguments?.getString("purposeOfTransferId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
         }
-        if (beneAccountName != "null") {
-            binding.receiverName.text = beneAccountName
+
+        try {
+            purposeOfTransferName = arguments?.getString("purposeOfTransferName").toString()
+            if (purposeOfTransferName != "null") {
+                binding.reason.setText("$purposeOfTransferName")
+            }
+        } catch (e: NullPointerException) {
+            e.localizedMessage
         }
-        if (beneAccountNo != "null") {
-            binding.receiverAccount.text = beneAccountNo
+
+        try {
+            sourceOfFundId = arguments?.getString("sourceOfFundId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
         }
-        if (purposeOfTransferName != "null") {
-            binding.reason.setText("$purposeOfTransferName")
+
+        try {
+            sourceOfFundName = arguments?.getString("sourceOfFundName").toString()
+            if (sourceOfFundName != "null") {
+                binding.sourceOfIncome.setText("$sourceOfFundName")
+            }
+        } catch (e: NullPointerException) {
+            e.localizedMessage
         }
-        if (sourceOfFundName != "null") {
-            binding.sourceOfIncome.setText("$sourceOfFundName")
-        }
+
+
+        totalAmount = sendAmount + commission
+        binding.totalAmount.text = "GBP $totalAmount"
 
         val consumerItem = ConsumerItem(
             deviceId = deviceId, params1 = personId, params2 = ""
         )
         paymentViewModel.consumer(consumerItem)
         paymentViewModel.consumerResult.observe(this) { result ->
-            if (result!!.data != null) {
-                consumerId = result.data.toString()
+            try {
+                if (result!!.data != null) {
+                    consumerId = result.data.toString()
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
 
@@ -340,29 +407,40 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
             val bundle = Bundle().apply {
-                putString("paymentType", paymentMode.toString())
+
+                putString("paymentMode", paymentMode.toString())
                 putString("orderType", orderType.toString())
+
                 putString("sendAmount", sendAmount.toString())
-                putString("receiveAmount", beneAmount.toString())
-                putString("exchangeRate", rate.toString())
+                putString("beneAmount", beneAmount.toString())
+
+                putString("rate", rate.toString())
                 putString("commission", commission.toString())
 
-                putString("bankId", beneBankId.toString())
-                putString("walletId", beneWalletId.toString())
-                putString("branchId", beneBranchId.toString())
-                putString("bankName", beneBankName)
+                putString("beneBankId", beneBankId.toString())
+                putString("beneBankName", beneBankName)
+
+                putString("beneBranchId", beneBranchId.toString())
+                putString("beneBranchName", beneBranchName.toString())
+
+                putString("beneWalletId", beneWalletId.toString())
+                putString("beneWalletName", beneWalletName.toString())
+
                 putString("beneAccountNo", beneAccountNo)
                 putString("payingAgentId", payingAgentId.toString())
 
-                putString("benId", benePersonId.toString())
-                putString("beneficiaryId", beneId.toString())
-                putString("beneficiaryName", beneAccountName)
-                putString("beneficiaryPhoneNumber", beneMobile)
+                putString("benePersonId", benePersonId.toString())
+                putString("beneId", beneId.toString())
 
-                putString("reasonId", purposeOfTransferId.toString())
-                putString("reasonName", purposeOfTransferName)
-                putString("sourceOfIncomeId", sourceOfFundId.toString())
-                putString("sourceOfIncomeName", sourceOfFundName)
+                putString("beneAccountName", beneAccountName)
+                putString("beneMobile", beneMobile)
+
+                putString("purposeOfTransferId", purposeOfTransferId.toString())
+                putString("purposeOfTransferName", purposeOfTransferName)
+
+                putString("sourceOfFundId", sourceOfFundId.toString())
+                putString("sourceOfFundName", sourceOfFundName)
+
             }
             findNavController().navigate(
                 R.id.action_nav_review_to_nav_main, bundle
@@ -478,10 +556,18 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             try {
                 if (result!!.data != null) {
                     for (data in result.data!!) {
-                        address = data!!.address.toString()
-                        isMobileOTPValidate = data!!.isMobileOTPValidate!!
-                        mobile = data.mobile.toString()
-                        if (address == "" || address == "null") {
+
+                        customerPostCode = data!!.postCode.toString()
+                        customerFirstName = data.firstName.toString()
+                        customerLastName = data.lastName.toString()
+                        customerAddress = data.address.toString()
+                        customerCity = data.cityName.toString()
+                        customerState = data.divisionName.toString()
+                        customerEmail = data.email.toString()
+                        customerMobile = data.mobile.toString()
+                        isMobileOTPValidate = data.isMobileOTPValidate!!
+
+                        if (customerAddress == "" || customerAddress == "null") {
                             if (!addressVerifyBottomSheet.isAdded) {
                                 addressVerifyBottomSheet.show(
                                     childFragmentManager, addressVerifyBottomSheet.tag
@@ -489,7 +575,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                             }
                         } else if (!isMobileOTPValidate) {
                             if (!transactionOtpVerifyBottomSheet.isAdded) {
-                                transactionOtpVerifyBottomSheet.setPhoneNumber(mobile!!)
+                                transactionOtpVerifyBottomSheet.setPhoneNumber(customerMobile!!)
                                 transactionOtpVerifyBottomSheet.show(
                                     childFragmentManager, transactionOtpVerifyBottomSheet.tag
                                 )
@@ -502,7 +588,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                             beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
                             val totalAmountValue = binding.totalAmount.text.toString()
-                            totalAmountGiven =
+                            totalAmount =
                                 totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
                             val paymentItem = PaymentItem(
@@ -537,7 +623,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                                 sourceOfFundId = sourceOfFundId,
                                 toCountryId = toCountryId,
                                 toCurrencyId = toCurrencyId,
-                                totalAmountGiven = totalAmountGiven,
+                                totalAmountGiven = totalAmount,
                                 userIPAddress = ipAddress
                             )
                             paymentViewModel.payment(paymentItem)
@@ -545,7 +631,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     }
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -577,7 +663,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     paymentViewModel.requireDocument(requireDocumentItem)
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -589,7 +675,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     encryptCode = result.data.toString()
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -598,13 +684,13 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         paymentViewModel.requireDocumentResult.observe(this) { result ->
             try {
                 if (result!!.code == "000") {
-                    requireDoc = result!!.data.toString()
-                    if (result!!.data != null) {
+                    requireDoc = result.data.toString()
+                    if (result.data != null) {
                         val totalAmountValue = binding.totalAmount.text.toString()
-                        totalAmountGiven = totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+                        totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
                         if (!requireDocumentBottomSheet.isAdded) {
                             requireDocumentBottomSheet.requireDocument(
-                                totalAmountGiven,
+                                totalAmount,
                                 benePersonId,
                                 customerId,
                                 currentDate,
@@ -616,7 +702,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                             )
                         }
                     } else {
-                        if (!address.equals(null) && isMobileOTPValidate && !requireDoc.equals(
+                        if (!customerAddress.equals(null) && isMobileOTPValidate && !requireDoc.equals(
                                 null
                             )
                         ) {
@@ -624,7 +710,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                                 cardPayment()
                             } else if (paymentMode == 5) {
                                 val bundle = Bundle().apply {
-                                    putString("sendAmount", totalAmountGiven.toString())
+                                    putString("sendAmount", totalAmount.toString())
                                     putString("transactionCode", transactionCode)
                                 }
                                 findNavController().navigate(
@@ -635,7 +721,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     }
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -658,13 +744,13 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
         // Create Billing PaymentAddress
         billingAddress = PaymentAddress(
-            "Mohammad",
-            "Kobirul Islam",
-            "Dhaka",
-            "Dhaka",
-            "1000",
-            "Dhaka",
-            "Dhaka",
+            customerFirstName.toString(),
+            customerLastName.toString(),
+            customerAddress.toString(),
+            customerAddress.toString(),
+            customerPostCode.toString(),
+            customerCity.toString(),
+            customerState.toString(),
             Country.UnitedKingdom
         )
 
@@ -689,7 +775,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         paymentRequest = PaymentRequest(
             requireContext(),
             transactionCode,
-            BigDecimal(totalAmountGiven),
+            BigDecimal(totalAmount),
             Currency.GBP,
             customerEmail,
             customerMobile,
@@ -859,7 +945,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     Log.i("info", "Save Consumer: " + result.data.toString())
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -871,7 +957,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     Log.i("info", "observeEmpResult: " + result.data.toString())
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -946,7 +1032,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         try {
             transactionCode = arguments?.getString("transactionCode").toString()
             val transactionDetailsItem = TransactionDetailsItem(
-                deviceId = deviceId, params1 = personId, params2 = transactionCode.toString()
+                deviceId = deviceId, params1 = personId, params2 = transactionCode
             )
             paymentViewModel.paymentTransaction(transactionDetailsItem)
             observeTransactionDetailsResult()
@@ -961,22 +1047,32 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 if (result!!.data != null) {
                     for (paymentTransactionData in result.data!!) {
 
-                        paymentMode = paymentTransactionData?.paymentType.toString().toInt()
-                        orderType = paymentTransactionData?.orderTypeId.toString().toInt()
+                        paymentMode = paymentTransactionData?.paymentMode.toString().toInt()
+                        orderType = paymentTransactionData?.orderType.toString().toInt()
 
                         sendAmount = paymentTransactionData?.sendAmount.toString().toDouble()
-                        beneAmount = paymentTransactionData?.benAmount.toString().toDouble()
+                        beneAmount = paymentTransactionData?.beneAmount.toString().toDouble()
 
                         rate = paymentTransactionData?.rate.toString().toDouble()
                         commission = paymentTransactionData?.transferFees.toString().toDouble()
 
                         beneBankId = paymentTransactionData?.beneBankId.toString().toInt()
                         beneBranchId = paymentTransactionData?.beneBranchId.toString().toInt()
-                        beneAccountNo = paymentTransactionData?.bankName.toString()
+                        try {
+                            beneAccountNo = paymentTransactionData?.beneAccountNo.toString()
+                            binding.receiverAccount.text = beneAccountNo
+                        } catch (e: NullPointerException) {
+                            e.localizedMessage
+                        }
                         payingAgentId = paymentTransactionData?.payingAgentId.toString().toInt()
 
                         beneId = paymentTransactionData?.beneId.toString().toInt()
-                        beneAccountName = paymentTransactionData?.benName.toString()
+                        try {
+                            beneAccountName = paymentTransactionData?.beneName.toString()
+                            binding.receiverName.text = beneAccountName
+                        } catch (e: NullPointerException) {
+                            e.localizedMessage
+                        }
 
                         purposeOfTransferId =
                             paymentTransactionData?.purposeOfTransferId.toString().toInt()
@@ -989,27 +1085,15 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                         if (commission.toString() != "null") {
                             binding.transferFee.text = "GBP $commission"
                         }
-                        if (sendAmount.toString() != "null" || commission.toString() != "null") {
-                            try {
-                                val sa = sendAmount
-                                val cm = commission
-                                totalAmountGiven = sa + cm
-                                binding.totalAmount.text = "GBP $totalAmountGiven"
-                            } catch (e: NumberFormatException) {
-                                e.message
-                            }
-                        }
+
+                        totalAmount = sendAmount + commission
+                        binding.totalAmount.text = "GBP $totalAmount"
+
                         if (rate.toString() != "null") {
                             binding.exchangeRate.text = "GBP $rate"
                         }
                         if (beneAmount.toString() != "null") {
                             binding.receiveAmount.text = "BDT $beneAmount"
-                        }
-                        if (beneAccountName != "null") {
-                            binding.receiverName.text = beneAccountName
-                        }
-                        if (beneAccountNo != "null") {
-                            binding.receiverAccount.text = beneAccountNo
                         }
                         if (purposeOfTransferName != "null") {
                             binding.reason.setText("$purposeOfTransferName")
@@ -1035,7 +1119,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     }
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -1155,16 +1239,10 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                         if (commission.toString() != "null") {
                             binding.transferFee.text = "GBP $commission"
                         }
-                        if (sendAmount.toString() != "null" || commission.toString() != "null") {
-                            try {
-                                val sa = sendAmount
-                                val cm = commission
-                                totalAmountGiven = sa + cm
-                                binding.totalAmount.text = "GBP $totalAmountGiven"
-                            } catch (e: NumberFormatException) {
-                                e.message
-                            }
-                        }
+
+                        totalAmount = sendAmount + commission
+                        binding.totalAmount.text = "GBP $totalAmount"
+
                         if (rate.toString() != "null") {
                             binding.exchangeRate.text = "BDT $rate"
                         }
@@ -1273,7 +1351,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             cardPayment()
         } else if (paymentMode == 5) {
             val bundle = Bundle().apply {
-                putString("sendAmount", totalAmountGiven.toString())
+                putString("sendAmount", totalAmount.toString())
                 putString("transactionCode", transactionCode)
             }
             findNavController().navigate(

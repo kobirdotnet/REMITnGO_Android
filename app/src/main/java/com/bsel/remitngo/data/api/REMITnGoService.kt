@@ -256,7 +256,7 @@ interface REMITnGoService {
     @POST("api/General/LoadQueryDataByComplainId")
     suspend fun queryMessage(@Body queryMessageItem: QueryMessageItem): Response<QueryMessageResponseItem>
 
-    @POST("api/General/LoadComplainType")
+    @POST("api/General/Dropdown")
     suspend fun queryType(@Body queryTypeItem: QueryTypeItem): Response<QueryTypeResponseItem>
     @POST("api/General/SaveQuery")
     suspend fun addQuery(@Body addQueryItem: AddQueryItem): Response<AddQueryResponseItem>

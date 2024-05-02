@@ -24,7 +24,7 @@
     <string name="menu_recipient_details">Recipient Details</string>
     <string name="menu_bank_details">Bank Details</string>
     <string name="menu_confirm_transfer">Confirm Transfer</string>
-    <string name="menu_transaction">Transaction</string>
+    <string name="menu_transaction">Transaction History</string>
     <string name="menu_transaction_history">Transaction History</string>
     <string name="menu_cancel_request">Cancel Request</string>
     <string name="menu_generate_query">Generate Query</string>

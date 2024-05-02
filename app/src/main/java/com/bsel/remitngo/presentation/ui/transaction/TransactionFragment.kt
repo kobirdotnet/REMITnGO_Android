@@ -28,6 +28,8 @@ import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.encript.EncryptItemForCreateReceipt
+import com.bsel.remitngo.data.model.payment.PaymentItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.transaction.TransactionData
 import com.bsel.remitngo.data.model.transaction.TransactionItem
 import com.bsel.remitngo.databinding.FragmentTransactionBinding
@@ -72,12 +74,16 @@ class TransactionFragment : Fragment() {
 
     private val transactionBottomSheet: TransactionBottomSheet by lazy { TransactionBottomSheet() }
 
-    private lateinit var personId: String
-    private lateinit var firstName: String
-    private lateinit var lastName: String
-    private lateinit var customerEmail: String
-    private lateinit var customerMobile: String
-    private lateinit var customerDateOfBirth: String
+    private var customerId: Int = 0
+    private var personId: Int = 0
+    private var customerPostCode: String? = null
+    private var customerFirstName: String? = null
+    private var customerLastName: String? = null
+    private var customerAddress: String? = null
+    private var customerState: String? = null
+    private var customerCity: String? = null
+    private var customerEmail: String? = null
+    private var customerMobile: String? = null
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
@@ -117,71 +123,125 @@ class TransactionFragment : Fragment() {
             ViewModelProvider(this, transactionViewModelFactory)[TransactionViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString()
-        firstName = preferenceManager.loadData("firstName").toString()
-        lastName = preferenceManager.loadData("lastName").toString()
-        customerEmail = preferenceManager.loadData("email").toString()
-        customerMobile = preferenceManager.loadData("mobile").toString()
-        customerDateOfBirth = preferenceManager.loadData("dob").toString()
+        preferenceManager = PreferenceManager(requireContext())
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            customerId = preferenceManager.loadData("customerId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        val transactionItem = TransactionItem(
-            deviceId = deviceId,
-            params1 = personId.toInt(),
-            params2 = 0
+        val profileItem = ProfileItem(
+            deviceId = deviceId, personId = personId
         )
-        transactionViewModel.transaction(transactionItem)
-        observeTransactionResult()
+        transactionViewModel.profile(profileItem)
 
         val consumerItem = ConsumerItem(
             deviceId = deviceId,
-            params1 = personId.toInt(),
+            params1 = personId,
             params2 = ""
         )
         transactionViewModel.consumer(consumerItem)
-        transactionViewModel.consumerResult.observe(this) { result ->
-            if (result!!.data != null) {
-                consumerId = result.data.toString()
-            }
-        }
 
+        val transactionItem = TransactionItem(
+            deviceId = deviceId,
+            params1 = personId,
+            params2 = 0
+        )
+        transactionViewModel.transaction(transactionItem)
+
+        observeProfileResult()
+        observeConsumerResult()
+        observeTransactionResult()
         observeEncryptForCreateReceiptResult()
     }
+    private fun observeProfileResult() {
+        transactionViewModel.profileResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (data in result.data!!) {
+                        customerPostCode = data!!.postCode.toString()
+                        customerFirstName = data.firstName.toString()
+                        customerLastName = data.lastName.toString()
+                        customerAddress = data.address.toString()
+                        customerCity = data.cityName.toString()
+                        customerState = data.divisionName.toString()
+                        customerEmail = data.email.toString()
+                        customerMobile = data.mobile.toString()
+                    }
+                }
+            } catch (e: NullPointerException) {
+                e.message
+            }
+        }
+    }
 
+    private fun observeConsumerResult() {
+        transactionViewModel.consumerResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    consumerId = result.data.toString()
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
+            }
+        }
+    }
     private fun observeTransactionResult() {
         transactionViewModel.transactionResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.transactionRecyclerView.layoutManager =
-                    LinearLayoutManager(requireActivity())
-                transactionAdapter = TransactionAdapter(
-                    selectedItem = { selectedItem: TransactionData ->
-                        transaction(selectedItem)
-                        binding.transactionSearch.setQuery("", false)
-                    },
-                    downloadReceipt = { downloadReceipt: TransactionData ->
-                        downloadReceipt(downloadReceipt)
-                    },
-                    sendAgain = { sendAgain: TransactionData ->
-                        sendAgain(sendAgain)
-                    }
-                )
-                binding.transactionRecyclerView.adapter = transactionAdapter
-                transactionAdapter.setList(result.data as List<TransactionData>)
-                transactionAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.transactionRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    transactionAdapter = TransactionAdapter(
+                        selectedItem = { selectedItem: TransactionData ->
+                            transaction(selectedItem)
+                            binding.transactionSearch.setQuery("", false)
+                        },
+                        downloadReceipt = { downloadReceipt: TransactionData ->
+                            downloadReceipt(downloadReceipt)
+                        },
+                        sendAgain = { sendAgain: TransactionData ->
+                            sendAgain(sendAgain)
+                        }
+                    )
+                    binding.transactionRecyclerView.adapter = transactionAdapter
+                    transactionAdapter.setList(result.data as List<TransactionData>)
+                    transactionAdapter.notifyDataSetChanged()
 
-                binding.transactionSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.transactionSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        transactionAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            transactionAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
+            }
+        }
+    }
+    private fun observeEncryptForCreateReceiptResult() {
+        transactionViewModel.encryptForCreateReceiptResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    val createReceiptCode = result.data.toString()
+                    createReceipt(createReceiptCode)
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -204,7 +264,7 @@ class TransactionFragment : Fragment() {
 
     private fun downloadReceipt(transactionData: TransactionData) {
         transactionCode = transactionData.transactionCode.toString()
-        sendAmount = transactionData.amount.toString()
+        sendAmount = transactionData.sendAmount.toString()
         orderStatus = transactionData.orderStatus.toString()
         paymentMode = transactionData.paymentMode.toString()
 
@@ -212,7 +272,7 @@ class TransactionFragment : Fragment() {
             if (paymentMode=="5"){
                 val bundle = Bundle().apply {
                     putString("transactionCode", transactionData.transactionCode.toString())
-                    putString("sendAmount", transactionData.amount.toString())
+                    putString("sendAmount", transactionData.sendAmount.toString())
                 }
                 findNavController().navigate(
                     R.id.action_nav_transaction_history_to_nav_complete_bank_transaction,
@@ -259,13 +319,13 @@ class TransactionFragment : Fragment() {
 
         // Create Billing PaymentAddress
         billingAddress = PaymentAddress(
-            "Mohammad",
-            "Kobirul Islam",
-            "Dhaka",
-            "Dhaka",
-            "1000",
-            "Dhaka",
-            "Dhaka",
+            customerFirstName.toString(),
+            customerLastName.toString(),
+            customerAddress.toString(),
+            customerAddress.toString(),
+            customerPostCode.toString(),
+            customerCity.toString(),
+            customerState.toString(),
             Country.UnitedKingdom
         )
 
@@ -501,15 +561,6 @@ class TransactionFragment : Fragment() {
                 connection.disconnect()
             } catch (e: Exception) {
                 e.message
-            }
-        }
-    }
-
-    private fun observeEncryptForCreateReceiptResult() {
-        transactionViewModel.encryptForCreateReceiptResult.observe(this) { result ->
-            if (result!!.data != null) {
-                val createReceiptCode = result.data.toString()
-                createReceipt(createReceiptCode)
             }
         }
     }

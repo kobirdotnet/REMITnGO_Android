@@ -79,7 +79,6 @@
                         android:textColor="@color/blue" />
                 </LinearLayout>
 
-
             </LinearLayout>
 
             <LinearLayout
@@ -110,14 +109,17 @@
                         android:textColor="@color/red"
                         android:textSize="18sp" />
 
-                    <TextView
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:text="Please send again."
                         android:textColor="@color/red"
-                        android:textSize="18sp" />
+                        android:padding="@dimen/padding_left"
+                        android:textAllCaps="true"
+                        android:backgroundTint="@color/grey"/>
 
                 </LinearLayout>
 
@@ -151,17 +153,19 @@
                         android:textColor="@color/red"
                         android:textSize="18sp" />
 
-                    <TextView
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:text="Please send again."
                         android:textColor="@color/red"
-                        android:textSize="18sp" />
+                        android:padding="@dimen/padding_left"
+                        android:textAllCaps="true"
+                        android:backgroundTint="@color/grey"/>
 
                 </LinearLayout>
-
 
             </LinearLayout>
 

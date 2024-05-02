@@ -13,6 +13,8 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptResponseItemForCreateReceipt
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
+import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.transaction.TransactionItem
 import com.bsel.remitngo.data.model.transaction.TransactionResponseItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
@@ -22,7 +24,9 @@ import retrofit2.Response
 
 class TransactionRemoteDataSourceImpl(private val remitNgoService: REMITnGoService) :
     TransactionRemoteDataSource {
-
+    override suspend fun profile(profileItem: ProfileItem): Response<ProfileResponseItem> {
+        return remitNgoService.profile(profileItem)
+    }
     override suspend fun consumer(consumerItem: ConsumerItem): Response<ConsumerResponseItem> {
         return remitNgoService.consumer(consumerItem)
     }

@@ -82,11 +82,14 @@ class QueryTypeBottomSheet : BottomSheetDialogFragment() {
         preferenceManager = PreferenceManager(requireContext())
         personId = preferenceManager.loadData("personId").toString()
         deviceId = getDeviceId(requireContext())
-        
+
         binding.cancelButton.setOnClickListener { dismiss() }
 
         val queryTypeItem = QueryTypeItem(
-            deviceId = deviceId
+            deviceId = deviceId,
+            dropdownId = 305,
+            param1 = 0,
+            param2 = 0
         )
         queryViewModel.queryType(queryTypeItem)
         observeQueryTypeResult()
@@ -96,33 +99,35 @@ class QueryTypeBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeQueryTypeResult() {
         queryViewModel.queryTypeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.queryTypeRecyclerView.layoutManager =
-                    LinearLayoutManager(requireActivity())
-                queryTypeAdapter = QueryTypeAdapter(
-                    selectedItem = { selectedItem: QueryTypeData ->
-                        queryType(selectedItem)
-                        binding.queryTypeSearch.setQuery("", false)
-                    }
-                )
-                binding.queryTypeRecyclerView.adapter = queryTypeAdapter
-                queryTypeAdapter.setList(result.data as List<QueryTypeData>)
-                queryTypeAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.queryTypeRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    queryTypeAdapter = QueryTypeAdapter(
+                        selectedItem = { selectedItem: QueryTypeData ->
+                            queryType(selectedItem)
+                            binding.queryTypeSearch.setQuery("", false)
+                        }
+                    )
+                    binding.queryTypeRecyclerView.adapter = queryTypeAdapter
+                    queryTypeAdapter.setList(result.data as List<QueryTypeData>)
+                    queryTypeAdapter.notifyDataSetChanged()
 
-                binding.queryTypeSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.queryTypeSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        queryTypeAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-                Log.i("info", " queryType successful: $result")
-            } else {
-                Log.i("info", " queryType failed")
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            queryTypeAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                    Log.i("info", " queryType successful: $result")
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
@@ -131,6 +136,7 @@ class QueryTypeBottomSheet : BottomSheetDialogFragment() {
         itemSelectedListener?.onQueryTypeItemSelected(selectedItem)
         dismiss()
     }
+
     private fun getDeviceId(context: Context): String {
         val deviceId: String
 

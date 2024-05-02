@@ -107,16 +107,16 @@ class TransactionBottomSheet : BottomSheetDialogFragment() {
 
                     binding.orderType.text = transactionDetailsData!!.orderTypeName.toString()
 
-                    binding.benName.text = transactionDetailsData!!.benName.toString()
+                    binding.benName.text = transactionDetailsData!!.beneName.toString()
 
-                    binding.bankName.text = transactionDetailsData!!.bankName.toString()
+                    binding.bankName.text = transactionDetailsData!!.beneBankName.toString()
 
-                    binding.accountNo.text = transactionDetailsData!!.accountNo.toString()
+                    binding.accountNo.text = transactionDetailsData!!.beneAccountNo.toString()
 
 //                    val totalAmount = transactionDetailsData!!.totalAmount.toString()
 //                    binding.sendAmount.text = "GBP $totalAmount"
 
-                    val benAmount = transactionDetailsData!!.benAmount.toString()
+                    val benAmount = transactionDetailsData!!.beneAmount.toString()
                     binding.benAmount.text = "BDT $benAmount"
 
                     val exchangeRate=transactionDetailsData!!.rate.toString()

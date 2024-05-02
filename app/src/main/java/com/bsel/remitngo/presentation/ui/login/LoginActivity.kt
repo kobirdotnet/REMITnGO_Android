@@ -115,10 +115,11 @@ class LoginActivity : AppCompatActivity() {
                         preferenceManager.saveData("customerId", data.id.toString())
                         preferenceManager.saveData("personId", data.personId.toString())
                         preferenceManager.saveData("firstName", data.firstName.toString())
+                        preferenceManager.saveData("cmCode", data.cmCode.toString())
                         preferenceManager.saveData("lastName", data.lastName.toString())
                         preferenceManager.saveData("customerEmail", data.email.toString())
                         preferenceManager.saveData("customerMobile", data.mobile.toString())
-                        preferenceManager.saveData("dob", data.dateOfBirth.toString())
+                        preferenceManager.saveData("customerDob", data.dateOfBirth.toString())
                     }
                     TokenManager.setToken(result.token)
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)

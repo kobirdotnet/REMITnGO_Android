@@ -21,6 +21,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bsel.remitngo.R
+import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.databinding.ActivityMainBinding
 import com.bsel.remitngo.presentation.ui.login.LoginActivity
 import com.google.android.material.navigation.NavigationView
@@ -33,6 +34,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
+
+    private lateinit var preferenceManager: PreferenceManager
+    private var customerId: Int = 0
+    private var personId: Int = 0
+    private var cmCode: String? = null
+    private var customerDob: String? = null
+    private var firstName: String? = null
+    private var lastName: String? = null
+    private var customerEmail: String? = null
+    private var customerMobile: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,15 +102,57 @@ class MainActivity : AppCompatActivity() {
         val support = headerView.findViewById<LinearLayout>(R.id.support)
         val logOut = headerView.findViewById<LinearLayout>(R.id.logOut)
 
-        customerName.text = "Mohammad Kobirul Islam"
-        customerEmailAddress.text = "kobirdotnet@gmail.com"
-        customerPhoneNumber.text = "+8801535111573"
+        preferenceManager = PreferenceManager(this@MainActivity)
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            customerId = preferenceManager.loadData("customerId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            cmCode = preferenceManager.loadData("cmCode").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+        try {
+            customerDob = preferenceManager.loadData("customerDob").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+        try {
+            firstName = preferenceManager.loadData("firstName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+        try {
+            lastName = preferenceManager.loadData("lastName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+        try {
+            customerEmail = preferenceManager.loadData("customerEmail").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+        try {
+            customerMobile = preferenceManager.loadData("customerMobile").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        customerName.text = "$firstName $lastName"
+        customerEmailAddress.text = customerEmail
+        customerPhoneNumber.text = customerMobile
 
         referralBonus.text = "Share your unique id with your friends and families and get discount."
         referralBonusTxt.text =
             "You will receive GBP 5.00 and your friend will receive GBP 5.00 on their first transfer. Minimum send requirements and conditions apply."
         referralCodeTxt.text = "Your Unique ID: "
-        referralCode.text = "CM007788"
+        referralCode.text = "$cmCode"
         inviteReferralCode.text = "Share Now"
 
         inviteReferralCode.setOnClickListener {

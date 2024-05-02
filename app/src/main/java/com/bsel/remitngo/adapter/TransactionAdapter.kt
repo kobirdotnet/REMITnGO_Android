@@ -60,18 +60,15 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
         downloadReceipt: (TransactionData) -> Unit,
         sendAgain: (TransactionData) -> Unit
     ) {
-        binding.benName.text = transactionItem.benName.toString()
+        binding.benName.text = transactionItem.beneName.toString()
         binding.orderType.text = transactionItem.orderTypeName.toString()
         binding.transactionCode.text = transactionItem.transactionCode.toString()
         binding.transactionDate.text = transactionItem.transactionDateTime12hr.toString()
 
-        binding.bankName.text = transactionItem.bankName.toString()
-        binding.accountNo.text = transactionItem.accountNo.toString()
-        val benAmount = transactionItem.benAmount.toString()
+        binding.bankName.text = transactionItem.beneBankName.toString()
+        binding.accountNo.text = transactionItem.beneAccountNo.toString()
+        val benAmount = transactionItem.beneAmount.toString()
         binding.benAmount.text = "BDT $benAmount"
-
-        val orderStatus = transactionItem.orderStatus.toString()
-        Log.i("info", "orderStatus: $orderStatus")
 
         val paymentMode = transactionItem.paymentMode.toString()
         Log.i("info", "paymentMode: $paymentMode")
@@ -82,40 +79,42 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
         val paymentStatus = transactionItem.paymentStatus.toString()
         Log.i("info", "paymentStatus: $paymentStatus")
 
-        if (orderStatus == "7" || orderStatus == "8" || orderStatus == "10" || orderStatus == "11") {
+        val orderStatus = transactionItem.orderStatus.toString().toInt()
+        Log.i("info", "orderStatus: $orderStatus")
+
+        if (orderStatus == 7 || orderStatus == 8 || orderStatus == 10 || orderStatus == 11) {
             binding.cancelStatus.visibility = View.VISIBLE
             binding.successStatus.visibility = View.GONE
         } else {
             binding.cancelStatus.visibility = View.GONE
             binding.successStatus.visibility = View.VISIBLE
+        }
 
-            if (orderStatus == "1") {
+        if(orderStatus == 21){
+            binding.btnDownloadReceipt.text = "Pay Now"
+        }else{
+            binding.btnDownloadReceipt.text = "Download Receipt"
+        }
+
+        when (orderStatus) {
+            1 -> {
                 binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
                 binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_white)
                 binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_white)
                 binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_white)
-            } else if (orderStatus == "2" || orderStatus == "3" || orderStatus == "4") {
+            }
+            2, 3, 4 -> {
                 binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
                 binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_green)
                 binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_white)
                 binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_white)
-            } else if (orderStatus == "5") {
+            }
+            5 -> {
                 binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
                 binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_green)
                 binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_green)
                 binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_white)
-            } else if (orderStatus == "5") {
-                binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
-                binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_green)
-                binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_green)
-                binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_green)
             }
-        }
-
-        if(orderStatus == "21"){
-            binding.btnDownloadReceipt.text = "Pay Now"
-        }else{
-            binding.btnDownloadReceipt.text = "Download Receipt"
         }
 
 

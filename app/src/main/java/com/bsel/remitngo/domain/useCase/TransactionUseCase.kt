@@ -12,6 +12,8 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptResponseItemForCreateReceipt
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
+import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.transaction.TransactionItem
 import com.bsel.remitngo.data.model.transaction.TransactionResponseItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
@@ -19,7 +21,9 @@ import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionD
 import com.bsel.remitngo.domain.repository.TransactionRepository
 
 class TransactionUseCase(private val transactionRepository: TransactionRepository) {
-
+    suspend fun execute(profileItem: ProfileItem): ProfileResponseItem? {
+        return transactionRepository.profile(profileItem)
+    }
     suspend fun execute(consumerItem: ConsumerItem): ConsumerResponseItem? {
         return transactionRepository.consumer(consumerItem)
     }

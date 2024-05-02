@@ -4,6 +4,8 @@ package com.bsel.remitngo.data.model.login
 import com.google.gson.annotations.SerializedName
 
 data class LoginData(
+    @SerializedName("CMCode")
+    val cmCode: String?,
     @SerializedName("DateOfBirth")
     val dateOfBirth: String?,
     @SerializedName("Email")

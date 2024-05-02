@@ -133,14 +133,18 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        binding.bankAccountName.setText(beneAccountName)
-        binding.bankAccountNumber.setText(beneAccountNo)
-        binding.walletAccountName.setText(beneAccountName)
-        binding.walletAccountNumber.setText(beneAccountNo)
-
-        Log.i("info","beneAccountName: "+beneAccountName)
-        Log.i("info","beneAccountNo: "+beneAccountNo)
-        Log.i("info","beneMobile: "+beneMobile)
+        if (beneAccountName!="null"){
+            binding.bankAccountName.setText(beneAccountName)
+        }
+        if (beneAccountNo!="null"){
+            binding.bankAccountNumber.setText(beneAccountNo)
+        }
+        if (beneAccountName!="null"){
+            binding.walletAccountName.setText(beneAccountName)
+        }
+        if (beneAccountNo!="null"){
+            binding.walletAccountNumber.setText(beneAccountNo)
+        }
 
         bankAccountNameFocusListener()
         bankNameFocusListener()

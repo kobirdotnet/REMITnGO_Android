@@ -68,14 +68,20 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     private var commission: Double = 0.0
 
     private var beneWalletId: Int = 0
+    private var beneWalletName: String? = null
+
     private var beneBankId: Int = 0
-    private var beneBranchId: Int = 0
     private var beneBankName: String? = null
+
+    private var beneBranchId: Int = 0
+    private var beneBranchName: String? = null
+
     private var beneAccountNo: String? = null
     private var payingAgentId: Int = 0
 
     private var benePersonId: Int = 0
     private var beneId: Int = 0
+
     private var beneAccountName: String? = null
     private var beneMobile: String? = null
 
@@ -106,90 +112,166 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             ViewModelProvider(this, calculationViewModelFactory)[CalculationViewModel::class.java]
 
         preferenceManager = PreferenceManager(requireContext())
-        personId = preferenceManager.loadData("personId").toString().toInt()
-        customerId = preferenceManager.loadData("customerId").toString().toInt()
-        customerEmail = preferenceManager.loadData("customerEmail").toString()
-        customerMobile = preferenceManager.loadData("customerMobile").toString()
+
+        try {
+            personId = preferenceManager.loadData("personId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+
+        try {
+            customerId = preferenceManager.loadData("customerId").toString().toInt()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+
+        try {
+            customerEmail = preferenceManager.loadData("customerEmail").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            customerMobile = preferenceManager.loadData("customerMobile").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
 
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
         try {
-            paymentMode = arguments?.getString("paymentType").toString().toInt()
+            paymentMode = arguments?.getString("paymentMode").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
             orderType = arguments?.getString("orderType").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
             sendAmount = arguments?.getString("sendAmount").toString().toDouble()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            beneAmount = arguments?.getString("receiveAmount").toString().toDouble()
+            beneAmount = arguments?.getString("beneAmount").toString().toDouble()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            rate = arguments?.getString("exchangeRate").toString().toDouble()
+            rate = arguments?.getString("rate").toString().toDouble()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
             commission = arguments?.getString("commission").toString().toDouble()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            beneBankId = arguments?.getString("bankId").toString().toInt()
+            beneBankId = arguments?.getString("beneBankId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            beneWalletId = arguments?.getString("walletId").toString().toInt()
+            beneBankName = arguments?.getString("beneBankName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            beneBranchId = arguments?.getString("beneBranchId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            beneBranchId = arguments?.getString("branchId").toString().toInt()
+            beneBranchName = arguments?.getString("beneBranchName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            beneWalletId = arguments?.getString("beneWalletId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
+        try {
+            beneWalletName = arguments?.getString("beneWalletName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            beneAccountNo = arguments?.getString("beneAccountNo").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
         try {
             payingAgentId = arguments?.getString("payingAgentId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
-        beneBankName = arguments?.getString("bankName").toString()
-        beneAccountNo = arguments?.getString("bankName").toString()
+
         try {
-            benePersonId = arguments?.getString("benId").toString().toInt()
+            benePersonId = arguments?.getString("benePersonId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+
         try {
-            beneId = arguments?.getString("beneficiaryId").toString().toInt()
+            beneId = arguments?.getString("beneId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
-        beneAccountName = arguments?.getString("beneficiaryName").toString()
-        beneMobile = arguments?.getString("beneficiaryPhoneNumber").toString()
+
         try {
-            purposeOfTransferId = arguments?.getString("reasonId").toString().toInt()
+            beneAccountName = arguments?.getString("beneAccountName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            beneMobile = arguments?.getString("beneMobile").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            purposeOfTransferId = arguments?.getString("purposeOfTransferId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
-        purposeOfTransferName = arguments?.getString("reasonName").toString()
+
         try {
-            sourceOfFundId = arguments?.getString("sourceOfIncomeId").toString().toInt()
+            purposeOfTransferName = arguments?.getString("purposeOfTransferName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            sourceOfFundId = arguments?.getString("sourceOfFundId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
-        sourceOfFundName = arguments?.getString("sourceOfIncomeName").toString()
+
+        try {
+            sourceOfFundName = arguments?.getString("sourceOfFundName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
 
         when (orderType) {
             5 -> {
@@ -240,7 +322,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.cardPayment.isChecked = true
                 binding.bankPayment.isChecked = false
             }
-            3 -> {
+            5 -> {
                 binding.cardPayment.isChecked = false
                 binding.bankPayment.isChecked = true
             }
@@ -418,29 +500,39 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
             val bundle = Bundle().apply {
-                putString("paymentType", paymentMode.toString())
+
+                putString("paymentMode", paymentMode.toString())
                 putString("orderType", orderType.toString())
+
                 putString("sendAmount", sendAmount.toString())
-                putString("receiveAmount", beneAmount.toString())
-                putString("exchangeRate", rate.toString())
+                putString("beneAmount", beneAmount.toString())
+
+                putString("rate", rate.toString())
                 putString("commission", commission.toString())
 
-                putString("bankId", beneBankId.toString())
-                putString("walletId", beneWalletId.toString())
-                putString("branchId", beneBranchId.toString())
-                putString("bankName", beneBankName)
+                putString("beneBankId", beneBankId.toString())
+                putString("beneBankName", beneBankName)
+
+                putString("beneBranchId", beneBranchId.toString())
+                putString("beneBranchName", beneBranchName.toString())
+
+                putString("beneWalletId", beneWalletId.toString())
+                putString("beneWalletName", beneWalletName.toString())
+
                 putString("beneAccountNo", beneAccountNo)
                 putString("payingAgentId", payingAgentId.toString())
 
-                putString("benId", benePersonId.toString())
-                putString("beneficiaryId", beneId.toString())
-                putString("beneficiaryName", beneAccountName)
-                putString("beneficiaryPhoneNumber", beneMobile)
+                putString("benePersonId", benePersonId.toString())
+                putString("beneId", beneId.toString())
 
-                putString("reasonId", purposeOfTransferId.toString())
-                putString("reasonName", purposeOfTransferName)
-                putString("sourceOfIncomeId", sourceOfFundId.toString())
-                putString("sourceOfIncomeName", sourceOfFundName)
+                putString("beneAccountName", beneAccountName)
+                putString("beneMobile", beneMobile)
+
+                putString("purposeOfTransferId", purposeOfTransferId.toString())
+                putString("purposeOfTransferName", purposeOfTransferName)
+
+                putString("sourceOfFundId", sourceOfFundId.toString())
+                putString("sourceOfFundName", sourceOfFundName)
             }
             findNavController().navigate(
                 R.id.action_nav_main_to_nav_review,
@@ -501,7 +593,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     for (data in result.data!!) {
                         commission = data!!.commission.toString().toDouble()
                         calculateRate = data.rate!!.toDouble()
-                        rate = data.rate!!.toDouble().toString().toDouble()
+                        rate = data.rate.toDouble().toString().toDouble()
                         binding.exchangeRate.text = "BDT $rate"
                         updateValuesGBP()
                     }

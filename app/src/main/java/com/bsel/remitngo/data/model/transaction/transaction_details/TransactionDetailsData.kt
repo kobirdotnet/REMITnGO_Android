@@ -4,36 +4,38 @@ package com.bsel.remitngo.data.model.transaction.transaction_details
 import com.google.gson.annotations.SerializedName
 
 data class TransactionDetailsData(
-    @SerializedName("AccountNo")
-    val accountNo: String?,
-    @SerializedName("BankName")
-    val bankName: String?,
-    @SerializedName("BenAmount")
-    val benAmount: Double?,
-    @SerializedName("BenName")
-    val benName: String?,
-    @SerializedName("BeneBankAccountName")
-    val beneBankAccountName: String?,
+    @SerializedName("BeneAccountNo")
+    val beneAccountNo: String?,
+    @SerializedName("BeneAmount")
+    val beneAmount: Double?,
     @SerializedName("BeneBankId")
     val beneBankId: String?,
+    @SerializedName("BeneBankName")
+    val beneBankName: String?,
     @SerializedName("BeneBranchId")
     val beneBranchId: Int?,
     @SerializedName("BeneId")
     val beneId: String?,
+    @SerializedName("BeneName")
+    val beneName: String?,
+    @SerializedName("BeneWalletId")
+    val beneWalletId: Int?,
+    @SerializedName("BeneWalletNo")
+    val beneWalletNo: String?,
+    @SerializedName("CustomerId")
+    val customerId: Int?,
     @SerializedName("OrderStatus")
     val orderStatus: String?,
-    @SerializedName("OrderTypeId")
-    val orderTypeId: String?,
+    @SerializedName("OrderType")
+    val orderType: String?,
     @SerializedName("OrderTypeName")
     val orderTypeName: String?,
     @SerializedName("PayingAgentId")
     val payingAgentId: String?,
+    @SerializedName("PaymentMode")
+    val paymentMode: String?,
     @SerializedName("PaymentStatus")
     val paymentStatus: String?,
-    @SerializedName("PaymentType")
-    val paymentType: String?,
-    @SerializedName("PaymentTypeName")
-    val paymentTypeName: String?,
     @SerializedName("PurposeOfTransferId")
     val purposeOfTransferId: Int?,
     @SerializedName("Rate")
@@ -42,6 +44,8 @@ data class TransactionDetailsData(
     val sendAmount: String?,
     @SerializedName("SourceOfFundId")
     val sourceOfFundId: Int?,
+    @SerializedName("TotalAmount")
+    val totalAmount: Double?,
     @SerializedName("TransactionCode")
     val transactionCode: String?,
     @SerializedName("TransactionDate")

@@ -13,6 +13,8 @@ import com.bsel.remitngo.data.model.encript.EncryptResponseItem
 import com.bsel.remitngo.data.model.encript.EncryptResponseItemForCreateReceipt
 import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.payment.PaymentResponseItem
+import com.bsel.remitngo.data.model.profile.ProfileItem
+import com.bsel.remitngo.data.model.profile.ProfileResponseItem
 import com.bsel.remitngo.data.model.transaction.TransactionItem
 import com.bsel.remitngo.data.model.transaction.TransactionResponseItem
 import com.bsel.remitngo.data.model.transaction.transaction_details.TransactionDetailsItem
@@ -22,6 +24,22 @@ import com.bsel.remitngo.domain.repository.TransactionRepository
 
 class TransactionRepositoryImpl(private val transactionRemoteDataSource: TransactionRemoteDataSource) :
     TransactionRepository {
+    override suspend fun profile(profileItem: ProfileItem): ProfileResponseItem? {
+        return try {
+            val response = transactionRemoteDataSource.profile(profileItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to Profile: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error Profile: ${exception.message}", exception)
+            null
+        }
+    }
 
     override suspend fun consumer(consumerItem: ConsumerItem): ConsumerResponseItem? {
         return try {

@@ -13,17 +13,25 @@ data class ProfileData(
     @SerializedName("BCNStatus")
     val bCNStatus: Int?,
     @SerializedName("BIC")
-    val bIC: String?,
+    val bIC: Any?,
+    @SerializedName("CityName")
+    val cityName: String?,
     @SerializedName("CleanStringName")
-    val cleanStringName: String?,
+    val cleanStringName: Any?,
     @SerializedName("CountryId")
     val countryId: Int?,
+    @SerializedName("CountryName")
+    val countryName: String?,
     @SerializedName("DateOfBirth")
     val dateOfBirth: String?,
     @SerializedName("DistrictId")
     val districtId: Int?,
+    @SerializedName("DistrictName")
+    val districtName: String?,
     @SerializedName("DivisionId")
     val divisionId: Int?,
+    @SerializedName("DivisionName")
+    val divisionName: String?,
     @SerializedName("Email")
     val email: String?,
     @SerializedName("EmailVerified")
@@ -33,13 +41,13 @@ data class ProfileData(
     @SerializedName("ExportFlag")
     val exportFlag: Boolean?,
     @SerializedName("FatherName")
-    val fatherName: String?,
+    val fatherName: Any?,
     @SerializedName("FirstName")
     val firstName: String?,
     @SerializedName("FirstPrevPass")
-    val firstPrevPass: String?,
+    val firstPrevPass: Any?,
     @SerializedName("FiscalCode")
-    val fiscalCode: String?,
+    val fiscalCode: Any?,
     @SerializedName("Gender")
     val gender: Int?,
     @SerializedName("HouseName")
@@ -47,7 +55,7 @@ data class ProfileData(
     @SerializedName("HouseNo")
     val houseNo: String?,
     @SerializedName("IBAN")
-    val iBAN: String?,
+    val iBAN: Any?,
     @SerializedName("Id")
     val id: Int?,
     @SerializedName("intCol1")
@@ -97,25 +105,25 @@ data class ProfileData(
     @SerializedName("MobileVerified")
     val mobileVerified: Boolean?,
     @SerializedName("MotherName")
-    val motherName: String?,
+    val motherName: Any?,
     @SerializedName("NationalId")
-    val nationalId: String?,
+    val nationalId: Any?,
     @SerializedName("Nationality")
     val nationality: Int?,
     @SerializedName("NonSanitizedMobileNumber")
-    val nonSanitizedMobileNumber: String?,
+    val nonSanitizedMobileNumber: Any?,
     @SerializedName("numCol1")
-    val numCol1: Double?,
+    val numCol1: Int?,
     @SerializedName("numCol2")
-    val numCol2: Double?,
+    val numCol2: Int?,
     @SerializedName("OccupationCode")
     val occupationCode: Int?,
     @SerializedName("OccupationTypeId")
     val occupationTypeId: Int?,
     @SerializedName("Password")
-    val password: String?,
+    val password: Any?,
     @SerializedName("PerAddress")
-    val perAddress: String?,
+    val perAddress: Any?,
     @SerializedName("PerCountryId")
     val perCountryId: Int?,
     @SerializedName("PerDistrictId")
@@ -123,7 +131,7 @@ data class ProfileData(
     @SerializedName("PerDivisionId")
     val perDivisionId: Int?,
     @SerializedName("PerPostCode")
-    val perPostCode: String?,
+    val perPostCode: Any?,
     @SerializedName("PerThanaId")
     val perThanaId: Int?,
     @SerializedName("PersonId")
@@ -131,53 +139,53 @@ data class ProfileData(
     @SerializedName("PersonType")
     val personType: Int?,
     @SerializedName("Phone")
-    val phone: String?,
+    val phone: Any?,
     @SerializedName("PostCode")
     val postCode: String?,
     @SerializedName("ReasonId")
     val reasonId: Int?,
     @SerializedName("RefCM")
-    val refCM: String?,
+    val refCM: Any?,
     @SerializedName("RegisterBy")
     val registerBy: Int?,
     @SerializedName("RegistrationDate")
     val registrationDate: String?,
     @SerializedName("RemitterPlaceOfBirth")
-    val remitterPlaceOfBirth: String?,
+    val remitterPlaceOfBirth: Any?,
     @SerializedName("result")
-    val result: String?,
+    val result: Any?,
     @SerializedName("SecondLastName")
-    val secondLastName: String?,
+    val secondLastName: Any?,
     @SerializedName("SecondPrevPass")
-    val secondPrevPass: String?,
+    val secondPrevPass: Any?,
     @SerializedName("SenderAddress")
-    val senderAddress: String?,
+    val senderAddress: Any?,
     @SerializedName("SenderCity")
-    val senderCity: String?,
+    val senderCity: Any?,
     @SerializedName("SenderState")
-    val senderState: String?,
+    val senderState: Any?,
     @SerializedName("SenderZipCode")
-    val senderZipCode: String?,
+    val senderZipCode: Any?,
     @SerializedName("SourceOfFund")
     val sourceOfFund: Int?,
     @SerializedName("SourceOfIncomeId")
     val sourceOfIncomeId: Int?,
     @SerializedName("SpouseName")
-    val spouseName: String?,
+    val spouseName: Any?,
     @SerializedName("strCol1")
-    val strCol1: String?,
+    val strCol1: Any?,
     @SerializedName("strCol2")
-    val strCol2: String?,
+    val strCol2: Any?,
     @SerializedName("strCol3")
-    val strCol3: String?,
+    val strCol3: Any?,
     @SerializedName("strCol4")
-    val strCol4: String?,
+    val strCol4: Any?,
     @SerializedName("strCol5")
-    val strCol5: String?,
+    val strCol5: Any?,
     @SerializedName("ThanaId")
     val thanaId: Int?,
     @SerializedName("ThirdPrevPass")
-    val thirdPrevPass: String?,
+    val thirdPrevPass: Any?,
     @SerializedName("Title")
     val title: Int?,
     @SerializedName("UpdateDate")
