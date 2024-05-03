@@ -244,13 +244,17 @@ class ProfileFragment : Fragment() {
 
     private fun observeOccupationResult() {
         profileViewModel.occupationResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (occupationData in result.data!!) {
-                    if (::occupationId.isInitialized && occupationId == occupationData!!.id.toString()) {
-                        occupation = occupationData!!.name.toString()
-                        binding.occupation.text = "$occupation"
+            try {
+                if (result!!.data != null) {
+                    for (occupationData in result.data!!) {
+                        if (::occupationId.isInitialized && occupationId == occupationData!!.id.toString()) {
+                            occupation = occupationData!!.name.toString()
+                            binding.occupation.text = "$occupation"
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

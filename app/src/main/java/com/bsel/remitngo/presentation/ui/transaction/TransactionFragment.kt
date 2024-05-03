@@ -145,15 +145,13 @@ class TransactionFragment : Fragment() {
 
         val consumerItem = ConsumerItem(
             deviceId = deviceId,
-            params1 = personId,
-            params2 = ""
+            personId = personId
         )
         transactionViewModel.consumer(consumerItem)
 
         val transactionItem = TransactionItem(
             deviceId = deviceId,
-            params1 = personId,
-            params2 = 0
+            personId = personId
         )
         transactionViewModel.transaction(transactionItem)
 
@@ -469,8 +467,8 @@ class TransactionFragment : Fragment() {
 
                 val saveConsumerItem = SaveConsumerItem(
                     deviceId = deviceId,
-                    params1 = personId.toInt(),
-                    params2 = consumerId
+                    personId = personId,
+                    consumerId = consumerId
                 )
                 transactionViewModel.saveConsumer(saveConsumerItem)
                 observeSaveConsumerResult()
@@ -518,8 +516,12 @@ class TransactionFragment : Fragment() {
 
     private fun observeSaveConsumerResult() {
         transactionViewModel.saveConsumerResult.observe(this) { result ->
-            if (result!!.data != null) {
-                Log.i("info", "Save Consumer: " + result.data.toString())
+            try {
+                if (result!!.data != null) {
+                    Log.i("info", "Save Consumer: " + result.data.toString())
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

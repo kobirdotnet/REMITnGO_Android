@@ -181,6 +181,7 @@ interface REMITnGoService {
 
     @POST("api/Transaction/CalculateRate")
     suspend fun calculateRate(@Body calculateRateItem: CalculateRateItem): Response<CalculateRateResponseItem>
+
     @POST("api/Transaction/CalculateRate")
     suspend fun rateCalculate(@Body calculateRateItem: CalculateRateItem): Response<CalculateRateResponseItem>
 
@@ -235,6 +236,7 @@ interface REMITnGoService {
 
     @POST("api/Transaction/GetTransactionDetailsByTransactionCode")
     suspend fun transactionDetails(@Body transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem>
+
     @POST("api/Transaction/GetTransactionDetailsByTransactionCode")
     suspend fun paymentTransaction(@Body transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem>
 
@@ -258,8 +260,10 @@ interface REMITnGoService {
 
     @POST("api/General/Dropdown")
     suspend fun queryType(@Body queryTypeItem: QueryTypeItem): Response<QueryTypeResponseItem>
+
     @POST("api/General/SaveQuery")
     suspend fun addQuery(@Body addQueryItem: AddQueryItem): Response<AddQueryResponseItem>
+
     @POST("api/General/SaveUserMessage")
     suspend fun addMessage(@Body addMessageItem: AddMessageItem): Response<AddMessageResponseItem>
 
@@ -286,15 +290,19 @@ interface REMITnGoService {
 
     @POST("api/General/LoadCalculationPageMsg")
     suspend fun percentage(@Body percentageItem: PercentageItem): Response<PercentageResponseItem>
+
     @POST("api/Transaction/ApplyPromo")
     suspend fun promo(@Body promoItem: PromoItem): Response<PromoResponseItem>
+
     @GET("Receipt/CreateReceipt")
     suspend fun createReceipt(@Query("TransactionId") transactionId: String): Response<CreateReceiptResponse>
 
     @POST("api/Home/ForgotPassword")
     suspend fun forgotPassword(@Body forgotPasswordItem: ForgotPasswordItem): Response<ForgotPasswordResponseItem>
+
     @POST("api/Home/OtpValidation")
     suspend fun otpValidation(@Body otpValidationItem: OtpValidationItem): Response<OtpValidationResponseItem>
+
     @POST("api/Home/SetPassword")
     suspend fun setPassword(@Body setPasswordItem: SetPasswordItem): Response<SetPasswordResponseItem>
 
@@ -303,8 +311,10 @@ interface REMITnGoService {
 
     @POST("api/Home/GenerateOtpForMobileOrEmailVarify")
     suspend fun phoneVerify(@Body phoneVerifyItem: PhoneVerifyItem): Response<PhoneVerifyResponseItem>
+
     @POST("api/Home/MobileOrEmailVarificationUpdate")
     suspend fun phoneOtpVerify(@Body phoneOtpVerifyItem: PhoneOtpVerifyItem): Response<PhoneOtpVerifyResponseItem>
+
     @POST("api/General/IsRequireDocForTransaction")
     suspend fun requireDocument(@Body requireDocumentItem: RequireDocumentItem): Response<RequireDocumentResponseItem>
 
@@ -313,6 +323,7 @@ interface REMITnGoService {
 
     @GET("api/General/GetDynamicMsg/{message}")
     suspend fun support(@Path("message") message: String): Response<SupportResponseItem>
+
     @GET("api/General/GetDynamicMsg/{message}")
     suspend fun requireDocMsg(@Path("message") message: String): Response<RequireDocMsg>
 

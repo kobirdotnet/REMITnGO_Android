@@ -82,8 +82,7 @@ class AddressBottomSheet : BottomSheetDialogFragment() {
         deviceId = getDeviceId(requireContext())
         val postCodeItem = PostCodeItem(
             deviceId = deviceId,
-            params1 = 0,
-            params2 = selectedPostCode
+            postCode = selectedPostCode
         )
         profileViewModel.postCode(postCodeItem)
         observePostCodeResult()
@@ -97,31 +96,33 @@ class AddressBottomSheet : BottomSheetDialogFragment() {
 
     private fun observePostCodeResult() {
         profileViewModel.postCodeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.addressRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                addressAdapter = AddressAdapter(
-                    selectedItem = { selectedItem: PostCodeData ->
-                        address(selectedItem)
-                        binding.addressSearch.setQuery("", false)
-                    }
-                )
-                binding.addressRecyclerView.adapter = addressAdapter
-                addressAdapter.setList(result.data as List<PostCodeData>)
-                addressAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.addressRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    addressAdapter = AddressAdapter(
+                        selectedItem = { selectedItem: PostCodeData ->
+                            address(selectedItem)
+                            binding.addressSearch.setQuery("", false)
+                        }
+                    )
+                    binding.addressRecyclerView.adapter = addressAdapter
+                    addressAdapter.setList(result.data as List<PostCodeData>)
+                    addressAdapter.notifyDataSetChanged()
 
-                binding.addressSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.addressSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        addressAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-            } else {
-                Log.i("info", "nationality failed")
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            addressAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

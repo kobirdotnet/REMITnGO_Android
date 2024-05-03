@@ -4,10 +4,10 @@ package com.bsel.remitngo.data.model.query.query_message
 import com.google.gson.annotations.SerializedName
 
 data class QueryMessageItem(
-    @SerializedName("deviceId")
+    @SerializedName("DeviceId")
     val deviceId: String?,
-    @SerializedName("params1")
-    val params1: Int?,
-    @SerializedName("params2")
-    val params2: Int?
+    @SerializedName("PersonId")
+    val personId: Int?,
+    @SerializedName("ComplainId")
+    val complainId: Int?
 )

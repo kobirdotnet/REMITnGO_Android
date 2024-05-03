@@ -39,7 +39,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/transferHistoryModify"
+                    android:id="@+id/modify"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
@@ -502,7 +502,8 @@
                     android:paddingLeft="@dimen/padding_left"
                     android:paddingRight="@dimen/padding_right"
                     android:paddingTop="@dimen/padding_top"
-                    android:paddingBottom="@dimen/padding_bottom">
+                    android:paddingBottom="@dimen/padding_bottom"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"

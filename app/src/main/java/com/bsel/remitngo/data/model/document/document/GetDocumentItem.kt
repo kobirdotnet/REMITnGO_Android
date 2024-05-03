@@ -4,10 +4,10 @@ package com.bsel.remitngo.data.model.document.document
 import com.google.gson.annotations.SerializedName
 
 data class GetDocumentItem(
-    @SerializedName("deviceId")
+    @SerializedName("DeviceId")
     val deviceId: String?,
-    @SerializedName("params1")
-    val params1: Int?,
-    @SerializedName("params2")
-    val params2: Int?
+    @SerializedName("PersonId")
+    val personId: Int?,
+    @SerializedName("DocumentId")
+    val documentId: Int?
 )

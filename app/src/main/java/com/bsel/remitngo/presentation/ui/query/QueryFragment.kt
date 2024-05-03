@@ -67,8 +67,7 @@ class QueryFragment : Fragment() {
 
         val queryItem = QueryItem(
             deviceId = deviceId,
-            params1 = personId.toInt(),
-            params2 = 0
+            personId = personId.toInt()
         )
         queryViewModel.query(queryItem)
         observeQueryResult()

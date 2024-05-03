@@ -4,10 +4,8 @@ package com.bsel.remitngo.data.model.consumer.consumer
 import com.google.gson.annotations.SerializedName
 
 data class ConsumerItem(
-    @SerializedName("deviceId")
+    @SerializedName("DeviceId")
     val deviceId: String?,
-    @SerializedName("params1")
-    val params1: Int?,
-    @SerializedName("params2")
-    val params2: String?
+    @SerializedName("PersonId")
+    val personId: Int?
 )

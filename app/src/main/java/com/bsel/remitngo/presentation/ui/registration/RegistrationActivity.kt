@@ -26,13 +26,10 @@ import com.bsel.remitngo.bottomSheet.RegistrationDialog
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnMarketingItemSelectedListener
 import com.bsel.remitngo.data.model.marketing.MarketingValue
-import com.bsel.remitngo.data.model.registration.ErrorResponseData
 import com.bsel.remitngo.data.model.registration.RegistrationItem
-import com.bsel.remitngo.data.model.registration.RegistrationResponseItem
 import com.bsel.remitngo.databinding.ActivityRegistrationBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.login.LoginActivity
-import org.json.JSONArray
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -191,39 +188,23 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
     private fun observeRegistrationResult() {
         registrationViewModel.registrationResult.observe(this) { result ->
-            result?.let { registrationResponse ->
-                if (registrationResponse.code == "000") {
-                    val data = registrationResponse.data.toString()
+            try {
+                if (result!!.data != null){
+                    var message= result.data!![0]!!.message
                     if (!registrationDialog.isAdded) {
-                        registrationDialog.setSelectedMessage(data)
+                        registrationDialog.setSelectedMessage(message!!)
                         registrationDialog.dialog?.window?.setLayout(
                             WindowManager.LayoutParams.MATCH_PARENT,
                             WindowManager.LayoutParams.MATCH_PARENT
                         )
                         registrationDialog.show(supportFragmentManager, registrationDialog.tag)
                     }
+
 //                    val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
 //                    startActivity(intent)
-                } else {
-                    val data = registrationResponse.data
-
-                    if (data is List<*>) {
-                        val messages = data.filterIsInstance<ErrorResponseData>().mapNotNull { it.message }
-                        val message = messages.joinToString(separator = "\n")
-
-                        if (!registrationDialog.isAdded) {
-                            registrationDialog.setSelectedMessage(message.ifEmpty { "Unknown error" })
-                            registrationDialog.dialog?.window?.setLayout(
-                                WindowManager.LayoutParams.MATCH_PARENT,
-                                WindowManager.LayoutParams.MATCH_PARENT
-                            )
-                            registrationDialog.show(supportFragmentManager, registrationDialog.tag)
-                        }
-                    }
-
                 }
-            } ?: run {
-                Log.e("error", "Null response received")
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

@@ -81,7 +81,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/msg"
+                android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"

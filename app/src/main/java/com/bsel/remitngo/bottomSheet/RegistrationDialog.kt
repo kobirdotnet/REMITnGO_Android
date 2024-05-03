@@ -38,7 +38,7 @@ class RegistrationDialog : DialogFragment() {
     private var customerEmail: String? = null
     private var customerMobile: String? = null
 
-    var msg: String? = null
+    var message: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.registration_layout, container, false)
@@ -84,13 +84,13 @@ class RegistrationDialog : DialogFragment() {
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        binding.msg.text = msg
+        binding.message.text = message
     }
 
     fun setSelectedMessage(
-        msg: String
+        message: String
     ) {
-        this.msg = msg
+        this.message = message
     }
 
     private fun getDeviceId(context: Context): String {

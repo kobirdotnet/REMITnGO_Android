@@ -4,10 +4,8 @@ package com.bsel.remitngo.data.model.transaction.transaction_details
 import com.google.gson.annotations.SerializedName
 
 data class TransactionDetailsItem(
-    @SerializedName("deviceId")
+    @SerializedName("DeviceId")
     val deviceId: String?,
-    @SerializedName("params1")
-    val params1: Int?,
-    @SerializedName("params2")
-    val params2: String?
+    @SerializedName("TransactionCode")
+    val transactionCode: String?
 )

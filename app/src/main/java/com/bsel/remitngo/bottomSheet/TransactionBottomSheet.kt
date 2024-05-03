@@ -79,8 +79,7 @@ class TransactionBottomSheet : BottomSheetDialogFragment() {
 
         val transactionDetailsItem = TransactionDetailsItem(
             deviceId = deviceId,
-            params1 = personId.toInt(),
-            params2 = selectedTransactionCode
+            transactionCode = selectedTransactionCode
         )
         transactionViewModel.transactionDetails(transactionDetailsItem)
         observeTransactionDetailsResult()
@@ -94,41 +93,45 @@ class TransactionBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeTransactionDetailsResult() {
         transactionViewModel.transactionDetailsResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (transactionDetailsData in result!!.data!!) {
+            try {
+                if (result!!.data != null) {
+                    for (transactionDetailsData in result!!.data!!) {
 
-                    binding.transactionCode.text =
-                        transactionDetailsData!!.transactionCode.toString()
+                        binding.transactionCode.text =
+                            transactionDetailsData!!.transactionCode.toString()
 
-                    binding.transactionDate.text =
-                        transactionDetailsData!!.transactionDateTime12hr.toString()
+                        binding.transactionDate.text =
+                            transactionDetailsData!!.transactionDateTime12hr.toString()
 
 //                    binding.paymentMode.text = transactionDetailsData!!.paymentMode.toString()
 
-                    binding.orderType.text = transactionDetailsData!!.orderTypeName.toString()
+                        binding.orderType.text = transactionDetailsData!!.orderTypeName.toString()
 
-                    binding.benName.text = transactionDetailsData!!.beneName.toString()
+                        binding.benName.text = transactionDetailsData!!.beneName.toString()
 
-                    binding.bankName.text = transactionDetailsData!!.beneBankName.toString()
+                        binding.bankName.text = transactionDetailsData!!.beneBankName.toString()
 
-                    binding.accountNo.text = transactionDetailsData!!.beneAccountNo.toString()
+                        binding.accountNo.text = transactionDetailsData!!.beneAccountNo.toString()
 
 //                    val totalAmount = transactionDetailsData!!.totalAmount.toString()
 //                    binding.sendAmount.text = "GBP $totalAmount"
 
-                    val benAmount = transactionDetailsData!!.beneAmount.toString()
-                    binding.benAmount.text = "BDT $benAmount"
+                        val benAmount = transactionDetailsData!!.beneAmount.toString()
+                        binding.benAmount.text = "BDT $benAmount"
 
-                    val exchangeRate=transactionDetailsData!!.rate.toString()
-                    binding.exchangeRate.text = "BDT $exchangeRate"
+                        val exchangeRate=transactionDetailsData!!.rate.toString()
+                        binding.exchangeRate.text = "BDT $exchangeRate"
 
 //                    val commission=transactionDetailsData!!.transferFees.toString()
 //                    binding.commission.text = "GBP $commission"
 
-                    binding.paymentStatus.text = transactionDetailsData!!.paymentStatus.toString()
+                        binding.paymentStatus.text = transactionDetailsData!!.paymentStatus.toString()
 
-                    binding.transactionStatus.text = transactionDetailsData!!.transactionStatus.toString()
+                        binding.transactionStatus.text = transactionDetailsData!!.transactionStatus.toString()
+                    }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

@@ -91,8 +91,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     private var sourceOfFundId: Int = 0
     private var sourceOfFundName: String? = null
 
-    private var calculateRate = 0.0
-
     private lateinit var percentageUrl: String
 
     override fun onCreateView(
@@ -493,11 +491,34 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         }
 
         binding.btnNext.setOnClickListener {
-            val sendAmountValue = binding.sendAmount.text.toString()
-            sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+            try {
+                val sendAmountValue = binding.sendAmount.text.toString()
+                sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+            }catch (e:NumberFormatException){
+                e.localizedMessage
+            }
 
-            val receiveAmountValue = binding.receiveAmount.text.toString()
-            beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+            try {
+                val receiveAmountValue = binding.receiveAmount.text.toString()
+                beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+            }catch (e:NumberFormatException){
+                e.localizedMessage
+            }
+
+            try {
+                val rateValue = binding.exchangeRate.text.toString()
+                rate = rateValue.replace(Regex("[^\\d.]"), "").toDouble()
+            }catch (e:NumberFormatException){
+                e.localizedMessage
+            }
+
+            try {
+                val commissionValue = binding.commission.text.toString()
+                commission = commissionValue.replace(Regex("[^\\d.]"), "").toDouble()
+            }catch (e:NumberFormatException){
+                e.localizedMessage
+            }
+
 
             val bundle = Bundle().apply {
 
@@ -591,10 +612,13 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             try {
                 if (result!!.data != null) {
                     for (data in result.data!!) {
+
                         commission = data!!.commission.toString().toDouble()
-                        calculateRate = data.rate!!.toDouble()
-                        rate = data.rate.toDouble().toString().toDouble()
+                        binding.commission.text = "Commission $commission GBP"
+
+                        rate = data.rate!!.toDouble()
                         binding.exchangeRate.text = "BDT $rate"
+
                         updateValuesGBP()
                     }
                 }
@@ -625,7 +649,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     fun updateValuesBDT() {
         val bdtValue = binding.receiveAmount.text.toString().toDoubleOrNull()
         if (bdtValue != null) {
-            val gbpValue = bdtValue / calculateRate
+            val gbpValue = bdtValue / rate
             val formattedGBP = decimalFormat.format(gbpValue)
             binding.sendAmount.setText(formattedGBP.toString())
         } else {
@@ -636,7 +660,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     fun updateValuesGBP() {
         val gbpValue = binding.sendAmount.text.toString().toDoubleOrNull()
         if (gbpValue != null) {
-            val bdtValue = gbpValue * calculateRate
+            val bdtValue = gbpValue * rate
             val formattedBDT = decimalFormat.format(bdtValue)
             binding.receiveAmount.setText(formattedBDT.toString())
         } else {

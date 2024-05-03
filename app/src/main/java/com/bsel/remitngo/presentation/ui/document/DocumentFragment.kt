@@ -74,8 +74,8 @@ class DocumentFragment : Fragment() {
 
         val getDocumentItem = GetDocumentItem(
             deviceId = deviceId,
-            params1 = personId.toInt(),
-            params2 = 0
+            personId = personId.toInt(),
+            documentId = 0
         )
         documentViewModel.getDocument(getDocumentItem)
         observeGetDocumentResult()
@@ -83,58 +83,62 @@ class DocumentFragment : Fragment() {
 
     private fun observeGetDocumentResult() {
         documentViewModel.getDocumentResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.documentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                documentAdapter = DocumentAdapter(
-                    selectedItem = { selectedItem: GetDocumentData ->
-                        documentItem(selectedItem)
-                        binding.documentSearch.setQuery("", false)
-                    },
-                    preViewItem = { selectedItem: GetDocumentData ->
-                        preViewItem(selectedItem)
-                        binding.documentSearch.setQuery("", false)
-                    }
-                )
-                binding.documentRecyclerView.adapter = documentAdapter
-                documentAdapter.setList(result.data as List<GetDocumentData>)
-                documentAdapter.notifyDataSetChanged()
-                binding.documentSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+            try {
+                if (result!!.data != null) {
+                    binding.documentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    documentAdapter = DocumentAdapter(
+                        selectedItem = { selectedItem: GetDocumentData ->
+                            documentItem(selectedItem)
+                            binding.documentSearch.setQuery("", false)
+                        },
+                        preViewItem = { selectedItem: GetDocumentData ->
+                            preViewItem(selectedItem)
+                            binding.documentSearch.setQuery("", false)
+                        }
+                    )
+                    binding.documentRecyclerView.adapter = documentAdapter
+                    documentAdapter.setList(result.data as List<GetDocumentData>)
+                    documentAdapter.notifyDataSetChanged()
+                    binding.documentSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        documentAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-                binding.documentRecyclerView.addOnScrollListener(
-                    object : RecyclerView.OnScrollListener() {
-                        override fun onScrolled(
-                            recyclerView: RecyclerView,
-                            dx: Int,
-                            dy: Int
-                        ) {
-                            super.onScrolled(
-                                recyclerView,
-                                dx,
-                                dy
-                            )
-                            if (dy > 10 && binding.btnUploadDocument.isExtended) {
-                                binding.btnUploadDocument.shrink()
-                            }
-                            if (dy < -10 && !binding.btnUploadDocument.isExtended) {
-                                binding.btnUploadDocument.extend()
-                            }
-                            if (!recyclerView.canScrollVertically(
-                                    -1
-                                )
-                            ) {
-                                binding.btnUploadDocument.extend()
-                            }
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            documentAdapter.filter(newText.orEmpty())
+                            return true
                         }
                     })
+                    binding.documentRecyclerView.addOnScrollListener(
+                        object : RecyclerView.OnScrollListener() {
+                            override fun onScrolled(
+                                recyclerView: RecyclerView,
+                                dx: Int,
+                                dy: Int
+                            ) {
+                                super.onScrolled(
+                                    recyclerView,
+                                    dx,
+                                    dy
+                                )
+                                if (dy > 10 && binding.btnUploadDocument.isExtended) {
+                                    binding.btnUploadDocument.shrink()
+                                }
+                                if (dy < -10 && !binding.btnUploadDocument.isExtended) {
+                                    binding.btnUploadDocument.extend()
+                                }
+                                if (!recyclerView.canScrollVertically(
+                                        -1
+                                    )
+                                ) {
+                                    binding.btnUploadDocument.extend()
+                                }
+                            }
+                        })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

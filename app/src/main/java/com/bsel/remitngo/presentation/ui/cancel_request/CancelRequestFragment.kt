@@ -60,8 +60,7 @@ class CancelRequestFragment : Fragment() {
 
         val populateCancelItem = PopulateCancelItem(
             deviceId = deviceId,
-            params1 = personId.toInt(),
-            params2 = 0
+            personId = personId.toInt()
         )
         cancelRequestViewModel.populateCancel(populateCancelItem)
         observePopulateCancelRequestResult()
@@ -70,17 +69,21 @@ class CancelRequestFragment : Fragment() {
 
     private fun observePopulateCancelRequestResult() {
         cancelRequestViewModel.populateCancelResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.cancelRequestRecyclerView.layoutManager =
-                    LinearLayoutManager(requireActivity())
-                cancelRequestAdapter = CancelRequestAdapter(
-                    selectedItem = { selectedItem: PopulateCancelData ->
-                        populateCancel(selectedItem)
-                    }
-                )
-                binding.cancelRequestRecyclerView.adapter = cancelRequestAdapter
-                cancelRequestAdapter.setList(result.data as List<PopulateCancelData>)
-                cancelRequestAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.cancelRequestRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    cancelRequestAdapter = CancelRequestAdapter(
+                        selectedItem = { selectedItem: PopulateCancelData ->
+                            populateCancel(selectedItem)
+                        }
+                    )
+                    binding.cancelRequestRecyclerView.adapter = cancelRequestAdapter
+                    cancelRequestAdapter.setList(result.data as List<PopulateCancelData>)
+                    cancelRequestAdapter.notifyDataSetChanged()
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

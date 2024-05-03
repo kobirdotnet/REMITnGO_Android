@@ -239,6 +239,9 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             e.localizedMessage
         }
 
+        totalAmount = sendAmount + commission
+        binding.totalAmount.text = "GBP $totalAmount"
+
         try {
             beneBankId = arguments?.getString("beneBankId").toString().toInt()
         } catch (e: NumberFormatException) {
@@ -350,12 +353,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             e.localizedMessage
         }
 
-
-        totalAmount = sendAmount + commission
-        binding.totalAmount.text = "GBP $totalAmount"
-
         val consumerItem = ConsumerItem(
-            deviceId = deviceId, params1 = personId, params2 = ""
+            deviceId = deviceId, personId = personId
         )
         paymentViewModel.consumer(consumerItem)
         paymentViewModel.consumerResult.observe(this) { result ->
@@ -363,7 +362,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 if (result!!.data != null) {
                     consumerId = result.data.toString()
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }
@@ -399,23 +398,32 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             chooseRecipientBottomSheet.show(childFragmentManager, chooseRecipientBottomSheet.tag)
         }
 
-        binding.transferHistoryModify.setOnClickListener {
+        binding.modify.setOnClickListener {
             val sendAmountValue = binding.sendAmount.text.toString()
-            sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+            modifiedSendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
             val receiveAmountValue = binding.receiveAmount.text.toString()
-            beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+            modifiedBeneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+
+            val rateValue = binding.exchangeRate.text.toString()
+            modifiedRate = rateValue.replace(Regex("[^\\d.]"), "").toDouble()
+
+            val commissionValue = binding.transferFee.text.toString()
+            modifiedCommission = commissionValue.replace(Regex("[^\\d.]"), "").toDouble()
+
+            val totalAmountValue = binding.totalAmount.text.toString()
+            totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
             val bundle = Bundle().apply {
 
                 putString("paymentMode", paymentMode.toString())
                 putString("orderType", orderType.toString())
 
-                putString("sendAmount", sendAmount.toString())
-                putString("beneAmount", beneAmount.toString())
+                putString("sendAmount", modifiedSendAmount.toString())
+                putString("beneAmount", modifiedBeneAmount.toString())
 
-                putString("rate", rate.toString())
-                putString("commission", commission.toString())
+                putString("rate", modifiedRate.toString())
+                putString("commission", modifiedCommission.toString())
 
                 putString("beneBankId", beneBankId.toString())
                 putString("beneBankName", beneBankName)
@@ -581,15 +589,21 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                                 )
                             }
                         } else {
+
                             val sendAmountValue = binding.sendAmount.text.toString()
-                            sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+                            modifiedSendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
                             val receiveAmountValue = binding.receiveAmount.text.toString()
-                            beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+                            modifiedBeneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+
+                            val rateValue = binding.exchangeRate.text.toString()
+                            modifiedRate = rateValue.replace(Regex("[^\\d.]"), "").toDouble()
+
+                            val commissionValue = binding.transferFee.text.toString()
+                            modifiedCommission = commissionValue.replace(Regex("[^\\d.]"), "").toDouble()
 
                             val totalAmountValue = binding.totalAmount.text.toString()
-                            totalAmount =
-                                totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+                            totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
                             val paymentItem = PaymentItem(
                                 beneAccountName = beneAccountName,
@@ -893,7 +907,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 consumerId = response.consumerId.toString()
 
                 val saveConsumerItem = SaveConsumerItem(
-                    deviceId = deviceId, params1 = personId, params2 = consumerId
+                    deviceId = deviceId, personId = personId, consumerId = consumerId
                 )
                 paymentViewModel.saveConsumer(saveConsumerItem)
                 observeSaveConsumerResult()
@@ -1007,7 +1021,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     }
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -1023,7 +1037,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     }
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -1032,7 +1046,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         try {
             transactionCode = arguments?.getString("transactionCode").toString()
             val transactionDetailsItem = TransactionDetailsItem(
-                deviceId = deviceId, params1 = personId, params2 = transactionCode
+                deviceId = deviceId, transactionCode = transactionCode
             )
             paymentViewModel.paymentTransaction(transactionDetailsItem)
             observeTransactionDetailsResult()
@@ -1129,10 +1143,14 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             try {
                 if (result!!.data != null) {
                     for (data in result.data!!) {
+
                         commission = data!!.commission.toString().toDouble()
+                        binding.transferFee.text = commission.toString()
+
                         rate = data.rate!!.toDouble().toString().toDouble()
                         rate = data.rate.toString().toDouble()
                         binding.exchangeRate.text = rate.toString()
+
                         updateValuesGBP()
                     }
                 }
@@ -1182,24 +1200,24 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         promoCode = binding.promoCode.text.toString()
 
         val sendAmountValue = binding.sendAmount.text.toString()
-        sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+        modifiedSendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
         val receiveAmountValue = binding.receiveAmount.text.toString()
-        beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+        modifiedBeneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
         val commissionValue = binding.transferFee.text.toString()
-        commission = commissionValue.replace(Regex("[^\\d.]"), "").toDouble()
+        modifiedCommission = commissionValue.replace(Regex("[^\\d.]"), "").toDouble()
 
         val rateValue = binding.exchangeRate.text.toString()
-        rate = rateValue.replace(Regex("[^\\d.]"), "").toDouble()
+        modifiedRate = rateValue.replace(Regex("[^\\d.]"), "").toDouble()
 
         val promoItem = PromoItem(
-            beneAmount = beneAmount,
-            commision = commission,
+            beneAmount = modifiedBeneAmount,
+            commision = modifiedCommission,
             personId = 0,
             promoCode = promoCode,
-            rate = rate,
-            sendAmount = sendAmount
+            rate = modifiedRate,
+            sendAmount = modifiedSendAmount
         )
         paymentViewModel.promo(promoItem)
         observePromoResult()
@@ -1220,65 +1238,56 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     binding.previousReceiveAmount.visibility = View.GONE
 
                     if (result.promoResponseData!!.promoData != null) {
-                        sendAmount =
+
+                        modifiedSendAmount =
                             result.promoResponseData.promoData!!.modifiedSendAmount.toString()
                                 .toDouble()
-                        commission = result.promoResponseData.promoData.modifiedCommision.toString()
-                            .toDouble()
-                        rate =
-                            result.promoResponseData.promoData.modifiedRate!!.toString().toDouble()
+                        gbpValue = modifiedSendAmount
+                        binding.sendAmount.text = "GBP $modifiedSendAmount"
 
-                        beneAmount =
+                        modifiedCommission =
+                            result.promoResponseData.promoData.modifiedCommision.toString()
+                                .toDouble()
+                        binding.transferFee.text = "GBP $modifiedCommission"
+
+                        modifiedRate =
+                            result.promoResponseData.promoData.modifiedRate!!.toString().toDouble()
+                        binding.exchangeRate.text = "BDT $modifiedRate"
+
+                        modifiedBeneAmount =
                             result.promoResponseData.promoData.modifiedBeneAmount!!.toString()
                                 .toDouble()
+                        binding.receiveAmount.text = "BDT $modifiedBeneAmount"
 
-                        if (sendAmount.toString() != "null") {
-                            gbpValue = sendAmount
-                            binding.sendAmount.text = "GBP $sendAmount"
-                        }
-                        if (commission.toString() != "null") {
-                            binding.transferFee.text = "GBP $commission"
-                        }
-
-                        totalAmount = sendAmount + commission
+                        totalAmount = modifiedSendAmount + modifiedCommission
                         binding.totalAmount.text = "GBP $totalAmount"
 
-                        if (rate.toString() != "null") {
-                            binding.exchangeRate.text = "BDT $rate"
-                        }
-                        if (beneAmount.toString() != "null") {
-                            binding.receiveAmount.text = "BDT $beneAmount"
-                        }
+                        sendAmount =
+                            result.promoResponseData.promoData.sendAmount!!.toString().toDouble()
+                        binding.previousSendAmount.visibility=View.VISIBLE
+                        binding.previousSendAmount.hint = "GBP $sendAmount"
 
-                        val previousSendAmount =
-                            result.promoResponseData.promoData.sendAmount!!.toString()
-                        val previousTransferFee =
-                            result.promoResponseData.promoData.commision!!.toString()
-                        val previousRate = result.promoResponseData.promoData.rate!!.toString()
-                        val previousReceiveAmount =
-                            result.promoResponseData.promoData.beneAmount!!.toString()
+                        commission =
+                            result.promoResponseData.promoData.commision!!.toString().toDouble()
+                        binding.previousTransferFee.visibility=View.VISIBLE
+                        binding.previousTransferFee.hint = "GBP $commission"
+
+                        rate = result.promoResponseData.promoData.rate!!.toString().toDouble()
+                        binding.previousRate.visibility=View.VISIBLE
+                        binding.previousRate.hint = "BDT $rate"
+
+                        beneAmount =
+                            result.promoResponseData.promoData.beneAmount!!.toString().toDouble()
+                        binding.previousReceiveAmount.visibility=View.VISIBLE
+                        binding.previousReceiveAmount.hint = "BDT $beneAmount"
+
+                        var previousTotalAmount = sendAmount + commission
+                        binding.previousTotalAmount.visibility=View.VISIBLE
+                        binding.previousTotalAmount.hint = "GBP $previousTotalAmount"
+
                         val promoMessage = result.promoResponseData.promoData.promoMsg!!.toString()
-
-                        if (previousSendAmount != "null") {
-                            binding.previousSendAmount.visibility = View.VISIBLE
-                            binding.previousSendAmount.hint = "GBP $previousSendAmount"
-                        }
-                        if (previousTransferFee != "null") {
-                            binding.previousTransferFee.visibility = View.VISIBLE
-                            binding.previousTransferFee.hint = "GBP $previousTransferFee"
-                        }
-                        if (previousRate != "null") {
-                            binding.previousRate.visibility = View.VISIBLE
-                            binding.previousRate.hint = "BDT $previousRate"
-                        }
-                        if (previousReceiveAmount != "null") {
-                            binding.previousReceiveAmount.visibility = View.VISIBLE
-                            binding.previousReceiveAmount.hint = "BDT $previousReceiveAmount"
-                        }
-                        if (promoMessage != "null") {
-                            binding.promoMessage.text = promoMessage
-                            binding.promo.text = "Your applied promo is: $promoCode"
-                        }
+                        binding.promoMessage.text = promoMessage
+                        binding.promo.text = "Your applied promo is: $promoCode"
 
                         updateValuesGBP()
                     }
@@ -1303,7 +1312,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     }
 
     private fun updateValuesGBP() {
-        val bdtValue = gbpValue * rate
+        val bdtValue = gbpValue * modifiedRate
         val formattedBDT = decimalFormat.format(bdtValue)
         binding.receiveAmount.text = "BDT $formattedBDT"
     }

@@ -3,7 +3,7 @@ package com.bsel.remitngo.data.model.registration
 
 import com.google.gson.annotations.SerializedName
 
-data class ErrorResponseData(
+data class RegistrationData(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Email")

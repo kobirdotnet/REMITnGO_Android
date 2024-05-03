@@ -6,9 +6,7 @@ data class RegistrationResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: Any?,
+    val `data`: List<RegistrationData?>?,
     @SerializedName("Message")
-    val message: String?,
-    @SerializedName("Token")
-    val token: String?
+    val message: String?
 )

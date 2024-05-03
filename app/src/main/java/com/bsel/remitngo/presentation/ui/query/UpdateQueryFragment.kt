@@ -35,9 +35,9 @@ class UpdateQueryFragment : Fragment() {
     private lateinit var deviceId: String
     private lateinit var personId: String
 
-    private lateinit var complainId: String
-    private lateinit var queryTypeId: String
-    private lateinit var transactionCode: String
+    private var complainId: Int = 0
+    private var queryTypeId: Int = 0
+    private var transactionCode: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,13 +60,17 @@ class UpdateQueryFragment : Fragment() {
         personId = preferenceManager.loadData("personId").toString()
         deviceId = getDeviceId(requireContext())
 
-        complainId = arguments?.getString("complainId").toString()
+        try {
+            complainId = arguments?.getString("complainId").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         binding.btnAddMessage.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("complainId", complainId)
-                putString("queryTypeId", queryTypeId)
-                putString("transactionCode", transactionCode)
+                putString("complainId", complainId.toString())
+                putString("queryTypeId", queryTypeId.toString())
+                putString("transactionCode", transactionCode.toString())
             }
             findNavController().navigate(
                 R.id.action_nav_update_query_to_nav_query_message,
@@ -76,8 +80,8 @@ class UpdateQueryFragment : Fragment() {
 
         val queryMessageItem = QueryMessageItem(
             deviceId = deviceId,
-            params1 = personId.toInt(),
-            params2 = complainId.toInt()
+            personId = personId.toInt(),
+            complainId = complainId.toInt()
         )
         queryViewModel.queryMessage(queryMessageItem)
         observeQueryMessageResult()
@@ -112,9 +116,9 @@ class UpdateQueryFragment : Fragment() {
                             binding.messageLayout.visibility = View.GONE
                         }
 
-                        complainId = queryData.complainID.toString()
-                        queryTypeId = queryData.complainType.toString()
-                        transactionCode = queryData.transactionCode.toString()
+                        complainId = queryData.complainID.toString().toInt()
+                        queryTypeId = queryData.complainType.toString().toInt()
+                        transactionCode = queryData.transactionCode.toString().toInt()
                     }
                 }
             }

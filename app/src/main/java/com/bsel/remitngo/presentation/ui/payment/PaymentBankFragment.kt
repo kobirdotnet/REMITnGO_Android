@@ -105,20 +105,24 @@ class PaymentBankFragment : Fragment() {
 
     private fun observeTransactionDetailsResult() {
         paymentViewModel.paymentTransactionResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (paymentTransactionData in result.data!!) {
+            try {
+                if (result!!.data != null) {
+                    for (paymentTransactionData in result.data!!) {
 
-                    transactionCode = paymentTransactionData?.transactionCode.toString()
-                    sendAmount = paymentTransactionData?.sendAmount.toString()
+                        transactionCode = paymentTransactionData?.transactionCode.toString()
+                        sendAmount = paymentTransactionData?.sendAmount.toString()
 
-                    if (sendAmount != "null") {
-                        binding.sendAmount.text =
-                            "Transfer $sendAmount GBP to the following Bank Account"
-                    }
-                    if (transactionCode != "null") {
-                        binding.transactionCode.text = "$transactionCode"
+                        if (sendAmount != "null") {
+                            binding.sendAmount.text =
+                                "Transfer $sendAmount GBP to the following Bank Account"
+                        }
+                        if (transactionCode != "null") {
+                            binding.transactionCode.text = "$transactionCode"
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -127,8 +131,7 @@ class PaymentBankFragment : Fragment() {
         if (::transactionCode.isInitialized && transactionCode != "null") {
             val transactionDetailsItem = TransactionDetailsItem(
                 deviceId = deviceId,
-                params1 = personId.toInt(),
-                params2 = transactionCode
+                transactionCode = transactionCode
             )
             paymentViewModel.paymentTransaction(transactionDetailsItem)
         }

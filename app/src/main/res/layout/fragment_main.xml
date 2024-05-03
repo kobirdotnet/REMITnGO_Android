@@ -112,7 +112,7 @@
                 android:paddingTop="@dimen/padding_top"
                 android:paddingRight="@dimen/padding_right"
                 android:paddingBottom="@dimen/padding_bottom"
-                android:weightSum="5">
+                android:weightSum="6">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -161,13 +161,37 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center">
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:textColor="@color/black" />
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/sync" />
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/sync"
+                        android:layout_margin="@dimen/padding_left"/>
+
+                    <TextView
+                        android:id="@+id/commission"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:hint="Commission 3.0 GBP"
+                        android:textColor="@color/black"
+                        android:textSize="9sp"/>
+
                 </LinearLayout>
 
                 <LinearLayout

@@ -15,7 +15,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
@@ -26,11 +25,12 @@ import com.bsel.remitngo.R
 import com.bsel.remitngo.bottomSheet.ForgotPasswordBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.api.TokenManager
+import com.bsel.remitngo.data.model.login.AccessToken
 import com.bsel.remitngo.data.model.login.LoginItem
 import com.bsel.remitngo.databinding.ActivityLoginBinding
 import com.bsel.remitngo.presentation.di.Injector
-import com.bsel.remitngo.presentation.ui.registration.RegistrationActivity
 import com.bsel.remitngo.presentation.ui.main.MainActivity
+import com.bsel.remitngo.presentation.ui.registration.RegistrationActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -40,6 +40,9 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
+import java.util.*
 import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
@@ -111,17 +114,17 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this) { result ->
             try {
                 if (result!!.data != null) {
-                    for (data in result.data!!) {
-                        preferenceManager.saveData("customerId", data.id.toString())
-                        preferenceManager.saveData("personId", data.personId.toString())
-                        preferenceManager.saveData("firstName", data.firstName.toString())
-                        preferenceManager.saveData("cmCode", data.cmCode.toString())
-                        preferenceManager.saveData("lastName", data.lastName.toString())
-                        preferenceManager.saveData("customerEmail", data.email.toString())
-                        preferenceManager.saveData("customerMobile", data.mobile.toString())
-                        preferenceManager.saveData("customerDob", data.dateOfBirth.toString())
-                    }
-                    TokenManager.setToken(result.token)
+                    val token = result!!.data!!.accessToken
+                    val accessToken = decodeJWT(token!!)
+                    preferenceManager.saveData("customerId", accessToken.customerId)
+                    preferenceManager.saveData("personId", accessToken.personId)
+                    preferenceManager.saveData("firstName", accessToken.firstName)
+                    preferenceManager.saveData("cmCode", accessToken.CMCode)
+                    preferenceManager.saveData("lastName", accessToken.lastName)
+                    preferenceManager.saveData("customerEmail", accessToken.email)
+                    preferenceManager.saveData("customerMobile", accessToken.mobile)
+                    preferenceManager.saveData("customerDob", accessToken.DOB)
+                    TokenManager.setToken(result!!.data!!.accessToken)
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                 }
@@ -148,7 +151,7 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.password.text.toString()
 
         val loginItem = LoginItem(
-            channel = "Apps",
+            channel = "1",
             deviceId = deviceId,
             password = password,
             userId = email
@@ -421,6 +424,30 @@ class LoginActivity : AppCompatActivity() {
                 Log.e("LocationInfo", "Error getting location: ${e.message}")
                 // Handle failure
             }
+    }
+
+    fun decodeJWT(token: String): AccessToken {
+        val key = Keys.hmacShaKeyFor("AshProgHelpSecretKeypokopkokpkokhnxgfjdfjhsdfhdfghghbdfghosdfgsfgsbgsdf".toByteArray()) // Replace "yourSecretKey" with your actual secret key
+        val claims = Jwts.parserBuilder()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .body
+
+        return AccessToken(
+            jti = claims["jti"].toString(),
+            personId = claims["PersonId"].toString(),
+            customerId = claims["CustomerId"].toString(),
+            email = claims["Email"].toString(),
+            mobile = claims["Mobile"].toString(),
+            firstName = claims["FirstName"].toString(),
+            lastName = claims["LastName"].toString(),
+            DOB = claims["DOB"].toString(),
+            CMCode = claims["CMCode"].toString(),
+            siq = claims["siq"].toString(),
+            channel = claims["Channel"].toString(),
+            exp = Date((claims["exp"] as Int).toLong() * 1000)
+        )
     }
 
 

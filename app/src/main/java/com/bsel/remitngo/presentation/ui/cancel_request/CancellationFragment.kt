@@ -67,8 +67,7 @@ class CancellationFragment : Fragment() {
 
         val getCancelRequestItem = GetCancelRequestItem(
             deviceId = deviceId,
-            params1 = personId.toInt(),
-            params2 = 0
+            personId = personId.toInt()
         )
         cancelRequestViewModel.getCancelRequest(getCancelRequestItem)
         observeGetCancelRequestResult()
@@ -77,17 +76,21 @@ class CancellationFragment : Fragment() {
 
     private fun observeGetCancelRequestResult() {
         cancelRequestViewModel.getCancelRequestResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.cancellationRecyclerView.layoutManager =
-                    LinearLayoutManager(requireActivity())
-                cancellationAdapter = CancellationAdapter(
-                    selectedItem = { selectedItem: GetCancelResponseData ->
-                        cancellation(selectedItem)
-                    }
-                )
-                binding.cancellationRecyclerView.adapter = cancellationAdapter
-                cancellationAdapter.setList(result.data as List<GetCancelResponseData>)
-                cancellationAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.cancellationRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    cancellationAdapter = CancellationAdapter(
+                        selectedItem = { selectedItem: GetCancelResponseData ->
+                            cancellation(selectedItem)
+                        }
+                    )
+                    binding.cancellationRecyclerView.adapter = cancellationAdapter
+                    cancellationAdapter.setList(result.data as List<GetCancelResponseData>)
+                    cancellationAdapter.notifyDataSetChanged()
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
