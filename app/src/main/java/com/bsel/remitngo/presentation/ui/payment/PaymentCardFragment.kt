@@ -84,14 +84,11 @@ class PaymentCardFragment : Fragment() {
     private fun observePaymentStatusResult() {
         paymentViewModel.paymentStatusResult.observe(this) { result ->
             if (result!!.data == null) {
-                Log.i("info", "observePaymentStatusResult: ${result.data}")
                 binding.paymentSuccessful.visibility = View.GONE
                 binding.paymentFailed.visibility = View.GONE
                 binding.paymentCancel.visibility = View.VISIBLE
                 binding.backToHomeLayout.visibility = View.VISIBLE
-
             } else {
-                Log.i("info", "observePaymentStatusResult: ${result.data}")
                 when (result.data) {
                     "Success" -> {
                         binding.paymentSuccessful.visibility = View.VISIBLE
@@ -131,7 +128,6 @@ class PaymentCardFragment : Fragment() {
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     val receiptUrl =
                         "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
-                    Log.i("info", "receiptUrl: $receiptUrl")
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(receiptUrl)
                     context?.startActivity(intent)
@@ -144,16 +140,20 @@ class PaymentCardFragment : Fragment() {
                 }
                 connection.disconnect()
             } catch (e: Exception) {
-                e.message
+                e.localizedMessage
             }
         }
     }
 
     private fun observeEncryptForCreateReceiptResult() {
         paymentViewModel.encryptForCreateReceiptResult.observe(this) { result ->
-            if (result!!.data != null) {
-                val createReceiptCode = result.data.toString()
-                createReceipt(createReceiptCode)
+            try {
+                if (result!!.data != null) {
+                    val createReceiptCode = result.data.toString()
+                    createReceipt(createReceiptCode)
+                }
+            }catch (e:java.lang.NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -174,7 +174,7 @@ class PaymentCardFragment : Fragment() {
                     context?.startActivity(intent)
                 }
             } catch (e: Exception) {
-                e.message
+                e.localizedMessage
             }
         }
     }

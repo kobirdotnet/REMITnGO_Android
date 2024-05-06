@@ -1,5 +1,5 @@
 package com.bsel.remitngo.data.interfaceses
 
 interface OnRequireDocumentListener {
-    fun onRequireDocumentSelected(selectedItem: String?)
+    fun onRequireDocumentSelected(totalAmount: Double, transactionCode: String)
 }

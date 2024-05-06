@@ -25,7 +25,9 @@ import com.bsel.remitngo.bottomSheet.MarketingBottomSheet
 import com.bsel.remitngo.bottomSheet.RegistrationDialog
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnMarketingItemSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnRegistrationSelectedListener
 import com.bsel.remitngo.data.model.marketing.MarketingValue
+import com.bsel.remitngo.data.model.registration.RegistrationData
 import com.bsel.remitngo.data.model.registration.RegistrationItem
 import com.bsel.remitngo.databinding.ActivityRegistrationBinding
 import com.bsel.remitngo.presentation.di.Injector
@@ -34,7 +36,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListener {
+class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListener,OnRegistrationSelectedListener {
     @Inject
     lateinit var registrationViewModelFactory: RegistrationViewModelFactory
     private lateinit var registrationViewModel: RegistrationViewModel
@@ -54,6 +56,14 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
     var rdoSMS = false
     var rdoPhone = false
     var rdoPost = false
+
+    private var code: String? = null
+    private var message: String? = null
+    private var isLogin: Boolean? = false
+    private var isMigrate: Boolean? = false
+    private var personId: Int? = 0
+    private var email: String? = null
+    private var mobile: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +87,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         passwordFocusListener()
         confirmPasswordFocusListener()
 
-        binding.dobContainer.setEndIconOnClickListener {
+        binding.dob.setOnClickListener {
             val calendar = Calendar.getInstance()
             val currentYear = calendar.get(Calendar.YEAR)
             val currentMonth = calendar.get(Calendar.MONTH)
@@ -189,25 +199,53 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
     private fun observeRegistrationResult() {
         registrationViewModel.registrationResult.observe(this) { result ->
             try {
-                if (result!!.data != null){
-                    var message= result.data!![0]!!.message
-                    if (!registrationDialog.isAdded) {
-                        registrationDialog.setSelectedMessage(message!!)
-                        registrationDialog.dialog?.window?.setLayout(
-                            WindowManager.LayoutParams.MATCH_PARENT,
-                            WindowManager.LayoutParams.MATCH_PARENT
-                        )
-                        registrationDialog.show(supportFragmentManager, registrationDialog.tag)
-                    }
+                if (result!!.data != null) {
 
-//                    val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
-//                    startActivity(intent)
+                    var code = result.data!![0]!!.code
+                    var message = result.data!![0]!!.message
+                    var isLogin = result.data!![0]!!.isLogin
+                    var isMigrate = result.data!![0]!!.isMigrate
+                    var personId = result.data!![0]!!.personId
+                    var email = result.data!![0]!!.email
+                    var mobile = result.data!![0]!!.mobile
+
+                    if (!registrationDialog.isAdded) {
+                        registrationDialog.setSelectedMessage(
+                            code,
+                            email,
+                            isLogin,
+                            isMigrate,
+                            message,
+                            mobile,
+                            personId
+                        )
+                        registrationDialog.itemSelectedListener = this@RegistrationActivity
+                        registrationDialog.show(supportFragmentManager, registrationDialog.tag)
+                        registrationDialog.isCancelable=false
+                    }
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }
     }
+
+    override fun onRegistrationSelected(selectedItem: RegistrationData) {
+        code = selectedItem.code
+        email = selectedItem.email
+        isLogin = selectedItem.isLogin
+        isMigrate = selectedItem.isMigrate
+        message = selectedItem.message
+        mobile = selectedItem.mobile
+        personId = selectedItem.personId
+
+        if (code=="0000"){
+            val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+    }
+
 
     private fun signUpForm() {
         binding.firstNameContainer.helperText = validFirstName()
@@ -238,7 +276,6 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         val email = binding.email.text.toString()
         val phoneNumber = binding.phoneNumber.text.toString()
         val password = binding.password.text.toString()
-        val isOnline = 1
         val refCode = binding.referralCode.text.toString()
 
         val registrationItem = RegistrationItem(
@@ -251,7 +288,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
             mobile = phoneNumber,
             password = password,
             refCode = refCode,
-            isOnlineCustomer = isOnline,
+            isOnlineCustomer = 1,
             rdoemail = rdoEmail,
             rdophone = rdoPhone,
             rdopost = rdoPost,
@@ -455,5 +492,4 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
             imm.hideSoftInputFromWindow(activity.window.decorView.windowToken, 0)
         }
     }
-
 }

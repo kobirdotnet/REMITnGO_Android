@@ -38,6 +38,7 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
     private val uploadRequireDocumentBottomSheet: UploadRequireDocumentBottomSheet by lazy { UploadRequireDocumentBottomSheet() }
 
     private var totalAmount: Double = 0.0
+    private var transactionCode: String? = null
     private var benePersonId: Int = 0
     private var customerId: Int = 0
     private var currentDate: String? = null
@@ -77,7 +78,7 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
             ViewModelProvider(this, paymentViewModelFactory)[PaymentViewModel::class.java]
 
         binding.cancelButton.setOnClickListener { dismiss() }
-        binding.btnLater.setOnClickListener { paymentLater("paymentLater") }
+        binding.btnLater.setOnClickListener { paymentLater(totalAmount, transactionCode!!) }
 
         binding.btnUpload.setOnClickListener {
             if (!uploadRequireDocumentBottomSheet.isAdded) {
@@ -114,19 +115,21 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    private fun paymentLater(paymentLater: String) {
-        itemSelectedListener?.onRequireDocumentSelected(paymentLater)
+    private fun paymentLater(totalAmount: Double, transactionCode: String) {
+        itemSelectedListener?.onRequireDocumentSelected(totalAmount, transactionCode)
         dismiss()
     }
 
     fun requireDocument(
         totalAmount: Double,
+        transactionCode: String,
         benePersonId: Int,
         customerId: Int,
         currentDate: String,
         purposeOfTransferId: Int
     ) {
         this.totalAmount = totalAmount
+        this.transactionCode = transactionCode
         this.benePersonId = benePersonId
         this.customerId = customerId
         this.currentDate = currentDate
@@ -148,7 +151,7 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
                         }
                     }
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }
@@ -167,7 +170,7 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
                         requireDocumentAdapter.notifyDataSetChanged()
                     }
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }

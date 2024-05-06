@@ -14,19 +14,25 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.QueryMessageAdapter
+import com.bsel.remitngo.bottomSheet.QueryMessageBottomSheet
+import com.bsel.remitngo.bottomSheet.QueryTypeBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.interfaceses.OnQueryMessageSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnQueryTypeItemSelectedListener
 import com.bsel.remitngo.data.model.query.query_message.QueryMessageItem
 import com.bsel.remitngo.data.model.query.query_message.QueryMessageTable
 import com.bsel.remitngo.databinding.FragmentUpdateQueryBinding
 import com.bsel.remitngo.presentation.di.Injector
 import javax.inject.Inject
 
-class UpdateQueryFragment : Fragment() {
+class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
     @Inject
     lateinit var queryViewModelFactory: QueryViewModelFactory
     private lateinit var queryViewModel: QueryViewModel
 
     private lateinit var binding: FragmentUpdateQueryBinding
+
+    private val queryMessageBottomSheet: QueryMessageBottomSheet by lazy { QueryMessageBottomSheet() }
 
     private lateinit var queryMessageAdapter: QueryMessageAdapter
 
@@ -67,21 +73,15 @@ class UpdateQueryFragment : Fragment() {
         }
 
         binding.btnAddMessage.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("complainId", complainId.toString())
-                putString("queryTypeId", queryTypeId.toString())
-                putString("transactionCode", transactionCode.toString())
-            }
-            findNavController().navigate(
-                R.id.action_nav_update_query_to_nav_query_message,
-                bundle
-            )
+            queryMessageBottomSheet.itemSelectedListener = this
+            queryMessageBottomSheet.setData(complainId,queryTypeId,transactionCode)
+            queryMessageBottomSheet.show(childFragmentManager, queryMessageBottomSheet.tag)
         }
 
         val queryMessageItem = QueryMessageItem(
             deviceId = deviceId,
             personId = personId.toInt(),
-            complainId = complainId.toInt()
+            complainId = complainId
         )
         queryViewModel.queryMessage(queryMessageItem)
         observeQueryMessageResult()
@@ -146,5 +146,12 @@ class UpdateQueryFragment : Fragment() {
         return deviceId
     }
 
-
+    override fun onQueryMessageSelected(complainId: Int) {
+        val queryMessageItem = QueryMessageItem(
+            deviceId = deviceId,
+            personId = personId.toInt(),
+            complainId = complainId
+        )
+        queryViewModel.queryMessage(queryMessageItem)
+    }
 }

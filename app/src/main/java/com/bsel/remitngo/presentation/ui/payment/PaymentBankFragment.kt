@@ -90,15 +90,18 @@ class PaymentBankFragment : Fragment() {
 
     private fun observeBankTransactionMessageResult() {
         paymentViewModel.bankTransactionMessageResult.observe(this) { result ->
-            Log.i("info","result: "+result)
-            if (result!!.data != null) {
-                for (bankTransactionMessage in result.data!!) {
-                    binding.accountName.text = bankTransactionMessage!!.accountName.toString()
-                    binding.accountNo.text = bankTransactionMessage.accountNumber.toString()
-                    binding.shortCode.text = bankTransactionMessage.sortCode.toString()
-                    binding.iban.text = bankTransactionMessage.iBAN.toString()
-                    binding.message.text = bankTransactionMessage.message.toString()
+            try {
+                if (result!!.data != null) {
+                    for (bankTransactionMessage in result.data!!) {
+                        binding.accountName.text = bankTransactionMessage!!.accountName.toString()
+                        binding.accountNo.text = bankTransactionMessage.accountNumber.toString()
+                        binding.shortCode.text = bankTransactionMessage.sortCode.toString()
+                        binding.iban.text = bankTransactionMessage.iBAN.toString()
+                        binding.message.text = bankTransactionMessage.message.toString()
+                    }
                 }
+            }catch (e:java.lang.NullPointerException){
+                e.localizedMessage
             }
         }
     }
@@ -110,7 +113,7 @@ class PaymentBankFragment : Fragment() {
                     for (paymentTransactionData in result.data!!) {
 
                         transactionCode = paymentTransactionData?.transactionCode.toString()
-                        sendAmount = paymentTransactionData?.sendAmount.toString()
+                        sendAmount = paymentTransactionData?.totalAmount.toString()
 
                         if (sendAmount != "null") {
                             binding.sendAmount.text =

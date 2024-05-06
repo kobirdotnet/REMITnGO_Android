@@ -32,7 +32,6 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/choose_order_type_container"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -41,13 +40,14 @@
                     app:endIconTint="@color/blue"
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/choose_order_type"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/grey"
-                        android:completionThreshold="1"
+                        android:focusableInTouchMode="false"
+                        android:drawableRight="@drawable/arrow_drop_down"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
@@ -177,7 +177,6 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/gender_container"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Gender"
@@ -186,13 +185,14 @@
                         app:endIconTint="@color/blue"
                         app:helperTextTextColor="@android:color/holo_red_dark">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/gender"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
                             android:backgroundTint="@color/grey"
-                            android:completionThreshold="1"
+                            android:focusableInTouchMode="false"
+                            android:drawableRight="@drawable/arrow_drop_down"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
@@ -215,7 +215,6 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/relation_container"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Relation"
@@ -224,13 +223,14 @@
                         app:endIconTint="@color/blue"
                         app:helperTextTextColor="@android:color/holo_red_dark">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/relation"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
                             android:backgroundTint="@color/grey"
-                            android:completionThreshold="1"
+                            android:focusableInTouchMode="false"
+                            android:drawableRight="@drawable/arrow_drop_down"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
@@ -253,7 +253,6 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/reason_container"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Reason"
@@ -262,13 +261,14 @@
                         app:endIconTint="@color/blue"
                         app:helperTextTextColor="@android:color/holo_red_dark">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/reason"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
                             android:backgroundTint="@color/grey"
-                            android:completionThreshold="1"
+                            android:focusableInTouchMode="false"
+                            android:drawableRight="@drawable/arrow_drop_down"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
@@ -309,7 +309,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="text"
-                            
                             android:textColor="@color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -345,7 +344,6 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:inputType="none"
-                            
                             android:text="Bangladesh"
                             android:textColor="@color/black"/>
                     </com.google.android.material.textfield.TextInputLayout>

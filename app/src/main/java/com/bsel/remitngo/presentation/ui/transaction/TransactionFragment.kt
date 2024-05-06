@@ -176,7 +176,7 @@ class TransactionFragment : Fragment() {
                     }
                 }
             } catch (e: NullPointerException) {
-                e.message
+                e.localizedMessage
             }
         }
     }
@@ -487,13 +487,13 @@ class TransactionFragment : Fragment() {
                 transactionViewModel.emp(encryptItem)
                 observeEmpResult()
 
-//                val bundle = Bundle().apply {
-//                    putString("transactionCode", transactionCode)
-//                }
-//                findNavController().navigate(
-//                    R.id.action_nav_review_to_nav_complete_card_transaction,
-//                    bundle
-//                )
+                val bundle = Bundle().apply {
+                    putString("transactionCode", transactionCode)
+                }
+                findNavController().navigate(
+                    R.id.action_nav_review_to_nav_complete_card_transaction,
+                    bundle
+                )
 
             }
         }

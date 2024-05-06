@@ -45,7 +45,7 @@ class ChooseBankFragment : Fragment() {
     private lateinit var deviceId: String
 
     private lateinit var paymentType: String
-    private lateinit var orderType: String
+    private var orderType: Int=0
 
     private lateinit var sendAmount: String
     private lateinit var receiveAmount: String
@@ -100,7 +100,11 @@ class ChooseBankFragment : Fragment() {
         ipAddress = getIPAddress(requireContext())
 
         paymentType = arguments?.getString("paymentType").toString()
-        orderType = arguments?.getString("orderType").toString()
+        try {
+            orderType = arguments?.getString("orderType").toString().toInt()
+        }catch (e:NumberFormatException){
+            e.localizedMessage
+        }
 
         sendAmount = arguments?.getString("sendAmount").toString()
         receiveAmount = arguments?.getString("receiveAmount").toString()
@@ -127,7 +131,7 @@ class ChooseBankFragment : Fragment() {
         binding.btnBank.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("paymentType", paymentType)
-                putString("orderType", orderType)
+                putString("orderType", orderType.toString())
                 putString("sendAmount", sendAmount)
                 putString("receiveAmount", receiveAmount)
                 putString("exchangeRate", exchangeRate)
@@ -155,36 +159,25 @@ class ChooseBankFragment : Fragment() {
             )
         }
 
-        if (orderType=="null"){
-            val getBankItem = GetBankItem(
-                benePersonId = benePersonId,
-                accountType = orderType.toInt(),
-                walletId = walletId,
-                bankId=bankId.toInt()
-            )
-            bankViewModel.getBank(getBankItem)
-            observeGetBankResult()
-        }else{
-            try {
-                val getBankItem = GetBankItem(
-                    benePersonId = benePersonId,
-                    accountType = orderType.toInt(),
-                    walletId = walletId,
-                    bankId=bankId.toInt()
-                )
-                bankViewModel.getBank(getBankItem)
-                observeGetBankResult()
-            }catch (e:NumberFormatException){
-                e.localizedMessage
-            }
-        }
+        val getBankItem = GetBankItem(
+            benePersonId = benePersonId,
+            accountType = orderType,
+            walletId = walletId,
+            bankId=bankId.toInt()
+        )
+        bankViewModel.getBank(getBankItem)
+        observeGetBankResult()
 
-        if (orderType=="3"){
-            binding.accountTxt.text = "Bank Account"
-        }else if (orderType=="5"){
-            binding.accountTxt.text = "Bank Account"
-        }else if (orderType=="1"){
-            binding.accountTxt.text = "Wallet Account"
+        when (orderType) {
+            3 -> {
+                binding.accountTxt.text = "Bank Account"
+            }
+            5 -> {
+                binding.accountTxt.text = "Bank Account"
+            }
+            1 -> {
+                binding.accountTxt.text = "Wallet Account"
+            }
         }
     }
 
@@ -214,7 +207,7 @@ class ChooseBankFragment : Fragment() {
 
         val bundle = Bundle().apply {
             putString("paymentType", paymentType)
-            putString("orderType", orderType)
+            putString("orderType", orderType.toString())
             putString("sendAmount", sendAmount)
             putString("receiveAmount", receiveAmount)
             putString("exchangeRate", exchangeRate)

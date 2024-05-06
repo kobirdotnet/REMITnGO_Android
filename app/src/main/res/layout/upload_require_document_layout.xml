@@ -57,7 +57,6 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/document_category_container"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -66,13 +65,14 @@
                     app:endIconTint="@color/blue"
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/documentCategory"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/grey"
-                        android:completionThreshold="1"
+                        android:focusableInTouchMode="false"
+                        android:drawableRight="@drawable/arrow_drop_down"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
@@ -94,7 +94,6 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/document_type_container"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -103,13 +102,14 @@
                     app:endIconTint="@color/blue"
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/documentType"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/grey"
-                        android:completionThreshold="1"
+                        android:focusableInTouchMode="false"
+                        android:drawableRight="@drawable/arrow_drop_down"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"

@@ -5,6 +5,8 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -62,6 +64,8 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_main,
+                R.id.nav_complete_card_transaction,
+                R.id.nav_complete_bank_transaction,
                 R.id.nav_my_profile,
                 R.id.nav_beneficiary_management,
                 R.id.nav_documents,
@@ -223,31 +227,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_home -> {
+                navController.navigate(R.id.nav_main)
+                true
+            }
+            R.id.action_notification -> {
+                navController.navigate(R.id.nav_notification)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
-//    @SuppressLint("MissingSuperCall")
-//    override fun onBackPressed() {
-//        val drawerLayout: DrawerLayout = binding.drawerLayout
-//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            drawerLayout.closeDrawer(GravityCompat.START)
-//        } else {
-//            if (!isFinishing && !isDestroyed) {
-//                val builder = AlertDialog.Builder(this)
-//                builder.setTitle("App termination")
-//                builder.setMessage("Do you want to close the app?")
-//                builder.setPositiveButton("EXIT") { _, _ ->
-//                    ActivityCompat.finishAffinity(this)
-//                }
-//                builder.setNegativeButton("STAY") { _, _ ->
-//                }
-//                val dialog = builder.create()
-//                dialog.show()
-//            }
-//        }
-//    }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         val v = currentFocus

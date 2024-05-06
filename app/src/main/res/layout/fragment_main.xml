@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
@@ -177,9 +178,9 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
+                        android:layout_margin="@dimen/padding_left"
                         android:layout_weight="1"
-                        android:src="@drawable/sync"
-                        android:layout_margin="@dimen/padding_left"/>
+                        android:src="@drawable/sync" />
 
                     <TextView
                         android:id="@+id/commission"
@@ -189,8 +190,8 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:hint="Commission 3.0 GBP"
-                        android:textColor="@color/black"
-                        android:textSize="9sp"/>
+                        android:textColor="@color/yellow"
+                        android:textSize="8sp" />
 
                 </LinearLayout>
 
@@ -330,23 +331,23 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/padding_left"
-                android:paddingTop="@dimen/padding_top"
                 android:paddingRight="@dimen/padding_right"
                 android:paddingBottom="@dimen/padding_bottom"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/collectionPointInstantCreditContainer"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Collection Point Bank">
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/collectionPointInstantCredit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
+                        android:drawableRight="@drawable/arrow_drop_down"
+                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/roboto_regular"
                         android:inputType="none"
                         android:textColor="@color/black" />
@@ -363,23 +364,23 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/padding_left"
-                android:paddingTop="@dimen/padding_top"
                 android:paddingRight="@dimen/padding_right"
                 android:paddingBottom="@dimen/padding_bottom"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/collectionPointCashPickUpContainer"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Collection Point Bank">
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/collectionPointCashPickUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
+                        android:drawableRight="@drawable/arrow_drop_down"
+                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/roboto_regular"
                         android:inputType="none"
                         android:textColor="@color/black" />
@@ -396,23 +397,23 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/padding_left"
-                android:paddingTop="@dimen/padding_top"
                 android:paddingRight="@dimen/padding_right"
                 android:paddingBottom="@dimen/padding_bottom"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/collectionPointWalletContainer"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Collection Point Wallet">
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/collectionPointWallet"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
+                        android:drawableRight="@drawable/arrow_drop_down"
+                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/roboto_regular"
                         android:inputType="none"
                         android:textColor="@color/black" />

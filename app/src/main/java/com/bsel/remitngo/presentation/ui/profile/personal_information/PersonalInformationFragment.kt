@@ -81,7 +81,7 @@ class PersonalInformationFragment : Fragment() {
         dateOfBirth = arguments?.getString("dateOfBirth").toString()
         binding.dob.setText(dateOfBirth)
 
-        binding.dobContainer.setEndIconOnClickListener {
+        binding.dob.setOnClickListener {
             val calendar = Calendar.getInstance()
             val currentYear = calendar.get(Calendar.YEAR)
             val currentMonth = calendar.get(Calendar.MONTH)

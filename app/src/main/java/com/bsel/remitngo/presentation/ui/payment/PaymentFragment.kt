@@ -591,16 +591,19 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                         } else {
 
                             val sendAmountValue = binding.sendAmount.text.toString()
-                            modifiedSendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+                            modifiedSendAmount =
+                                sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
                             val receiveAmountValue = binding.receiveAmount.text.toString()
-                            modifiedBeneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
+                            modifiedBeneAmount =
+                                receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
 
                             val rateValue = binding.exchangeRate.text.toString()
                             modifiedRate = rateValue.replace(Regex("[^\\d.]"), "").toDouble()
 
                             val commissionValue = binding.transferFee.text.toString()
-                            modifiedCommission = commissionValue.replace(Regex("[^\\d.]"), "").toDouble()
+                            modifiedCommission =
+                                commissionValue.replace(Regex("[^\\d.]"), "").toDouble()
 
                             val totalAmountValue = binding.totalAmount.text.toString()
                             totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
@@ -699,12 +702,13 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             try {
                 if (result!!.code == "000") {
                     requireDoc = result.data.toString()
+                    val totalAmountValue = binding.totalAmount.text.toString()
+                    totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
                     if (result.data != null) {
-                        val totalAmountValue = binding.totalAmount.text.toString()
-                        totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
                         if (!requireDocumentBottomSheet.isAdded) {
                             requireDocumentBottomSheet.requireDocument(
                                 totalAmount,
+                                transactionCode,
                                 benePersonId,
                                 customerId,
                                 currentDate,
@@ -1160,10 +1164,17 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         }
     }
 
+    private fun updateValuesGBP() {
+        val bdtValue = gbpValue * rate
+        val formattedBDT = decimalFormat.format(bdtValue)
+        binding.receiveAmount.text = "BDT $formattedBDT"
+    }
+
     private fun applyPromo() {
         binding.btnAddPromoCode.visibility = View.VISIBLE
-        binding.promoCodeLayout.visibility = View.GONE
-        binding.promoLayout.visibility = View.GONE
+        binding.promoCodeContainer.visibility = View.GONE
+        binding.btnApplyPromoCode.visibility = View.GONE
+        binding.promoMessage.visibility = View.GONE
 
         binding.previousSendAmount.visibility = View.GONE
         binding.previousTransferFee.visibility = View.GONE
@@ -1173,17 +1184,12 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
         binding.btnAddPromoCode.setOnClickListener {
             binding.btnAddPromoCode.visibility = View.GONE
-            binding.promoCodeLayout.visibility = View.VISIBLE
-            binding.promoLayout.visibility = View.GONE
-
-            binding.previousSendAmount.visibility = View.GONE
-            binding.previousTransferFee.visibility = View.GONE
-            binding.previousTotalAmount.visibility = View.GONE
-            binding.previousRate.visibility = View.GONE
-            binding.previousReceiveAmount.visibility = View.GONE
+            binding.promoCodeContainer.visibility = View.VISIBLE
+            binding.btnApplyPromoCode.visibility = View.VISIBLE
+            binding.promoMessage.visibility = View.GONE
         }
 
-        binding.applyPromoCode.setOnClickListener { promoCodeFrom() }
+        binding.btnApplyPromoCode.setOnClickListener { promoCodeFrom() }
     }
 
     private fun promoCodeFrom() {
@@ -1227,15 +1233,11 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         paymentViewModel.promoResult.observe(this) { result ->
             try {
                 if (result!!.promoResponseData!!.code == "0000") {
-                    binding.btnAddPromoCode.visibility = View.GONE
-                    binding.promoCodeLayout.visibility = View.GONE
-                    binding.promoLayout.visibility = View.VISIBLE
 
-                    binding.previousSendAmount.visibility = View.GONE
-                    binding.previousTransferFee.visibility = View.GONE
-                    binding.previousTotalAmount.visibility = View.GONE
-                    binding.previousRate.visibility = View.GONE
-                    binding.previousReceiveAmount.visibility = View.GONE
+                    binding.btnAddPromoCode.visibility = View.GONE
+                    binding.promoCodeContainer.visibility = View.GONE
+                    binding.btnApplyPromoCode.visibility = View.GONE
+                    binding.promoMessage.visibility = View.VISIBLE
 
                     if (result.promoResponseData!!.promoData != null) {
 
@@ -1264,57 +1266,42 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
                         sendAmount =
                             result.promoResponseData.promoData.sendAmount!!.toString().toDouble()
-                        binding.previousSendAmount.visibility=View.VISIBLE
+                        binding.previousSendAmount.visibility = View.VISIBLE
                         binding.previousSendAmount.hint = "GBP $sendAmount"
 
                         commission =
                             result.promoResponseData.promoData.commision!!.toString().toDouble()
-                        binding.previousTransferFee.visibility=View.VISIBLE
+                        binding.previousTransferFee.visibility = View.VISIBLE
                         binding.previousTransferFee.hint = "GBP $commission"
 
                         rate = result.promoResponseData.promoData.rate!!.toString().toDouble()
-                        binding.previousRate.visibility=View.VISIBLE
+                        binding.previousRate.visibility = View.VISIBLE
                         binding.previousRate.hint = "BDT $rate"
 
                         beneAmount =
                             result.promoResponseData.promoData.beneAmount!!.toString().toDouble()
-                        binding.previousReceiveAmount.visibility=View.VISIBLE
+                        binding.previousReceiveAmount.visibility = View.VISIBLE
                         binding.previousReceiveAmount.hint = "BDT $beneAmount"
 
                         var previousTotalAmount = sendAmount + commission
-                        binding.previousTotalAmount.visibility=View.VISIBLE
+                        binding.previousTotalAmount.visibility = View.VISIBLE
                         binding.previousTotalAmount.hint = "GBP $previousTotalAmount"
 
                         val promoMessage = result.promoResponseData.promoData.promoMsg!!.toString()
-                        binding.promoMessage.text = promoMessage
-                        binding.promo.text = "Your applied promo is: $promoCode"
+                        binding.promoMessage.text =
+                            "$promoCode promo code is applied.\n$promoMessage"
 
                         updateValuesGBP()
                     }
 
                 } else if (result.promoResponseData!!.code == "1111") {
-                    binding.btnAddPromoCode.visibility = View.GONE
-                    binding.promoCodeLayout.visibility = View.VISIBLE
-                    binding.promoLayout.visibility = View.GONE
-
-                    binding.previousSendAmount.visibility = View.GONE
-                    binding.previousTransferFee.visibility = View.GONE
-                    binding.previousTotalAmount.visibility = View.GONE
-                    binding.previousRate.visibility = View.GONE
-                    binding.previousReceiveAmount.visibility = View.GONE
-
-                    binding.invalidPromoMessage.text = result.promoResponseData.message.toString()
+                    binding.promoCodeContainer.helperText =
+                        result.promoResponseData.message.toString()
                 }
             } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }
-    }
-
-    private fun updateValuesGBP() {
-        val bdtValue = gbpValue * modifiedRate
-        val formattedBDT = decimalFormat.format(bdtValue)
-        binding.receiveAmount.text = "BDT $formattedBDT"
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -1355,7 +1342,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         )
     }
 
-    override fun onRequireDocumentSelected(selectedItem: String?) {
+    override fun onRequireDocumentSelected(totalAmount: Double, transactionCode: String) {
         if (paymentMode == 4) {
             cardPayment()
         } else if (paymentMode == 5) {
@@ -1366,6 +1353,13 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             findNavController().navigate(
                 R.id.action_nav_review_to_nav_complete_bank_transaction, bundle
             )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.nav_main)
         }
     }
 
@@ -1397,7 +1391,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private fun validSourceOfIncome(): String? {
         val sourceOfIncome = binding.sourceOfIncome.text.toString()
         if (sourceOfIncome.isEmpty()) {
-            return "select source of income"
+            return "select source of fund"
         }
         return null
     }
@@ -1448,13 +1442,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             return "Enter your promo code"
         }
         return null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().navigate(R.id.nav_main)
-        }
     }
 
 }
