@@ -97,40 +97,55 @@ class TransactionBottomSheet : BottomSheetDialogFragment() {
                 if (result!!.data != null) {
                     for (transactionDetailsData in result!!.data!!) {
 
-                        binding.transactionCode.text =
-                            transactionDetailsData!!.transactionCode.toString()
-
-                        binding.transactionDate.text =
-                            transactionDetailsData!!.transactionDateTime12hr.toString()
-
-//                    binding.paymentMode.text = transactionDetailsData!!.paymentMode.toString()
-
-                        binding.orderType.text = transactionDetailsData!!.orderTypeName.toString()
-
-                        binding.benName.text = transactionDetailsData!!.beneName.toString()
-
-                        binding.bankName.text = transactionDetailsData!!.beneBankName.toString()
-
-                        binding.accountNo.text = transactionDetailsData!!.beneAccountNo.toString()
-
-//                    val totalAmount = transactionDetailsData!!.totalAmount.toString()
-//                    binding.sendAmount.text = "GBP $totalAmount"
-
-                        val benAmount = transactionDetailsData!!.beneAmount.toString()
-                        binding.benAmount.text = "BDT $benAmount"
-
-                        val exchangeRate=transactionDetailsData!!.rate.toString()
-                        binding.exchangeRate.text = "BDT $exchangeRate"
-
-//                    val commission=transactionDetailsData!!.transferFees.toString()
-//                    binding.commission.text = "GBP $commission"
-
-                        binding.paymentStatus.text = transactionDetailsData!!.paymentStatus.toString()
-
-                        binding.transactionStatus.text = transactionDetailsData!!.transactionStatus.toString()
+                        if (transactionDetailsData!!.transactionCode != "null") {
+                            binding.transactionCode.text = transactionDetailsData!!.transactionCode
+                        }
+                        if (transactionDetailsData.transactionDateTime12hr != "null") {
+                            binding.transactionDate.text =
+                                transactionDetailsData!!.transactionDateTime12hr
+                        }
+                        if (transactionDetailsData.paymentTypeName != "null") {
+                            binding.paymentMode.text = transactionDetailsData.paymentTypeName
+                        }
+                        if (transactionDetailsData.orderTypeName != "null") {
+                            binding.orderType.text = transactionDetailsData.orderTypeName
+                        }
+                        if (transactionDetailsData.beneName != "null") {
+                            binding.beneName.text = transactionDetailsData.beneName
+                        }
+                        if (transactionDetailsData.beneBankName != "null") {
+                            binding.bankName.text = transactionDetailsData.beneBankName
+                        }
+                        if (transactionDetailsData.beneAccountNo != "null") {
+                            binding.accountNo.text = transactionDetailsData.beneAccountNo
+                        }
+                        if (transactionDetailsData.sendAmount.toString() != "null") {
+                            val sendAmount = transactionDetailsData.sendAmount.toString()
+                            binding.sendAmount.text = "GBP $sendAmount"
+                        }
+                        if (transactionDetailsData.beneAmount.toString() != "null") {
+                            val beneAmount = transactionDetailsData.beneAmount.toString()
+                            binding.beneAmount.text = "BDT $beneAmount"
+                        }
+                        if (transactionDetailsData.rate.toString() != "null") {
+                            val exchangeRate = transactionDetailsData.rate.toString()
+                            binding.exchangeRate.text = "BDT $exchangeRate"
+                        }
+                        if (transactionDetailsData.transferFees.toString() != "null") {
+                            val commission = transactionDetailsData.transferFees.toString()
+                            binding.commission.text = "GBP $commission"
+                        }
+                        if (transactionDetailsData.transactionStatus.toString() != "null") {
+                            binding.transactionStatus.text =
+                                transactionDetailsData.transactionStatus.toString()
+                        }
+                        if (transactionDetailsData.paymentStatus.toString() != "null") {
+                            binding.paymentStatus.text =
+                                transactionDetailsData.paymentStatus.toString()
+                        }
                     }
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }

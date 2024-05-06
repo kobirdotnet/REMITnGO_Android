@@ -11,7 +11,7 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:scrollbars="none"
-        tools:context=".presentation.ui.beneficiary.SaveBeneficiaryFragment">
+        tools:context=".presentation.ui.beneficiary.beneficiaryManagement.SaveBeneficiaryFragment">
 
         <LinearLayout
             android:layout_width="match_parent"

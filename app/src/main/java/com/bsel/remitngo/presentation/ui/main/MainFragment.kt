@@ -614,7 +614,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     for (data in result.data!!) {
 
                         commission = data!!.commission.toString().toDouble()
-                        binding.commission.text = "Commission $commission GBP"
+                        binding.commission.text = "Fee $commission GBP"
 
                         rate = data.rate!!.toDouble()
                         binding.exchangeRate.text = "BDT $rate"

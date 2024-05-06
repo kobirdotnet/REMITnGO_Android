@@ -220,7 +220,7 @@
                             android:textColor="@color/black" />
 
                         <TextView
-                            android:id="@+id/benName"
+                            android:id="@+id/beneName"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -356,7 +356,7 @@
                             android:textColor="@color/black" />
 
                         <TextView
-                            android:id="@+id/benAmount"
+                            android:id="@+id/beneAmount"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

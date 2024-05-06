@@ -61,26 +61,11 @@ class ContactViewHolder(val binding: ItemContactBinding) :
         contactItem: ContactItem,
         selectedItem: (ContactItem) -> Unit
     ) {
-
-        val randomColor = getRandomColor()
-        val backgroundDrawable = GradientDrawable()
-        backgroundDrawable.shape = GradientDrawable.OVAL
-        backgroundDrawable.setColor(randomColor)
-
-        binding.firstLetterBackground.background = backgroundDrawable
-        binding.firstLetterName.setTextColor(getRandomColor())
-
-        binding.firstLetterName.text = contactItem.firstLetter
         binding.contactName.text = contactItem.name
         binding.contactNumber.text = contactItem.phoneNumber
         binding.itemContactLayout.setOnClickListener {
             selectedItem(contactItem)
         }
-    }
-
-    private fun getRandomColor(): Int {
-        val random = Random.Default
-        return Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256))
     }
 
 }

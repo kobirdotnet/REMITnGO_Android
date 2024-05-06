@@ -64,12 +64,12 @@ class SupportFragment : Fragment() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(
                         requireContext(),
-                        android.Manifest.permission.CALL_PHONE
+                        Manifest.permission.CALL_PHONE
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     ActivityCompat.requestPermissions(
                         requireActivity(),
-                        arrayOf(android.Manifest.permission.CALL_PHONE),
+                        arrayOf(Manifest.permission.CALL_PHONE),
                         1
                     )
                 } else {
@@ -150,21 +150,24 @@ class SupportFragment : Fragment() {
 
     private fun observeSupportResult() {
         supportViewModel.supportResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (support in result.data!!) {
-                    Log.i("info", "support: $support")
-                    binding.phoneNumber.text = support!!.phoneNumber.toString()
-                    phoneNumber = support!!.phoneNumber.toString()
+            try {
+                if (result!!.data != null) {
+                    for (support in result.data!!) {
+                        binding.phoneNumber.text = support!!.phoneNumber.toString()
+                        phoneNumber = support.phoneNumber.toString()
 
-                    binding.email.text = support!!.email.toString()
-                    email = support!!.email.toString()
+                        binding.email.text = support!!.email.toString()
+                        email = support.email.toString()
 
-                    binding.whatsApp.text = support!!.whatsAppMsg.toString()
-                    whatsAppUrl = support!!.whatsappUrl.toString()
+                        binding.whatsApp.text = support.phoneNumber.toString()
+                        whatsAppUrl = support.whatsappUrl.toString()
 
-                    binding.messenger.text = support!!.messangerMsg.toString()
-                    messengerUrl = support!!.messagnerUrl.toString()
+                        binding.messenger.text = support.messangerMsg.toString()
+                        messengerUrl = support.messagnerUrl.toString()
+                    }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

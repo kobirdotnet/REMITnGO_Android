@@ -510,17 +510,35 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     }
 
     private fun paymentFrom() {
-        binding.receiverNameContainer.helperText = validReceiverName()
-        binding.reasonContainer.helperText = validReason()
-        binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
 
-        val validReceiverName = binding.receiverNameContainer.helperText == null
-        val validReason = binding.reasonContainer.helperText == null
-        val validSourceOfIncome = binding.sourceOfIncomeContainer.helperText == null
+        if (orderType == 2 || orderType == 4) {
+            binding.receiverNameContainer.helperText = validReceiverName()
+            binding.reasonContainer.helperText = validReason()
+            binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
 
-        if (validReceiverName && validReason && validSourceOfIncome) {
-            submitPaymentFrom()
+            val validReceiverName = binding.receiverNameContainer.helperText == null
+            val validReason = binding.reasonContainer.helperText == null
+            val validSourceOfIncome = binding.sourceOfIncomeContainer.helperText == null
+
+            if (validReceiverName && validReason && validSourceOfIncome) {
+                submitPaymentFrom()
+            }
+        } else {
+            binding.receiverNameContainer.helperText = validReceiverName()
+            binding.receiverAccountContainer.helperText = validReceiverAccount()
+            binding.reasonContainer.helperText = validReason()
+            binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
+
+            val validReceiverName = binding.receiverNameContainer.helperText == null
+            val validReceiverAccount = binding.receiverAccountContainer.helperText == null
+            val validReason = binding.reasonContainer.helperText == null
+            val validSourceOfIncome = binding.sourceOfIncomeContainer.helperText == null
+
+            if (validReceiverName && validReceiverAccount && validReason && validSourceOfIncome) {
+                submitPaymentFrom()
+            }
         }
+
 
     }
 

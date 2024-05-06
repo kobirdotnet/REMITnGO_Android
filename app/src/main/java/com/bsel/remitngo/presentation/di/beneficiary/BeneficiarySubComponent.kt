@@ -3,10 +3,10 @@ package com.bsel.remitngo.presentation.di.beneficiary
 import com.bsel.remitngo.bottomSheet.ChooseRecipientBottomSheet
 import com.bsel.remitngo.bottomSheet.PurposeOfTransferBottomSheet
 import com.bsel.remitngo.bottomSheet.SaveRecipientBottomSheet
-import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryManagementFragment
-import com.bsel.remitngo.presentation.ui.beneficiary.SaveRecipientFragment
-import com.bsel.remitngo.presentation.ui.beneficiary.ChooseRecipientFragment
-import com.bsel.remitngo.presentation.ui.beneficiary.SaveBeneficiaryFragment
+import com.bsel.remitngo.presentation.ui.beneficiary.beneficiaryManagement.BeneficiaryManagementFragment
+import com.bsel.remitngo.presentation.ui.beneficiary.recipientManagement.SaveRecipientFragment
+import com.bsel.remitngo.presentation.ui.beneficiary.recipientManagement.ChooseRecipientFragment
+import com.bsel.remitngo.presentation.ui.beneficiary.beneficiaryManagement.SaveBeneficiaryFragment
 import dagger.Subcomponent
 
 @BeneficiaryScope

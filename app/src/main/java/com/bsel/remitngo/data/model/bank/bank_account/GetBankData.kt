@@ -22,4 +22,5 @@ data class GetBankData(
     val walletId: Int?,
     @SerializedName("WalletName")
     val walletName: String?
+
 )

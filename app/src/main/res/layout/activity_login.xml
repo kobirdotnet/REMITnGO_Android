@@ -171,6 +171,7 @@
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
                         android:inputType="none"
+                        android:padding="@dimen/padding_left"
                         android:text="Login"
                         android:textAllCaps="true"
                         android:textColor="@color/white" />

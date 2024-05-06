@@ -7,9 +7,7 @@ data class ForgotPasswordResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: Any?,
+    val `data`: ForgotPasswordResponseData?,
     @SerializedName("Message")
-    val message: String?,
-    @SerializedName("Token")
-    val token: Any?
+    val message: String?
 )

@@ -9,10 +9,12 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BankAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
@@ -235,6 +237,46 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
                     binding.bankRecyclerView.adapter = bankAdapter
                     bankAdapter.setList(result.data as List<GetBankData>)
                     bankAdapter.notifyDataSetChanged()
+
+                    binding.bankSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
+
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            bankAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+
+                    binding.bankRecyclerView.addOnScrollListener(
+                        object : RecyclerView.OnScrollListener() {
+                            override fun onScrolled(
+                                recyclerView: RecyclerView,
+                                dx: Int,
+                                dy: Int
+                            ) {
+                                super.onScrolled(
+                                    recyclerView,
+                                    dx,
+                                    dy
+                                )
+                                if (dy > 10 && binding.btnBank.isExtended) {
+                                    binding.btnBank.shrink()
+                                }
+                                if (dy < -10 && !binding.btnBank.isExtended) {
+                                    binding.btnBank.extend()
+                                }
+                                if (!recyclerView.canScrollVertically(
+                                        -1
+                                    )
+                                ) {
+                                    binding.btnBank.extend()
+                                }
+                            }
+                        })
+
                 }
             } catch (e: NullPointerException) {
                 e.localizedMessage

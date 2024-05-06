@@ -1,4 +1,4 @@
-package com.bsel.remitngo.presentation.ui.beneficiary
+package com.bsel.remitngo.presentation.ui.beneficiary.recipientManagement
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -30,6 +30,8 @@ import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
 import com.bsel.remitngo.databinding.FragmentChooseRecipientBinding
 import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModel
+import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModelFactory
 import java.util.*
 import javax.inject.Inject
 

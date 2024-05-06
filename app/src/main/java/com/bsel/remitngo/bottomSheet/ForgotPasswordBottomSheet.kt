@@ -121,32 +121,31 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeForgotPasswordResult() {
         loginViewModel.forgotPasswordResult.observe(this) { result ->
-            if (result!! != null) {
-                val resultMessage = result!!.message
-                val parts = resultMessage!!.split("*")
-                if (parts.size >= 2) {
-                    personId = parts[0]
-                    message = parts.subList(1, parts.size).joinToString("*")
-                } else {
-                    message = result!!.message.toString()
+            try {
+                if (result!!.data != null) {
+
+                    personId = result.data!!.personId.toString()
+                    message = result.data.message.toString()
+
+                    if (::personId.isInitialized && personId != "null") {
+                        binding.verifyLayout.visibility = View.GONE
+                        binding.validationLayout.visibility = View.VISIBLE
+                        binding.setPasswordLayout.visibility = View.GONE
+
+                        binding.otpVerifyMessage.text = message
+
+                        binding.btnOtpValidation.setOnClickListener { otpValidationForm() }
+
+                        startCountDown()
+
+                    } else {
+                        binding.verifyLayout.visibility = View.VISIBLE
+                        binding.validationLayout.visibility = View.GONE
+                        binding.setPasswordLayout.visibility = View.GONE
+                    }
                 }
-
-                if (::personId.isInitialized && personId != "null") {
-                    binding.verifyLayout.visibility = View.GONE
-                    binding.validationLayout.visibility = View.VISIBLE
-                    binding.setPasswordLayout.visibility = View.GONE
-
-                    binding.otpVerifyMessage.text = message
-
-                    binding.btnOtpValidation.setOnClickListener { otpValidationForm() }
-
-                    startCountDown()
-
-                } else {
-                    binding.verifyLayout.visibility = View.VISIBLE
-                    binding.validationLayout.visibility = View.GONE
-                    binding.setPasswordLayout.visibility = View.GONE
-                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
@@ -194,27 +193,28 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun startCountDown() {
-        binding.otpTimeCounter.visibility=View.VISIBLE
-        binding.btnOtpSendAgain.visibility=View.GONE
+        binding.otpTimeCounter.visibility = View.VISIBLE
+        binding.btnOtpSendAgain.visibility = View.GONE
         countDownTimer = object : CountDownTimer(120000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsLeft = millisUntilFinished / 1000
                 val minutes = secondsLeft / 60
                 val seconds = secondsLeft % 60
-                binding.otpTimeCounter.text = "Resend OTP in ${String.format("%02d:%02d", minutes, seconds)} seconds"
+                binding.otpTimeCounter.text =
+                    "Resend OTP in ${String.format("%02d:%02d", minutes, seconds)} seconds"
             }
 
             override fun onFinish() {
-                binding.otpTimeCounter.visibility=View.GONE
-                binding.btnOtpSendAgain.visibility=View.VISIBLE
-                binding.btnOtpSendAgain.setOnClickListener {passwordForm()}
+                binding.otpTimeCounter.visibility = View.GONE
+                binding.btnOtpSendAgain.visibility = View.VISIBLE
+                binding.btnOtpSendAgain.setOnClickListener { passwordForm() }
             }
         }.start()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::countDownTimer.isInitialized){
+        if (::countDownTimer.isInitialized) {
             countDownTimer.cancel()
         }
     }

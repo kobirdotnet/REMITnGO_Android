@@ -336,68 +336,72 @@ class ProfileFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeProfileResult() {
         profileViewModel.profileResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (data in result.data!!) {
-                    firstName = data!!.firstName.toString()
-                    lastName = data!!.lastName.toString()
-                    binding.name.text = "$firstName $lastName"
+            try {
+                if (result!!.data != null) {
+                    for (data in result.data!!) {
+                        firstName = data!!.firstName.toString()
+                        lastName = data!!.lastName.toString()
+                        binding.name.text = "$firstName $lastName"
 
-                    genderId = data!!.gender.toString()
-                    if (genderId == "1") {
-                        binding.gender.text = "Male"
-                    } else if (genderId == "2") {
-                        binding.gender.text = "Female"
-                    }
-
-                    dateOfBirth = data!!.dateOfBirth.toString()
-                    val dateTime =
-                        LocalDateTime.parse(dateOfBirth, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-                    val date = dateTime.toLocalDate()
-                    val dob = date.format(DateTimeFormatter.ISO_DATE)
-                    binding.dob.text = "$dob"
-
-                    occupationTypeId = data!!.occupationTypeId.toString()
-
-                    occupationId = data!!.occupationCode.toString()
-
-                    sourceOfIncomeId = data!!.sourceOfIncomeId.toString()
-
-                    annualIncomeId = data!!.annualNetIncomeId.toString()
-
-                    nationalityId = data!!.nationality.toString()
-
-                    postCode = data!!.postCode.toString()
-
-                    address = data!!.address.toString()
-                    binding.userAddress.text = "$address"
-
-                    ukDivisionId = data!!.divisionId.toString()
-
-                    countyId = data!!.districtId.toString()
-
-                    cityId = data!!.thanaId.toString()
-
-                    email = data!!.email.toString()
-                    binding.emailAddress.text = "$email"
-
-                    isMobileOTPValidate = data!!.isMobileOTPValidate!!
-                    mobile = data!!.mobile.toString()
-                    binding.phoneNumber.text = "$mobile"
-                    if (!isMobileOTPValidate) {
-                        binding.mobileEdit.visibility = View.VISIBLE
-                        binding.mobileNumber.setOnClickListener {
-                            val bundle = Bundle().apply {
-                                putString("mobile", mobile)
-                            }
-                            findNavController().navigate(
-                                R.id.action_nav_my_profile_to_nav_mobile_number,
-                                bundle
-                            )
+                        genderId = data!!.gender.toString()
+                        if (genderId == "1") {
+                            binding.gender.text = "Male"
+                        } else if (genderId == "2") {
+                            binding.gender.text = "Female"
                         }
-                    } else {
-                        binding.mobileEdit.visibility = View.GONE
+
+                        dateOfBirth = data!!.dateOfBirth.toString()
+                        val dateTime =
+                            LocalDateTime.parse(dateOfBirth, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                        val date = dateTime.toLocalDate()
+                        val dob = date.format(DateTimeFormatter.ISO_DATE)
+                        binding.dob.text = "$dob"
+
+                        occupationTypeId = data!!.occupationTypeId.toString()
+
+                        occupationId = data!!.occupationCode.toString()
+
+                        sourceOfIncomeId = data!!.sourceOfIncomeId.toString()
+
+                        annualIncomeId = data!!.annualNetIncomeId.toString()
+
+                        nationalityId = data!!.nationality.toString()
+
+                        postCode = data!!.postCode.toString()
+
+                        address = data!!.address.toString()
+                        binding.userAddress.text = "$address"
+
+                        ukDivisionId = data!!.divisionId.toString()
+
+                        countyId = data!!.districtId.toString()
+
+                        cityId = data!!.thanaId.toString()
+
+                        email = data!!.email.toString()
+                        binding.emailAddress.text = "$email"
+
+                        isMobileOTPValidate = data!!.isMobileOTPValidate!!
+                        mobile = data!!.mobile.toString()
+                        binding.phoneNumber.text = "$mobile"
+                        if (!isMobileOTPValidate) {
+                            binding.mobileEdit.visibility = View.VISIBLE
+                            binding.mobileNumber.setOnClickListener {
+                                val bundle = Bundle().apply {
+                                    putString("mobile", mobile)
+                                }
+                                findNavController().navigate(
+                                    R.id.action_nav_my_profile_to_nav_mobile_number,
+                                    bundle
+                                )
+                            }
+                        } else {
+                            binding.mobileEdit.visibility = View.GONE
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

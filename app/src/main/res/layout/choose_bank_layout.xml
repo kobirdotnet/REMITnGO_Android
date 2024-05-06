@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:id="@+id/extraSpace"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/grey"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -42,76 +43,82 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:background="@color/grey"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/padding_left"
+            android:paddingTop="@dimen/padding_top"
+            android:paddingRight="@dimen/padding_right">
+
+            <SearchView
+                android:id="@+id/bankSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_search_view_background"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/roboto_regular"
+                android:gravity="center_vertical"
+                android:iconifiedByDefault="true"
+                android:queryHint="Search Account"
+                android:textColor="@color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="right"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/padding_left"
-                android:paddingTop="@dimen/padding_top"
-                android:paddingRight="@dimen/padding_right">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/padding_top">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnBank"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/accountTxt"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/add_person"
-                    android:focusableInTouchMode="false"
+                    android:background="@color/white"
                     android:fontFamily="@font/roboto_regular"
-                    android:gravity="center"
-                    android:text="Add new account"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/padding_left"
+                    android:text="Bank Account"
                     android:textAllCaps="false"
                     android:textColor="@color/black" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/padding_left"
-                android:paddingTop="@dimen/padding_top"
-                android:paddingRight="@dimen/padding_right"
-                android:paddingBottom="@dimen/padding_bottom">
-
-                <SearchView
-                    android:id="@+id/bankSearch"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_search_view_background"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="center_vertical"
-                    android:iconifiedByDefault="true"
-                    android:queryHint="Search recipients"
-                    android:textColor="@color/black" />
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/accountTxt">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    <LinearLayout
+                        android:id="@+id/extraSpace"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/accountTxt"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/bankRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            tools:listitem="@layout/item_get_bank" />
+                    </LinearLayout>
+
+                    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                        android:id="@+id/btnBank"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/padding_top"
+                        android:backgroundTint="@color/blue"
+                        android:drawableLeft="@drawable/add_account"
+                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/roboto_regular"
-                        android:padding="@dimen/padding_bottom"
-                        android:text="Bank Account"
-                        android:textColor="@color/black" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/bankRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:listitem="@layout/item_get_bank" />
-                </LinearLayout>
+                        android:padding="@dimen/padding_top"
+                        android:text="Add Account"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        app:icon="@drawable/add_person"
+                        app:iconPadding="@dimen/padding_top"
+                        app:iconTint="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.bsel.remitngo.presentation.ui.beneficiary
+package com.bsel.remitngo.presentation.ui.beneficiary.beneficiaryManagement
 
 import android.content.Context
 import android.net.wifi.WifiManager
@@ -19,18 +19,20 @@ import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.save_beneficiary.BeneficiaryItem
 import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
 import com.bsel.remitngo.data.model.reason.ReasonData
-import com.bsel.remitngo.data.model.relation.RelationData
-import com.bsel.remitngo.databinding.FragmentSaveRecipientBinding
+import com.bsel.remitngo.databinding.FragmentSaveBeneficiaryBinding
 import com.bsel.remitngo.presentation.di.Injector
+import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModel
+import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModelFactory
 import java.util.*
 import javax.inject.Inject
 
-class SaveRecipientFragment : Fragment(), OnBeneficiarySelectedListener {
+class SaveBeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
     @Inject
     lateinit var beneficiaryViewModelFactory: BeneficiaryViewModelFactory
     private lateinit var beneficiaryViewModel: BeneficiaryViewModel
 
-    private lateinit var binding: FragmentSaveRecipientBinding
+    private lateinit var binding: FragmentSaveBeneficiaryBinding
+
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -72,16 +74,17 @@ class SaveRecipientFragment : Fragment(), OnBeneficiarySelectedListener {
     private lateinit var sourceOfIncomeId: String
     private lateinit var sourceOfIncomeName: String
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_save_recipient, container, false)
+        return inflater.inflate(R.layout.fragment_save_beneficiary, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentSaveRecipientBinding.bind(view)
+        binding = FragmentSaveBeneficiaryBinding.bind(view)
 
         (requireActivity().application as Injector).createBeneficiarySubComponent().inject(this)
 
@@ -187,7 +190,7 @@ class SaveRecipientFragment : Fragment(), OnBeneficiarySelectedListener {
                         putString("sourceOfIncomeName", sourceOfIncomeName)
                     }
                     findNavController().navigate(
-                        R.id.action_nav_save_recipient_to_nav_choose_recipient,
+                        R.id.action_nav_save_beneficiary_to_nav_beneficiary_management,
                         bundle
                     )
                 }
@@ -382,7 +385,6 @@ class SaveRecipientFragment : Fragment(), OnBeneficiarySelectedListener {
     }
 
     override fun onBankAndWalletItemSelected(selectedItem: GetBankData) {
-
 
     }
 

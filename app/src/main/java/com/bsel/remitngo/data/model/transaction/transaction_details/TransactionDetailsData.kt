@@ -27,21 +27,23 @@ data class TransactionDetailsData(
     @SerializedName("OrderStatus")
     val orderStatus: String?,
     @SerializedName("OrderType")
-    val orderType: String?,
+    val orderType: Int?,
     @SerializedName("OrderTypeName")
     val orderTypeName: String?,
     @SerializedName("PayingAgentId")
-    val payingAgentId: String?,
+    val payingAgentId: Int?,
     @SerializedName("PaymentMode")
-    val paymentMode: String?,
+    val paymentMode: Int?,
     @SerializedName("PaymentStatus")
     val paymentStatus: String?,
+    @SerializedName("PaymentTypeName")
+    val paymentTypeName: String?,
     @SerializedName("PurposeOfTransferId")
     val purposeOfTransferId: Int?,
     @SerializedName("Rate")
     val rate: Double?,
     @SerializedName("SendAmount")
-    val sendAmount: String?,
+    val sendAmount: Double?,
     @SerializedName("SourceOfFundId")
     val sourceOfFundId: Int?,
     @SerializedName("TotalAmount")
@@ -55,5 +57,5 @@ data class TransactionDetailsData(
     @SerializedName("TransactionStatus")
     val transactionStatus: String?,
     @SerializedName("TransferFees")
-    val transferFees: String?
+    val transferFees: Double?
 )

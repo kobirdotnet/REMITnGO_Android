@@ -1,32 +1,35 @@
-package com.bsel.remitngo.bottomSheet
+package com.bsel.remitngo.presentation.ui.beneficiary.beneficiaryManagement
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.database.Cursor
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.Settings
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.SearchView
-import androidx.annotation.NonNull
+import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BeneficiaryAdapter
 import com.bsel.remitngo.adapter.ContactsAdapter
+import com.bsel.remitngo.bottomSheet.ChooseBankBottomSheet
+import com.bsel.remitngo.bottomSheet.SaveRecipientBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBankAndWalletSelectedListener
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
@@ -35,27 +38,22 @@ import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.ContactItem
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
-import com.bsel.remitngo.databinding.ChooseRecipientLayoutBinding
+import com.bsel.remitngo.databinding.FragmentBeneficiaryManagementBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModel
 import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModelFactory
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.*
 import javax.inject.Inject
 
-class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
+class BeneficiaryManagementFragment : Fragment(),
     OnBankAndWalletSelectedListener, OnSaveBeneficiarySelectedListener {
     @Inject
     lateinit var beneficiaryViewModelFactory: BeneficiaryViewModelFactory
     private lateinit var beneficiaryViewModel: BeneficiaryViewModel
 
-    private lateinit var binding: ChooseRecipientLayoutBinding
+    private lateinit var binding: FragmentBeneficiaryManagementBinding
 
     var itemSelectedListener: OnBeneficiarySelectedListener? = null
-
-    private lateinit var chooseRecipientBehavior: BottomSheetBehavior<*>
 
     private val saveRecipientBottomSheet: SaveRecipientBottomSheet by lazy { SaveRecipientBottomSheet() }
     private val chooseBankBottomSheet: ChooseBankBottomSheet by lazy { ChooseBankBottomSheet() }
@@ -93,40 +91,21 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
 
     private var beneMobile: String? = null
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        val view = View.inflate(requireContext(), R.layout.choose_recipient_layout, null)
-        binding = DataBindingUtil.bind(view)!!
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_beneficiary_management, container, false)
+    }
 
-        bottomSheet.setContentView(view)
-        chooseRecipientBehavior = BottomSheetBehavior.from(view.parent as View)
-        chooseRecipientBehavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
-
-        binding.extraSpace.minimumHeight = (Resources.getSystem().displayMetrics.heightPixels)
-
-        chooseRecipientBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(@NonNull view: View, i: Int) {
-                when (i) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> dismiss()
-                }
-            }
-
-            override fun onSlide(@NonNull view: View, v: Float) {}
-        })
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentBeneficiaryManagementBinding.bind(view)
 
         (requireActivity().application as Injector).createBeneficiarySubComponent().inject(this)
 
         beneficiaryViewModel =
             ViewModelProvider(this, beneficiaryViewModelFactory)[BeneficiaryViewModel::class.java]
-
-        binding.cancelButton.setOnClickListener { dismiss() }
 
         preferenceManager = PreferenceManager(requireContext())
         try {
@@ -156,18 +135,18 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
         binding.beneSearch.visibility = View.VISIBLE
         binding.beneficiaryRecyclerView.visibility = View.VISIBLE
         binding.beneficiaryRecyclerView.setBackgroundResource(R.color.white)
-        binding.btnRecipient.setBackgroundResource(R.color.white)
+        binding.btnBeneficiary.setBackgroundResource(R.color.white)
 
         binding.contactSearch.visibility = View.GONE
         binding.contactRecyclerView.visibility = View.GONE
         binding.contactRecyclerView.setBackgroundResource(R.color.grey)
         binding.btnContact.setBackgroundResource(R.color.grey)
 
-        binding.btnRecipient.setOnClickListener {
+        binding.btnBeneficiary.setOnClickListener {
             binding.beneSearch.visibility = View.VISIBLE
             binding.beneficiaryRecyclerView.visibility = View.VISIBLE
             binding.beneficiaryRecyclerView.setBackgroundResource(R.color.white)
-            binding.btnRecipient.setBackgroundResource(R.color.white)
+            binding.btnBeneficiary.setBackgroundResource(R.color.white)
 
             binding.contactSearch.visibility = View.GONE
             binding.contactRecyclerView.visibility = View.GONE
@@ -178,7 +157,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
             binding.beneSearch.visibility = View.GONE
             binding.beneficiaryRecyclerView.visibility = View.GONE
             binding.beneficiaryRecyclerView.setBackgroundResource(R.color.grey)
-            binding.btnRecipient.setBackgroundResource(R.color.grey)
+            binding.btnBeneficiary.setBackgroundResource(R.color.grey)
 
             binding.contactSearch.visibility = View.VISIBLE
             binding.contactRecyclerView.visibility = View.VISIBLE
@@ -213,8 +192,6 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
         observeGetBeneficiaryResult()
 
         requestContactsPermission()
-
-        return bottomSheet
     }
 
     fun setOrderType(
@@ -249,13 +226,13 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
         beneficiaryViewModel.getBeneficiaryResult.observe(this) { result ->
             if (result == null) {
                 val builder = AlertDialog.Builder(requireContext())
+                val dialog = builder.create()
                 builder.setIcon(R.drawable.warning)
                 builder.setTitle("Warning!")
                 builder.setMessage("Recipient not loading properly.")
                 builder.setPositiveButton("Close") { _: DialogInterface, _: Int ->
-                    dismiss()
+                    dialog.dismiss()
                 }
-                val dialog = builder.create()
                 dialog.show()
             } else {
                 try {
@@ -264,7 +241,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
                             LinearLayoutManager(requireActivity())
                         beneficiaryAdapter = BeneficiaryAdapter(
                             selectedItem = { selectedItem: GetBeneficiaryData ->
-                                recipientItem(selectedItem)
+                                beneficiaryItem(selectedItem)
                                 binding.beneSearch.setQuery("", false)
                             }
                         )
@@ -319,14 +296,13 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
         }
     }
 
-    private fun recipientItem(selectedItem: GetBeneficiaryData) {
+    private fun beneficiaryItem(selectedItem: GetBeneficiaryData) {
         benePersonId = selectedItem.benePersonId!!
         beneId = selectedItem.beneficiaryId!!
         beneAccountName = selectedItem.beneName.toString()
         beneMobile = selectedItem.mobile.toString()
         if (orderType == 2) {
             itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
-            dismiss()
         } else {
             itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
             chooseBankBottomSheet.itemSelectedListener = this
@@ -428,7 +404,6 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
                         }
                     }
                 })
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -552,7 +527,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
         binding.beneSearch.visibility = View.VISIBLE
         binding.beneficiaryRecyclerView.visibility = View.VISIBLE
         binding.beneficiaryRecyclerView.setBackgroundResource(R.color.white)
-        binding.btnRecipient.setBackgroundResource(R.color.white)
+        binding.btnBeneficiary.setBackgroundResource(R.color.white)
 
         binding.contactSearch.visibility = View.GONE
         binding.contactRecyclerView.visibility = View.GONE
@@ -562,12 +537,13 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
 
     override fun onBankAndWalletItemSelected(selectedItem: GetBankData) {
         itemSelectedListener?.onBankAndWalletItemSelected(selectedItem)
-        dismiss()
     }
 
-    override fun onStart() {
-        super.onStart()
-        chooseRecipientBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.nav_main)
+        }
     }
 
 }

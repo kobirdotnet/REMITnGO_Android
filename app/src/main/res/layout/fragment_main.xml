@@ -189,9 +189,8 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
-                        android:hint="Commission 3.0 GBP"
-                        android:textColor="@color/yellow"
-                        android:textSize="8sp" />
+                        android:hint="Fee 3.0 GBP"
+                        android:textColor="@color/blue" />
 
                 </LinearLayout>
 

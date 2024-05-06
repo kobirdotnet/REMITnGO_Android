@@ -49,7 +49,7 @@
 
     <fragment
         android:id="@+id/nav_choose_recipient"
-        android:name="com.bsel.remitngo.presentation.ui.beneficiary.ChooseRecipientFragment"
+        android:name="com.bsel.remitngo.presentation.ui.beneficiary.recipientManagement.ChooseRecipientFragment"
         android:label="@string/menu_choose_recipient"
         tools:layout="@layout/fragment_choose_recipient">
         <action
@@ -64,7 +64,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_save_recipient"
-        android:name="com.bsel.remitngo.presentation.ui.beneficiary.SaveRecipientFragment"
+        android:name="com.bsel.remitngo.presentation.ui.beneficiary.recipientManagement.SaveRecipientFragment"
         android:label="@string/menu_recipient_details"
         tools:layout="@layout/fragment_save_recipient">
         <action
@@ -302,7 +302,7 @@
 
     <fragment
         android:id="@+id/nav_beneficiary_management"
-        android:name="com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryManagementFragment"
+        android:name="com.bsel.remitngo.presentation.ui.beneficiary.beneficiaryManagement.BeneficiaryManagementFragment"
         android:label="@string/menu_beneficiary"
         tools:layout="@layout/fragment_beneficiary_management" >
         <action
@@ -312,7 +312,7 @@
 
     <fragment
         android:id="@+id/nav_save_beneficiary"
-        android:name="com.bsel.remitngo.presentation.ui.beneficiary.SaveBeneficiaryFragment"
+        android:name="com.bsel.remitngo.presentation.ui.beneficiary.beneficiaryManagement.SaveBeneficiaryFragment"
         android:label="@string/menu_save_beneficiary"
         tools:layout="@layout/fragment_save_beneficiary">
         <action
