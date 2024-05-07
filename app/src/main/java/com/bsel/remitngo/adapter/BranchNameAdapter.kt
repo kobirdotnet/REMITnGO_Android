@@ -58,7 +58,9 @@ class BranchNameViewHolder(val binding: ItemBranchBinding) :
         branchItem: BranchData,
         selectedItem: (BranchData) -> Unit
     ) {
-        binding.bankBranchName.text = branchItem.name
+        if (branchItem.name != null){
+            binding.bankBranchName.text = branchItem.name
+        }
         binding.itemBranchLayout.setOnClickListener {
             selectedItem(branchItem)
         }

@@ -22,7 +22,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
-                android:hint="Abdul Bari"
                 android:textColor="@color/black"
                 android:visibility="gone"/>
 
@@ -31,7 +30,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
-                android:hint="BRAC Bank"
                 android:textColor="@color/black" />
 
             <LinearLayout
@@ -44,7 +42,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
-                    android:hint="123456789"
                     android:paddingRight="@dimen/padding_right"
                     android:textColor="@color/text_color" />
 
@@ -53,7 +50,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
-                    android:hint="dhaka"
                     android:textColor="@color/text_color" />
             </LinearLayout>
         </LinearLayout>

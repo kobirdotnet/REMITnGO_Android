@@ -83,32 +83,36 @@ class PaymentCardFragment : Fragment() {
 
     private fun observePaymentStatusResult() {
         paymentViewModel.paymentStatusResult.observe(this) { result ->
-            if (result!!.data == null) {
-                binding.paymentSuccessful.visibility = View.GONE
-                binding.paymentFailed.visibility = View.GONE
-                binding.paymentCancel.visibility = View.VISIBLE
-                binding.backToHomeLayout.visibility = View.VISIBLE
-            } else {
-                when (result.data) {
-                    "Success" -> {
-                        binding.paymentSuccessful.visibility = View.VISIBLE
-                        binding.paymentFailed.visibility = View.GONE
-                        binding.paymentCancel.visibility = View.GONE
-                        binding.backToHomeLayout.visibility = View.VISIBLE
-                    }
-                    "Failed" -> {
-                        binding.paymentSuccessful.visibility = View.GONE
-                        binding.paymentFailed.visibility = View.VISIBLE
-                        binding.paymentCancel.visibility = View.GONE
-                        binding.backToHomeLayout.visibility = View.VISIBLE
-                    }
-                    "Cancel" -> {
-                        binding.paymentSuccessful.visibility = View.GONE
-                        binding.paymentFailed.visibility = View.GONE
-                        binding.paymentCancel.visibility = View.VISIBLE
-                        binding.backToHomeLayout.visibility = View.VISIBLE
+            try {
+                if (result!!.data == null) {
+                    binding.paymentSuccessful.visibility = View.GONE
+                    binding.paymentFailed.visibility = View.GONE
+                    binding.paymentCancel.visibility = View.VISIBLE
+                    binding.backToHomeLayout.visibility = View.VISIBLE
+                } else {
+                    when (result.data) {
+                        "Success" -> {
+                            binding.paymentSuccessful.visibility = View.VISIBLE
+                            binding.paymentFailed.visibility = View.GONE
+                            binding.paymentCancel.visibility = View.GONE
+                            binding.backToHomeLayout.visibility = View.VISIBLE
+                        }
+                        "Failed" -> {
+                            binding.paymentSuccessful.visibility = View.GONE
+                            binding.paymentFailed.visibility = View.VISIBLE
+                            binding.paymentCancel.visibility = View.GONE
+                            binding.backToHomeLayout.visibility = View.VISIBLE
+                        }
+                        "Cancel" -> {
+                            binding.paymentSuccessful.visibility = View.GONE
+                            binding.paymentFailed.visibility = View.GONE
+                            binding.paymentCancel.visibility = View.VISIBLE
+                            binding.backToHomeLayout.visibility = View.VISIBLE
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

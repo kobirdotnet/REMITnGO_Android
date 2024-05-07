@@ -169,35 +169,39 @@ class BankFragment : Fragment(), OnBankSelectedListener {
 
     private fun observeSaveBankResult() {
         bankViewModel.saveBankResult.observe(this) { result ->
-            if (result != null) {
-                val bundle = Bundle().apply {
-                    putString("paymentType", paymentType)
-                    putString("orderType", orderType)
-                    putString("sendAmount", sendAmount)
-                    putString("receiveAmount", receiveAmount)
-                    putString("exchangeRate", exchangeRate)
-                    putString("commission", commission)
+            try {
+                if (result != null) {
+                    val bundle = Bundle().apply {
+                        putString("paymentType", paymentType)
+                        putString("orderType", orderType)
+                        putString("sendAmount", sendAmount)
+                        putString("receiveAmount", receiveAmount)
+                        putString("exchangeRate", exchangeRate)
+                        putString("commission", commission)
 
-                    putString("bankId", bankId)
-                    putString("branchId", branchId)
-                    putString("bankName", bankName)
-                    putString("payingAgentId", payingAgentId)
+                        putString("bankId", bankId)
+                        putString("branchId", branchId)
+                        putString("bankName", bankName)
+                        putString("payingAgentId", payingAgentId)
 
-                    putString("benId", benId)
-                    putString("beneficiaryId", beneficiaryId)
-                    putString("beneficiaryName", beneficiaryName)
-                    putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
+                        putString("benId", benId)
+                        putString("beneficiaryId", beneficiaryId)
+                        putString("beneficiaryName", beneficiaryName)
+                        putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
 
-                    putString("reasonId", reasonId)
-                    putString("reasonName", reasonName)
+                        putString("reasonId", reasonId)
+                        putString("reasonName", reasonName)
 
-                    putString("sourceOfIncomeId", sourceOfIncomeId)
-                    putString("sourceOfIncomeName", sourceOfIncomeName)
+                        putString("sourceOfIncomeId", sourceOfIncomeId)
+                        putString("sourceOfIncomeName", sourceOfIncomeName)
+                    }
+                    findNavController().navigate(
+                        R.id.action_nav_save_bank_to_nav_choose_bank,
+                        bundle
+                    )
                 }
-                findNavController().navigate(
-                    R.id.action_nav_save_bank_to_nav_choose_bank,
-                    bundle
-                )
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.bsel.remitngo.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -58,8 +59,12 @@ class BeneficiaryViewHolder(val binding: ItemBeneficiaryBinding) :
         beneficiaryItem: GetBeneficiaryData,
         selectedItem: (GetBeneficiaryData) -> Unit
     ) {
-        binding.beneficiaryName.text = beneficiaryItem.beneName.toString()
-        binding.beneficiaryPhone.text = beneficiaryItem.mobile.toString()
+        if (beneficiaryItem.beneName != null){
+            binding.beneficiaryName.text = beneficiaryItem.beneName.toString()
+        }
+        if (beneficiaryItem.mobile != null){
+            binding.beneficiaryPhone.text = beneficiaryItem.mobile.toString()
+        }
         binding.itemBeneficiaryLayout.setOnClickListener {
             selectedItem(beneficiaryItem)
         }

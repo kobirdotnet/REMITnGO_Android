@@ -32,7 +32,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:layout_weight="1"
-                    android:text="Collection Point Bank"
+                    android:text="Select Instant Credit Bank"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:textColor="@android:color/white" />
             </LinearLayout>

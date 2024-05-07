@@ -101,29 +101,33 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeBranchResult() {
         bankViewModel.branchResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.branchRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                branchNameAdapter = BranchNameAdapter(
-                    selectedItem = { selectedItem: BranchData ->
-                        branchItem(selectedItem)
-                        binding.branchSearch.setQuery("", false)
-                    }
-                )
-                binding.branchRecyclerView.adapter = branchNameAdapter
-                branchNameAdapter.setList(result.data as List<BranchData>)
-                branchNameAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.branchRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    branchNameAdapter = BranchNameAdapter(
+                        selectedItem = { selectedItem: BranchData ->
+                            branchItem(selectedItem)
+                            binding.branchSearch.setQuery("", false)
+                        }
+                    )
+                    binding.branchRecyclerView.adapter = branchNameAdapter
+                    branchNameAdapter.setList(result.data as List<BranchData>)
+                    branchNameAdapter.notifyDataSetChanged()
 
-                binding.branchSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.branchSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        branchNameAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            branchNameAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

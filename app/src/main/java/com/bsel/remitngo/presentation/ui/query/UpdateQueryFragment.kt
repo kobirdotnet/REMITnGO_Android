@@ -90,37 +90,41 @@ class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
 
     private fun observeQueryMessageResult() {
         queryViewModel.queryMessageResult.observe(viewLifecycleOwner) { result ->
-            result?.let { queryResponse ->
-                if (queryResponse.queryMessageData != null) {
-                    val queryDataList =
-                        queryResponse.queryMessageData.queryMessageTable ?: emptyList()
+            try {
+                result?.let { queryResponse ->
+                    if (queryResponse.queryMessageData != null) {
+                        val queryDataList =
+                            queryResponse.queryMessageData.queryMessageTable ?: emptyList()
 
-                    binding.messageRecyclerView.layoutManager =
-                        LinearLayoutManager(requireActivity())
-                    queryMessageAdapter = QueryMessageAdapter { selectedItem ->
-                        queryMessage(selectedItem)
-                    }
-                    binding.messageRecyclerView.adapter = queryMessageAdapter
-                    queryMessageAdapter.setList(queryDataList as List<QueryMessageTable>)
-                    queryMessageAdapter.notifyDataSetChanged()
-
-                    if (queryDataList.isNotEmpty()) {
-                        val queryData = queryDataList[0]
-                        binding.queryType.setText(queryData.complainTypeString.toString())
-                        binding.status.setText(queryData.complainStatusString.toString())
-                        binding.transactionCode.setText(queryData.transactionCode.toString())
-                        val complainStatus = queryData.complainStatus!!
-                        if (complainStatus) {
-                            binding.messageLayout.visibility = View.VISIBLE
-                        } else {
-                            binding.messageLayout.visibility = View.GONE
+                        binding.messageRecyclerView.layoutManager =
+                            LinearLayoutManager(requireActivity())
+                        queryMessageAdapter = QueryMessageAdapter { selectedItem ->
+                            queryMessage(selectedItem)
                         }
+                        binding.messageRecyclerView.adapter = queryMessageAdapter
+                        queryMessageAdapter.setList(queryDataList as List<QueryMessageTable>)
+                        queryMessageAdapter.notifyDataSetChanged()
 
-                        complainId = queryData.complainID.toString().toInt()
-                        queryTypeId = queryData.complainType.toString().toInt()
-                        transactionCode = queryData.transactionCode.toString().toInt()
+                        if (queryDataList.isNotEmpty()) {
+                            val queryData = queryDataList[0]
+                            binding.queryType.setText(queryData.complainTypeString.toString())
+                            binding.status.setText(queryData.complainStatusString.toString())
+                            binding.transactionCode.setText(queryData.transactionCode.toString())
+                            val complainStatus = queryData.complainStatus!!
+                            if (complainStatus) {
+                                binding.messageLayout.visibility = View.VISIBLE
+                            } else {
+                                binding.messageLayout.visibility = View.GONE
+                            }
+
+                            complainId = queryData.complainID.toString().toInt()
+                            queryTypeId = queryData.complainType.toString().toInt()
+                            transactionCode = queryData.transactionCode.toString().toInt()
+                        }
                     }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

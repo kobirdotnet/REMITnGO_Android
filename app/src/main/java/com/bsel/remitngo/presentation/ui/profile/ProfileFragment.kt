@@ -71,6 +71,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var postCode: String
     private lateinit var address: String
+    private lateinit var houseNo: String
 
     private lateinit var ukDivisionId: String
     private lateinit var ukDivision: String
@@ -218,6 +219,7 @@ class ProfileFragment : Fragment() {
             val bundle = Bundle().apply {
                 putString("postCode", postCode)
                 putString("address", address)
+                putString("houseNo", houseNo)
                 putString("ukDivisionId", ukDivisionId)
                 putString("countyId", countyId)
                 putString("cityId", cityId)
@@ -232,12 +234,16 @@ class ProfileFragment : Fragment() {
 
     private fun observeOccupationTypeResult() {
         profileViewModel.occupationTypeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (occupationTypeData in result.data!!) {
-                    if (::occupationTypeId.isInitialized && occupationTypeId == occupationTypeData!!.id.toString()) {
-                        occupationType = occupationTypeData!!.name.toString()
+            try {
+                if (result!!.data != null) {
+                    for (occupationTypeData in result.data!!) {
+                        if (::occupationTypeId.isInitialized && occupationTypeId == occupationTypeData!!.id.toString()) {
+                            occupationType = occupationTypeData!!.name.toString()
+                        }
                     }
                 }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
@@ -253,7 +259,7 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }
@@ -261,74 +267,98 @@ class ProfileFragment : Fragment() {
 
     private fun observeSourceOfIncomeResult() {
         profileViewModel.sourceOfIncomeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (sourceOfIncomeData in result.data!!) {
-                    if (::sourceOfIncomeId.isInitialized && sourceOfIncomeId == sourceOfIncomeData!!.id.toString()) {
-                        sourceOfIncome = sourceOfIncomeData!!.name.toString()
+            try {
+                if (result!!.data != null) {
+                    for (sourceOfIncomeData in result.data!!) {
+                        if (::sourceOfIncomeId.isInitialized && sourceOfIncomeId == sourceOfIncomeData!!.id.toString()) {
+                            sourceOfIncome = sourceOfIncomeData!!.name.toString()
+                        }
                     }
                 }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
 
     private fun observeAnnualIncomeResult() {
         profileViewModel.annualIncomeResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (annualIncomeData in result.data!!) {
-                    if (::annualIncomeId.isInitialized && annualIncomeId == annualIncomeData!!.id.toString()) {
-                        annualIncome = annualIncomeData!!.name.toString()
-                        binding.annualIncome.text = "$annualIncome"
+            try {
+                if (result!!.data != null) {
+                    for (annualIncomeData in result.data!!) {
+                        if (::annualIncomeId.isInitialized && annualIncomeId == annualIncomeData!!.id.toString()) {
+                            annualIncome = annualIncomeData!!.name.toString()
+                            binding.annualIncome.text = "$annualIncome"
+                        }
                     }
                 }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
 
     private fun observeNationalityResult() {
         profileViewModel.nationalityResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (nationalityData in result.data!!) {
-                    if (::nationalityId.isInitialized && nationalityId == nationalityData!!.id.toString()) {
-                        nationality = nationalityData!!.name.toString()
-                        binding.nationality.text = "$nationality"
+            try {
+                if (result!!.data != null) {
+                    for (nationalityData in result.data!!) {
+                        if (::nationalityId.isInitialized && nationalityId == nationalityData!!.id.toString()) {
+                            nationality = nationalityData!!.name.toString()
+                            binding.nationality.text = "$nationality"
+                        }
                     }
                 }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
 
     private fun observeUkDivisionResult() {
         profileViewModel.ukDivisionResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (ukDivisionData in result.data!!) {
-                    if (::ukDivisionId.isInitialized && ukDivisionId == ukDivisionData!!.id.toString()) {
-                        ukDivision = ukDivisionData!!.name.toString()
+            try {
+                if (result!!.data != null) {
+                    for (ukDivisionData in result.data!!) {
+                        if (::ukDivisionId.isInitialized && ukDivisionId == ukDivisionData!!.id.toString()) {
+                            ukDivision = ukDivisionData!!.name.toString()
+                        }
                     }
                 }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
 
     private fun observeCountyResult() {
         profileViewModel.countyResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (countyData in result.data!!) {
-                    if (::countyId.isInitialized && countyId == countyData!!.id.toString()) {
-                        county = countyData!!.name.toString()
+            try {
+                if (result!!.data != null) {
+                    for (countyData in result.data!!) {
+                        if (::countyId.isInitialized && countyId == countyData!!.id.toString()) {
+                            county = countyData!!.name.toString()
+                        }
                     }
                 }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
 
     private fun observeCityResult() {
         profileViewModel.cityResult.observe(this) { result ->
-            if (result!!.data != null) {
-                for (cityData in result.data!!) {
-                    if (::cityId.isInitialized && cityId == cityData!!.id.toString()) {
-                        city = cityData!!.name.toString()
+            try {
+                if (result!!.data != null) {
+                    for (cityData in result.data!!) {
+                        if (::cityId.isInitialized && cityId == cityData!!.id.toString()) {
+                            city = cityData!!.name.toString()
+                        }
                     }
                 }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
     }
@@ -372,6 +402,9 @@ class ProfileFragment : Fragment() {
                         address = data!!.address.toString()
                         binding.userAddress.text = "$address"
 
+                        val parts = address.split(",")
+                        houseNo = parts[0]
+
                         ukDivisionId = data!!.divisionId.toString()
 
                         countyId = data!!.districtId.toString()
@@ -400,7 +433,7 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }

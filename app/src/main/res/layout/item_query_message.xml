@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
-            android:text="Message..."
             android:textColor="@color/black" />
 
         <LinearLayout

@@ -199,7 +199,7 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
 
         val beneficiaryItem = BeneficiaryItem(
             deviceId = deviceId,
-            personId = personId.toInt(),
+            personId = personId,
             firstname = beneAccountName,
             middlename = "",
             lastname = "",

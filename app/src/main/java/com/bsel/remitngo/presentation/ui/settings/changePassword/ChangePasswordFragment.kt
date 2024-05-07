@@ -62,8 +62,12 @@ class ChangePasswordFragment : Fragment() {
 
     private fun observeChangePasswordResult() {
         settingsViewModel.changePasswordResult.observe(this) { result ->
-            if (result != null) {
-                Log.i("info", "Message: " + result!!.message)
+            try {
+                if (result != null) {
+                    Log.i("info", "Message: " + result!!.message)
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

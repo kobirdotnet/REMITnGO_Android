@@ -58,7 +58,9 @@ class BankNameViewHolder(val binding: ItemBankBinding) :
         bankItem: BankData,
         selectedItem: (BankData) -> Unit
     ) {
-        binding.bankName.text = bankItem.name
+        if (bankItem.name != null){
+            binding.bankName.text = bankItem.name
+        }
         binding.itemBankLayout.setOnClickListener {
             selectedItem(bankItem)
         }

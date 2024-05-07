@@ -43,9 +43,12 @@ class RequireDocumentViewHolder(val binding: ItemRequireDocumentBinding) :
     fun bind(
         documentItem: RequireDocumentData
     ) {
-        var sl = documentItem.sl
-        var name = documentItem.name
-        binding.requireDocumentName.text = "$sl $name"
+        if (documentItem.sl.toString() != null && documentItem.name.toString() != null) {
+            var sl = documentItem.sl
+            var name = documentItem.name
+            binding.requireDocumentName.text = "$sl $name"
+        }
+
     }
 
 }

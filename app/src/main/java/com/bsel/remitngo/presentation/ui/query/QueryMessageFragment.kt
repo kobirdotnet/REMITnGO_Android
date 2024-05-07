@@ -80,14 +80,18 @@ class QueryMessageFragment : Fragment() {
 
     private fun observeAddMessageResult() {
         queryViewModel.addMessageResult.observe(this) { result ->
-            if (result!!.data != null) {
-                val bundle = Bundle().apply {
-                    putString("complainId", complainId)
+            try {
+                if (result!!.data != null) {
+                    val bundle = Bundle().apply {
+                        putString("complainId", complainId)
+                    }
+                    findNavController().navigate(
+                        R.id.action_nav_query_message_to_nav_update_query,
+                        bundle
+                    )
                 }
-                findNavController().navigate(
-                    R.id.action_nav_query_message_to_nav_update_query,
-                    bundle
-                )
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

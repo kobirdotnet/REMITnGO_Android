@@ -58,7 +58,10 @@ class OccupationViewHolder(val binding: ItemOccupationBinding) :
         occupation: OccupationData,
         selectedItem: (OccupationData) -> Unit
     ) {
-        binding.occupation.text = occupation.name
+        if (occupation.name != null) {
+            binding.occupation.text = occupation.name
+        }
+
         binding.itemOccupationLayout.setOnClickListener {
             selectedItem(occupation)
         }

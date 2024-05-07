@@ -1193,6 +1193,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         binding.promoCodeContainer.visibility = View.GONE
         binding.btnApplyPromoCode.visibility = View.GONE
         binding.promoMessage.visibility = View.GONE
+        binding.promoLayout.visibility = View.GONE
 
         binding.previousSendAmount.visibility = View.GONE
         binding.previousTransferFee.visibility = View.GONE
@@ -1205,6 +1206,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             binding.promoCodeContainer.visibility = View.VISIBLE
             binding.btnApplyPromoCode.visibility = View.VISIBLE
             binding.promoMessage.visibility = View.GONE
+            binding.promoLayout.visibility = View.GONE
         }
 
         binding.btnApplyPromoCode.setOnClickListener { promoCodeFrom() }
@@ -1256,8 +1258,11 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     binding.promoCodeContainer.visibility = View.GONE
                     binding.btnApplyPromoCode.visibility = View.GONE
                     binding.promoMessage.visibility = View.VISIBLE
+                    binding.promoLayout.visibility = View.VISIBLE
 
                     if (result.promoResponseData!!.promoData != null) {
+
+                        var applyPromoAmtFor = result.promoResponseData.promoData!!.applyPromoAmtFor
 
                         modifiedSendAmount =
                             result.promoResponseData.promoData!!.modifiedSendAmount.toString()
@@ -1282,32 +1287,125 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                         totalAmount = modifiedSendAmount + modifiedCommission
                         binding.totalAmount.text = "GBP $totalAmount"
 
-                        sendAmount =
-                            result.promoResponseData.promoData.sendAmount!!.toString().toDouble()
-                        binding.previousSendAmount.visibility = View.VISIBLE
-                        binding.previousSendAmount.hint = "GBP $sendAmount"
+                        when (applyPromoAmtFor) {
+                            1 -> {
+                                sendAmount =
+                                    result.promoResponseData.promoData.sendAmount!!.toString()
+                                        .toDouble()
+                                binding.previousSendAmount.visibility = View.VISIBLE
+                                binding.previousSendAmount.hint = "GBP $sendAmount"
 
-                        commission =
-                            result.promoResponseData.promoData.commision!!.toString().toDouble()
-                        binding.previousTransferFee.visibility = View.VISIBLE
-                        binding.previousTransferFee.hint = "GBP $commission"
+                                commission =
+                                    result.promoResponseData.promoData.commision!!.toString()
+                                        .toDouble()
+                                binding.previousTransferFee.visibility = View.GONE
+                                binding.previousTransferFee.hint = "GBP $commission"
 
-                        rate = result.promoResponseData.promoData.rate!!.toString().toDouble()
-                        binding.previousRate.visibility = View.VISIBLE
-                        binding.previousRate.hint = "BDT $rate"
+                                rate =
+                                    result.promoResponseData.promoData.rate!!.toString().toDouble()
+                                binding.previousRate.visibility = View.GONE
+                                binding.previousRate.hint = "BDT $rate"
 
-                        beneAmount =
-                            result.promoResponseData.promoData.beneAmount!!.toString().toDouble()
-                        binding.previousReceiveAmount.visibility = View.VISIBLE
-                        binding.previousReceiveAmount.hint = "BDT $beneAmount"
+                                beneAmount =
+                                    result.promoResponseData.promoData.beneAmount!!.toString()
+                                        .toDouble()
+                                binding.previousReceiveAmount.visibility = View.GONE
+                                binding.previousReceiveAmount.hint = "BDT $beneAmount"
 
-                        var previousTotalAmount = sendAmount + commission
-                        binding.previousTotalAmount.visibility = View.VISIBLE
-                        binding.previousTotalAmount.hint = "GBP $previousTotalAmount"
+                                var previousTotalAmount = sendAmount + commission
+                                binding.previousTotalAmount.visibility = View.GONE
+                                binding.previousTotalAmount.hint = "GBP $previousTotalAmount"
+                            }
+                            2 -> {
+                                sendAmount =
+                                    result.promoResponseData.promoData.sendAmount!!.toString()
+                                        .toDouble()
+                                binding.previousSendAmount.visibility = View.GONE
+                                binding.previousSendAmount.hint = "GBP $sendAmount"
+
+                                commission =
+                                    result.promoResponseData.promoData.commision!!.toString()
+                                        .toDouble()
+                                binding.previousTransferFee.visibility = View.GONE
+                                binding.previousTransferFee.hint = "GBP $commission"
+
+                                rate =
+                                    result.promoResponseData.promoData.rate!!.toString().toDouble()
+                                binding.previousRate.visibility = View.GONE
+                                binding.previousRate.hint = "BDT $rate"
+
+                                beneAmount =
+                                    result.promoResponseData.promoData.beneAmount!!.toString()
+                                        .toDouble()
+                                binding.previousReceiveAmount.visibility = View.VISIBLE
+                                binding.previousReceiveAmount.hint = "BDT $beneAmount"
+
+                                var previousTotalAmount = sendAmount + commission
+                                binding.previousTotalAmount.visibility = View.GONE
+                                binding.previousTotalAmount.hint = "GBP $previousTotalAmount"
+                            }
+                            3 -> {
+                                sendAmount =
+                                    result.promoResponseData.promoData.sendAmount!!.toString()
+                                        .toDouble()
+                                binding.previousSendAmount.visibility = View.GONE
+                                binding.previousSendAmount.hint = "GBP $sendAmount"
+
+                                commission =
+                                    result.promoResponseData.promoData.commision!!.toString()
+                                        .toDouble()
+                                binding.previousTransferFee.visibility = View.VISIBLE
+                                binding.previousTransferFee.hint = "GBP $commission"
+
+                                rate =
+                                    result.promoResponseData.promoData.rate!!.toString().toDouble()
+                                binding.previousRate.visibility = View.GONE
+                                binding.previousRate.hint = "BDT $rate"
+
+                                beneAmount =
+                                    result.promoResponseData.promoData.beneAmount!!.toString()
+                                        .toDouble()
+                                binding.previousReceiveAmount.visibility = View.GONE
+                                binding.previousReceiveAmount.hint = "BDT $beneAmount"
+
+                                var previousTotalAmount = sendAmount + commission
+                                binding.previousTotalAmount.visibility = View.VISIBLE
+                                binding.previousTotalAmount.hint = "GBP $previousTotalAmount"
+                            }
+                            4 -> {
+                                sendAmount =
+                                    result.promoResponseData.promoData.sendAmount!!.toString()
+                                        .toDouble()
+                                binding.previousSendAmount.visibility = View.GONE
+                                binding.previousSendAmount.hint = "GBP $sendAmount"
+
+                                commission =
+                                    result.promoResponseData.promoData.commision!!.toString()
+                                        .toDouble()
+                                binding.previousTransferFee.visibility = View.GONE
+                                binding.previousTransferFee.hint = "GBP $commission"
+
+                                rate =
+                                    result.promoResponseData.promoData.rate!!.toString().toDouble()
+                                binding.previousRate.visibility = View.VISIBLE
+                                binding.previousRate.hint = "BDT $rate"
+
+                                beneAmount =
+                                    result.promoResponseData.promoData.beneAmount!!.toString()
+                                        .toDouble()
+                                binding.previousReceiveAmount.visibility = View.VISIBLE
+                                binding.previousReceiveAmount.hint = "BDT $beneAmount"
+
+                                var previousTotalAmount = sendAmount + commission
+                                binding.previousTotalAmount.visibility = View.GONE
+                                binding.previousTotalAmount.hint = "GBP $previousTotalAmount"
+                            }
+                        }
+
 
                         val promoMessage = result.promoResponseData.promoData.promoMsg!!.toString()
-                        binding.promoMessage.text =
-                            "$promoCode promo code is applied.\n$promoMessage"
+                        binding.appliedPromoCode.text = "Your applied promo code is : $promoCode"
+                        binding.promoMessage.text = "$promoMessage"
 
                         updateValuesGBP()
                     }

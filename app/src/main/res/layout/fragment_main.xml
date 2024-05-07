@@ -286,7 +286,7 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        android:text="Bank Account"
+                        android:text="BEFTN / NPSB"
                         android:textColor="@color/black" />
 
                     <RadioButton
@@ -338,7 +338,7 @@
                     android:id="@+id/collectionPointInstantCreditContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Collection Point Bank">
+                    android:hint="Instant Credit Bank">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/collectionPointInstantCredit"
@@ -371,7 +371,7 @@
                     android:id="@+id/collectionPointCashPickUpContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Collection Point Bank">
+                    android:hint="Cash Collection Bank">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/collectionPointCashPickUp"
@@ -404,7 +404,7 @@
                     android:id="@+id/collectionPointWalletContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Collection Point Wallet">
+                    android:hint="Mobile Wallet">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/collectionPointWallet"

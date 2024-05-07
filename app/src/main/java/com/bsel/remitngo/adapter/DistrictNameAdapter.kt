@@ -58,7 +58,10 @@ class DistrictNameViewHolder(val binding: ItemDistrictBinding) :
         districtItem: DistrictData,
         selectedItem: (DistrictData) -> Unit
     ) {
-        binding.districtName.text = districtItem.name
+        if (districtItem.name != null) {
+            binding.districtName.text = districtItem.name
+        }
+
         binding.itemDistrictLayout.setOnClickListener {
             selectedItem(districtItem)
         }

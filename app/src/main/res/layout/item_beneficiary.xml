@@ -22,7 +22,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
-                android:text="John Doe"
                 android:textColor="@color/black" />
 
             <TextView
@@ -30,7 +29,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
-                android:text="123456789(BRAC Bank(Dhaka))"
                 android:textColor="@color/text_color" />
         </LinearLayout>
     </LinearLayout>

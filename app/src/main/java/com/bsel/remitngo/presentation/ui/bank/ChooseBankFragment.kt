@@ -183,18 +183,22 @@ class ChooseBankFragment : Fragment() {
 
     private fun observeGetBankResult() {
         bankViewModel.getBankResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.bankRecyclerView.layoutManager =
-                    LinearLayoutManager(requireActivity())
-                bankAdapter = BankAdapter(
-                    selectedItem = { selectedItem: GetBankData ->
-                        bankItem(selectedItem)
-                        binding.bankSearch.setQuery("", false)
-                    }
-                )
-                binding.bankRecyclerView.adapter = bankAdapter
-                bankAdapter.setList(result.data as List<GetBankData>)
-                bankAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.bankRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    bankAdapter = BankAdapter(
+                        selectedItem = { selectedItem: GetBankData ->
+                            bankItem(selectedItem)
+                            binding.bankSearch.setQuery("", false)
+                        }
+                    )
+                    binding.bankRecyclerView.adapter = bankAdapter
+                    bankAdapter.setList(result.data as List<GetBankData>)
+                    bankAdapter.notifyDataSetChanged()
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

@@ -64,15 +64,20 @@ class QueryMessageViewHolder(val binding: ItemQueryMessageBinding) :
         queryMessage: QueryMessageTable,
         selectedItem: (QueryMessageTable) -> Unit
     ) {
-        binding.message.text = queryMessage.message
-        binding.postedBy.text = queryMessage.name
+        if (queryMessage.message != null) {
+            binding.message.text = queryMessage.message
+        }
+        if (queryMessage.name != null) {
+            binding.postedBy.text = queryMessage.name
+        }
+        if (queryMessage.updateDate != null) {
+            val dateTime =
+                LocalDateTime.parse(queryMessage.updateDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            val date = dateTime.toLocalDate()
+            val updateDate = date.format(DateTimeFormatter.ISO_DATE)
+            binding.postedDate.text = "$updateDate"
+        }
 
-        val dateTime =
-            LocalDateTime.parse(queryMessage.updateDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        val date = dateTime.toLocalDate()
-        val updateDate = date.format(DateTimeFormatter.ISO_DATE)
-
-        binding.postedDate.text = "$updateDate"
         binding.itemQueryMessageLayout.setOnClickListener {
             selectedItem(queryMessage)
         }

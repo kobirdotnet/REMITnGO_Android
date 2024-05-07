@@ -59,7 +59,10 @@ class RelationNameViewHolder(val binding: ItemRelationBinding) :
         relationItem: RelationData,
         selectedItem: (RelationData) -> Unit
     ) {
-        binding.relationName.text = relationItem.name
+        if (relationItem.name != null) {
+            binding.relationName.text = relationItem.name
+        }
+
         binding.itemRelationLayout.setOnClickListener {
             selectedItem(relationItem)
         }

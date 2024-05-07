@@ -58,7 +58,10 @@ class QueryTypeViewHolder(val binding: ItemQueryTypeBinding) :
         queryType: QueryTypeData,
         selectedItem: (QueryTypeData) -> Unit
     ) {
-        binding.queryTypeName.text = queryType.name
+        if (queryType.name != null) {
+            binding.queryTypeName.text = queryType.name
+        }
+
         binding.itemQueryTypeLayout.setOnClickListener {
             selectedItem(queryType)
         }

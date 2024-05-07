@@ -61,8 +61,12 @@ class ContactViewHolder(val binding: ItemContactBinding) :
         contactItem: ContactItem,
         selectedItem: (ContactItem) -> Unit
     ) {
-        binding.contactName.text = contactItem.name
-        binding.contactNumber.text = contactItem.phoneNumber
+        if (contactItem.name != null) {
+            binding.contactName.text = contactItem.name
+        }
+        if (contactItem.phoneNumber != null) {
+            binding.contactNumber.text = contactItem.phoneNumber
+        }
         binding.itemContactLayout.setOnClickListener {
             selectedItem(contactItem)
         }

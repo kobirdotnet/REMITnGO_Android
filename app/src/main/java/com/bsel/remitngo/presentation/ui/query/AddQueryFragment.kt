@@ -74,10 +74,14 @@ class AddQueryFragment : Fragment(), OnQueryTypeItemSelectedListener {
 
     private fun observeAddQueryResult() {
         queryViewModel.addQueryResult.observe(this) { result ->
-            if (result!!.data != null) {
-                findNavController().navigate(
-                    R.id.action_nav_add_query_to_nav_generate_query
-                )
+            try {
+                if (result!!.data != null) {
+                    findNavController().navigate(
+                        R.id.action_nav_add_query_to_nav_generate_query
+                    )
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

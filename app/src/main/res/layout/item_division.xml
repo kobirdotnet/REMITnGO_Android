@@ -18,7 +18,6 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
-            android:text="Dhaka"
             android:textColor="@color/black" />
 
     </LinearLayout>

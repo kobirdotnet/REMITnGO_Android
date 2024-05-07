@@ -58,7 +58,10 @@ class CountyViewHolder(val binding: ItemCountyBinding) :
         countyItem: CountyData,
         selectedItem: (CountyData) -> Unit
     ) {
-        binding.countyName.text = countyItem.name
+        if (countyItem.name != null) {
+            binding.countyName.text = countyItem.name
+        }
+
         binding.itemCountyLayout.setOnClickListener {
             selectedItem(countyItem)
         }

@@ -5,6 +5,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,6 +54,7 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
 
     private var postCode: String? = null
     private var address: String? = null
+    private var houseNo: String? = null
 
     private var ukDivisionId: Int=0
     private var ukDivision: String? = null
@@ -82,6 +84,7 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         countryFocusListener()
         postCodeFocusListener()
         addressFocusListener()
+        houseNoFocusListener()
         divisionFocusListener()
         countyFocusListener()
         cityFocusListener()
@@ -105,6 +108,12 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         try {
             address = arguments?.getString("address").toString()
             binding.address.setText(address)
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
+        try {
+            houseNo = arguments?.getString("houseNo").toString()
+            binding.houseNo.setText(houseNo)
         }catch (e:NullPointerException){
             e.localizedMessage
         }
@@ -243,6 +252,7 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         binding.countryContainer.helperText = validCountry()
         binding.postCodeContainer.helperText = validPostCode()
         binding.addressContainer.helperText = validAddress()
+        binding.houseNoContainer.helperText = validHouseNo()
         binding.divisionContainer.helperText = validDivision()
         binding.countyContainer.helperText = validCounty()
         binding.cityContainer.helperText = validCity()
@@ -250,11 +260,12 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         val validCountry = binding.countryContainer.helperText == null
         val validPostCode = binding.postCodeContainer.helperText == null
         val validAddress = binding.addressContainer.helperText == null
+        val validHouseNo = binding.houseNoContainer.helperText == null
         val validDivision = binding.divisionContainer.helperText == null
         val validCounty = binding.countyContainer.helperText == null
         val validCity = binding.cityContainer.helperText == null
 
-        if (validCountry && validPostCode && validAddress && validDivision && validCounty && validCity) {
+        if (validCountry && validPostCode && validAddress && validHouseNo && validDivision && validCounty && validCity) {
             submitAddressForm()
         }
 
@@ -263,6 +274,7 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
     private fun submitAddressForm() {
         val postCode = binding.postCode.text.toString()
         val address = binding.address.text.toString()
+        val houseNo = binding.houseNo.text.toString()
         val division = binding.division.text.toString()
         val county = binding.county.text.toString()
         val city = binding.city.text.toString()
@@ -284,7 +296,7 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
             divisionId = ukDivisionId,
             districtId = countyId,
             thanaId = cityId,
-            buildingno = "",
+            buildingno = houseNo,
             housename = "",
             address = address,
             annualNetIncomeId = 0,
@@ -358,6 +370,23 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
         return null
     }
 
+    private fun houseNoFocusListener() {
+        binding.houseNo.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.houseNoContainer.helperText = validHouseNo()
+            }
+        }
+    }
+
+    private fun validHouseNo(): String? {
+        val address = binding.houseNo.text.toString()
+        if (address.isEmpty()) {
+            return "enter house no"
+        }
+        return null
+    }
+
+
     private fun divisionFocusListener() {
         binding.division.setOnFocusChangeListener { _, focused ->
             if (!focused) {
@@ -407,7 +436,11 @@ class SaveAddressFragment : Fragment(), OnAddressItemSelectedListener {
     }
 
     override fun onAddressItemSelected(selectedItem: PostCodeData) {
+        val parts = selectedItem.ukAddress!!.split(",")
+        val houseNumber = parts[0]
+
         binding.postCode.setText(selectedItem.postcode)
+        binding.houseNo.setText(houseNumber)
         binding.address.setText(selectedItem.ukAddress)
     }
 

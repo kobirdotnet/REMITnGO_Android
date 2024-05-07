@@ -93,30 +93,34 @@ class DivisionBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeDivisionResult() {
         bankViewModel.divisionResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.divisionRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                divisionNameAdapter = DivisionNameAdapter(
-                    selectedItem = { selectedItem: DivisionData ->
-                        divisionItem(selectedItem)
-                        binding.divisionSearch.setQuery("", false)
-                    }
-                )
-                binding.divisionRecyclerView.adapter = divisionNameAdapter
-                divisionNameAdapter.setList(result.data as List<DivisionData>)
-                divisionNameAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.divisionRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    divisionNameAdapter = DivisionNameAdapter(
+                        selectedItem = { selectedItem: DivisionData ->
+                            divisionItem(selectedItem)
+                            binding.divisionSearch.setQuery("", false)
+                        }
+                    )
+                    binding.divisionRecyclerView.adapter = divisionNameAdapter
+                    divisionNameAdapter.setList(result.data as List<DivisionData>)
+                    divisionNameAdapter.notifyDataSetChanged()
 
-                binding.divisionSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.divisionSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        divisionNameAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            divisionNameAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
 
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

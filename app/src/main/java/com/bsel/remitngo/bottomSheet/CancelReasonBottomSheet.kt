@@ -96,33 +96,35 @@ class CancelReasonBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeCancelReasonResult() {
         cancelRequestViewModel.cancelReasonResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.reasonRecyclerView.layoutManager =
-                    LinearLayoutManager(requireActivity())
-                cancelReasonAdapter = CancelReasonAdapter(
-                    selectedItem = { selectedItem: CancelReasonData ->
-                        cancelReason(selectedItem)
-                        binding.reasonSearch.setQuery("", false)
-                    }
-                )
-                binding.reasonRecyclerView.adapter = cancelReasonAdapter
-                cancelReasonAdapter.setList(result.data as List<CancelReasonData>)
-                cancelReasonAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.reasonRecyclerView.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    cancelReasonAdapter = CancelReasonAdapter(
+                        selectedItem = { selectedItem: CancelReasonData ->
+                            cancelReason(selectedItem)
+                            binding.reasonSearch.setQuery("", false)
+                        }
+                    )
+                    binding.reasonRecyclerView.adapter = cancelReasonAdapter
+                    cancelReasonAdapter.setList(result.data as List<CancelReasonData>)
+                    cancelReasonAdapter.notifyDataSetChanged()
 
-                binding.reasonSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.reasonSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        cancelReasonAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
-                Log.i("info", "get cancel Reason successful: $result")
-            } else {
-                Log.i("info", "get cancel Reason failed")
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            cancelReasonAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                    Log.i("info", "get cancel Reason successful: $result")
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

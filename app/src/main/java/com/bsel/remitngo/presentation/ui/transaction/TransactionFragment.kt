@@ -151,6 +151,7 @@ class TransactionFragment : Fragment() {
 
         val transactionItem = TransactionItem(
             deviceId = deviceId,
+            loadType = 0,
             personId = personId
         )
         transactionViewModel.transaction(transactionItem)

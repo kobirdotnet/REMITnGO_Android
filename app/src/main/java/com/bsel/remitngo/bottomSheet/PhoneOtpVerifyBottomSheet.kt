@@ -95,24 +95,32 @@ class PhoneOtpVerifyBottomSheet : BottomSheetDialogFragment() {
 
     private fun observePhoneVerifyResult() {
         profileViewModel.phoneVerifyResult.observe(this) { result ->
-            if (result!! != null) {
-                Log.i("info", "phoneVerifyResult: $result")
-                startCountDown()
+            try {
+                if (result!! != null) {
+                    Log.i("info", "phoneVerifyResult: $result")
+                    startCountDown()
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observePhoneOtpVerifyResult() {
         profileViewModel.phoneOtpVerifyResult.observe(this) { result ->
-            if (result!! != null) {
-                if (result!!.code == "000") {
-                    dismiss()
-                    findNavController().navigate(
-                        R.id.action_nav_mobile_number_to_nav_my_profile
-                    )
-                } else {
-                    binding.otpVerifyMessage.text = result.data.toString()
+            try {
+                if (result!! != null) {
+                    if (result!!.code == "000") {
+                        dismiss()
+                        findNavController().navigate(
+                            R.id.action_nav_mobile_number_to_nav_my_profile
+                        )
+                    } else {
+                        binding.otpVerifyMessage.text = result.data.toString()
+                    }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

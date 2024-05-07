@@ -58,7 +58,10 @@ class CityViewHolder(val binding: ItemCityBinding) :
         cityItem: CityData,
         selectedItem: (CityData) -> Unit
     ) {
-        binding.cityName.text = cityItem.name
+        if (cityItem.name != null) {
+            binding.cityName.text = cityItem.name
+        }
+
         binding.itemCityLayout.setOnClickListener {
             selectedItem(cityItem)
         }

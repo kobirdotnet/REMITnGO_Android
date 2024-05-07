@@ -7,5 +7,7 @@ data class TransactionItem(
     @SerializedName("DeviceId")
     val deviceId: String?,
     @SerializedName("PersonId")
-    val personId: Int?
+    val personId: Int?,
+    @SerializedName("loadType")
+    val loadType: Int?
 )

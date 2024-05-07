@@ -58,7 +58,10 @@ class DocumentTypeViewHolder(val binding: ItemDocumentTypeBinding) :
         document: DocumentTypeData,
         selectedItem: (DocumentTypeData) -> Unit
     ) {
-        binding.documentTypeName.text = document.name
+        if (document.name != null) {
+            binding.documentTypeName.text = document.name
+        }
+
         binding.itemDocumentTypeLayout.setOnClickListener {
             selectedItem(document)
         }

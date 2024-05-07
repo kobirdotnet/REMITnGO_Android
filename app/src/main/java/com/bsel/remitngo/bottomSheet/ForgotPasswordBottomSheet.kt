@@ -152,42 +152,50 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeOtpResult() {
         loginViewModel.otpValidationResult.observe(this) { result ->
-            if (result!! != null) {
-                if (result.code == "000") {
-                    binding.verifyLayout.visibility = View.GONE
-                    binding.validationLayout.visibility = View.GONE
-                    binding.setPasswordLayout.visibility = View.VISIBLE
+            try {
+                if (result!! != null) {
+                    if (result.code == "000") {
+                        binding.verifyLayout.visibility = View.GONE
+                        binding.validationLayout.visibility = View.GONE
+                        binding.setPasswordLayout.visibility = View.VISIBLE
 
-                    binding.btnSetPassword.setOnClickListener { setPasswordForm() }
-                } else {
+                        binding.btnSetPassword.setOnClickListener { setPasswordForm() }
+                    } else {
 
-                    binding.verifyLayout.visibility = View.GONE
-                    binding.validationLayout.visibility = View.VISIBLE
-                    binding.setPasswordLayout.visibility = View.GONE
+                        binding.verifyLayout.visibility = View.GONE
+                        binding.validationLayout.visibility = View.VISIBLE
+                        binding.setPasswordLayout.visibility = View.GONE
 
-                    binding.otpVerifyMessage.text = result!!.data.toString()
-                    binding.otpVerifyMessage.setTextColor(Color.RED)
+                        binding.otpVerifyMessage.text = result!!.data.toString()
+                        binding.otpVerifyMessage.setTextColor(Color.RED)
+                    }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
 
     private fun observeSetPasswordResult() {
         loginViewModel.setPasswordResult.observe(this) { result ->
-            if (result!! != null) {
-                if (result!!.code == "000") {
-                    binding.verifyLayout.visibility = View.VISIBLE
-                    binding.validationLayout.visibility = View.GONE
-                    binding.setPasswordLayout.visibility = View.GONE
-                    dismiss()
-                } else {
-                    binding.verifyLayout.visibility = View.GONE
-                    binding.validationLayout.visibility = View.GONE
-                    binding.setPasswordLayout.visibility = View.VISIBLE
+            try {
+                if (result!! != null) {
+                    if (result!!.code == "000") {
+                        binding.verifyLayout.visibility = View.VISIBLE
+                        binding.validationLayout.visibility = View.GONE
+                        binding.setPasswordLayout.visibility = View.GONE
+                        dismiss()
+                    } else {
+                        binding.verifyLayout.visibility = View.GONE
+                        binding.validationLayout.visibility = View.GONE
+                        binding.setPasswordLayout.visibility = View.VISIBLE
 
-                    binding.setPasswordMessage.text = result!!.message.toString()
-                    binding.setPasswordMessage.setTextColor(Color.RED)
+                        binding.setPasswordMessage.text = result!!.message.toString()
+                        binding.setPasswordMessage.setTextColor(Color.RED)
+                    }
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

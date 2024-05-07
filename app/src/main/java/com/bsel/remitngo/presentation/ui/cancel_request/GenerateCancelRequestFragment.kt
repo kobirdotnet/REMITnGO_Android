@@ -103,10 +103,14 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
 
     private fun observeSaveCancelRequestResult() {
         cancelRequestViewModel.saveCancelRequestResult.observe(this) { result ->
-            if (result!!.data != null) {
-                findNavController().navigate(
-                    R.id.action_nav_generate_cancel_request_to_nav_cancellation
-                )
+            try {
+                if (result!!.data != null) {
+                    findNavController().navigate(
+                        R.id.action_nav_generate_cancel_request_to_nav_cancellation
+                    )
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

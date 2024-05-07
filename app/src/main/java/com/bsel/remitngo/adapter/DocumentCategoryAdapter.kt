@@ -58,7 +58,10 @@ class DocumentCategoryViewHolder(val binding: ItemDocumentCategoryBinding) :
         category: DocumentCategoryData,
         selectedItem: (DocumentCategoryData) -> Unit
     ) {
-        binding.documentCategoryName.text = category.name
+        if (category.name != null) {
+            binding.documentCategoryName.text = category.name
+        }
+
         binding.itemDocumentCategoryLayout.setOnClickListener {
             selectedItem(category)
         }

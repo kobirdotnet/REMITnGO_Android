@@ -58,11 +58,21 @@ class QueryViewHolder(val binding: ItemQueryBinding) :
         queryItem: QueryTable,
         selectedItem: (QueryTable) -> Unit
     ) {
-        binding.query.text = queryItem.complainTypeString
-        binding.type.text = queryItem.complainTypeString
-        binding.status.text = queryItem.complainStatusString
-        binding.transactionCode.text = queryItem.transactionCode
-        binding.message.text = queryItem.message
+        if (queryItem.complainTypeString != null) {
+            binding.query.text = queryItem.complainTypeString
+        }
+        if (queryItem.complainTypeString != null) {
+            binding.type.text = queryItem.complainTypeString
+        }
+        if (queryItem.complainStatusString != null) {
+            binding.status.text = queryItem.complainStatusString
+        }
+        if (queryItem.transactionCode != null) {
+            binding.transactionCode.text = queryItem.transactionCode
+        }
+        if (queryItem.message != null) {
+            binding.message.text = queryItem.message
+        }
         binding.itemQueryLayout.setOnClickListener {
             selectedItem(queryItem)
         }

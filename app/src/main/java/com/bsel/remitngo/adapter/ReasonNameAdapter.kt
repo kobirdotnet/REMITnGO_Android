@@ -59,7 +59,10 @@ class ReasonNameViewHolder(val binding: ItemReasonBinding) :
         reasonItem: ReasonData,
         selectedItem: (ReasonData) -> Unit
     ) {
-        binding.reasonName.text = reasonItem.name
+        if (reasonItem.name != null) {
+            binding.reasonName.text = reasonItem.name
+        }
+
         binding.itemReasonLayout.setOnClickListener {
             selectedItem(reasonItem)
         }

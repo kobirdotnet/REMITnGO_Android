@@ -76,17 +76,21 @@ class QueryFragment : Fragment() {
 
     private fun observeQueryResult() {
         queryViewModel.queryResult.observe(viewLifecycleOwner) { result ->
-            result?.let { queryResponse ->
-                if (queryResponse.queryData != null) {
-                    val queryDataList = queryResponse.queryData.queryTable ?: emptyList()
-                    binding.queryRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                    queryAdapter = QueryAdapter { selectedItem ->
-                        queryItem(selectedItem)
+            try {
+                result?.let { queryResponse ->
+                    if (queryResponse.queryData != null) {
+                        val queryDataList = queryResponse.queryData.queryTable ?: emptyList()
+                        binding.queryRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                        queryAdapter = QueryAdapter { selectedItem ->
+                            queryItem(selectedItem)
+                        }
+                        binding.queryRecyclerView.adapter = queryAdapter
+                        queryAdapter.setList(queryDataList as List<QueryTable>)
+                        queryAdapter.notifyDataSetChanged()
                     }
-                    binding.queryRecyclerView.adapter = queryAdapter
-                    queryAdapter.setList(queryDataList as List<QueryTable>)
-                    queryAdapter.notifyDataSetChanged()
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

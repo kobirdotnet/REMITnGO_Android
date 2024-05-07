@@ -64,20 +64,24 @@ class DocumentViewHolder(val binding: ItemDocumentBinding) :
         selectedItem: (GetDocumentData) -> Unit,
         preViewItem: (GetDocumentData) -> Unit
     ) {
-        binding.documentName.text = documentItem.category
+        if (documentItem.category != null) {
+            binding.documentName.text = documentItem.category
+        }
+        if (documentItem.expireDate != null) {
+            val dateTime =
+                LocalDateTime.parse(documentItem.expireDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            val date = dateTime.toLocalDate()
+            val expireDate = date.format(DateTimeFormatter.ISO_DATE)
+            binding.expireDate.text = "Expire Date: $expireDate"
+        }
+        if (documentItem.fileName != null) {
+            val fileName=documentItem.fileName
+            val imageUrl = "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/$fileName"
 
-        val dateTime =
-            LocalDateTime.parse(documentItem.expireDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        val date = dateTime.toLocalDate()
-        val expireDate = date.format(DateTimeFormatter.ISO_DATE)
-        binding.expireDate.text = "Expire Date: $expireDate"
-
-        val fileName=documentItem.fileName
-        val imageUrl = "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/$fileName"
-
-        Glide.with(binding.docImage)
-            .load(imageUrl)
-            .into(binding.docImage)
+            Glide.with(binding.docImage)
+                .load(imageUrl)
+                .into(binding.docImage)
+        }
 
         binding.itemDocumentLayout.setOnClickListener {
             selectedItem(documentItem)

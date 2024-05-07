@@ -58,7 +58,9 @@ class CancelReasonViewHolder(val binding: ItemCancelReasonBinding) :
         cancelReasonItem: CancelReasonData,
         selectedItem: (CancelReasonData) -> Unit
     ) {
-        binding.reasonName.text = cancelReasonItem.name
+        if (cancelReasonItem.name != null){
+            binding.reasonName.text = cancelReasonItem.name
+        }
         binding.itemCancelReasonLayout.setOnClickListener {
             selectedItem(cancelReasonItem)
         }

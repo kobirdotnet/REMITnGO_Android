@@ -30,7 +30,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
-                    android:text="A"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -47,7 +46,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
-                android:text="John Doe"
                 android:textColor="@color/black" />
 
             <TextView
@@ -55,7 +53,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
-                android:text="+123456789"
                 android:textColor="@color/text_color" />
         </LinearLayout>
     </LinearLayout>

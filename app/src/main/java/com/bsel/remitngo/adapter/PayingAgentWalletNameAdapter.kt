@@ -58,7 +58,10 @@ class PayingAgentWalletNameViewHolder(val binding: ItemPayingAgentWalletBinding)
         payingAgentItem: PayingAgentData,
         selectedItem: (PayingAgentData) -> Unit
     ) {
-        binding.payingAgentName.text = payingAgentItem.name
+        if (payingAgentItem.name != null) {
+            binding.payingAgentName.text = payingAgentItem.name
+        }
+
         binding.itemPayingAgentLayout.setOnClickListener {
             selectedItem(payingAgentItem)
         }

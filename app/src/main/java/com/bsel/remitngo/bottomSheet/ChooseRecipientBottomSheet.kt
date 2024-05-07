@@ -247,74 +247,78 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
 
     private fun observeGetBeneficiaryResult() {
         beneficiaryViewModel.getBeneficiaryResult.observe(this) { result ->
-            if (result == null) {
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setIcon(R.drawable.warning)
-                builder.setTitle("Warning!")
-                builder.setMessage("Recipient not loading properly.")
-                builder.setPositiveButton("Close") { _: DialogInterface, _: Int ->
-                    dismiss()
-                }
-                val dialog = builder.create()
-                dialog.show()
-            } else {
-                try {
-                    if (result!!.data != null) {
-                        binding.beneficiaryRecyclerView.layoutManager =
-                            LinearLayoutManager(requireActivity())
-                        beneficiaryAdapter = BeneficiaryAdapter(
-                            selectedItem = { selectedItem: GetBeneficiaryData ->
-                                recipientItem(selectedItem)
-                                binding.beneSearch.setQuery("", false)
-                            }
-                        )
-                        binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
-                        beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
-                        beneficiaryAdapter.notifyDataSetChanged()
+            try {
+                if (result == null) {
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.setIcon(R.drawable.warning)
+                    builder.setTitle("Warning!")
+                    builder.setMessage("Recipient not loading properly.")
+                    builder.setPositiveButton("Close") { _: DialogInterface, _: Int ->
+                        dismiss()
+                    }
+                    val dialog = builder.create()
+                    dialog.show()
+                } else {
+                    try {
+                        if (result!!.data != null) {
+                            binding.beneficiaryRecyclerView.layoutManager =
+                                LinearLayoutManager(requireActivity())
+                            beneficiaryAdapter = BeneficiaryAdapter(
+                                selectedItem = { selectedItem: GetBeneficiaryData ->
+                                    recipientItem(selectedItem)
+                                    binding.beneSearch.setQuery("", false)
+                                }
+                            )
+                            binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
+                            beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
+                            beneficiaryAdapter.notifyDataSetChanged()
 
-                        binding.beneSearch.setOnQueryTextListener(object :
-                            SearchView.OnQueryTextListener {
-                            override fun onQueryTextSubmit(query: String?): Boolean {
-                                return false
-                            }
+                            binding.beneSearch.setOnQueryTextListener(object :
+                                SearchView.OnQueryTextListener {
+                                override fun onQueryTextSubmit(query: String?): Boolean {
+                                    return false
+                                }
 
-                            override fun onQueryTextChange(newText: String?): Boolean {
-                                beneficiaryAdapter.filter(newText.orEmpty())
-                                return true
-                            }
-                        })
-
-                        binding.beneficiaryRecyclerView.addOnScrollListener(
-                            object : RecyclerView.OnScrollListener() {
-                                override fun onScrolled(
-                                    recyclerView: RecyclerView,
-                                    dx: Int,
-                                    dy: Int
-                                ) {
-                                    super.onScrolled(
-                                        recyclerView,
-                                        dx,
-                                        dy
-                                    )
-                                    if (dy > 10 && binding.btnAddBeneficiary.isExtended) {
-                                        binding.btnAddBeneficiary.shrink()
-                                    }
-                                    if (dy < -10 && !binding.btnAddBeneficiary.isExtended) {
-                                        binding.btnAddBeneficiary.extend()
-                                    }
-                                    if (!recyclerView.canScrollVertically(
-                                            -1
-                                        )
-                                    ) {
-                                        binding.btnAddBeneficiary.extend()
-                                    }
+                                override fun onQueryTextChange(newText: String?): Boolean {
+                                    beneficiaryAdapter.filter(newText.orEmpty())
+                                    return true
                                 }
                             })
 
+                            binding.beneficiaryRecyclerView.addOnScrollListener(
+                                object : RecyclerView.OnScrollListener() {
+                                    override fun onScrolled(
+                                        recyclerView: RecyclerView,
+                                        dx: Int,
+                                        dy: Int
+                                    ) {
+                                        super.onScrolled(
+                                            recyclerView,
+                                            dx,
+                                            dy
+                                        )
+                                        if (dy > 10 && binding.btnAddBeneficiary.isExtended) {
+                                            binding.btnAddBeneficiary.shrink()
+                                        }
+                                        if (dy < -10 && !binding.btnAddBeneficiary.isExtended) {
+                                            binding.btnAddBeneficiary.extend()
+                                        }
+                                        if (!recyclerView.canScrollVertically(
+                                                -1
+                                            )
+                                        ) {
+                                            binding.btnAddBeneficiary.extend()
+                                        }
+                                    }
+                                })
+
+                        }
+                    } catch (e: NullPointerException) {
+                        e.localizedMessage
                     }
-                } catch (e: NullPointerException) {
-                    e.localizedMessage
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

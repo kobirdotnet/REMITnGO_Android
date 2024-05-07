@@ -25,7 +25,6 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
-            android:text="AB Bank"
             android:textColor="@color/black" />
 
     </LinearLayout>

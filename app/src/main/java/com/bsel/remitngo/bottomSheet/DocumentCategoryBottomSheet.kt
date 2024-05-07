@@ -105,29 +105,33 @@ class DocumentCategoryBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeDocumentCategoryResult() {
         documentViewModel.documentCategoryResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.documentCategoryRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                documentCategoryAdapter = DocumentCategoryAdapter(
-                    selectedItem = { selectedItem: DocumentCategoryData ->
-                        documentCategory(selectedItem)
-                        binding.documentCategorySearch.setQuery("", false)
-                    }
-                )
-                binding.documentCategoryRecyclerView.adapter = documentCategoryAdapter
-                documentCategoryAdapter.setList(result.data as List<DocumentCategoryData>)
-                documentCategoryAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.documentCategoryRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    documentCategoryAdapter = DocumentCategoryAdapter(
+                        selectedItem = { selectedItem: DocumentCategoryData ->
+                            documentCategory(selectedItem)
+                            binding.documentCategorySearch.setQuery("", false)
+                        }
+                    )
+                    binding.documentCategoryRecyclerView.adapter = documentCategoryAdapter
+                    documentCategoryAdapter.setList(result.data as List<DocumentCategoryData>)
+                    documentCategoryAdapter.notifyDataSetChanged()
 
-                binding.documentCategorySearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.documentCategorySearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        documentCategoryAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            documentCategoryAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

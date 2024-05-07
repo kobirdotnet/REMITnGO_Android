@@ -58,10 +58,18 @@ class BankViewHolder(val binding: ItemGetBankBinding) :
         bankItem: GetBankData,
         selectedItem: (GetBankData) -> Unit
     ) {
-        binding.accountName.text = bankItem.accountName.toString()
-        binding.bankName.text = bankItem.bankName.toString()
-        binding.accountNo.text = bankItem.accountNo.toString()
-        binding.branchName.text = bankItem.branchName.toString()
+        if (bankItem.accountName != null){
+            binding.accountName.text = bankItem.accountName.toString()
+        }
+        if (bankItem.bankName != null){
+            binding.bankName.text = bankItem.bankName.toString()
+        }
+        if (bankItem.accountNo != null){
+            binding.accountNo.text = bankItem.accountNo.toString()
+        }
+        if (bankItem.branchName != null){
+            binding.branchName.text = bankItem.branchName.toString()
+        }
         binding.itemGetBankLayout.setOnClickListener {
             selectedItem(bankItem)
         }

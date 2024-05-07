@@ -58,7 +58,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:text="Amendment Related Query"
                         android:textColor="@color/navy_blue"
                         android:textSize="18sp" />
 
@@ -103,7 +102,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:text="Amendment Related Query"
                         android:textColor="@color/blue" />
 
                 </LinearLayout>
@@ -147,7 +145,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:text="OPEN"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
@@ -191,7 +188,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:text="3175960"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
@@ -235,7 +231,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:text="status updated"
                         android:textColor="@color/blue" />
 
                 </LinearLayout>

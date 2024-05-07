@@ -58,7 +58,9 @@ class AnnualIncomeViewHolder(val binding: ItemAnnualIncomeBinding) :
         annualIncome: AnnualIncomeData,
         selectedItem: (AnnualIncomeData) -> Unit
     ) {
-        binding.annualIncome.text = annualIncome.name
+        if (annualIncome.name !=null){
+            binding.annualIncome.text = annualIncome.name
+        }
         binding.itemAnnualIncomeLayout.setOnClickListener {
             selectedItem(annualIncome)
         }

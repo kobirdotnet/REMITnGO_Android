@@ -54,15 +54,22 @@ class CancellationViewHolder(val binding: ItemCancellationBinding) :
         cancellationItem: GetCancelResponseData,
         selectedItem: (GetCancelResponseData) -> Unit
     ) {
-        binding.transactionCode.text = cancellationItem.transactionCode.toString()
-        binding.cancellationReason.text = cancellationItem.cancelReasion.toString()
-        val beneAmount = cancellationItem.beneAmount.toString()
-        binding.sendAmount.text = "BDT $beneAmount"
-        val orderStatus = cancellationItem.orderStatus.toString()
-        if (orderStatus == "17") {
-            binding.status.text = "Cancel"
+        if (cancellationItem.transactionCode != null){
+            binding.transactionCode.text = cancellationItem.transactionCode.toString()
         }
-
+        if (cancellationItem.cancelReasion != null){
+            binding.cancellationReason.text = cancellationItem.cancelReasion.toString()
+        }
+        if (cancellationItem.beneAmount.toString() != null){
+            val beneAmount = cancellationItem.beneAmount.toString()
+            binding.sendAmount.text = "BDT $beneAmount"
+        }
+        if ( cancellationItem.orderStatus.toString() != null){
+            val orderStatus = cancellationItem.orderStatus.toString()
+            if (orderStatus == "17") {
+                binding.status.text = "Cancel"
+            }
+        }
         binding.itemCancellationLayout.setOnClickListener {
             selectedItem(cancellationItem)
         }

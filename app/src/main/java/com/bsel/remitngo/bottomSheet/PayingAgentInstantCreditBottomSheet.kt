@@ -17,7 +17,7 @@ import com.bsel.remitngo.adapter.PayingAgentInstantCreditAdapter
 import com.bsel.remitngo.data.interfaceses.OnCalculationSelectedListener
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentData
 import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
-import com.bsel.remitngo.databinding.PayingAgentBankNameLayoutBinding
+import com.bsel.remitngo.databinding.PayingAgentInstandCreditBankNameLayoutBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.main.CalculationViewModel
 import com.bsel.remitngo.presentation.ui.main.CalculationViewModelFactory
@@ -35,7 +35,7 @@ class PayingAgentInstantCreditBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var payingAgentNameBehavior: BottomSheetBehavior<*>
 
-    private lateinit var binding: PayingAgentBankNameLayoutBinding
+    private lateinit var binding: PayingAgentInstandCreditBankNameLayoutBinding
 
     private lateinit var payingAgentInstantCreditAdapter: PayingAgentInstantCreditAdapter
 
@@ -46,7 +46,7 @@ class PayingAgentInstantCreditBottomSheet : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        val view = View.inflate(requireContext(), R.layout.paying_agent_bank_name_layout, null)
+        val view = View.inflate(requireContext(), R.layout.paying_agent_instand_credit_bank_name_layout, null)
         binding = DataBindingUtil.bind(view)!!
 
         bottomSheet.setContentView(view)

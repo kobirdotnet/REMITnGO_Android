@@ -16,7 +16,6 @@
             android:id="@+id/paying_agent_flag"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@drawable/ab_bank"
             android:visibility="gone"/>
 
         <TextView
@@ -25,7 +24,6 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/roboto_regular"
             android:gravity="center_vertical"
-            android:text="bKash"
             android:textColor="@color/black" />
 
     </LinearLayout>

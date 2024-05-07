@@ -58,7 +58,10 @@ class DivisionNameViewHolder(val binding: ItemDivisionBinding) :
         divisionItem: DivisionData,
         selectedItem: (DivisionData) -> Unit
     ) {
-        binding.divisionName.text = divisionItem.name
+        if (divisionItem.name != null) {
+            binding.divisionName.text = divisionItem.name
+        }
+
         binding.itemDivisionLayout.setOnClickListener {
             selectedItem(divisionItem)
         }

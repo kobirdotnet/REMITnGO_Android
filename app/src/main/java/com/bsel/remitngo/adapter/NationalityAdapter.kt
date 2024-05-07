@@ -58,7 +58,10 @@ class NationalityViewHolder(val binding: ItemNationalityBinding) :
         nationality: NationalityData,
         selectedItem: (NationalityData) -> Unit
     ) {
-        binding.nationality.text = nationality.name
+        if (nationality.name != null) {
+            binding.nationality.text = nationality.name
+        }
+
         binding.itemNationalityLayout.setOnClickListener {
             selectedItem(nationality)
         }

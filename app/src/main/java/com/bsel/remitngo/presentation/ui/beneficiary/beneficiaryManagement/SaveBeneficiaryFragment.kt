@@ -162,38 +162,42 @@ class SaveBeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
 
     private fun observeSaveBeneficiaryResult() {
         beneficiaryViewModel.beneficiaryResult.observe(this) { result ->
-            if (result?.data != null) {
-                val cusBankInfoId = extractData(result.data)
-                if (cusBankInfoId != null) {
-                    val bundle = Bundle().apply {
-                        putString("paymentType", paymentType)
-                        putString("orderType", orderType)
-                        putString("sendAmount", sendAmount)
-                        putString("receiveAmount", receiveAmount)
-                        putString("exchangeRate", exchangeRate)
-                        putString("commission", commission)
+            try {
+                if (result?.data != null) {
+                    val cusBankInfoId = extractData(result.data)
+                    if (cusBankInfoId != null) {
+                        val bundle = Bundle().apply {
+                            putString("paymentType", paymentType)
+                            putString("orderType", orderType)
+                            putString("sendAmount", sendAmount)
+                            putString("receiveAmount", receiveAmount)
+                            putString("exchangeRate", exchangeRate)
+                            putString("commission", commission)
 
-                        putString("bankId", bankId)
-                        putString("branchId", branchId)
-                        putString("bankName", bankName)
-                        putString("payingAgentId", payingAgentId)
+                            putString("bankId", bankId)
+                            putString("branchId", branchId)
+                            putString("bankName", bankName)
+                            putString("payingAgentId", payingAgentId)
 
-                        putString("benId", benId)
-                        putString("beneficiaryId", beneficiaryId)
-                        putString("beneficiaryName", beneficiaryName)
-                        putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
+                            putString("benId", benId)
+                            putString("beneficiaryId", beneficiaryId)
+                            putString("beneficiaryName", beneficiaryName)
+                            putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
 
-                        putString("reasonId", reasonId)
-                        putString("reasonName", reasonName)
+                            putString("reasonId", reasonId)
+                            putString("reasonName", reasonName)
 
-                        putString("sourceOfIncomeId", sourceOfIncomeId)
-                        putString("sourceOfIncomeName", sourceOfIncomeName)
+                            putString("sourceOfIncomeId", sourceOfIncomeId)
+                            putString("sourceOfIncomeName", sourceOfIncomeName)
+                        }
+                        findNavController().navigate(
+                            R.id.action_nav_save_beneficiary_to_nav_beneficiary_management,
+                            bundle
+                        )
                     }
-                    findNavController().navigate(
-                        R.id.action_nav_save_beneficiary_to_nav_beneficiary_management,
-                        bundle
-                    )
                 }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

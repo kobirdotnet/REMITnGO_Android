@@ -58,7 +58,10 @@ class SourceOfIncomeViewHolder(val binding: ItemSourceOfIncomeBinding) :
         sourceOfIncome: SourceOfIncomeData,
         selectedItem: (SourceOfIncomeData) -> Unit
     ) {
-        binding.sourceOfIncome.text = sourceOfIncome.name
+        if (sourceOfIncome.name != null) {
+            binding.sourceOfIncome.text = sourceOfIncome.name
+        }
+
         binding.itemSourceOfIncomeLayout.setOnClickListener {
             selectedItem(sourceOfIncome)
         }

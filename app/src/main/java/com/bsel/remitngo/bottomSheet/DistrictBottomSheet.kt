@@ -105,30 +105,34 @@ class DistrictBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeDistrictResult() {
         bankViewModel.districtResult.observe(this) { result ->
-            if (result!!.data != null) {
-                binding.districtRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                districtNameAdapter = DistrictNameAdapter(
-                    selectedItem = { selectedItem: DistrictData ->
-                        districtItem(selectedItem)
-                        binding.districtSearch.setQuery("", false)
-                    }
-                )
-                binding.districtRecyclerView.adapter = districtNameAdapter
-                districtNameAdapter.setList(result.data as List<DistrictData>)
-                districtNameAdapter.notifyDataSetChanged()
+            try {
+                if (result!!.data != null) {
+                    binding.districtRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    districtNameAdapter = DistrictNameAdapter(
+                        selectedItem = { selectedItem: DistrictData ->
+                            districtItem(selectedItem)
+                            binding.districtSearch.setQuery("", false)
+                        }
+                    )
+                    binding.districtRecyclerView.adapter = districtNameAdapter
+                    districtNameAdapter.setList(result.data as List<DistrictData>)
+                    districtNameAdapter.notifyDataSetChanged()
 
-                binding.districtSearch.setOnQueryTextListener(object :
-                    SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
+                    binding.districtSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        districtNameAdapter.filter(newText.orEmpty())
-                        return true
-                    }
-                })
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            districtNameAdapter.filter(newText.orEmpty())
+                            return true
+                        }
+                    })
 
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

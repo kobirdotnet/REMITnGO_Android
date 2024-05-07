@@ -387,6 +387,7 @@
                         android:gravity="center_vertical"
                         android:inputType="none"
                         android:textColor="@color/black" />
+
                     <TextView
                         android:id="@+id/receiverAccount"
                         android:layout_width="match_parent"
@@ -425,8 +426,8 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/white"
-                        android:focusableInTouchMode="false"
                         android:drawableRight="@drawable/arrow_drop_down"
+                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
@@ -460,8 +461,8 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/white"
-                        android:focusableInTouchMode="false"
                         android:drawableRight="@drawable/arrow_drop_down"
+                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
@@ -478,7 +479,9 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/padding_left"
-                android:paddingRight="@dimen/padding_right">
+                android:paddingRight="@dimen/padding_right"
+                android:paddingTop="@dimen/padding_top"
+                android:paddingBottom="@dimen/padding_bottom">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddPromoCode"
@@ -488,8 +491,8 @@
                     android:drawableLeft="@drawable/promo"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
-                    android:textAllCaps="false"
                     android:text="Add Promo"
+                    android:textAllCaps="false"
                     android:textColor="@color/blue" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -506,8 +509,8 @@
                         android:id="@+id/promoCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/yellow"
                         android:layout_gravity="center_vertical"
+                        android:background="@color/yellow"
                         android:focusableInTouchMode="true"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
@@ -522,18 +525,60 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
-                    android:textAllCaps="false"
                     android:text="Apply"
+                    android:textAllCaps="false"
                     android:textColor="@color/blue" />
 
-                <TextView
-                    android:id="@+id/promoMessage"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/promoLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
-                    android:gravity="center_vertical"
-                    android:hint="your applied promo is: NKMHG. promo code applied successfully"
-                    android:textColor="@color/yellow" />
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/padding_top"
+                    android:paddingBottom="@dimen/padding_bottom">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/circle_background_green"></TextView>
+
+                        <TextView
+                            android:id="@+id/appliedPromoCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_regular"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/padding_top"
+                            android:textColor="@color/blue" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/circle_background_green"></TextView>
+
+                        <TextView
+                            android:id="@+id/promoMessage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_regular"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/padding_top"
+                            android:textColor="@color/blue" />
+                    </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
 

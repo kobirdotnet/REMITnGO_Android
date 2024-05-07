@@ -13,14 +13,19 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bsel.remitngo.R
+import com.bsel.remitngo.bottomSheet.MarketingBottomSheet
 import com.bsel.remitngo.databinding.FragmentSettingsBinding
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.interfaceses.OnMarketingItemSelectedListener
+import com.bsel.remitngo.data.model.marketing.MarketingValue
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.Executor
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
 
     private lateinit var binding: FragmentSettingsBinding
+
+    private val marketingBottomSheet: MarketingBottomSheet by lazy { MarketingBottomSheet() }
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -30,6 +35,11 @@ class SettingsFragment : Fragment() {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
+
+    var rdoEmail = false
+    var rdoSMS = false
+    var rdoPhone = false
+    var rdoPost = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -123,6 +133,19 @@ class SettingsFragment : Fragment() {
             )
         }
 
+        binding.setPreferences.setOnClickListener {
+            if (!marketingBottomSheet.isAdded) {
+                marketingBottomSheet.setSelectedMarketing(
+                    rdoEmail,
+                    rdoSMS,
+                    rdoPhone,
+                    rdoPost
+                )
+                marketingBottomSheet.itemSelectedListener = this
+                marketingBottomSheet.show(childFragmentManager, marketingBottomSheet.tag)
+            }
+        }
+
     }
 
     private fun checkDeviceHasBiometric() {
@@ -169,6 +192,13 @@ class SettingsFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().navigate(R.id.nav_main)
         }
+    }
+
+    override fun onMarketingItemSelected(selectedItem: MarketingValue) {
+        rdoEmail = selectedItem.rdoEmail == true
+        rdoSMS = selectedItem.rdoSMS == true
+        rdoPhone = selectedItem.rdoPhone == true
+        rdoPost = selectedItem.rdoPost == true
     }
 
 }

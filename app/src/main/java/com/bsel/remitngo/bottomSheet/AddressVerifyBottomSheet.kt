@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
@@ -99,6 +100,7 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
         countryFocusListener()
         postCodeFocusListener()
         addressFocusListener()
+        houseNoFocusListener()
         divisionFocusListener()
         countyFocusListener()
         cityFocusListener()
@@ -232,6 +234,7 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
         binding.countryContainer.helperText = validCountry()
         binding.postCodeContainer.helperText = validPostCode()
         binding.addressContainer.helperText = validAddress()
+        binding.houseNoContainer.helperText = validHouseNo()
         binding.divisionContainer.helperText = validDivision()
         binding.countyContainer.helperText = validCounty()
         binding.cityContainer.helperText = validCity()
@@ -239,11 +242,12 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
         val validCountry = binding.countryContainer.helperText == null
         val validPostCode = binding.postCodeContainer.helperText == null
         val validAddress = binding.addressContainer.helperText == null
+        val validHouseNo = binding.houseNoContainer.helperText == null
         val validDivision = binding.divisionContainer.helperText == null
         val validCounty = binding.countyContainer.helperText == null
         val validCity = binding.cityContainer.helperText == null
 
-        if (validCountry && validPostCode && validAddress && validDivision && validCounty && validCity) {
+        if (validCountry && validPostCode && validAddress && validHouseNo && validDivision && validCounty && validCity) {
             submitAddressForm()
         }
 
@@ -252,6 +256,7 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
     private fun submitAddressForm() {
         val postCode = binding.postCode.text.toString()
         val address = binding.address.text.toString()
+        val houseNo = binding.houseNo.text.toString()
         val division = binding.division.text.toString()
         val county = binding.county.text.toString()
         val city = binding.city.text.toString()
@@ -273,7 +278,7 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
             divisionId = ukDivisionId,
             districtId = countyId,
             thanaId = cityId,
-            buildingno = "",
+            buildingno = houseNo,
             housename = "",
             address = address,
             annualNetIncomeId = 0,
@@ -347,6 +352,23 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
         return null
     }
 
+
+    private fun houseNoFocusListener() {
+        binding.houseNo.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.houseNoContainer.helperText = validHouseNo()
+            }
+        }
+    }
+
+    private fun validHouseNo(): String? {
+        val address = binding.houseNo.text.toString()
+        if (address.isEmpty()) {
+            return "enter house no"
+        }
+        return null
+    }
+
     private fun divisionFocusListener() {
         binding.division.setOnFocusChangeListener { _, focused ->
             if (!focused) {
@@ -396,7 +418,17 @@ class AddressVerifyBottomSheet : BottomSheetDialogFragment(), OnAddressItemSelec
     }
 
     override fun onAddressItemSelected(selectedItem: PostCodeData) {
+        val parts = selectedItem.ukAddress!!.split(",")
+        val houseNumber = parts[0]
+        val address = parts[1]
+        val city = parts[2]
+
+        val secondParts = parts[1].split(" ")
+        val postalCode = secondParts.last()
+        val cityName = secondParts.dropLast(1).joinToString(" ")
+
         binding.postCode.setText(selectedItem.postcode)
+        binding.houseNo.setText(houseNumber)
         binding.address.setText(selectedItem.ukAddress)
     }
 

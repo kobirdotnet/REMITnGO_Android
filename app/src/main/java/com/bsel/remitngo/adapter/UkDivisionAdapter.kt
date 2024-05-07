@@ -58,7 +58,10 @@ class UkDivisionViewHolder(val binding: ItemUkDivisionBinding) :
         ukDivisionItem: UkDivisionData,
         selectedItem: (UkDivisionData) -> Unit
     ) {
-        binding.ukDivisionName.text = ukDivisionItem.name
+        if (ukDivisionItem.name.toString() != null) {
+            binding.ukDivisionName.text = ukDivisionItem.name
+        }
+
         binding.itemUkDivisionLayout.setOnClickListener {
             selectedItem(ukDivisionItem)
         }

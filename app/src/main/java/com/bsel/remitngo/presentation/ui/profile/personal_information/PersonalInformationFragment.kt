@@ -161,10 +161,14 @@ class PersonalInformationFragment : Fragment() {
 
     private fun observeUpdateProfileResult() {
         profileViewModel.updateProfileResult.observe(this) { result ->
-            if (result != null) {
-                findNavController().navigate(
-                    R.id.action_nav_personal_information_to_nav_my_profile
-                )
+            try {
+                if (result != null) {
+                    findNavController().navigate(
+                        R.id.action_nav_personal_information_to_nav_my_profile
+                    )
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

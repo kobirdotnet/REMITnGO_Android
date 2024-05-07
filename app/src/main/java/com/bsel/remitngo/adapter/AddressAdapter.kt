@@ -58,7 +58,9 @@ class AddressViewHolder(val binding: ItemAddressBinding) :
         addressItem: PostCodeData,
         selectedItem: (PostCodeData) -> Unit
     ) {
-        binding.addressName.text = addressItem.ukAddress
+        if (addressItem.ukAddress != null){
+            binding.addressName.text = addressItem.ukAddress
+        }
         binding.itemAddressLayout.setOnClickListener {
             selectedItem(addressItem)
         }

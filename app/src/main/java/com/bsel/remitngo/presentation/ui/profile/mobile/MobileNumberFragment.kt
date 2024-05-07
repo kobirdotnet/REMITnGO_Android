@@ -77,10 +77,14 @@ class MobileNumberFragment : Fragment() {
 
     private fun observePhoneVerifyResult() {
         profileViewModel.phoneVerifyResult.observe(this) { result ->
-            if (result!! != null) {
-                message = result!!.message.toString()
-                phoneOtpVerifyBottomSheet.setPhoneNumber(phoneNumber)
-                phoneOtpVerifyBottomSheet.show(childFragmentManager, phoneOtpVerifyBottomSheet.tag)
+            try {
+                if (result!! != null) {
+                    message = result!!.message.toString()
+                    phoneOtpVerifyBottomSheet.setPhoneNumber(phoneNumber)
+                    phoneOtpVerifyBottomSheet.show(childFragmentManager, phoneOtpVerifyBottomSheet.tag)
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }
