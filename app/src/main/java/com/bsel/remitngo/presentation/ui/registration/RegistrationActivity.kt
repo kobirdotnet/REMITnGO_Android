@@ -1,6 +1,8 @@
 package com.bsel.remitngo.presentation.ui.registration
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -8,35 +10,31 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.util.Patterns
 import android.view.MotionEvent
-import android.view.WindowManager
+import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.NumberPicker
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
 import com.bsel.remitngo.bottomSheet.MarketingBottomSheet
-import com.bsel.remitngo.bottomSheet.RegistrationDialog
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnMarketingItemSelectedListener
-import com.bsel.remitngo.data.interfaceses.OnRegistrationSelectedListener
 import com.bsel.remitngo.data.model.marketing.MarketingValue
-import com.bsel.remitngo.data.model.registration.RegistrationData
 import com.bsel.remitngo.data.model.registration.RegistrationItem
 import com.bsel.remitngo.databinding.ActivityRegistrationBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.login.LoginActivity
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListener,OnRegistrationSelectedListener {
+class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListener {
     @Inject
     lateinit var registrationViewModelFactory: RegistrationViewModelFactory
     private lateinit var registrationViewModel: RegistrationViewModel
@@ -44,7 +42,6 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
     private lateinit var binding: ActivityRegistrationBinding
 
     private val marketingBottomSheet: MarketingBottomSheet by lazy { MarketingBottomSheet() }
-    private val registrationDialog: RegistrationDialog by lazy { RegistrationDialog() }
 
     private lateinit var deviceId: String
 
@@ -56,14 +53,6 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
     var rdoSMS = false
     var rdoPhone = false
     var rdoPost = false
-
-    private var code: String? = null
-    private var message: String? = null
-    private var isLogin: Boolean? = false
-    private var isMigrate: Boolean? = false
-    private var personId: Int? = 0
-    private var email: String? = null
-    private var mobile: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,6 +178,12 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
         binding.btnSignUp.setOnClickListener { signUpForm() }
 
+        binding.firstName.setText("MOHAMMEDNURUL")
+        binding.lastName.setText("ISLAM")
+        binding.dob.setText("1980-02-01")
+        binding.email.setText("kobir456@gmail.com")
+        binding.phoneNumber.setText("07787155001")
+
         binding.password.setText("Normal@222")
         binding.confirmPassword.setText("Normal@222")
 
@@ -196,32 +191,116 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
     }
 
+    @SuppressLint("MissingInflatedId")
     private fun observeRegistrationResult() {
         registrationViewModel.registrationResult.observe(this) { result ->
             try {
-                if (result!!.data != null) {
+                if (result == null) {
+                    showDialog(
+                        "Registration Failed",
+                        "Unable to registration. Please try again later."
+                    )
+                } else {
+                    if (result.message == "Successful") {
+                        if (result!!.data != null) {
+                            val dialogView = layoutInflater.inflate(
+                                R.layout.registration_successful_layout,
+                                null
+                            )
+                            val dialog = AlertDialog.Builder(this)
+                                .setView(dialogView)
+                                .create()
 
-                    var code = result.data!![0]!!.code
-                    var message = result.data!![0]!!.message
-                    var isLogin = result.data!![0]!!.isLogin
-                    var isMigrate = result.data!![0]!!.isMigrate
-                    var personId = result.data!![0]!!.personId
-                    var email = result.data!![0]!!.email
-                    var mobile = result.data!![0]!!.mobile
+                            dialogView.findViewById<TextView>(R.id.titleTxt).text =
+                                "Registration Successful."
+                            dialogView.findViewById<TextView>(R.id.messageTxt).text =
+                                "${result.data!![0]!!.message}"
 
-                    if (!registrationDialog.isAdded) {
-                        registrationDialog.setSelectedMessage(
-                            code,
-                            email,
-                            isLogin,
-                            isMigrate,
-                            message,
-                            mobile,
-                            personId
-                        )
-                        registrationDialog.itemSelectedListener = this@RegistrationActivity
-                        registrationDialog.show(supportFragmentManager, registrationDialog.tag)
-                        registrationDialog.isCancelable=false
+                            dialogView.findViewById<ImageView>(R.id.imgClose).setOnClickListener {
+                                dialog.dismiss()
+                                val intent =
+                                    Intent(this@RegistrationActivity, LoginActivity::class.java)
+                                startActivity(intent)
+                            }
+
+                            dialogView.findViewById<Button>(R.id.btnLogin).setOnClickListener {
+                                dialog.dismiss()
+                                val intent =
+                                    Intent(this@RegistrationActivity, LoginActivity::class.java)
+                                startActivity(intent)
+                            }
+
+                            dialog.setCancelable(false)
+                            dialog.show()
+                        }
+                    } else {
+                        if (result!!.data != null) {
+                            val dialogView = layoutInflater.inflate(
+                                R.layout.registration_failed_layout,
+                                null
+                            )
+                            val dialog = AlertDialog.Builder(this)
+                                .setView(dialogView)
+                                .create()
+
+                            dialogView.findViewById<TextView>(R.id.titleTxt).text =
+                                "Registration Failed."
+                            dialogView.findViewById<TextView>(R.id.messageTxt).text =
+                                "${result.data!![0]!!.message}"
+                            dialogView.findViewById<ImageView>(R.id.imgClose).setOnClickListener {
+                                dialog.dismiss()
+                            }
+
+                            var isMobileConfirmationNedded = result.data!![0]!!.isMobileConfirmationNedded
+                            var mobile = result.data!![0]!!.mobile
+
+                            var isLogin = result.data!![0]!!.isLogin
+                            var isMigrate = result.data!![0]!!.isMigrate
+
+                            if (isLogin == true && isMigrate == false) {
+                                dialogView.findViewById<LinearLayout>(R.id.loginLayout).visibility =
+                                    View.VISIBLE
+                                dialogView.findViewById<LinearLayout>(R.id.migrationLayout).visibility =
+                                    View.GONE
+
+                                dialogView.findViewById<Button>(R.id.btnLogin).setOnClickListener {
+                                    dialog.dismiss()
+                                    val intent =
+                                        Intent(this@RegistrationActivity, LoginActivity::class.java)
+                                    startActivity(intent)
+                                }
+                            } else if (isLogin == false && isMigrate == true) {
+                                dialogView.findViewById<LinearLayout>(R.id.loginLayout).visibility =
+                                    View.GONE
+                                dialogView.findViewById<LinearLayout>(R.id.migrationLayout).visibility =
+                                    View.VISIBLE
+
+                                dialogView.findViewById<Button>(R.id.btnYes).setOnClickListener {
+                                    dialog.dismiss()
+                                    verifyMobile(mobile,isMobileConfirmationNedded)
+                                }
+                                dialogView.findViewById<Button>(R.id.btnNo).setOnClickListener {
+                                    dialog.dismiss()
+                                }
+                            } else if (isLogin == false && isMigrate == false) {
+                                dialogView.findViewById<LinearLayout>(R.id.loginLayout).visibility =
+                                    View.GONE
+                                dialogView.findViewById<LinearLayout>(R.id.migrationLayout).visibility =
+                                    View.GONE
+                            }
+
+                            dialogView.findViewById<Button>(R.id.btnHelp).setOnClickListener {
+                                dialog.dismiss()
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://bracsaajanexchange.com")
+                                )
+                                startActivity(intent)
+                            }
+
+                            dialog.setCancelable(false)
+                            dialog.show()
+                        }
                     }
                 }
             } catch (e: NullPointerException) {
@@ -230,22 +309,77 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         }
     }
 
-    override fun onRegistrationSelected(selectedItem: RegistrationData) {
-        code = selectedItem.code
-        email = selectedItem.email
-        isLogin = selectedItem.isLogin
-        isMigrate = selectedItem.isMigrate
-        message = selectedItem.message
-        mobile = selectedItem.mobile
-        personId = selectedItem.personId
+    @SuppressLint("MissingInflatedId")
+    private fun verifyMobile(mobile: String?, isMobileConfirmationNedded: Boolean?) {
+        val dialogView = layoutInflater.inflate(
+            R.layout.profile_verify_layout,
+            null
+        )
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
 
-        if (code=="0000"){
-            val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
+        dialogView.findViewById<TextView>(R.id.titleTxt).text =
+            "Profile Verification."
+        dialogView.findViewById<TextView>(R.id.messageTxt).text =
+            "To get access exiting profile you need to verify current mobile no. associated with profile."
+
+        var phoneNumber = mobile!!.substring(0, 3)
+
+        if (isMobileConfirmationNedded == true){
+
+            dialogView.findViewById<TextView>(R.id.mobileTxt).visibility =View.GONE
+            dialogView.findViewById<TextView>(R.id.mobileTxt).text = "Mobile: $mobile"
+
+            dialogView.findViewById<LinearLayout>(R.id.mobileVerifyLayout).visibility = View.VISIBLE
+            dialogView.findViewById<TextView>(R.id.mobileVerifyTxt).text = "Mobile: XXXXXXXX$phoneNumber"
+            dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).visibility = View.VISIBLE
+            dialogView.findViewById<TextInputEditText>(R.id.mobileNumber).setText("")
+
+        }else if (isMobileConfirmationNedded==false){
+            dialogView.findViewById<TextView>(R.id.mobileTxt).visibility =View.VISIBLE
+            dialogView.findViewById<TextView>(R.id.mobileTxt).text = "Mobile: $mobile"
+
+            dialogView.findViewById<LinearLayout>(R.id.mobileVerifyLayout).visibility = View.GONE
+            dialogView.findViewById<TextView>(R.id.mobileVerifyTxt).text = "Mobile: XXXXXXXX$phoneNumber"
+            dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).visibility = View.GONE
+            dialogView.findViewById<TextInputEditText>(R.id.mobileNumber).setText("")
+        }
+
+
+
+
+        dialogView.findViewById<ImageView>(R.id.imgClose).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialogView.findViewById<Button>(R.id.btnSendOtp).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<Button>(R.id.btnHelp).setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://bracsaajanexchange.com")
+            )
             startActivity(intent)
         }
 
+        dialog.setCancelable(false)
+        dialog.show()
     }
 
+    private fun showDialog(title: String, message: String) {
+        val alertDialog = AlertDialog.Builder(this).apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+        }.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
 
     private fun signUpForm() {
         binding.firstNameContainer.helperText = validFirstName()
@@ -381,7 +515,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         if (!phone.matches(".*[0-9].*".toRegex())) {
             return "Must be all digits"
         }
-        if (phone.length != 10) {
+        if (phone.length < 10) {
             return "Must be 10 digits"
         }
         return null

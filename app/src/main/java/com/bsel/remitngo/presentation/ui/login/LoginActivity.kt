@@ -2,6 +2,7 @@ package com.bsel.remitngo.presentation.ui.login
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -113,25 +114,44 @@ class LoginActivity : AppCompatActivity() {
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(this) { result ->
             try {
-                if (result!!.data != null) {
-                    val token = result!!.data!!.accessToken
-                    val accessToken = decodeJWT(token!!)
-                    preferenceManager.saveData("customerId", accessToken.customerId)
-                    preferenceManager.saveData("personId", accessToken.personId)
-                    preferenceManager.saveData("firstName", accessToken.firstName)
-                    preferenceManager.saveData("cmCode", accessToken.CMCode)
-                    preferenceManager.saveData("lastName", accessToken.lastName)
-                    preferenceManager.saveData("customerEmail", accessToken.email)
-                    preferenceManager.saveData("customerMobile", accessToken.mobile)
-                    preferenceManager.saveData("customerDob", accessToken.DOB)
-                    TokenManager.setToken(result!!.data!!.accessToken)
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
+                if (result == null) {
+                    showDialog("Login Failed", "Unable to login. Please try again later.")
+                } else {
+                    if (result.message == "Successful") {
+                        if (result.data != null) {
+                            val token = result.data.accessToken
+                            val accessToken = decodeJWT(token!!)
+                            preferenceManager.saveData("customerId", accessToken.customerId)
+                            preferenceManager.saveData("personId", accessToken.personId)
+                            preferenceManager.saveData("firstName", accessToken.firstName)
+                            preferenceManager.saveData("cmCode", accessToken.CMCode)
+                            preferenceManager.saveData("lastName", accessToken.lastName)
+                            preferenceManager.saveData("customerEmail", accessToken.email)
+                            preferenceManager.saveData("customerMobile", accessToken.mobile)
+                            preferenceManager.saveData("customerDob", accessToken.DOB)
+                            TokenManager.setToken(result!!.data!!.accessToken)
+                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            startActivity(intent)
+                        }
+                    } else {
+                        showDialog("Login Failed", "Failed to login user: ${result.message}")
+                    }
                 }
             } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }
+    }
+
+    private fun showDialog(title: String, message: String) {
+        val alertDialog = AlertDialog.Builder(this).apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+        }.create()
+        alertDialog.show()
     }
 
     private fun logInForm() {
@@ -427,7 +447,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun decodeJWT(token: String): AccessToken {
-        val key = Keys.hmacShaKeyFor("AshProgHelpSecretKeypokopkokpkokhnxgfjdfjhsdfhdfghghbdfghosdfgsfgsbgsdf".toByteArray()) // Replace "yourSecretKey" with your actual secret key
+        val key =
+            Keys.hmacShaKeyFor("AshProgHelpSecretKeypokopkokpkokhnxgfjdfjhsdfhdfghghbdfghosdfgsfgsbgsdf".toByteArray()) // Replace "yourSecretKey" with your actual secret key
         val claims = Jwts.parserBuilder()
             .setSigningKey(key)
             .build()

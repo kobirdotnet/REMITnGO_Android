@@ -546,7 +546,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
-                    android:text="Sending money to Bangladesh is easy. Super fast, no fee transfers for cash pickup, mobile wallets, and banks"
+                    android:hint="Sending money to Bangladesh is easy. Super fast, no fee transfers for cash pickup, mobile wallets, and banks"
                     android:textColor="@color/black"
                     android:textSize="12sp" />
 

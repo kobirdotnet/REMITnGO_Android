@@ -12,10 +12,14 @@ data class RegistrationData(
     val isLogin: Boolean?,
     @SerializedName("IsMigrate")
     val isMigrate: Boolean?,
+    @SerializedName("IsMobileConfirmationNedded")
+    val isMobileConfirmationNedded: Boolean?,
     @SerializedName("Message")
     val message: String?,
     @SerializedName("Mobile")
     val mobile: String?,
     @SerializedName("PersonId")
-    val personId: Int?
+    val personId: Int?,
+    @SerializedName("ErrorType")
+    val errorType: Int?
 )
