@@ -164,37 +164,34 @@ class SaveBeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         beneficiaryViewModel.beneficiaryResult.observe(this) { result ->
             try {
                 if (result?.data != null) {
-                    val cusBankInfoId = extractData(result.data)
-                    if (cusBankInfoId != null) {
-                        val bundle = Bundle().apply {
-                            putString("paymentType", paymentType)
-                            putString("orderType", orderType)
-                            putString("sendAmount", sendAmount)
-                            putString("receiveAmount", receiveAmount)
-                            putString("exchangeRate", exchangeRate)
-                            putString("commission", commission)
+                    val bundle = Bundle().apply {
+                        putString("paymentType", paymentType)
+                        putString("orderType", orderType)
+                        putString("sendAmount", sendAmount)
+                        putString("receiveAmount", receiveAmount)
+                        putString("exchangeRate", exchangeRate)
+                        putString("commission", commission)
 
-                            putString("bankId", bankId)
-                            putString("branchId", branchId)
-                            putString("bankName", bankName)
-                            putString("payingAgentId", payingAgentId)
+                        putString("bankId", bankId)
+                        putString("branchId", branchId)
+                        putString("bankName", bankName)
+                        putString("payingAgentId", payingAgentId)
 
-                            putString("benId", benId)
-                            putString("beneficiaryId", beneficiaryId)
-                            putString("beneficiaryName", beneficiaryName)
-                            putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
+                        putString("benId", benId)
+                        putString("beneficiaryId", beneficiaryId)
+                        putString("beneficiaryName", beneficiaryName)
+                        putString("beneficiaryPhoneNumber", beneficiaryPhoneNumber)
 
-                            putString("reasonId", reasonId)
-                            putString("reasonName", reasonName)
+                        putString("reasonId", reasonId)
+                        putString("reasonName", reasonName)
 
-                            putString("sourceOfIncomeId", sourceOfIncomeId)
-                            putString("sourceOfIncomeName", sourceOfIncomeName)
-                        }
-                        findNavController().navigate(
-                            R.id.action_nav_save_beneficiary_to_nav_beneficiary_management,
-                            bundle
-                        )
+                        putString("sourceOfIncomeId", sourceOfIncomeId)
+                        putString("sourceOfIncomeName", sourceOfIncomeName)
                     }
+                    findNavController().navigate(
+                        R.id.action_nav_save_beneficiary_to_nav_beneficiary_management,
+                        bundle
+                    )
                 }
             }catch (e:NullPointerException){
                 e.localizedMessage
@@ -236,32 +233,24 @@ class SaveBeneficiaryFragment : Fragment(), OnBeneficiarySelectedListener {
         val address = binding.address.text.toString()
         val country = binding.country.text.toString()
         val countryId = 1
-        val isOnlineCustomer = 1
 
         val beneficiaryItem = BeneficiaryItem(
-            deviceId = deviceId,
-            personId = personId.toInt(),
-            firstname = recipientName,
-            middlename = "",
-            lastname = "",
-            gender = 0,
-            mobile = phoneNumber,
-            emailId = "",
-            countryID = countryId,
-            divisionID = 0,
-            districtID = 0,
-            thanaID = 0,
-            address = "",
-            active = true,
-            isOnlineCustomer = isOnlineCustomer,
-            userIPAddress = ipAddress.toString(),
-            relationType = 0,
-            resonID = 0,
-            iban = "",
-            bic = "",
-            identityType = 0,
-            beneOccupation = 0,
-            otherOccupation = ""
+            address="",
+            beneficiaryId=0,
+            beneficiaryName=recipientName,
+            countryID=countryId,
+            deviceId=deviceId,
+            districtID=0,
+            divisionID=0,
+            firstname="",
+            gender=0,
+            lastname="",
+            mobile=phoneNumber,
+            operationType=0,
+            personId=personId.toInt(),
+            relationType=0,
+            thanaID=0,
+            userIPAddress=ipAddress
         )
         beneficiaryViewModel.beneficiary(beneficiaryItem)
 

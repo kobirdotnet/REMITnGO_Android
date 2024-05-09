@@ -28,7 +28,6 @@ import com.bsel.remitngo.data.model.createReceipt.CreateReceiptResponse
 import com.bsel.remitngo.data.model.emp.EmpItem
 import com.bsel.remitngo.data.model.encript.EncryptItem
 import com.bsel.remitngo.data.model.encript.EncryptItemForCreateReceipt
-import com.bsel.remitngo.data.model.payment.PaymentItem
 import com.bsel.remitngo.data.model.profile.ProfileItem
 import com.bsel.remitngo.data.model.transaction.TransactionData
 import com.bsel.remitngo.data.model.transaction.TransactionItem
@@ -185,8 +184,8 @@ class TransactionFragment : Fragment() {
     private fun observeConsumerResult() {
         transactionViewModel.consumerResult.observe(this) { result ->
             try {
-                if (result!!.data != null) {
-                    consumerId = result.data.toString()
+                if (result!!.consumerData != null) {
+                    consumerId = result.consumerData!!.consumerId.toString()
                 }
             }catch (e:NullPointerException){
                 e.localizedMessage

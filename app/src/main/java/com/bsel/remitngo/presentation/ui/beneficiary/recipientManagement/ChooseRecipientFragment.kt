@@ -22,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.BeneficiaryAdapter
 import com.bsel.remitngo.adapter.ContactsAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.ContactItem
@@ -48,7 +47,7 @@ class ChooseRecipientFragment : Fragment() {
 
     private lateinit var contactsAdapter: ContactsAdapter
 
-    private lateinit var beneficiaryAdapter: BeneficiaryAdapter
+//    private lateinit var beneficiaryAdapter: BeneficiaryAdapter
 
     private lateinit var personId: String
     private lateinit var customerId: String
@@ -193,31 +192,31 @@ class ChooseRecipientFragment : Fragment() {
     private fun observeGetBeneficiaryResult() {
         beneficiaryViewModel.getBeneficiaryResult.observe(this) { result ->
             try {
-                if (result!!.data != null) {
-                    binding.beneficiaryRecyclerView.layoutManager =
-                        LinearLayoutManager(requireActivity())
-                    beneficiaryAdapter = BeneficiaryAdapter(
-                        selectedItem = { selectedItem: GetBeneficiaryData ->
-                            recipientItem(selectedItem)
-                            binding.beneficiarySearch.setQuery("", false)
-                        }
-                    )
-                    binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
-                    beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
-                    beneficiaryAdapter.notifyDataSetChanged()
-
-                    binding.beneficiarySearch.setOnQueryTextListener(object :
-                        SearchView.OnQueryTextListener {
-                        override fun onQueryTextSubmit(query: String?): Boolean {
-                            return false
-                        }
-
-                        override fun onQueryTextChange(newText: String?): Boolean {
-                            beneficiaryAdapter.filter(newText.orEmpty())
-                            return true
-                        }
-                    })
-                }
+//                if (result!!.data != null) {
+//                    binding.beneficiaryRecyclerView.layoutManager =
+//                        LinearLayoutManager(requireActivity())
+//                    beneficiaryAdapter = BeneficiaryAdapter(
+//                        selectedItem = { selectedItem: GetBeneficiaryData ->
+//                            recipientItem(selectedItem)
+//                            binding.beneficiarySearch.setQuery("", false)
+//                        }
+//                    )
+//                    binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
+//                    beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
+//                    beneficiaryAdapter.notifyDataSetChanged()
+//
+//                    binding.beneficiarySearch.setOnQueryTextListener(object :
+//                        SearchView.OnQueryTextListener {
+//                        override fun onQueryTextSubmit(query: String?): Boolean {
+//                            return false
+//                        }
+//
+//                        override fun onQueryTextChange(newText: String?): Boolean {
+//                            beneficiaryAdapter.filter(newText.orEmpty())
+//                            return true
+//                        }
+//                    })
+//                }
             }catch (e:NullPointerException){
                 e.localizedMessage
             }

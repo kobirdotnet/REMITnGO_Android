@@ -106,6 +106,11 @@ import com.bsel.remitngo.data.model.reason.ReasonItem
 import com.bsel.remitngo.data.model.reason.ReasonResponseItem
 import com.bsel.remitngo.data.model.registration.RegistrationItem
 import com.bsel.remitngo.data.model.registration.RegistrationResponseItem
+import com.bsel.remitngo.data.model.registration.migration.migrationMessage.RegistrationResponseMessage
+import com.bsel.remitngo.data.model.registration.migration.sendOtp.SendOtpItem
+import com.bsel.remitngo.data.model.registration.migration.sendOtp.SendOtpResponse
+import com.bsel.remitngo.data.model.registration.migration.setPassword.SetPasswordItemMigration
+import com.bsel.remitngo.data.model.registration.migration.setPassword.SetPasswordResponseItemMigration
 import com.bsel.remitngo.data.model.relation.RelationItem
 import com.bsel.remitngo.data.model.relation.RelationResponseItem
 import com.bsel.remitngo.data.model.support.SupportResponseItem
@@ -146,7 +151,10 @@ interface REMITnGoService {
     @POST("api/Beneficiary/BeneficiaryList")
     suspend fun getBeneficiary(@Body getBeneficiaryItem: GetBeneficiaryItem): Response<GetBeneficiaryResponseItem>
 
-    @POST("api/Beneficiary/AddBeneficiary")
+//    @POST("api/Beneficiary/AddBeneficiary")
+//    suspend fun beneficiary(@Body beneficiaryItem: BeneficiaryItem): Response<BeneficiaryResponseItem>
+
+    @POST("api/Beneficiary/AddOrUpdateBeneficiary")
     suspend fun beneficiary(@Body beneficiaryItem: BeneficiaryItem): Response<BeneficiaryResponseItem>
 
     @POST("api/General/Dropdown")
@@ -320,6 +328,15 @@ interface REMITnGoService {
 
     @GET("api/General/GetDynamicMsg/{message}")
     suspend fun bankTransactionMessage(@Path("message") message: String): Response<BankTransactionMessage>
+
+    @GET("api/General/GetDynamicMsg/{message}")
+    suspend fun registrationMessage(@Path("message") message: String): Response<RegistrationResponseMessage>
+
+    @POST("api/Home/VerifyRemitErpCusForRegistration")
+    suspend fun sendMigrationOtp(@Body sendOtpItem: SendOtpItem): Response<SendOtpResponse>
+
+    @POST("api/Home/SetPasswordRemitErpCustomer")
+    suspend fun setPasswordMigration(@Body setPasswordItemMigration: SetPasswordItemMigration): Response<SetPasswordResponseItemMigration>
 
     @GET("api/General/GetDynamicMsg/{message}")
     suspend fun support(@Path("message") message: String): Response<SupportResponseItem>

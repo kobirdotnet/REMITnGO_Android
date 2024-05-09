@@ -742,7 +742,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     ) {
         val calculateRateItem = CalculateRateItem(
             deviceId = deviceId,
-            personId = personId,
             bankId = bankId,
             payingAgentId = payingAgentId,
             orderType = orderType,

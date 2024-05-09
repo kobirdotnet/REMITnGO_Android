@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,8 +24,10 @@ import com.bsel.remitngo.R
 import com.bsel.remitngo.bottomSheet.MarketingBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnMarketingItemSelectedListener
+import com.bsel.remitngo.data.model.forgotPassword.OtpValidationItem
 import com.bsel.remitngo.data.model.marketing.MarketingValue
 import com.bsel.remitngo.data.model.registration.RegistrationItem
+import com.bsel.remitngo.data.model.registration.migration.sendOtp.SendOtpItem
 import com.bsel.remitngo.databinding.ActivityRegistrationBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.login.LoginActivity
@@ -261,6 +264,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
                             var isMobileConfirmationNedded =
                                 result.data!![0]!!.isMobileConfirmationNedded
                             var mobile = result.data!![0]!!.mobile
+                            var migratePersonId = result.data!![0]!!.personId
 
                             var isLogin = result.data!![0]!!.isLogin
                             var isMigrate = result.data!![0]!!.isMigrate
@@ -283,12 +287,17 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
                                 dialogView.findViewById<LinearLayout>(R.id.migrationLayout).visibility =
                                     View.VISIBLE
 
-                                dialogView.findViewById<Button>(R.id.btnYes).setOnClickListener {
-                                    dialog.dismiss()
-                                    verifyMobile(email, mobile, isMobileConfirmationNedded)
-                                }
                                 dialogView.findViewById<Button>(R.id.btnNo).setOnClickListener {
                                     dialog.dismiss()
+                                }
+                                dialogView.findViewById<Button>(R.id.btnYes).setOnClickListener {
+                                    dialog.dismiss()
+                                    verifyMobile(
+                                        migratePersonId,
+                                        email,
+                                        mobile,
+                                        isMobileConfirmationNedded
+                                    )
                                 }
                             } else if (isLogin == false && isMigrate == false) {
                                 dialogView.findViewById<LinearLayout>(R.id.loginLayout).visibility =
@@ -319,6 +328,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
     @SuppressLint("MissingInflatedId")
     private fun verifyMobile(
+        migratePersonId: Int?,
         email: String?,
         mobile: String?,
         isMobileConfirmationNedded: Boolean?
@@ -333,8 +343,15 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
         dialogView.findViewById<TextView>(R.id.titleTxt).text =
             "Profile Verification."
-        dialogView.findViewById<TextView>(R.id.messageTxt).text =
-            "To get access exiting profile you need to verify current mobile no. associated with profile."
+        registrationViewModel.registrationMessage("5")
+        registrationViewModel.registrationMessageResult.observe(this) { result ->
+            try {
+                dialogView.findViewById<TextView>(R.id.messageTxt).text =
+                    result!!.data!![0]!!.message.toString()
+            } catch (e: java.lang.NullPointerException) {
+                e.localizedMessage
+            }
+        }
 
         var phoneNumber = mobile!!.substring(8)
 
@@ -348,6 +365,43 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
             dialogView.findViewById<TextView>(R.id.mobileTxt).visibility = View.GONE
             dialogView.findViewById<TextView>(R.id.mobileTxt).text = "Mobile: $mobile"
+
+            dialogView.findViewById<Button>(R.id.btnSendOtp).setOnClickListener {
+                var mobileNumber =
+                    dialogView.findViewById<TextInputEditText>(R.id.mobileNumber).text.toString()
+                if (mobileNumber.isEmpty()) {
+                    dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).helperText =
+                        "Enter mobile number"
+                } else if (mobileNumber.length < 11) {
+                    dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).helperText =
+                        "Must be 11 digits"
+                } else if (mobileNumber != mobile) {
+                    dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).helperText =
+                        "Invalid number"
+                } else {
+                    dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).helperText =
+                        null
+
+                    val sendOtpItem = SendOtpItem(
+                        channelId = 1,
+                        deviceId = deviceId,
+                        mobile = mobileNumber
+                    )
+                    registrationViewModel.sendMigrationOtp(sendOtpItem)
+                    registrationViewModel.sendMigrationOtpResult.observe(this) { result ->
+                        try {
+                            if (result!!.data != "null") {
+                                var message = result.data.toString()
+                                dialog.dismiss()
+                                verifyOtp(migratePersonId, email, mobile, message)
+                            }
+                        } catch (e: java.lang.NullPointerException) {
+                            e.localizedMessage
+                        }
+                    }
+                }
+            }
+
         } else if (isMobileConfirmationNedded == false) {
             dialogView.findViewById<LinearLayout>(R.id.mobileVerifyLayout).visibility = View.GONE
             dialogView.findViewById<TextView>(R.id.mobileVerifyTxt).text =
@@ -358,30 +412,30 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
             dialogView.findViewById<TextView>(R.id.mobileTxt).visibility = View.VISIBLE
             dialogView.findViewById<TextView>(R.id.mobileTxt).text = "Mobile: $mobile"
+
+            dialogView.findViewById<Button>(R.id.btnSendOtp).setOnClickListener {
+                val sendOtpItem = SendOtpItem(
+                    channelId = 1,
+                    deviceId = deviceId,
+                    mobile = mobile
+                )
+                registrationViewModel.sendMigrationOtp(sendOtpItem)
+                registrationViewModel.sendMigrationOtpResult.observe(this) { result ->
+                    try {
+                        if (result!!.data != "null") {
+                            var message = result.data.toString()
+                            dialog.dismiss()
+                            verifyOtp(migratePersonId, email, mobile, message)
+                        }
+                    } catch (e: java.lang.NullPointerException) {
+                        e.localizedMessage
+                    }
+                }
+            }
         }
 
         dialogView.findViewById<ImageView>(R.id.imgClose).setOnClickListener {
             dialog.dismiss()
-        }
-
-        dialogView.findViewById<Button>(R.id.btnSendOtp).setOnClickListener {
-            var mobileNumber =
-                dialogView.findViewById<TextInputEditText>(R.id.mobileNumber).text.toString()
-            if (mobileNumber.isEmpty()) {
-                dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).helperText =
-                    "Enter mobile number"
-            } else if (mobileNumber.length < 11) {
-                dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).helperText =
-                    "Must be 11 digits"
-            } else if (mobileNumber != mobile) {
-                dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).helperText =
-                    "Invalid number"
-            } else {
-                dialogView.findViewById<TextInputLayout>(R.id.mobileNumberContainer).helperText =
-                    null
-                dialog.dismiss()
-                verifyOtp(email, mobile)
-            }
         }
 
         dialogView.findViewById<Button>(R.id.btnHelp).setOnClickListener {
@@ -397,7 +451,12 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         dialog.show()
     }
 
-    private fun verifyOtp(email: String?, mobile: String?) {
+    private fun verifyOtp(
+        migratePersonId: Int?,
+        email: String?,
+        mobile: String?,
+        message: String?
+    ) {
         val dialogView = layoutInflater.inflate(
             R.layout.otp_verification_layout,
             null
@@ -408,8 +467,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
         dialogView.findViewById<TextView>(R.id.titleTxt).text =
             "OTP Verification."
-        dialogView.findViewById<TextView>(R.id.otpVerifyMessage).text =
-            "OTP has been sent to your phone number."
+        dialogView.findViewById<TextView>(R.id.otpVerifyMessage).text = message
 
         dialogView.findViewById<TextInputLayout>(R.id.otpContainer)
         dialogView.findViewById<TextInputEditText>(R.id.otp)
@@ -425,8 +483,24 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
                     "Enter OTP code"
             } else {
                 dialogView.findViewById<TextInputLayout>(R.id.otpContainer).helperText = null
-                dialog.dismiss()
-                setUserPassword(email, mobile)
+                val otpValidationItem = OtpValidationItem(
+                    otp = otpNumber,
+                    personId = migratePersonId
+                )
+                registrationViewModel.otpValidation(otpValidationItem)
+                registrationViewModel.otpValidationResult.observe(this) { result ->
+                    try {
+                        if (result!!.message == "Successful") {
+                            dialog.dismiss()
+                            setUserPassword(migratePersonId, email, mobile)
+                        } else {
+                            dialogView.findViewById<TextInputLayout>(R.id.otpContainer).helperText =
+                                result!!.data.toString()
+                        }
+                    } catch (e: NullPointerException) {
+                        e.localizedMessage
+                    }
+                }
             }
         }
 
@@ -443,7 +517,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         dialog.show()
     }
 
-    private fun setUserPassword(email: String?, mobile: String?) {
+    private fun setUserPassword(migratePersonId: Int?, email: String?, mobile: String?) {
         val dialogView = layoutInflater.inflate(
             R.layout.set_password_layout,
             null
@@ -454,8 +528,15 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
         dialogView.findViewById<TextView>(R.id.titleTxt).text =
             "Set Password."
-        dialogView.findViewById<TextView>(R.id.setPasswordMessage).text =
-            "To gain access RemitNGo you must need to have unique userid and password."
+        registrationViewModel.registrationMessage("6")
+        registrationViewModel.registrationMessageResult.observe(this) { result ->
+            try {
+                dialogView.findViewById<TextView>(R.id.setPasswordMessage).text =
+                    result!!.data!![0]!!.message.toString()
+            } catch (e: java.lang.NullPointerException) {
+                e.localizedMessage
+            }
+        }
 
         dialogView.findViewById<TextInputLayout>(R.id.emailContainer)
         dialogView.findViewById<TextInputEditText>(R.id.email).setText(email)
@@ -488,8 +569,23 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
                 dialogView.findViewById<TextInputLayout>(R.id.passwordContainer).helperText = null
                 dialogView.findViewById<TextInputLayout>(R.id.confirmPasswordContainer).helperText =
                     null
-                dialog.dismiss()
-                confirmMigration()
+                val sendOtpItem = SendOtpItem(
+                    channelId = 1,
+                    deviceId = deviceId,
+                    mobile = mobile
+                )
+                registrationViewModel.sendMigrationOtp(sendOtpItem)
+                registrationViewModel.sendMigrationOtpResult.observe(this) { result ->
+                    try {
+                        if (result!!.message != "Successful") {
+                            var message = result!!.data.toString()
+                            dialog.dismiss()
+                            confirmMigration(message)
+                        }
+                    } catch (e: java.lang.NullPointerException) {
+                        e.localizedMessage
+                    }
+                }
             }
         }
 
@@ -506,7 +602,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
         dialog.show()
     }
 
-    private fun confirmMigration() {
+    private fun confirmMigration(message: String?) {
         val dialogView = layoutInflater.inflate(
             R.layout.registration_successful_layout,
             null
@@ -517,8 +613,7 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
 
         dialogView.findViewById<TextView>(R.id.titleTxt).text =
             "Registration Successful."
-        dialogView.findViewById<TextView>(R.id.messageTxt).text =
-            "Email verification link has been sent your email. Please click this link for verify your account."
+        dialogView.findViewById<TextView>(R.id.messageTxt).text = message
 
         dialogView.findViewById<ImageView>(R.id.imgClose).setOnClickListener {
             dialog.dismiss()

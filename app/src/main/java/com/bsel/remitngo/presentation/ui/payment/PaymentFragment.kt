@@ -359,8 +359,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         paymentViewModel.consumer(consumerItem)
         paymentViewModel.consumerResult.observe(this) { result ->
             try {
-                if (result!!.data != null) {
-                    consumerId = result.data.toString()
+                if (result!!.consumerData != null) {
+                    consumerId = result.consumerData!!.consumerId.toString()
                 }
             } catch (e: NullPointerException) {
                 e.localizedMessage
@@ -1140,7 +1140,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
                         val calculateRateItem = CalculateRateItem(
                             deviceId = deviceId,
-                            personId = personId,
                             bankId = beneBankId,
                             payingAgentId = payingAgentId,
                             orderType = orderType,
@@ -1252,35 +1251,31 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private fun observePromoResult() {
         paymentViewModel.promoResult.observe(this) { result ->
             try {
-                if (result!!.promoResponseData!!.code == "0000") {
-
+                if (result!!.message == "Successful") {
                     binding.btnAddPromoCode.visibility = View.GONE
                     binding.promoCodeContainer.visibility = View.GONE
                     binding.btnApplyPromoCode.visibility = View.GONE
                     binding.promoMessage.visibility = View.VISIBLE
                     binding.promoLayout.visibility = View.VISIBLE
-
-                    if (result.promoResponseData!!.promoData != null) {
-
-                        var applyPromoAmtFor = result.promoResponseData.promoData!!.applyPromoAmtFor
-
+                    if (result.promoResponseData?.get(0)!!.message == "Success") {
+                        var applyPromoAmtFor = result.promoResponseData[0]!!.applyPromoAmtForId
                         modifiedSendAmount =
-                            result.promoResponseData.promoData!!.modifiedSendAmount.toString()
+                            result.promoResponseData[0]!!.modifiedSentAmount.toString()
                                 .toDouble()
                         gbpValue = modifiedSendAmount
                         binding.sendAmount.text = "GBP $modifiedSendAmount"
 
                         modifiedCommission =
-                            result.promoResponseData.promoData.modifiedCommision.toString()
+                            result.promoResponseData[0]!!.modifiedCommision.toString()
                                 .toDouble()
                         binding.transferFee.text = "GBP $modifiedCommission"
 
                         modifiedRate =
-                            result.promoResponseData.promoData.modifiedRate!!.toString().toDouble()
+                            result.promoResponseData[0]!!.modifiedRate!!.toString().toDouble()
                         binding.exchangeRate.text = "BDT $modifiedRate"
 
                         modifiedBeneAmount =
-                            result.promoResponseData.promoData.modifiedBeneAmount!!.toString()
+                            result.promoResponseData[0]!!.modifiedBeneAmount!!.toString()
                                 .toDouble()
                         binding.receiveAmount.text = "BDT $modifiedBeneAmount"
 
@@ -1290,24 +1285,24 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                         when (applyPromoAmtFor) {
                             1 -> {
                                 sendAmount =
-                                    result.promoResponseData.promoData.sendAmount!!.toString()
+                                    result.promoResponseData[0]!!.sentAmount!!.toString()
                                         .toDouble()
                                 binding.previousSendAmount.visibility = View.VISIBLE
                                 binding.previousSendAmount.hint = "GBP $sendAmount"
 
                                 commission =
-                                    result.promoResponseData.promoData.commision!!.toString()
+                                    result.promoResponseData[0]!!.commision!!.toString()
                                         .toDouble()
                                 binding.previousTransferFee.visibility = View.GONE
                                 binding.previousTransferFee.hint = "GBP $commission"
 
                                 rate =
-                                    result.promoResponseData.promoData.rate!!.toString().toDouble()
+                                    result.promoResponseData[0]!!.rate!!.toString().toDouble()
                                 binding.previousRate.visibility = View.GONE
                                 binding.previousRate.hint = "BDT $rate"
 
                                 beneAmount =
-                                    result.promoResponseData.promoData.beneAmount!!.toString()
+                                    result.promoResponseData[0]!!.beneAmount!!.toString()
                                         .toDouble()
                                 binding.previousReceiveAmount.visibility = View.GONE
                                 binding.previousReceiveAmount.hint = "BDT $beneAmount"
@@ -1318,24 +1313,24 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                             }
                             2 -> {
                                 sendAmount =
-                                    result.promoResponseData.promoData.sendAmount!!.toString()
+                                    result.promoResponseData[0]!!.sentAmount!!.toString()
                                         .toDouble()
                                 binding.previousSendAmount.visibility = View.GONE
                                 binding.previousSendAmount.hint = "GBP $sendAmount"
 
                                 commission =
-                                    result.promoResponseData.promoData.commision!!.toString()
+                                    result.promoResponseData[0]!!.commision!!.toString()
                                         .toDouble()
                                 binding.previousTransferFee.visibility = View.GONE
                                 binding.previousTransferFee.hint = "GBP $commission"
 
                                 rate =
-                                    result.promoResponseData.promoData.rate!!.toString().toDouble()
+                                    result.promoResponseData[0]!!.rate!!.toString().toDouble()
                                 binding.previousRate.visibility = View.GONE
                                 binding.previousRate.hint = "BDT $rate"
 
                                 beneAmount =
-                                    result.promoResponseData.promoData.beneAmount!!.toString()
+                                    result.promoResponseData[0]!!.beneAmount!!.toString()
                                         .toDouble()
                                 binding.previousReceiveAmount.visibility = View.VISIBLE
                                 binding.previousReceiveAmount.hint = "BDT $beneAmount"
@@ -1346,24 +1341,24 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                             }
                             3 -> {
                                 sendAmount =
-                                    result.promoResponseData.promoData.sendAmount!!.toString()
+                                    result.promoResponseData[0]!!.sentAmount!!.toString()
                                         .toDouble()
                                 binding.previousSendAmount.visibility = View.GONE
                                 binding.previousSendAmount.hint = "GBP $sendAmount"
 
                                 commission =
-                                    result.promoResponseData.promoData.commision!!.toString()
+                                    result.promoResponseData[0]!!.commision!!.toString()
                                         .toDouble()
                                 binding.previousTransferFee.visibility = View.VISIBLE
                                 binding.previousTransferFee.hint = "GBP $commission"
 
                                 rate =
-                                    result.promoResponseData.promoData.rate!!.toString().toDouble()
+                                    result.promoResponseData[0]!!.rate!!.toString().toDouble()
                                 binding.previousRate.visibility = View.GONE
                                 binding.previousRate.hint = "BDT $rate"
 
                                 beneAmount =
-                                    result.promoResponseData.promoData.beneAmount!!.toString()
+                                    result.promoResponseData[0]!!.beneAmount!!.toString()
                                         .toDouble()
                                 binding.previousReceiveAmount.visibility = View.GONE
                                 binding.previousReceiveAmount.hint = "BDT $beneAmount"
@@ -1374,24 +1369,24 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                             }
                             4 -> {
                                 sendAmount =
-                                    result.promoResponseData.promoData.sendAmount!!.toString()
+                                    result.promoResponseData[0]!!.sentAmount!!.toString()
                                         .toDouble()
                                 binding.previousSendAmount.visibility = View.GONE
                                 binding.previousSendAmount.hint = "GBP $sendAmount"
 
                                 commission =
-                                    result.promoResponseData.promoData.commision!!.toString()
+                                    result.promoResponseData[0]!!.commision!!.toString()
                                         .toDouble()
                                 binding.previousTransferFee.visibility = View.GONE
                                 binding.previousTransferFee.hint = "GBP $commission"
 
                                 rate =
-                                    result.promoResponseData.promoData.rate!!.toString().toDouble()
+                                    result.promoResponseData[0]!!.rate!!.toString().toDouble()
                                 binding.previousRate.visibility = View.VISIBLE
                                 binding.previousRate.hint = "BDT $rate"
 
                                 beneAmount =
-                                    result.promoResponseData.promoData.beneAmount!!.toString()
+                                    result.promoResponseData[0]!!.beneAmount!!.toString()
                                         .toDouble()
                                 binding.previousReceiveAmount.visibility = View.VISIBLE
                                 binding.previousReceiveAmount.hint = "BDT $beneAmount"
@@ -1400,19 +1395,46 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                                 binding.previousTotalAmount.visibility = View.GONE
                                 binding.previousTotalAmount.hint = "GBP $previousTotalAmount"
                             }
+                            5 -> {
+                                sendAmount =
+                                    result.promoResponseData[0]!!.sentAmount!!.toString()
+                                        .toDouble()
+                                binding.previousSendAmount.visibility = View.GONE
+                                binding.previousSendAmount.hint = "GBP $sendAmount"
+
+                                commission =
+                                    result.promoResponseData[0]!!.commision!!.toString()
+                                        .toDouble()
+                                binding.previousTransferFee.visibility = View.VISIBLE
+                                binding.previousTransferFee.hint = "GBP $commission"
+
+                                rate =
+                                    result.promoResponseData[0]!!.rate!!.toString().toDouble()
+                                binding.previousRate.visibility = View.VISIBLE
+                                binding.previousRate.hint = "BDT $rate"
+
+                                beneAmount =
+                                    result.promoResponseData[0]!!.beneAmount!!.toString()
+                                        .toDouble()
+                                binding.previousReceiveAmount.visibility = View.VISIBLE
+                                binding.previousReceiveAmount.hint = "BDT $beneAmount"
+
+                                var previousTotalAmount = sendAmount + commission
+                                binding.previousTotalAmount.visibility = View.VISIBLE
+                                binding.previousTotalAmount.hint = "GBP $previousTotalAmount"
+                            }
                         }
 
 
-                        val promoMessage = result.promoResponseData.promoData.promoMsg!!.toString()
+                        val promoMessage = result.promoResponseData[0]!!.promoMsg!!.toString()
                         binding.appliedPromoCode.text = "Promo applied!"
                         binding.promoMessage.text = "$promoMessage"
 
                         updateValuesGBP()
                     }
-
-                } else if (result.promoResponseData!!.code == "1111") {
+                } else {
                     binding.promoCodeContainer.helperText =
-                        result.promoResponseData.message.toString()
+                        result.message!!.toString()
                 }
             } catch (e: NullPointerException) {
                 e.localizedMessage

@@ -6,8 +6,6 @@ import com.google.gson.annotations.SerializedName
 data class CalculateRateItem(
     @SerializedName("deviceId")
     val deviceId: String?,
-    @SerializedName("personId")
-    val personId: Int?,
     @SerializedName("bankId")
     val bankId: Int?,
     @SerializedName("payingAgentId")

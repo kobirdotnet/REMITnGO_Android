@@ -7,7 +7,7 @@ data class GetBankResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: List<GetBankData?>?,
+    val getBankData: List<GetBankData?>?,
     @SerializedName("Message")
     val message: String?,
     @SerializedName("Token")

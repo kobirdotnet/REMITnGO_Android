@@ -214,8 +214,8 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
     private fun observeSaveBankResult() {
         bankViewModel.saveBankResult.observe(this) { result ->
             try {
-                if (result?.data != null) {
-                    saveBankAndWallet(result?.data.toString())
+                if (result!!.saveBankResponseData != null) {
+                    saveBankAndWallet(result.saveBankResponseData.toString())
                 }
             }catch (e:NullPointerException){
                 e.localizedMessage

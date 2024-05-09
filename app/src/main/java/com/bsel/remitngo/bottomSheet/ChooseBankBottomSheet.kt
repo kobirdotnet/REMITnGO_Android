@@ -225,7 +225,7 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
     private fun observeGetBankResult() {
         bankViewModel.getBankResult.observe(this) { result ->
             try {
-                if (result!!.data != null) {
+                if (result!!.getBankData != null) {
                     binding.bankRecyclerView.layoutManager =
                         LinearLayoutManager(requireActivity())
                     bankAdapter = BankAdapter(
@@ -235,7 +235,7 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
                         }
                     )
                     binding.bankRecyclerView.adapter = bankAdapter
-                    bankAdapter.setList(result.data as List<GetBankData>)
+                    bankAdapter.setList(result.getBankData as List<GetBankData>)
                     bankAdapter.notifyDataSetChanged()
 
                     binding.bankSearch.setOnQueryTextListener(object :

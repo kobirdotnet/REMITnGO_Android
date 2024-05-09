@@ -5,16 +5,13 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.BankAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
@@ -32,7 +29,7 @@ class ChooseBankFragment : Fragment() {
 
     private lateinit var preferenceManager: PreferenceManager
 
-    private lateinit var bankAdapter: BankAdapter
+//    private lateinit var bankAdapter: BankAdapter
 
     private lateinit var personId: String
     private lateinit var firstName: String
@@ -159,14 +156,14 @@ class ChooseBankFragment : Fragment() {
             )
         }
 
-        val getBankItem = GetBankItem(
-            benePersonId = benePersonId,
-            accountType = orderType,
-            walletId = walletId,
-            bankId=bankId.toInt()
-        )
-        bankViewModel.getBank(getBankItem)
-        observeGetBankResult()
+//        val getBankItem = GetBankItem(
+//            benePersonId = benePersonId,
+//            accountType = orderType,
+//            walletId = walletId,
+//            bankId=bankId.toInt()
+//        )
+//        bankViewModel.getBank(getBankItem)
+//        observeGetBankResult()
 
         when (orderType) {
             3 -> {
@@ -181,27 +178,27 @@ class ChooseBankFragment : Fragment() {
         }
     }
 
-    private fun observeGetBankResult() {
-        bankViewModel.getBankResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    binding.bankRecyclerView.layoutManager =
-                        LinearLayoutManager(requireActivity())
-                    bankAdapter = BankAdapter(
-                        selectedItem = { selectedItem: GetBankData ->
-                            bankItem(selectedItem)
-                            binding.bankSearch.setQuery("", false)
-                        }
-                    )
-                    binding.bankRecyclerView.adapter = bankAdapter
-                    bankAdapter.setList(result.data as List<GetBankData>)
-                    bankAdapter.notifyDataSetChanged()
-                }
-            }catch (e:NullPointerException){
-                e.localizedMessage
-            }
-        }
-    }
+//    private fun observeGetBankResult() {
+//        bankViewModel.getBankResult.observe(this) { result ->
+//            try {
+////                if (result!!.data != null) {
+////                    binding.bankRecyclerView.layoutManager =
+////                        LinearLayoutManager(requireActivity())
+////                    bankAdapter = BankAdapter(
+////                        selectedItem = { selectedItem: GetBankData ->
+////                            bankItem(selectedItem)
+////                            binding.bankSearch.setQuery("", false)
+////                        }
+////                    )
+////                    binding.bankRecyclerView.adapter = bankAdapter
+////                    bankAdapter.setList(result.data as List<GetBankData>)
+////                    bankAdapter.notifyDataSetChanged()
+////                }
+//            }catch (e:NullPointerException){
+//                e.localizedMessage
+//            }
+//        }
+//    }
 
     private fun bankItem(selectedItem: GetBankData) {
 

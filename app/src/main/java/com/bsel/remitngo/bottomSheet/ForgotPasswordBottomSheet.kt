@@ -273,8 +273,6 @@ class ForgotPasswordBottomSheet : BottomSheetDialogFragment() {
 
         val otpValidationItem = OtpValidationItem(
             otp = otp,
-            otpSendBy = otpSendBy,
-            otpType = 2,
             personId = personId.toInt()
         )
         loginViewModel.otpValidation(otpValidationItem)

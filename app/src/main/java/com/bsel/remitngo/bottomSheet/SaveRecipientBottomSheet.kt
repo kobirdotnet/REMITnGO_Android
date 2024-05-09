@@ -195,32 +195,24 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
         beneAccountName = binding.recipientName.text.toString()
         beneMobile = binding.phoneNumber.text.toString()
         val countryId = 1
-        val isOnlineCustomer = 1
 
         val beneficiaryItem = BeneficiaryItem(
-            deviceId = deviceId,
-            personId = personId,
-            firstname = beneAccountName,
-            middlename = "",
-            lastname = "",
-            gender = 0,
-            mobile = beneMobile,
-            emailId = "",
-            countryID = countryId,
-            divisionID = 0,
-            districtID = 0,
-            thanaID = 0,
-            address = "",
-            active = true,
-            isOnlineCustomer = isOnlineCustomer,
-            userIPAddress = ipAddress.toString(),
-            relationType = 0,
-            resonID = 0,
-            iban = "",
-            bic = "",
-            identityType = 0,
-            beneOccupation = 0,
-            otherOccupation = ""
+            address="",
+            beneficiaryId=0,
+            beneficiaryName=beneAccountName,
+            countryID=countryId,
+            deviceId=deviceId,
+            districtID=0,
+            divisionID=0,
+            firstname="",
+            gender=0,
+            lastname="",
+            mobile=beneMobile,
+            operationType=0,
+            personId=personId,
+            relationType=0,
+            thanaID=0,
+            userIPAddress=ipAddress
         )
         beneficiaryViewModel.beneficiary(beneficiaryItem)
 

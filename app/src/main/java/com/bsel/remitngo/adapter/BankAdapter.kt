@@ -42,9 +42,9 @@ class BankAdapter(
 
     fun filter(query: String) {
         filteredBankList.clear()
-        for (banks in bankList) {
-            if (banks.bankName!!.contains(query, ignoreCase = true)) {
-                filteredBankList.add(banks)
+        for (bankData in bankList) {
+            if (bankData.bankName!!.contains(query, ignoreCase = true)) {
+                filteredBankList.add(bankData)
             }
         }
         notifyDataSetChanged()
