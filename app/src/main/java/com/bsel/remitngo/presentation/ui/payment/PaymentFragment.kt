@@ -1404,7 +1404,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
 
                         val promoMessage = result.promoResponseData.promoData.promoMsg!!.toString()
-                        binding.appliedPromoCode.text = "Your applied promo code is : $promoCode"
+                        binding.appliedPromoCode.text = "Promo applied!"
                         binding.promoMessage.text = "$promoMessage"
 
                         updateValuesGBP()

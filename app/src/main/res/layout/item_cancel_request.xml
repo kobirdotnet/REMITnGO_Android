@@ -250,7 +250,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="left"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="invisible">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnDownloadReceipt"

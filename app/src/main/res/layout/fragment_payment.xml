@@ -510,12 +510,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@color/yellow"
+                        android:background="@color/green"
                         android:focusableInTouchMode="true"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="text"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -535,7 +535,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingTop="@dimen/padding_top"
-                    android:paddingBottom="@dimen/padding_bottom">
+                    android:paddingBottom="@dimen/padding_bottom"
+                    android:paddingLeft="@dimen/padding_left"
+                    android:paddingRight="@dimen/padding_right"
+                    android:background="@drawable/promo_bg">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -555,7 +558,7 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:paddingLeft="@dimen/padding_top"
-                            android:textColor="@color/blue" />
+                            android:textColor="@color/green" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -576,7 +579,7 @@
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center_vertical"
                             android:paddingLeft="@dimen/padding_top"
-                            android:textColor="@color/blue" />
+                            android:textColor="@color/green" />
                     </LinearLayout>
                 </LinearLayout>
 

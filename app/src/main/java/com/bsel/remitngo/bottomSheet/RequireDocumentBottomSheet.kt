@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.RequireDocumentAdapter
+import com.bsel.remitngo.data.interfaceses.OnDocumentStatus
 import com.bsel.remitngo.data.interfaceses.OnRequireDocumentListener
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentData
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
@@ -22,7 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 
-class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
+class RequireDocumentBottomSheet : BottomSheetDialogFragment(),OnDocumentStatus {
     @Inject
     lateinit var paymentViewModelFactory: PaymentViewModelFactory
     private lateinit var paymentViewModel: PaymentViewModel
@@ -89,6 +90,7 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
                     currentDate!!,
                     purposeOfTransferId
                 )
+                uploadRequireDocumentBottomSheet.itemSelectedListener = this
                 uploadRequireDocumentBottomSheet.show(
                     childFragmentManager,
                     uploadRequireDocumentBottomSheet.tag
@@ -173,6 +175,22 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment() {
             } catch (e: NullPointerException) {
                 e.localizedMessage
             }
+        }
+    }
+
+    override fun onDocumentStatusSelected(selectedItem: String?) {
+        if (selectedItem=="dismiss"){
+            val requireDocumentItem = RequireDocumentItem(
+                agentId = 8082,
+                amount = totalAmount,
+                beneficiaryId = benePersonId,
+                customerId = customerId,
+                entryDate = currentDate,
+                purposeOfTransferId = purposeOfTransferId,
+                transactionType = 1
+            )
+            paymentViewModel.requireDocument(requireDocumentItem)
+            observeRequireDocumentResult()
         }
     }
 

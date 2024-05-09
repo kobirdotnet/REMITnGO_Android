@@ -35,17 +35,38 @@
                     android:text="Your transaction reference number is:"
                     android:textColor="@color/black" />
 
-                <TextView
-                    android:id="@+id/transactionCode"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/ref_border"
-                    android:fontFamily="@font/roboto_bold"
-                    android:gravity="center"
-                    android:hint="xxxxxxxxxxxxxx"
-                    android:padding="@dimen/activity_vertical_margin"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/transactionCode"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/roboto_bold"
+                        android:gravity="center"
+                        android:hint="234575535345"
+                        android:textIsSelectable="true"
+                        android:padding="@dimen/activity_vertical_margin"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/imgCopy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_content_copy"
+                        android:contentDescription="Copy"
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+
+
 
             </LinearLayout>
 

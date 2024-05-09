@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bsel.remitngo.R
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnDocumentItemSelectedListener
+import com.bsel.remitngo.data.interfaceses.OnDocumentStatus
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryData
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeData
@@ -40,6 +41,8 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
     @Inject
     lateinit var documentViewModelFactory: DocumentViewModelFactory
     private lateinit var documentViewModel: DocumentViewModel
+
+    var itemSelectedListener: OnDocumentStatus? = null
 
     private lateinit var binding: UploadRequireDocumentLayoutBinding
 
@@ -177,10 +180,8 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
             try {
                 if (result!!.code == "000") {
                     if (result!!.data != null) {
-                        Log.i("info", "requireCategory: " + result!!.data)
-                        for (reqCat in result!!.data!!) {
-                            Log.i("info", "requireCategoryId: " + reqCat!!.id)
-                        }
+                        documentCategoryId= result!!.data!![0]!!.id!!
+                        binding.documentCategory.setText(result!!.data!![0]!!.name)
                     }
                 }
             }catch (e:NullPointerException){
@@ -193,6 +194,7 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
         documentViewModel.uploadDocumentResult.observe(this) { result ->
             try {
                 dismiss()
+                itemSelectedListener?.onDocumentStatusSelected("dismiss")
             }catch (e:NullPointerException){
                 e.localizedMessage
             }

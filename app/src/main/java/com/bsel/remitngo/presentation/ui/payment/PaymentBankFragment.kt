@@ -21,6 +21,12 @@ import com.bsel.remitngo.presentation.di.Injector
 import java.util.*
 import javax.inject.Inject
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
+
 class PaymentBankFragment : Fragment() {
     @Inject
     lateinit var paymentViewModelFactory: PaymentViewModelFactory
@@ -70,6 +76,13 @@ class PaymentBankFragment : Fragment() {
         if (sendAmount != "null") {
             binding.sendAmount.text =
                 "Transfer $sendAmount GBP to the following Bank Account"
+        }
+
+        binding.imgCopy.setOnClickListener {
+            val clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipData = ClipData.newPlainText("Transaction Code", binding.transactionCode.text)
+            clipboardManager.setPrimaryClip(clipData)
+            Toast.makeText(requireContext(), "Transaction code copied to clipboard", Toast.LENGTH_SHORT).show()
         }
 
         binding.btnContinue.setOnClickListener {
