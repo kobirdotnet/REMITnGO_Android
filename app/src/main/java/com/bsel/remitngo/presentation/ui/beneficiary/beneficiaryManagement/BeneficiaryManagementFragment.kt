@@ -1,17 +1,13 @@
 package com.bsel.remitngo.presentation.ui.beneficiary.beneficiaryManagement
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BeneficiaryAdapter
-import com.bsel.remitngo.adapter.ContactsAdapter
+import com.bsel.remitngo.adapter.ContactAdapter
 import com.bsel.remitngo.bottomSheet.ChooseBankBottomSheet
 import com.bsel.remitngo.bottomSheet.SaveRecipientBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
@@ -35,13 +31,14 @@ import com.bsel.remitngo.data.interfaceses.OnBankAndWalletSelectedListener
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnSaveBeneficiarySelectedListener
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
-import com.bsel.remitngo.data.model.beneficiary.beneficiary.ContactItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.Contact
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
 import com.bsel.remitngo.databinding.FragmentBeneficiaryManagementBinding
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModel
 import com.bsel.remitngo.presentation.ui.beneficiary.BeneficiaryViewModelFactory
+import com.bsel.remitngo.presentation.ui.beneficiary.ContactViewModel
 import java.util.*
 import javax.inject.Inject
 
@@ -58,9 +55,11 @@ class BeneficiaryManagementFragment : Fragment(),
     private val saveRecipientBottomSheet: SaveRecipientBottomSheet by lazy { SaveRecipientBottomSheet() }
     private val chooseBankBottomSheet: ChooseBankBottomSheet by lazy { ChooseBankBottomSheet() }
 
-    private lateinit var beneficiaryAdapter: BeneficiaryAdapter
-    private lateinit var contactsAdapter: ContactsAdapter
+    private lateinit var contactViewModel: ContactViewModel
+    private lateinit var contactAdapter: ContactAdapter
     private val REQUEST_CONTACTS_PERMISSION = 1
+
+    private lateinit var beneficiaryAdapter: BeneficiaryAdapter
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -106,6 +105,8 @@ class BeneficiaryManagementFragment : Fragment(),
 
         beneficiaryViewModel =
             ViewModelProvider(this, beneficiaryViewModelFactory)[BeneficiaryViewModel::class.java]
+
+        contactViewModel = ContactViewModel(requireContext().applicationContext)
 
         preferenceManager = PreferenceManager(requireContext())
         try {
@@ -358,17 +359,16 @@ class BeneficiaryManagementFragment : Fragment(),
 
     private fun retrieveAndDisplayContacts() {
         try {
-            val contacts = getContacts()
             binding.contactRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-            contactsAdapter = ContactsAdapter(
-                selectedItem = { selectedItem: ContactItem ->
+            contactAdapter = ContactAdapter(
+                selectedItem = { selectedItem: Contact ->
                     contactItem(selectedItem)
                     binding.contactSearch.setQuery("", false)
                 }
             )
-            binding.contactRecyclerView.adapter = contactsAdapter
-            contactsAdapter.setList(contacts)
-            contactsAdapter.notifyDataSetChanged()
+            binding.contactRecyclerView.adapter = contactAdapter
+            contactAdapter.setList((contactViewModel.getContacts()))
+            contactAdapter.notifyDataSetChanged()
 
             binding.contactSearch.setOnQueryTextListener(object :
                 SearchView.OnQueryTextListener {
@@ -377,7 +377,7 @@ class BeneficiaryManagementFragment : Fragment(),
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    contactsAdapter.filter(newText.orEmpty())
+                    contactAdapter.filter(newText.orEmpty())
                     return true
                 }
             })
@@ -413,7 +413,7 @@ class BeneficiaryManagementFragment : Fragment(),
         }
     }
 
-    private fun contactItem(selectedItem: ContactItem) {
+    private fun contactItem(selectedItem: Contact) {
         beneAccountName = selectedItem.name
         beneMobile = selectedItem.phoneNumber
 
@@ -433,60 +433,6 @@ class BeneficiaryManagementFragment : Fragment(),
             beneMobile
         )
         saveRecipientBottomSheet.show(childFragmentManager, saveRecipientBottomSheet.tag)
-    }
-
-    @SuppressLint("Range")
-    private fun getContacts(): List<ContactItem> {
-        val contactItems = mutableListOf<ContactItem>()
-
-        val contentResolver: ContentResolver = requireContext().contentResolver
-        val cursor: Cursor? = contentResolver.query(
-            ContactsContract.Contacts.CONTENT_URI,
-            null,
-            null,
-            null,
-            null
-        )
-
-        cursor?.use {
-            while (it.moveToNext()) {
-                val contactId = it.getLong(it.getColumnIndex(ContactsContract.Contacts._ID))
-                val nameColumnIndex =
-                    it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
-
-                if (nameColumnIndex != -1 && !it.isNull(nameColumnIndex)) {
-                    val name = it.getString(nameColumnIndex)
-                    val phoneNumber = getPhoneNumber(contactId)
-                    val firstLetter = name.takeUnless { it.isNullOrEmpty() }?.get(0).toString()
-
-                    contactItems.add(ContactItem(contactId, name, phoneNumber, firstLetter))
-                }
-            }
-        }
-
-        cursor?.close()
-        return contactItems
-    }
-
-    @SuppressLint("Range")
-    private fun getPhoneNumber(contactId: Long): String {
-        val phoneNumberCursor: Cursor? =
-            requireContext().contentResolver.query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                null,
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                arrayOf(contactId.toString()),
-                null
-            )
-
-        phoneNumberCursor?.use {
-            if (it.moveToFirst()) {
-                return it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-            }
-        }
-
-        phoneNumberCursor?.close()
-        return ""
     }
 
     private fun getDeviceId(context: Context): String {

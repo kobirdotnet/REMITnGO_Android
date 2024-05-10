@@ -347,6 +347,7 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                 val fileRequestBody = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 val filePart = MultipartBody.Part.createFormData("file", file.name, fileRequestBody)
                 documentViewModel.uploadDocument(
+                    filePart,
                     deviceId.toRequestBody(),
                     personId.toString().toRequestBody(),
                     documentCategoryId.toString().toRequestBody(),
@@ -356,8 +357,6 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                     issueBy.toRequestBody(),
                     issueDate.toRequestBody(),
                     expireDate.toRequestBody(),
-                    issueDate.toRequestBody(),
-                    filePart
                 )
             }
         }

@@ -1,23 +1,20 @@
 package com.bsel.remitngo.adapter
 
 import android.annotation.SuppressLint
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
 import com.bsel.remitngo.databinding.ItemContactBinding
-import com.bsel.remitngo.data.model.beneficiary.beneficiary.ContactItem
-import kotlin.random.Random
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.Contact
 
-class ContactsAdapter(
-    private val selectedItem: (ContactItem) -> Unit
+class ContactAdapter(
+    private val selectedItem: (Contact) -> Unit
 ) : RecyclerView.Adapter<ContactViewHolder>() {
 
-    private val contactsList = ArrayList<ContactItem>()
-    private var filteredContactsList = ArrayList<ContactItem>()
+    private val contactsList = ArrayList<Contact>()
+    private var filteredContactsList = ArrayList<Contact>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -37,9 +34,9 @@ class ContactsAdapter(
         holder.bind(filteredContactsList[position], selectedItem)
     }
 
-    fun setList(contactItem: List<ContactItem>) {
+    fun setList(contact: List<Contact>) {
         contactsList.clear()
-        contactsList.addAll(contactItem)
+        contactsList.addAll(contact)
         filter("")
     }
 
@@ -58,17 +55,17 @@ class ContactsAdapter(
 class ContactViewHolder(val binding: ItemContactBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        contactItem: ContactItem,
-        selectedItem: (ContactItem) -> Unit
+        contact: Contact,
+        selectedItem: (Contact) -> Unit
     ) {
-        if (contactItem.name != null) {
-            binding.contactName.text = contactItem.name
+        if (contact.name != null) {
+            binding.contactName.text = contact.name
         }
-        if (contactItem.phoneNumber != null) {
-            binding.contactNumber.text = contactItem.phoneNumber
+        if (contact.phoneNumber != null) {
+            binding.contactNumber.text = contact.phoneNumber
         }
         binding.itemContactLayout.setOnClickListener {
-            selectedItem(contactItem)
+            selectedItem(contact)
         }
     }
 

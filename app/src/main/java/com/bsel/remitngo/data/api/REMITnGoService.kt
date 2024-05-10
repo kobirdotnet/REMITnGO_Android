@@ -151,9 +151,6 @@ interface REMITnGoService {
     @POST("api/Beneficiary/BeneficiaryList")
     suspend fun getBeneficiary(@Body getBeneficiaryItem: GetBeneficiaryItem): Response<GetBeneficiaryResponseItem>
 
-//    @POST("api/Beneficiary/AddBeneficiary")
-//    suspend fun beneficiary(@Body beneficiaryItem: BeneficiaryItem): Response<BeneficiaryResponseItem>
-
     @POST("api/Beneficiary/AddOrUpdateBeneficiary")
     suspend fun beneficiary(@Body beneficiaryItem: BeneficiaryItem): Response<BeneficiaryResponseItem>
 
@@ -220,23 +217,22 @@ interface REMITnGoService {
     @POST("api/General/Dropdown")
     suspend fun documentType(@Body documentTypeItem: DocumentTypeItem): Response<DocumentTypeResponseItem>
 
-    @POST("api/General/PopulateCustomerDocumentList")
+    @POST("api/General/GetDocumentList")
     suspend fun getDocument(@Body getDocumentItem: GetDocumentItem): Response<GetDocumentResponseItem>
 
     @Multipart
     @POST("api/General/UploadDocument")
     suspend fun uploadDocument(
-        @Part("deviceId") deviceId: RequestBody,
-        @Part("personId") personId: RequestBody,
-        @Part("categoryId") categoryId: RequestBody,
-        @Part("docId") docId: RequestBody,
-        @Part("typeId") typeId: RequestBody,
-        @Part("proofNo") proofNo: RequestBody,
-        @Part("issueBy") issueBy: RequestBody,
-        @Part("issueDate") issueDate: RequestBody,
-        @Part("expireDate") expireDate: RequestBody,
-        @Part("updateDate") updateDate: RequestBody,
-        @Part file: MultipartBody.Part
+        @Part file: MultipartBody.Part,
+        @Part("DeviceId") deviceId: RequestBody,
+        @Part("PersonId") personId: RequestBody,
+        @Part("CategoryId") categoryId: RequestBody,
+        @Part("DocId") docId: RequestBody,
+        @Part("TypeId") typeId: RequestBody,
+        @Part("DocNo") docNo: RequestBody,
+        @Part("IssueBy") issueBy: RequestBody,
+        @Part("IssueDate") issueDate: RequestBody,
+        @Part("ExpireDate") expireDate: RequestBody,
     ): Response<UploadDocumentResponseItem>
 
     @POST("api/Transaction/PopulateTransactionList")
@@ -296,7 +292,7 @@ interface REMITnGoService {
     @POST("api/Home/GetConsumerId")
     suspend fun consumer(@Body consumerItem: ConsumerItem): Response<ConsumerResponseItem>
 
-    @POST("api/General/LoadCalculationPageMsg")
+    @POST("api/General/LoadSlideMessage")
     suspend fun percentage(@Body percentageItem: PercentageItem): Response<PercentageResponseItem>
 
     @POST("api/Transaction/ApplyPromo")

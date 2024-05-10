@@ -196,6 +196,7 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                 val fileRequestBody = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 val filePart = MultipartBody.Part.createFormData("file", file.name, fileRequestBody)
                 documentViewModel.uploadDocument(
+                    filePart,
                     deviceId.toRequestBody(),
                     personId.toString().toRequestBody(),
                     documentCategoryId.toString().toRequestBody(),
@@ -204,9 +205,7 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
                     "0".toRequestBody(),
                     "xyz".toRequestBody(),
                     "2024-01-01".toRequestBody(),
-                    "2024-01-01".toRequestBody(),
-                    "2024-01-01".toRequestBody(),
-                    filePart
+                    "2024-01-01".toRequestBody()
                 )
             }
         }

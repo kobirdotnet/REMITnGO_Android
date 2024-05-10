@@ -7,9 +7,7 @@ data class PaymentResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: String?,
+    val paymentResponseData: PaymentResponseData?,
     @SerializedName("Message")
-    val message: String?,
-    @SerializedName("Token")
-    val token: Any?
+    val message: String?
 )

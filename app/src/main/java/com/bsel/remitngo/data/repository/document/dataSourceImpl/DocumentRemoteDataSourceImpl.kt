@@ -3,13 +3,12 @@ package com.bsel.remitngo.data.repository.document.dataSourceImpl
 import com.bsel.remitngo.data.api.REMITnGoService
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentItem
 import com.bsel.remitngo.data.model.document.docForTransaction.RequireDocumentResponseItem
-import com.bsel.remitngo.data.model.document.docForTransaction.docMsg.RequireDocMsg
+import com.bsel.remitngo.data.model.document.document.GetDocumentItem
+import com.bsel.remitngo.data.model.document.document.GetDocumentResponseItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryItem
 import com.bsel.remitngo.data.model.document.documentCategory.DocumentCategoryResponseItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeItem
 import com.bsel.remitngo.data.model.document.documentType.DocumentTypeResponseItem
-import com.bsel.remitngo.data.model.document.document.GetDocumentItem
-import com.bsel.remitngo.data.model.document.document.GetDocumentResponseItem
 import com.bsel.remitngo.data.model.document.uploadDocument.UploadDocumentResponseItem
 import com.bsel.remitngo.data.repository.document.dataSource.DocumentRemoteDataSource
 import okhttp3.MultipartBody
@@ -32,30 +31,28 @@ class DocumentRemoteDataSourceImpl(private val remitNgoService: REMITnGoService)
     }
 
     override suspend fun uploadDocument(
+        file: MultipartBody.Part,
         deviceId: RequestBody,
         personId: RequestBody,
         categoryId: RequestBody,
         docId: RequestBody,
         typeId: RequestBody,
-        proofNo: RequestBody,
+        docNo: RequestBody,
         issueBy: RequestBody,
         issueDate: RequestBody,
-        expireDate: RequestBody,
-        updateDate: RequestBody,
-        file: MultipartBody.Part
+        expireDate: RequestBody
     ): Response<UploadDocumentResponseItem> {
         return remitNgoService.uploadDocument(
+            file,
             deviceId,
             personId,
             categoryId,
             docId,
             typeId,
-            proofNo,
+            docNo,
             issueBy,
             issueDate,
-            expireDate,
-            updateDate,
-            file
+            expireDate
         )
     }
 

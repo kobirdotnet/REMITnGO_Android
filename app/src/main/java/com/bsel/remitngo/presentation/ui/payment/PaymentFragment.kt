@@ -510,7 +510,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     }
 
     private fun paymentFrom() {
-
         if (orderType == 2 || orderType == 4) {
             binding.receiverNameContainer.helperText = validReceiverName()
             binding.reasonContainer.helperText = validReason()
@@ -538,8 +537,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 submitPaymentFrom()
             }
         }
-
-
     }
 
     private fun submitPaymentFrom() {
@@ -674,9 +671,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private fun observePaymentResult() {
         paymentViewModel.paymentResult.observe(this) { result ->
             try {
-                if (result!!.data != null) {
-                    transactionCode = result.data!!.toString()
-                    transactionCode = result.data.toString()
+                if (result!!.paymentResponseData != null) {
+                    transactionCode = result.paymentResponseData!!.transactionCode!!.toString()
                     transactionCodeWithChannel = "$transactionCode*1"
                     if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
                         val encryptItem = EncryptItem(
@@ -1239,7 +1235,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         val promoItem = PromoItem(
             beneAmount = modifiedBeneAmount,
             commision = modifiedCommission,
-            personId = 0,
+            personId = personId,
             promoCode = promoCode,
             rate = modifiedRate,
             sendAmount = modifiedSendAmount

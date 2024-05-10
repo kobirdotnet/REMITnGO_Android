@@ -7,9 +7,7 @@ data class UploadDocumentResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val `data`: Int?,
+    val `data`: String?,
     @SerializedName("Message")
-    val message: String?,
-    @SerializedName("Token")
-    val token: String?
+    val message: String?
 )

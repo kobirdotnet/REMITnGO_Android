@@ -22,9 +22,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.ContactsAdapter
+import com.bsel.remitngo.adapter.ContactAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
-import com.bsel.remitngo.data.model.beneficiary.beneficiary.ContactItem
+import com.bsel.remitngo.data.model.beneficiary.beneficiary.Contact
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryItem
 import com.bsel.remitngo.databinding.FragmentChooseRecipientBinding
@@ -45,7 +45,7 @@ class ChooseRecipientFragment : Fragment() {
 
     private lateinit var preferenceManager: PreferenceManager
 
-    private lateinit var contactsAdapter: ContactsAdapter
+    private lateinit var contactsAdapter: ContactAdapter
 
 //    private lateinit var beneficiaryAdapter: BeneficiaryAdapter
 
@@ -307,8 +307,8 @@ class ChooseRecipientFragment : Fragment() {
             val contacts = getContacts()
             if (!::contactsAdapter.isInitialized) {
                 binding.contactRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                contactsAdapter = ContactsAdapter(
-                    selectedItem = { selectedItem: ContactItem ->
+                contactsAdapter = ContactAdapter(
+                    selectedItem = { selectedItem: Contact ->
                         contactItem(selectedItem)
                         binding.beneficiarySearch.setQuery("", false)
                     }
@@ -335,9 +335,9 @@ class ChooseRecipientFragment : Fragment() {
         }
     }
 
-    private fun contactItem(selectedItem: ContactItem) {
-        beneficiaryName= selectedItem.name
-        beneficiaryPhoneNumber= selectedItem.phoneNumber
+    private fun contactItem(selectedItem: Contact) {
+        beneficiaryName= selectedItem.name.toString()
+        beneficiaryPhoneNumber= selectedItem.phoneNumber.toString()
 
         val bundle = Bundle().apply {
             putString("paymentType", paymentType)
@@ -370,8 +370,8 @@ class ChooseRecipientFragment : Fragment() {
     }
 
     @SuppressLint("Range")
-    private fun getContacts(): List<ContactItem> {
-        val contactItems = mutableListOf<ContactItem>()
+    private fun getContacts(): List<Contact> {
+        val contacts = mutableListOf<Contact>()
 
         // Check and request permissions if needed
 
@@ -395,9 +395,8 @@ class ChooseRecipientFragment : Fragment() {
                 if (nameColumnIndex != -1 && !it.isNull(nameColumnIndex)) {
                     val name = it.getString(nameColumnIndex)
                     val phoneNumber = getPhoneNumber(contactId)
-                    val firstLetter = name.takeUnless { it.isNullOrEmpty() }?.get(0).toString()
 
-                    contactItems.add(ContactItem(contactId, name, phoneNumber, firstLetter))
+//                    contacts.add(Contact( name, phoneNumber))
 
                     // Increment the counter, and if it reaches 3, break the loop
                     counter++
@@ -409,7 +408,7 @@ class ChooseRecipientFragment : Fragment() {
         }
 
         cursor?.close()
-        return contactItems
+        return contacts
     }
 
     @SuppressLint("Range")

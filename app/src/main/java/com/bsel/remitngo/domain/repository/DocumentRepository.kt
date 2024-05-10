@@ -20,17 +20,16 @@ interface DocumentRepository {
     suspend fun documentType(documentTypeItem: DocumentTypeItem): DocumentTypeResponseItem?
     suspend fun getDocument(getDocumentItem: GetDocumentItem): GetDocumentResponseItem?
     suspend fun uploadDocument(
-        @Part("deviceId") deviceId: RequestBody,
-        @Part("personId") personId: RequestBody,
-        @Part("categoryId") categoryId: RequestBody,
-        @Part("docId") docId: RequestBody,
-        @Part("typeId") typeId: RequestBody,
-        @Part("proofNo") proofNo: RequestBody,
-        @Part("issueBy") issueBy: RequestBody,
-        @Part("issueDate") issueDate: RequestBody,
-        @Part("expireDate") expireDate: RequestBody,
-        @Part("updateDate") updateDate: RequestBody,
-        @Part file: MultipartBody.Part
+        @Part file: MultipartBody.Part,
+        @Part("DeviceId") deviceId: RequestBody,
+        @Part("PersonId") personId: RequestBody,
+        @Part("CategoryId") categoryId: RequestBody,
+        @Part("DocId") docId: RequestBody,
+        @Part("TypeId") typeId: RequestBody,
+        @Part("DocNo") docNo: RequestBody,
+        @Part("IssueBy") issueBy: RequestBody,
+        @Part("IssueDate") issueDate: RequestBody,
+        @Part("ExpireDate") expireDate: RequestBody,
     ): UploadDocumentResponseItem?
 
     suspend fun requireDocument(requireDocumentItem: RequireDocumentItem): RequireDocumentResponseItem?

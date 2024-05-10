@@ -226,6 +226,7 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
                 val fileRequestBody = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                 val filePart = MultipartBody.Part.createFormData("file", file.name, fileRequestBody)
                 documentViewModel.uploadDocument(
+                    filePart,
                     deviceId.toRequestBody(),
                     personId.toString().toRequestBody(),
                     documentCategoryId.toString().toRequestBody(),
@@ -235,8 +236,6 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
                     "xyz".toRequestBody(),
                     "2024-01-01".toRequestBody(),
                     "2024-01-01".toRequestBody(),
-                    "2024-01-01".toRequestBody(),
-                    filePart
                 )
             }
         }

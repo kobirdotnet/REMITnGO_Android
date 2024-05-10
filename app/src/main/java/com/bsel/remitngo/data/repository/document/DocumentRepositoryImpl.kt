@@ -71,31 +71,29 @@ class DocumentRepositoryImpl(private val documentRemoteDataSource: DocumentRemot
     }
 
     override suspend fun uploadDocument(
+        file: MultipartBody.Part,
         deviceId: RequestBody,
         personId: RequestBody,
         categoryId: RequestBody,
         docId: RequestBody,
         typeId: RequestBody,
-        proofNo: RequestBody,
+        docNo: RequestBody,
         issueBy: RequestBody,
         issueDate: RequestBody,
-        expireDate: RequestBody,
-        updateDate: RequestBody,
-        file: MultipartBody.Part
+        expireDate: RequestBody
     ): UploadDocumentResponseItem? {
         return try {
             val response = documentRemoteDataSource.uploadDocument(
+                file,
                 deviceId,
                 personId,
                 categoryId,
                 docId,
                 typeId,
-                proofNo,
+                docNo,
                 issueBy,
                 issueDate,
-                expireDate,
-                updateDate,
-                file
+                expireDate
             )
             if (response.isSuccessful) {
                 response.body()

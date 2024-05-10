@@ -2,58 +2,28 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/item_contact_layout"
+        android:id="@+id/itemContactLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/activity_vertical_margin">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:id="@+id/firstLetterBackground"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@drawable/circle_background_green"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/firstLetterName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/contactName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:fontFamily="@font/roboto_regular"
+            android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/contactName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_regular"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/contactNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_regular"
-                android:textColor="@color/text_color" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/contactNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:textColor="@color/text_color" />
     </LinearLayout>
 </layout>

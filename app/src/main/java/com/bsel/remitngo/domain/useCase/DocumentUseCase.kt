@@ -29,30 +29,28 @@ class DocumentUseCase(private val documentRepository: DocumentRepository) {
     }
 
     suspend fun execute(
+        file: MultipartBody.Part,
         deviceId: RequestBody,
         personId: RequestBody,
         categoryId: RequestBody,
         docId: RequestBody,
         typeId: RequestBody,
-        proofNo: RequestBody,
+        docNo: RequestBody,
         issueBy: RequestBody,
         issueDate: RequestBody,
-        expireDate: RequestBody,
-        updateDate: RequestBody,
-        file: MultipartBody.Part
+        expireDate: RequestBody
     ): UploadDocumentResponseItem? {
         return documentRepository.uploadDocument(
+            file,
             deviceId,
             personId,
             categoryId,
             docId,
             typeId,
-            proofNo,
+            docNo,
             issueBy,
             issueDate,
-            expireDate,
-            updateDate,
-            file
+            expireDate
         )
     }
 

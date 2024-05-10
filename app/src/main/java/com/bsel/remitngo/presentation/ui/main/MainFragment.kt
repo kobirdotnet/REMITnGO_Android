@@ -479,8 +479,9 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         })
 
         val percentageItem = PercentageItem(
-            countryId = 1,
-            customerId = 0
+            messageType = 1,
+            parameter1 = 1,
+            parameter2 = customerId
         )
         calculationViewModel.percentage(percentageItem)
 
