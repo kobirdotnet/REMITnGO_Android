@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -368,7 +369,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     orderType = 3
                     calculateRate(
                         deviceId,
-                        personId,
                         beneBankId,
                         payingAgentId,
                         orderType,
@@ -433,18 +433,41 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
                     binding.cardPayment.isChecked = true
                     binding.bankPayment.isChecked = false
+
+                    calculateRate(
+                        deviceId,
+                        beneBankId,
+                        payingAgentId,
+                        orderType,
+                        paymentMode,
+                        4,
+                        1,
+                        0,
+                        binding.sendAmount.text.toString()
+                    )
                 }
                 R.id.bankPayment -> {
                     paymentMode = 5
 
                     binding.cardPayment.isChecked = false
                     binding.bankPayment.isChecked = true
+
+                    calculateRate(
+                        deviceId,
+                        beneBankId,
+                        payingAgentId,
+                        orderType,
+                        paymentMode,
+                        4,
+                        1,
+                        0,
+                        binding.sendAmount.text.toString()
+                    )
                 }
             }
         }
 
         binding.sendAmount.setText(sendAmount.toString())
-        updateValuesGBP()
         binding.sendAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
@@ -458,7 +481,17 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
             override fun afterTextChanged(s: Editable?) {
                 if (!binding.sendAmount.isFocused) return
-                updateValuesGBP()
+                calculateRate(
+                    deviceId,
+                    beneBankId,
+                    payingAgentId,
+                    orderType,
+                    paymentMode,
+                    4,
+                    1,
+                    0,
+                    binding.sendAmount.text.toString()
+                )
             }
         })
         binding.receiveAmount.addTextChangedListener(object : TextWatcher {
@@ -474,7 +507,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
             override fun afterTextChanged(s: Editable?) {
                 if (!binding.receiveAmount.isFocused) return
-                updateValuesBDT()
+                updateValuesBDTtoGBP()
             }
         })
 
@@ -564,7 +597,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         calculateRate(
             deviceId,
-            personId,
             beneBankId,
             payingAgentId,
             orderType,
@@ -584,28 +616,9 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         )
         calculationViewModel.payingAgent(payingAgentItem)
 
-        observeExtraPercentageResult()
         observeCalculateRateResult()
         observePayingAgentResult()
-    }
-
-    private fun observeExtraPercentageResult() {
-        calculationViewModel.percentageResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    for (extraPercentage in result.data!!) {
-                        binding.extraPercentage.text = extraPercentage?.campingMessage.toString()
-                        percentageUrl = extraPercentage?.url.toString()
-                    }
-                }
-                binding.extraPercentage.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(percentageUrl))
-                    startActivity(intent)
-                }
-            } catch (e: NullPointerException) {
-                e.localizedMessage
-            }
-        }
+        observeExtraPercentageResult()
     }
 
     private fun observeCalculateRateResult() {
@@ -613,19 +626,48 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             try {
                 if (result!!.data != null) {
                     for (data in result.data!!) {
-
                         commission = data!!.commission.toString().toDouble()
                         binding.commission.text = "Fee $commission GBP"
 
                         rate = data.rate!!.toDouble()
                         binding.exchangeRate.text = "BDT $rate"
 
-                        updateValuesGBP()
+                        updateValuesGBPtoBDT()
                     }
+                }else{
+                    commission = 0.0
+                    binding.commission.text = "Fee $commission GBP"
+
+                    rate = 0.0
+                    binding.exchangeRate.text = "BDT $rate"
+
+                    updateValuesGBPtoBDT()
                 }
             } catch (e: NullPointerException) {
                 e.localizedMessage
             }
+        }
+    }
+
+    private fun updateValuesGBPtoBDT() {
+        val gbpValue = binding.sendAmount.text.toString().toDoubleOrNull()
+        if (gbpValue != null) {
+            val bdtValue = gbpValue * rate
+            val formattedBDT = decimalFormat.format(bdtValue)
+            binding.receiveAmount.setText(formattedBDT.toString())
+        } else {
+            binding.receiveAmount.setText("")
+        }
+    }
+
+    private fun updateValuesBDTtoGBP() {
+        val bdtValue = binding.receiveAmount.text.toString().toDoubleOrNull()
+        if (bdtValue != null) {
+            val gbpValue = bdtValue / rate
+            val formattedGBP = decimalFormat.format(gbpValue)
+            binding.sendAmount.setText(formattedGBP.toString())
+        } else {
+            binding.sendAmount.setText("")
         }
     }
 
@@ -647,25 +689,22 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         }
     }
 
-    fun updateValuesBDT() {
-        val bdtValue = binding.receiveAmount.text.toString().toDoubleOrNull()
-        if (bdtValue != null) {
-            val gbpValue = bdtValue / rate
-            val formattedGBP = decimalFormat.format(gbpValue)
-            binding.sendAmount.setText(formattedGBP.toString())
-        } else {
-            binding.sendAmount.setText("")
-        }
-    }
-
-    fun updateValuesGBP() {
-        val gbpValue = binding.sendAmount.text.toString().toDoubleOrNull()
-        if (gbpValue != null) {
-            val bdtValue = gbpValue * rate
-            val formattedBDT = decimalFormat.format(bdtValue)
-            binding.receiveAmount.setText(formattedBDT.toString())
-        } else {
-            binding.receiveAmount.setText("")
+    private fun observeExtraPercentageResult() {
+        calculationViewModel.percentageResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (extraPercentage in result.data!!) {
+                        binding.extraPercentage.text = extraPercentage?.campingMessage.toString()
+                        percentageUrl = extraPercentage?.url.toString()
+                    }
+                }
+                binding.extraPercentage.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(percentageUrl))
+                    startActivity(intent)
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
+            }
         }
     }
 
@@ -677,7 +716,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         calculateRate(
             deviceId,
-            personId,
             beneBankId,
             payingAgentId,
             orderType,
@@ -697,7 +735,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         calculateRate(
             deviceId,
-            personId,
             beneBankId,
             payingAgentId,
             orderType,
@@ -717,7 +754,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         calculateRate(
             deviceId,
-            personId,
             beneBankId,
             payingAgentId,
             orderType,
@@ -731,7 +767,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
     private fun calculateRate(
         deviceId: String,
-        personId: Int,
         bankId: Int,
         payingAgentId: Int,
         orderType: Int,

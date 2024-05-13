@@ -140,12 +140,15 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
         when (orderType) {
             3 -> {
                 binding.accountTxt.text = "Bank Account"
+                binding.nameToolbar.text="Choose Bank"
             }
             5 -> {
                 binding.accountTxt.text = "Bank Account"
+                binding.nameToolbar.text="Choose Bank"
             }
             1 -> {
                 binding.accountTxt.text = "Wallet Account"
+                binding.nameToolbar.text="Choose Wallet"
             }
         }
 

@@ -3,6 +3,7 @@ package com.bsel.remitngo.presentation.di.beneficiary
 import com.bsel.remitngo.bottomSheet.ChooseRecipientBottomSheet
 import com.bsel.remitngo.bottomSheet.PurposeOfTransferBottomSheet
 import com.bsel.remitngo.bottomSheet.SaveRecipientBottomSheet
+import com.bsel.remitngo.bottomSheet.UpdateAndDeleteBeneficiaryBottomSheet
 import com.bsel.remitngo.presentation.ui.beneficiary.beneficiaryManagement.BeneficiaryManagementFragment
 import com.bsel.remitngo.presentation.ui.beneficiary.recipientManagement.SaveRecipientFragment
 import com.bsel.remitngo.presentation.ui.beneficiary.recipientManagement.ChooseRecipientFragment
@@ -20,6 +21,7 @@ interface BeneficiarySubComponent {
     fun inject(purposeOfTransferBottomSheet: PurposeOfTransferBottomSheet)
     fun inject(chooseRecipientBottomSheet: ChooseRecipientBottomSheet)
     fun inject(saveRecipientBottomSheet: SaveRecipientBottomSheet)
+    fun inject(updateAndDeleteBeneficiaryBottomSheet: UpdateAndDeleteBeneficiaryBottomSheet)
 
     @Subcomponent.Factory
     interface Factory {

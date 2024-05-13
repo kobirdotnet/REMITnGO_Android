@@ -21,5 +21,7 @@ data class GetBeneficiaryData(
     @SerializedName("LastName")
     val lastName: String?,
     @SerializedName("Mobile")
-    val mobile: String?
+    val mobile: String?,
+    @SerializedName("HasTransactions")
+    val hasTransactions: Boolean?
 )

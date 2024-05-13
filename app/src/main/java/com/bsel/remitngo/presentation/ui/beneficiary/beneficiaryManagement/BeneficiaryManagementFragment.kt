@@ -22,10 +22,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.BeneficiaryAdapter
+import com.bsel.remitngo.adapter.BeneficiaryManagementAdapter
 import com.bsel.remitngo.adapter.ContactAdapter
 import com.bsel.remitngo.bottomSheet.ChooseBankBottomSheet
 import com.bsel.remitngo.bottomSheet.SaveRecipientBottomSheet
+import com.bsel.remitngo.bottomSheet.UpdateAndDeleteBeneficiaryBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBankAndWalletSelectedListener
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
@@ -53,13 +54,14 @@ class BeneficiaryManagementFragment : Fragment(),
     var itemSelectedListener: OnBeneficiarySelectedListener? = null
 
     private val saveRecipientBottomSheet: SaveRecipientBottomSheet by lazy { SaveRecipientBottomSheet() }
+    private val updateAndDeleteBeneficiaryBottomSheet: UpdateAndDeleteBeneficiaryBottomSheet by lazy { UpdateAndDeleteBeneficiaryBottomSheet() }
     private val chooseBankBottomSheet: ChooseBankBottomSheet by lazy { ChooseBankBottomSheet() }
 
     private lateinit var contactViewModel: ContactViewModel
     private lateinit var contactAdapter: ContactAdapter
     private val REQUEST_CONTACTS_PERMISSION = 1
 
-    private lateinit var beneficiaryAdapter: BeneficiaryAdapter
+    private lateinit var beneficiaryManagementAdapter: BeneficiaryManagementAdapter
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -241,15 +243,27 @@ class BeneficiaryManagementFragment : Fragment(),
                         if (result!!.data != null) {
                             binding.beneficiaryRecyclerView.layoutManager =
                                 LinearLayoutManager(requireActivity())
-                            beneficiaryAdapter = BeneficiaryAdapter(
+                            beneficiaryManagementAdapter = BeneficiaryManagementAdapter(
                                 selectedItem = { selectedItem: GetBeneficiaryData ->
                                     beneficiaryItem(selectedItem)
                                     binding.beneSearch.setQuery("", false)
+                                },
+                                bankInfo = {bankInfo: GetBeneficiaryData ->
+                                    bankInfo(bankInfo)
+                                    binding.beneSearch.setQuery("", false)
+                                },
+                                walletInfo = {walletInfo: GetBeneficiaryData ->
+                                    walletInfo(walletInfo)
+                                    binding.beneSearch.setQuery("", false)
+                                },
+                                transfer = {transfer: GetBeneficiaryData ->
+                                    transfer(transfer)
+                                    binding.beneSearch.setQuery("", false)
                                 }
                             )
-                            binding.beneficiaryRecyclerView.adapter = beneficiaryAdapter
-                            beneficiaryAdapter.setList(result.data as List<GetBeneficiaryData>)
-                            beneficiaryAdapter.notifyDataSetChanged()
+                            binding.beneficiaryRecyclerView.adapter = beneficiaryManagementAdapter
+                            beneficiaryManagementAdapter.setList(result.data as List<GetBeneficiaryData>)
+                            beneficiaryManagementAdapter.notifyDataSetChanged()
 
                             binding.beneSearch.setOnQueryTextListener(object :
                                 SearchView.OnQueryTextListener {
@@ -258,7 +272,7 @@ class BeneficiaryManagementFragment : Fragment(),
                                 }
 
                                 override fun onQueryTextChange(newText: String?): Boolean {
-                                    beneficiaryAdapter.filter(newText.orEmpty())
+                                    beneficiaryManagementAdapter.filter(newText.orEmpty())
                                     return true
                                 }
                             })
@@ -302,14 +316,41 @@ class BeneficiaryManagementFragment : Fragment(),
     }
 
     private fun beneficiaryItem(selectedItem: GetBeneficiaryData) {
-        benePersonId = selectedItem.benePersonId!!
-        beneId = selectedItem.beneficiaryId!!
-        beneAccountName = selectedItem.beneName.toString()
-        beneMobile = selectedItem.mobile.toString()
+        var beneName = selectedItem.beneName!!
+        var benePersonId = selectedItem.benePersonId!!
+        var beneId = selectedItem.beneficiaryId!!
+        var countryId = selectedItem.countryId!!
+        var countryName = selectedItem.countryName!!
+        var firstName = selectedItem.firstName!!
+        var lastName = selectedItem.lastName!!
+        var flagiconName = selectedItem.flagiconName!!
+        var beneMobile = selectedItem.mobile!!
+        var hasTransactions = selectedItem.hasTransactions!!
+
+        updateAndDeleteBeneficiaryBottomSheet.itemSelectedListener = this
+        updateAndDeleteBeneficiaryBottomSheet.setBeneficiaryData(
+            beneName,
+            benePersonId,
+            beneId,
+            countryId,
+            countryName,
+            firstName,
+            lastName,
+            flagiconName,
+            beneMobile,
+            hasTransactions
+        )
+        updateAndDeleteBeneficiaryBottomSheet.show(childFragmentManager, updateAndDeleteBeneficiaryBottomSheet.tag)
+    }
+    private fun bankInfo(bankInfo: GetBeneficiaryData) {
+        benePersonId = bankInfo.benePersonId!!
+        beneId = bankInfo.beneficiaryId!!
+        beneAccountName = bankInfo.beneName.toString()
+        beneMobile = bankInfo.mobile.toString()
         if (orderType == 2) {
-            itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
+            itemSelectedListener?.onChooseRecipientItemSelected(bankInfo)
         } else {
-            itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
+            itemSelectedListener?.onChooseRecipientItemSelected(bankInfo)
             chooseBankBottomSheet.itemSelectedListener = this
             chooseBankBottomSheet.setOrderType(
                 orderType,
@@ -327,6 +368,19 @@ class BeneficiaryManagementFragment : Fragment(),
             )
             chooseBankBottomSheet.show(childFragmentManager, chooseBankBottomSheet.tag)
         }
+    }
+    private fun walletInfo(walletInfo: GetBeneficiaryData) {
+        benePersonId = walletInfo.benePersonId!!
+        beneId = walletInfo.beneficiaryId!!
+        beneAccountName = walletInfo.beneName.toString()
+        beneMobile = walletInfo.mobile.toString()
+    }
+    private fun transfer(transfer: GetBeneficiaryData) {
+        benePersonId = transfer.benePersonId!!
+        beneId = transfer.beneficiaryId!!
+        beneAccountName = transfer.beneName.toString()
+        beneMobile = transfer.mobile.toString()
+        findNavController().navigate(R.id.action_nav_beneficiary_management_to_nav_main)
     }
 
     private fun requestContactsPermission() {

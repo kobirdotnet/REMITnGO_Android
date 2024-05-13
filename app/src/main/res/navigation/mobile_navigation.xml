@@ -308,6 +308,9 @@
         <action
             android:id="@+id/action_nav_beneficiary_management_to_nav_save_beneficiary"
             app:destination="@id/nav_save_beneficiary" />
+        <action
+            android:id="@+id/action_nav_beneficiary_management_to_nav_main"
+            app:destination="@id/nav_main" />
     </fragment>
 
     <fragment
