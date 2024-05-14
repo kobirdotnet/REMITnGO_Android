@@ -67,7 +67,7 @@ data class PaymentItem(
     @SerializedName("toCurrencyId")
     val toCurrencyId: Int?,
     @SerializedName("totalAmountGiven")
-    val totalAmountGiven: Double?,
+    val totalAmount: Double?,
     @SerializedName("userIPAddress")
     val userIPAddress: String?
 )

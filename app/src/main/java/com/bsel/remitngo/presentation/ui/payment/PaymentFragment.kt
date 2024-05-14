@@ -151,6 +151,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private var toCurrencyId: Int = 6
     private var totalAmount: Double = 0.0
 
+    private var calculationType: Int = 1
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -655,7 +657,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                                 sourceOfFundId = sourceOfFundId,
                                 toCountryId = toCountryId,
                                 toCurrencyId = toCurrencyId,
-                                totalAmountGiven = totalAmount,
+                                totalAmount = totalAmount,
                                 userIPAddress = ipAddress
                             )
                             paymentViewModel.payment(paymentItem)
@@ -1135,15 +1137,16 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                         }
 
                         val calculateRateItem = CalculateRateItem(
-                            deviceId = deviceId,
+                            amount = sendAmount.toString(),
                             bankId = beneBankId,
-                            payingAgentId = payingAgentId,
-                            orderType = orderType,
-                            paymentMode = 0,
+                            calculationType,
+                            deviceId = deviceId,
                             fromCountry = 4,
-                            toCountry = 1,
                             mobileOrWebPlatform = 0,
-                            amount = sendAmount.toString()
+                            orderType = orderType,
+                            payingAgentId = payingAgentId,
+                            paymentMode = 0,
+                            toCountry = 1
                         )
                         paymentViewModel.rateCalculate(calculateRateItem)
                         observeCalculateRateResult()
@@ -1164,7 +1167,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                         commission = data!!.commission.toString().toDouble()
                         binding.transferFee.text = commission.toString()
 
-                        rate = data.rate!!.toDouble().toString().toDouble()
                         rate = data.rate.toString().toDouble()
                         binding.exchangeRate.text = rate.toString()
 

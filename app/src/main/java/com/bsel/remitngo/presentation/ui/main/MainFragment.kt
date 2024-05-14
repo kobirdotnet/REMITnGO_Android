@@ -57,8 +57,6 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     var ipAddress: String? = null
     private lateinit var deviceId: String
 
-    private val decimalFormat = DecimalFormat("#.##")
-
     private var paymentMode: Int = 4
     private var orderType: Int = 3
 
@@ -93,6 +91,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     private var sourceOfFundName: String? = null
 
     private lateinit var percentageUrl: String
+
+    private var calculationType: Int = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -274,20 +274,20 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         when (orderType) {
             5 -> {
-                binding.bankAccount.isChecked = false
-                binding.instantCredit.isChecked = true
-                binding.cashPickup.isChecked = false
-                binding.mobileWallet.isChecked = false
+//                binding.bankAccount.isChecked = false
+//                binding.instantCredit.isChecked = true
+//                binding.cashPickup.isChecked = false
+//                binding.mobileWallet.isChecked = false
 
                 binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
                 binding.collectionPointWalletLayout.visibility = View.GONE
             }
             2 -> {
-                binding.bankAccount.isChecked = false
-                binding.instantCredit.isChecked = false
-                binding.cashPickup.isChecked = true
-                binding.mobileWallet.isChecked = false
+//                binding.bankAccount.isChecked = false
+//                binding.instantCredit.isChecked = false
+//                binding.cashPickup.isChecked = true
+//                binding.mobileWallet.isChecked = false
 
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
                 binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
@@ -295,20 +295,20 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 binding.collectionPointWallet.text = null
             }
             1 -> {
-                binding.bankAccount.isChecked = false
-                binding.instantCredit.isChecked = false
-                binding.cashPickup.isChecked = false
-                binding.mobileWallet.isChecked = true
+//                binding.bankAccount.isChecked = false
+//                binding.instantCredit.isChecked = false
+//                binding.cashPickup.isChecked = false
+//                binding.mobileWallet.isChecked = true
 
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
                 binding.collectionPointWalletLayout.visibility = View.VISIBLE
             }
             3 -> {
-                binding.bankAccount.isChecked = true
-                binding.instantCredit.isChecked = false
-                binding.cashPickup.isChecked = false
-                binding.mobileWallet.isChecked = false
+//                binding.bankAccount.isChecked = true
+//                binding.instantCredit.isChecked = false
+//                binding.cashPickup.isChecked = false
+//                binding.mobileWallet.isChecked = false
 
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
@@ -318,12 +318,12 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         when (paymentMode) {
             4 -> {
-                binding.cardPayment.isChecked = true
-                binding.bankPayment.isChecked = false
+//                binding.cardPayment.isChecked = true
+//                binding.bankPayment.isChecked = false
             }
             5 -> {
-                binding.cardPayment.isChecked = false
-                binding.bankPayment.isChecked = true
+//                binding.cardPayment.isChecked = false
+//                binding.bankPayment.isChecked = true
             }
         }
 
@@ -363,108 +363,278 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             )
         }
 
-        binding.orderModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            when (checkedId) {
-                R.id.bankAccount -> {
-                    orderType = 3
-                    calculateRate(
-                        deviceId,
-                        beneBankId,
-                        payingAgentId,
-                        orderType,
-                        paymentMode,
-                        4,
-                        1,
-                        0,
-                        binding.sendAmount.text.toString()
-                    )
-                    binding.bankAccount.isChecked = true
-                    binding.instantCredit.isChecked = false
-                    binding.cashPickup.isChecked = false
-                    binding.mobileWallet.isChecked = false
+        binding.bankAccount.setOnClickListener {
+            binding.iconBankTransfer.setImageResource(R.drawable.bank_account_white)
+            binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_blue)
+            binding.iconCashPickup.setImageResource(R.drawable.cash_picup_blue)
+            binding.iconMobileWallet.setImageResource(R.drawable.wallet_blue)
 
-                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
-                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
-                    binding.collectionPointWalletLayout.visibility = View.GONE
-                }
-                R.id.instantCredit -> {
-                    orderType = 5
+            binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_blue)
+            binding.iconInstantCredit.setBackgroundResource(R.drawable.image_border_grey)
+            binding.iconCashPickup.setBackgroundResource(R.drawable.image_border_grey)
+            binding.iconMobileWallet.setBackgroundResource(R.drawable.image_border_grey)
 
-                    binding.bankAccount.isChecked = false
-                    binding.instantCredit.isChecked = true
-                    binding.cashPickup.isChecked = false
-                    binding.mobileWallet.isChecked = false
+            binding.bankAccount.setBackgroundResource(R.drawable.border_blue)
+            binding.instantCredit.setBackgroundResource(R.drawable.border_gray)
+            binding.cashPickup.setBackgroundResource(R.drawable.border_gray)
+            binding.mobileWallet.setBackgroundResource(R.drawable.border_gray)
 
-                    binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
-                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
-                    binding.collectionPointWalletLayout.visibility = View.GONE
-                }
-                R.id.cashPickup -> {
-                    orderType = 2
+            orderType = 3
+            calculationType = 1
+            calculateRate(
+                binding.sendAmount.text.toString(),
+                beneBankId,
+                calculationType,
+                deviceId,
+                4,
+                0,
+                orderType,
+                payingAgentId,
+                paymentMode,
+                1
+            )
 
-                    binding.bankAccount.isChecked = false
-                    binding.instantCredit.isChecked = false
-                    binding.cashPickup.isChecked = true
-                    binding.mobileWallet.isChecked = false
-
-                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
-                    binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
-                    binding.collectionPointWalletLayout.visibility = View.GONE
-                }
-                R.id.mobileWallet -> {
-                    orderType = 1
-
-                    binding.bankAccount.isChecked = false
-                    binding.instantCredit.isChecked = false
-                    binding.cashPickup.isChecked = false
-                    binding.mobileWallet.isChecked = true
-
-                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
-                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
-                    binding.collectionPointWalletLayout.visibility = View.VISIBLE
-                }
-            }
+            binding.collectionPointInstantCreditLayout.visibility = View.GONE
+            binding.collectionPointCashPickUpLayout.visibility = View.GONE
+            binding.collectionPointWalletLayout.visibility = View.GONE
         }
 
-        binding.paymentModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            when (checkedId) {
-                R.id.cardPayment -> {
-                    paymentMode = 4
+        binding.instantCredit.setOnClickListener {
+            binding.iconBankTransfer.setImageResource(R.drawable.bank_account_blue)
 
-                    binding.cardPayment.isChecked = true
-                    binding.bankPayment.isChecked = false
+            binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_white)
 
-                    calculateRate(
-                        deviceId,
-                        beneBankId,
-                        payingAgentId,
-                        orderType,
-                        paymentMode,
-                        4,
-                        1,
-                        0,
-                        binding.sendAmount.text.toString()
-                    )
-                }
-                R.id.bankPayment -> {
-                    paymentMode = 5
+            binding.iconCashPickup.setImageResource(R.drawable.cash_picup_blue)
 
-                    binding.cardPayment.isChecked = false
-                    binding.bankPayment.isChecked = true
+            binding.iconMobileWallet.setImageResource(R.drawable.wallet_blue)
 
-                    calculateRate(
-                        deviceId,
-                        beneBankId,
-                        payingAgentId,
-                        orderType,
-                        paymentMode,
-                        4,
-                        1,
-                        0,
-                        binding.sendAmount.text.toString()
-                    )
-                }
-            }
+            binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_grey)
+            binding.iconInstantCredit.setBackgroundResource(R.drawable.image_border_blue)
+            binding.iconCashPickup.setBackgroundResource(R.drawable.image_border_grey)
+            binding.iconMobileWallet.setBackgroundResource(R.drawable.image_border_grey)
+
+            binding.bankAccount.setBackgroundResource(R.drawable.border_gray)
+            binding.instantCredit.setBackgroundResource(R.drawable.border_blue)
+            binding.cashPickup.setBackgroundResource(R.drawable.border_gray)
+            binding.mobileWallet.setBackgroundResource(R.drawable.border_gray)
+
+            orderType = 5
+
+            binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
+            binding.collectionPointCashPickUpLayout.visibility = View.GONE
+            binding.collectionPointWalletLayout.visibility = View.GONE
+        }
+
+        binding.cashPickup.setOnClickListener {
+            binding.iconBankTransfer.setImageResource(R.drawable.bank_account_blue)
+
+            binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_blue)
+
+            binding.iconCashPickup.setImageResource(R.drawable.cash_picup_white)
+
+            binding.iconMobileWallet.setImageResource(R.drawable.wallet_blue)
+
+            binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_grey)
+            binding.iconInstantCredit.setBackgroundResource(R.drawable.image_border_grey)
+            binding.iconCashPickup.setBackgroundResource(R.drawable.image_border_blue)
+            binding.iconMobileWallet.setBackgroundResource(R.drawable.image_border_grey)
+
+            binding.bankAccount.setBackgroundResource(R.drawable.border_gray)
+            binding.instantCredit.setBackgroundResource(R.drawable.border_gray)
+            binding.cashPickup.setBackgroundResource(R.drawable.border_blue)
+            binding.mobileWallet.setBackgroundResource(R.drawable.border_gray)
+
+            orderType = 2
+            binding.collectionPointInstantCreditLayout.visibility = View.GONE
+            binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
+            binding.collectionPointWalletLayout.visibility = View.GONE
+        }
+
+        binding.mobileWallet.setOnClickListener {
+            binding.iconBankTransfer.setImageResource(R.drawable.bank_account_blue)
+
+            binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_blue)
+
+            binding.iconCashPickup.setImageResource(R.drawable.cash_picup_blue)
+
+            binding.iconMobileWallet.setImageResource(R.drawable.wallet_white)
+
+            binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_grey)
+            binding.iconInstantCredit.setBackgroundResource(R.drawable.image_border_grey)
+            binding.iconCashPickup.setBackgroundResource(R.drawable.image_border_grey)
+            binding.iconMobileWallet.setBackgroundResource(R.drawable.image_border_blue)
+
+            binding.bankAccount.setBackgroundResource(R.drawable.border_gray)
+            binding.instantCredit.setBackgroundResource(R.drawable.border_gray)
+            binding.cashPickup.setBackgroundResource(R.drawable.border_gray)
+            binding.mobileWallet.setBackgroundResource(R.drawable.border_blue)
+
+            orderType = 1
+            binding.collectionPointInstantCreditLayout.visibility = View.GONE
+            binding.collectionPointCashPickUpLayout.visibility = View.GONE
+            binding.collectionPointWalletLayout.visibility = View.VISIBLE
+        }
+
+//        binding.orderModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+//            when (checkedId) {
+//                R.id.bankAccount -> {
+//                    orderType = 3
+//                    calculationType = 1
+//                    calculateRate(
+//                        binding.sendAmount.text.toString(),
+//                        beneBankId,
+//                        calculationType,
+//                        deviceId,
+//                        4,
+//                        0,
+//                        orderType,
+//                        payingAgentId,
+//                        paymentMode,
+//                        1
+//                    )
+//                    binding.bankAccount.isChecked = true
+//                    binding.instantCredit.isChecked = false
+//                    binding.cashPickup.isChecked = false
+//                    binding.mobileWallet.isChecked = false
+//
+//                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
+//                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
+//                    binding.collectionPointWalletLayout.visibility = View.GONE
+//                }
+//                R.id.instantCredit -> {
+//                    orderType = 5
+//
+//                    binding.bankAccount.isChecked = false
+//                    binding.instantCredit.isChecked = true
+//                    binding.cashPickup.isChecked = false
+//                    binding.mobileWallet.isChecked = false
+//
+//                    binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
+//                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
+//                    binding.collectionPointWalletLayout.visibility = View.GONE
+//                }
+//                R.id.cashPickup -> {
+//                    orderType = 2
+//
+//                    binding.bankAccount.isChecked = false
+//                    binding.instantCredit.isChecked = false
+//                    binding.cashPickup.isChecked = true
+//                    binding.mobileWallet.isChecked = false
+//
+//                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
+//                    binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
+//                    binding.collectionPointWalletLayout.visibility = View.GONE
+//                }
+//                R.id.mobileWallet -> {
+//                    orderType = 1
+//
+//                    binding.bankAccount.isChecked = false
+//                    binding.instantCredit.isChecked = false
+//                    binding.cashPickup.isChecked = false
+//                    binding.mobileWallet.isChecked = true
+//
+//                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
+//                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
+//                    binding.collectionPointWalletLayout.visibility = View.VISIBLE
+//                }
+//            }
+//        }
+
+//        binding.paymentModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+//            when (checkedId) {
+//                R.id.cardPayment -> {
+//                    paymentMode = 4
+//
+//                    binding.cardPayment.isChecked = true
+//                    binding.bankPayment.isChecked = false
+//
+//                    calculationType = 1
+//                    calculateRate(
+//                        binding.sendAmount.text.toString(),
+//                        beneBankId,
+//                        calculationType,
+//                        deviceId,
+//                        4,
+//                        0,
+//                        orderType,
+//                        payingAgentId,
+//                        paymentMode,
+//                        1
+//                    )
+//                }
+//                R.id.bankPayment -> {
+//                    paymentMode = 5
+//
+//                    binding.cardPayment.isChecked = false
+//                    binding.bankPayment.isChecked = true
+//
+//                    calculationType = 1
+//                    calculateRate(
+//                        binding.sendAmount.text.toString(),
+//                        beneBankId,
+//                        calculationType,
+//                        deviceId,
+//                        4,
+//                        0,
+//                        orderType,
+//                        payingAgentId,
+//                        paymentMode,
+//                        1
+//                    )
+//                }
+//            }
+//        }
+
+        binding.cardPayment.setOnClickListener {
+            binding.iconCreditOrDebit.setImageResource(R.drawable.credit_debit_white)
+            binding.iconCreditOrDebit.setBackgroundResource(R.drawable.image_border_blue)
+
+            binding.iconBankTransferWithCommission.setImageResource(R.drawable.bank_account_blue)
+            binding.iconBankTransferWithCommission.setBackgroundResource(R.drawable.image_border_grey)
+
+            binding.cardPayment.setBackgroundResource(R.drawable.border_blue)
+            binding.bankPayment.setBackgroundResource(R.drawable.border_gray)
+
+            paymentMode = 4
+            calculationType = 1
+            calculateRate(
+                binding.sendAmount.text.toString(),
+                beneBankId,
+                calculationType,
+                deviceId,
+                4,
+                0,
+                orderType,
+                payingAgentId,
+                paymentMode,
+                1
+            )
+        }
+
+        binding.bankPayment.setOnClickListener {
+            binding.iconCreditOrDebit.setImageResource(R.drawable.credit_debit_blue)
+            binding.iconCreditOrDebit.setBackgroundResource(R.drawable.image_border_grey)
+
+            binding.iconBankTransferWithCommission.setImageResource(R.drawable.bank_account_white)
+            binding.iconBankTransferWithCommission.setBackgroundResource(R.drawable.image_border_blue)
+
+            binding.cardPayment.setBackgroundResource(R.drawable.border_gray)
+            binding.bankPayment.setBackgroundResource(R.drawable.border_blue)
+
+            paymentMode = 5
+            calculationType = 1
+            calculateRate(
+                binding.sendAmount.text.toString(),
+                beneBankId,
+                calculationType,
+                deviceId,
+                4,
+                0,
+                orderType,
+                payingAgentId,
+                paymentMode,
+                1
+            )
         }
 
         binding.sendAmount.setText(sendAmount.toString())
@@ -481,16 +651,18 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
             override fun afterTextChanged(s: Editable?) {
                 if (!binding.sendAmount.isFocused) return
+                calculationType = 1
                 calculateRate(
-                    deviceId,
+                    binding.sendAmount.text.toString(),
                     beneBankId,
-                    payingAgentId,
-                    orderType,
-                    paymentMode,
+                    calculationType,
+                    deviceId,
                     4,
-                    1,
                     0,
-                    binding.sendAmount.text.toString()
+                    orderType,
+                    payingAgentId,
+                    paymentMode,
+                    1
                 )
             }
         })
@@ -507,7 +679,19 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
             override fun afterTextChanged(s: Editable?) {
                 if (!binding.receiveAmount.isFocused) return
-                updateValuesBDTtoGBP()
+                calculationType = 2
+                calculateRate(
+                    binding.receiveAmount.text.toString(),
+                    beneBankId,
+                    calculationType,
+                    deviceId,
+                    4,
+                    0,
+                    orderType,
+                    payingAgentId,
+                    paymentMode,
+                    1
+                )
             }
         })
 
@@ -528,28 +712,28 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             try {
                 val sendAmountValue = binding.sendAmount.text.toString()
                 sendAmount = sendAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
-            }catch (e:NumberFormatException){
+            } catch (e: NumberFormatException) {
                 e.localizedMessage
             }
 
             try {
                 val receiveAmountValue = binding.receiveAmount.text.toString()
                 beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
-            }catch (e:NumberFormatException){
+            } catch (e: NumberFormatException) {
                 e.localizedMessage
             }
 
             try {
                 val rateValue = binding.exchangeRate.text.toString()
                 rate = rateValue.replace(Regex("[^\\d.]"), "").toDouble()
-            }catch (e:NumberFormatException){
+            } catch (e: NumberFormatException) {
                 e.localizedMessage
             }
 
             try {
                 val commissionValue = binding.commission.text.toString()
                 commission = commissionValue.replace(Regex("[^\\d.]"), "").toDouble()
-            }catch (e:NumberFormatException){
+            } catch (e: NumberFormatException) {
                 e.localizedMessage
             }
 
@@ -595,16 +779,18 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             )
         }
 
+        calculationType = 1
         calculateRate(
-            deviceId,
+            binding.sendAmount.text.toString(),
             beneBankId,
-            payingAgentId,
-            orderType,
-            paymentMode,
+            calculationType,
+            deviceId,
             4,
-            1,
             0,
-            binding.sendAmount.text.toString()
+            orderType,
+            payingAgentId,
+            paymentMode,
+            1
         )
 
         val payingAgentItem = PayingAgentItem(
@@ -626,48 +812,39 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             try {
                 if (result!!.data != null) {
                     for (data in result.data!!) {
-                        commission = data!!.commission.toString().toDouble()
+
+                        if (calculationType == 1) {
+                            beneAmount = data!!.beneficiaryAmount!!
+                            binding.receiveAmount.setText("$beneAmount")
+                        } else if (calculationType == 2) {
+                            sendAmount = data!!.senderAmount!!
+                            binding.sendAmount.setText("$sendAmount")
+                        }
+
+                        commission = data!!.commission!!
                         binding.commission.text = "Fee $commission GBP"
 
                         rate = data.rate!!.toDouble()
                         binding.exchangeRate.text = "BDT $rate"
-
-                        updateValuesGBPtoBDT()
                     }
-                }else{
+                } else {
+                    if (calculationType == 1) {
+                        beneAmount = 0.0
+                        binding.receiveAmount.setText("$beneAmount")
+                    } else if (calculationType == 2) {
+                        sendAmount = 0.0
+                        binding.sendAmount.setText("$sendAmount")
+                    }
+
                     commission = 0.0
                     binding.commission.text = "Fee $commission GBP"
 
                     rate = 0.0
                     binding.exchangeRate.text = "BDT $rate"
-
-                    updateValuesGBPtoBDT()
                 }
             } catch (e: NullPointerException) {
                 e.localizedMessage
             }
-        }
-    }
-
-    private fun updateValuesGBPtoBDT() {
-        val gbpValue = binding.sendAmount.text.toString().toDoubleOrNull()
-        if (gbpValue != null) {
-            val bdtValue = gbpValue * rate
-            val formattedBDT = decimalFormat.format(bdtValue)
-            binding.receiveAmount.setText(formattedBDT.toString())
-        } else {
-            binding.receiveAmount.setText("")
-        }
-    }
-
-    private fun updateValuesBDTtoGBP() {
-        val bdtValue = binding.receiveAmount.text.toString().toDoubleOrNull()
-        if (bdtValue != null) {
-            val gbpValue = bdtValue / rate
-            val formattedGBP = decimalFormat.format(gbpValue)
-            binding.sendAmount.setText(formattedGBP.toString())
-        } else {
-            binding.sendAmount.setText("")
         }
     }
 
@@ -714,16 +891,18 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         beneBankId = selectedItem.bankId!!.toString().toInt()
         beneWalletId = selectedItem.walletId!!.toString().toInt()
 
+        calculationType = 1
         calculateRate(
-            deviceId,
+            binding.sendAmount.text.toString(),
             beneBankId,
-            payingAgentId,
-            orderType,
-            paymentMode,
+            calculationType,
+            deviceId,
             4,
-            1,
             0,
-            binding.sendAmount.text.toString()
+            orderType,
+            payingAgentId,
+            paymentMode,
+            1
         )
     }
 
@@ -733,16 +912,18 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         beneBankId = selectedItem.bankId!!.toString().toInt()
         beneWalletId = selectedItem.walletId!!.toString().toInt()
 
+        calculationType = 1
         calculateRate(
-            deviceId,
+            binding.sendAmount.text.toString(),
             beneBankId,
-            payingAgentId,
-            orderType,
-            paymentMode,
+            calculationType,
+            deviceId,
             4,
-            1,
             0,
-            binding.sendAmount.text.toString()
+            orderType,
+            payingAgentId,
+            paymentMode,
+            1
         )
     }
 
@@ -752,40 +933,44 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         beneBankId = selectedItem.bankId!!.toString().toInt()
         beneWalletId = selectedItem.walletId!!.toString().toInt()
 
+        calculationType = 1
         calculateRate(
-            deviceId,
+            binding.sendAmount.text.toString(),
             beneBankId,
-            payingAgentId,
-            orderType,
-            paymentMode,
+            calculationType,
+            deviceId,
             4,
-            1,
             0,
-            binding.sendAmount.text.toString()
+            orderType,
+            payingAgentId,
+            paymentMode,
+            1
         )
     }
 
     private fun calculateRate(
-        deviceId: String,
+        amount: String,
         bankId: Int,
-        payingAgentId: Int,
-        orderType: Int,
-        paymentMode: Int,
+        calculationType: Int,
+        deviceId: String,
         fromCountry: Int,
-        toCountry: Int,
         mobileOrWebPlatform: Int,
-        amount: String
+        orderType: Int,
+        payingAgentId: Int,
+        paymentMode: Int,
+        toCountry: Int
     ) {
         val calculateRateItem = CalculateRateItem(
-            deviceId = deviceId,
-            bankId = bankId,
-            payingAgentId = payingAgentId,
-            orderType = orderType,
-            paymentMode = paymentMode,
-            fromCountry = fromCountry,
-            toCountry = toCountry,
-            mobileOrWebPlatform = mobileOrWebPlatform,
             amount = amount,
+            bankId = bankId,
+            calculationType = calculationType,
+            deviceId = deviceId,
+            fromCountry = fromCountry,
+            mobileOrWebPlatform = mobileOrWebPlatform,
+            orderType = orderType,
+            payingAgentId = payingAgentId,
+            paymentMode = paymentMode,
+            toCountry = toCountry
         )
         calculationViewModel.calculateRate(calculateRateItem)
     }

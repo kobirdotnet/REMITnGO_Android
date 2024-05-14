@@ -86,7 +86,10 @@ class CancelReasonBottomSheet : BottomSheetDialogFragment() {
         deviceId = getDeviceId(requireContext())
 
         val cancelReasonItem = CancelReasonItem(
-            deviceId = deviceId
+            deviceId = deviceId,
+            dropdownId=310,
+            param1 = 0,
+            param2 = 0
         )
         cancelRequestViewModel.cancelReason(cancelReasonItem)
         observeCancelReasonResult()
@@ -121,7 +124,6 @@ class CancelReasonBottomSheet : BottomSheetDialogFragment() {
                             return true
                         }
                     })
-                    Log.i("info", "get cancel Reason successful: $result")
                 }
             }catch (e:NullPointerException){
                 e.localizedMessage

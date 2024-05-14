@@ -100,14 +100,14 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/beneficiaryRecyclerView"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:background="@color/white"
                             tools:listitem="@layout/item_beneficiary_management" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/contactRecyclerView"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:background="@color/grey"
                             android:visibility="gone"
                             tools:listitem="@layout/item_contact" />

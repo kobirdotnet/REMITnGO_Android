@@ -4,8 +4,8 @@ package com.bsel.remitngo.data.model.calculate_rate
 import com.google.gson.annotations.SerializedName
 
 data class CalculateRateData(
-    @SerializedName("Amount")
-    val amount: Double?,
+    @SerializedName("BeneficiaryAmount")
+    val beneficiaryAmount: Double?,
     @SerializedName("Commission")
     val commission: Double?,
     @SerializedName("FromCurrencyCode")
@@ -13,7 +13,7 @@ data class CalculateRateData(
     @SerializedName("FromCurrencyId")
     val fromCurrencyId: Int?,
     @SerializedName("Msg")
-    val msg: Any?,
+    val msg: String?,
     @SerializedName("OrderTypeId")
     val orderTypeId: Int?,
     @SerializedName("PayeeBank")
@@ -22,6 +22,8 @@ data class CalculateRateData(
     val paymentMode: Int?,
     @SerializedName("Rate")
     val rate: Double?,
+    @SerializedName("SenderAmount")
+    val senderAmount: Double?,
     @SerializedName("ToCurrencyCode")
     val toCurrencyCode: String?,
     @SerializedName("ToCurrencyId")

@@ -244,10 +244,10 @@ interface REMITnGoService {
     @POST("api/Transaction/GetTransactionDetailsByTransactionCode")
     suspend fun paymentTransaction(@Body transactionDetailsItem: TransactionDetailsItem): Response<TransactionDetailsResponseItem>
 
-    @POST("api/General/GetCancelResionList")
+    @POST("api/General/Dropdown")
     suspend fun cancelReason(@Body cancelReasonItem: CancelReasonItem): Response<CancelReasonResponseItem>
 
-    @POST("api/General/GetCancelRequestList")
+    @POST("api/General/GetCancelTransactionList")
     suspend fun getCancelRequest(@Body getCancelRequestItem: GetCancelRequestItem): Response<GetCancelResponseItem>
 
     @POST("api/Transaction/PopulateTransactionListForCancellation")

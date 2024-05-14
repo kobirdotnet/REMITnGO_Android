@@ -9,7 +9,5 @@ data class CalculateRateResponseItem(
     @SerializedName("Data")
     val `data`: List<CalculateRateData?>?,
     @SerializedName("Message")
-    val message: String?,
-    @SerializedName("Token")
-    val token: Any?
+    val message: String?
 )
