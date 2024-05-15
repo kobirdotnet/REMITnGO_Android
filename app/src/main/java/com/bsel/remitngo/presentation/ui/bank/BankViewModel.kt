@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.data.model.bank.BankResponseItem
+import com.bsel.remitngo.data.model.bank.WalletItem
+import com.bsel.remitngo.data.model.bank.WalletResponseItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankResponseItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
@@ -48,6 +50,16 @@ class BankViewModel(private val bankUseCase: BankUseCase) : ViewModel() {
         viewModelScope.launch {
             val result = bankUseCase.execute(bankItem)
             _bankResult.value = result
+        }
+    }
+
+    private val _walletResult = MutableLiveData<WalletResponseItem?>()
+    val walletResult: LiveData<WalletResponseItem?> = _walletResult
+
+    fun wallet(walletItem: WalletItem) {
+        viewModelScope.launch {
+            val result = bankUseCase.execute(walletItem)
+            _walletResult.value = result
         }
     }
 

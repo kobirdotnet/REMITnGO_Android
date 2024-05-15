@@ -117,7 +117,7 @@ class CountyBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            countyAdapter.filter(newText.orEmpty())
+                            countyAdapter.countyFilter(newText.orEmpty())
                             return true
                         }
                     })

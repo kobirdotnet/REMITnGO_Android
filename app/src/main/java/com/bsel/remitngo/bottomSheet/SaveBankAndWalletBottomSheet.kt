@@ -9,14 +9,20 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.SearchView
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
+import com.bsel.remitngo.adapter.BankNameAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBankSelectedListener
 import com.bsel.remitngo.data.interfaceses.OnSaveBankAndWalletSelectedListener
 import com.bsel.remitngo.data.model.bank.BankData
+import com.bsel.remitngo.data.model.bank.BankItem
+import com.bsel.remitngo.data.model.bank.WalletData
+import com.bsel.remitngo.data.model.bank.WalletItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
 import com.bsel.remitngo.data.model.branch.BranchData
 import com.bsel.remitngo.databinding.SaveBankAndWalletLayoutBinding
@@ -41,8 +47,8 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
     private lateinit var saveBankAndWalletBehavior: BottomSheetBehavior<*>
 
     private val bankBottomSheet: BankBottomSheet by lazy { BankBottomSheet() }
-
     private val bankBranchBottomSheet: BranchBottomSheet by lazy { BranchBottomSheet() }
+    private val walletBottomSheet: WalletBottomSheet by lazy { WalletBottomSheet() }
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -133,27 +139,6 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        if (beneAccountName!="null"){
-            binding.bankAccountName.setText(beneAccountName)
-        }
-        if (beneAccountNo!="null"){
-            binding.bankAccountNumber.setText(beneAccountNo)
-        }
-        if (beneAccountName!="null"){
-            binding.walletAccountName.setText(beneAccountName)
-        }
-        if (beneAccountNo!="null"){
-            binding.walletAccountNumber.setText(beneAccountNo)
-        }
-
-        bankAccountNameFocusListener()
-        bankNameFocusListener()
-        branchNameFocusListener()
-        bankAccountNumberFocusListener()
-
-        walletAccountNameFocusListener()
-        phoneNumberFocusListener()
-
         if (orderType == 1) {
             binding.bankAccountLayout.visibility = View.GONE
             binding.walletAccountLayout.visibility = View.VISIBLE
@@ -162,10 +147,71 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
             binding.walletAccountLayout.visibility = View.GONE
         }
 
+        if (beneAccountName != "null") {
+            binding.bankAccountName.setText(beneAccountName)
+            binding.walletAccountName.setText(beneAccountName)
+        }
+
+        bankAccountNameFocusListener()
+        bankNameFocusListener()
+        branchNameFocusListener()
+        bankAccountNumberFocusListener()
+
+        walletAccountNameFocusListener()
+        walletNameFocusListener()
+        walletAccountNumberFocusListener()
+
+        val bankItem = BankItem(
+            deviceId = deviceId,
+            dropdownId = 5,
+            param1 = 1,
+            param2 = beneBankId
+        )
+        bankViewModel.bank(bankItem)
+        bankViewModel.bankResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (bankId in result.data!!) {
+                        if (beneBankId == bankId!!.id!!) {
+                            binding.bankName.setText(bankId.name)
+                        }
+                    }
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
+            }
+        }
+
+        val walletItem = WalletItem(
+            deviceId = deviceId,
+            dropdownId = 311,
+            param1 = beneWalletId,
+            param2 = 0
+        )
+        bankViewModel.wallet(walletItem)
+        bankViewModel.walletResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (walletId in result.data!!) {
+                        if (beneWalletId == walletId!!.id!!) {
+                            binding.walletName.setText(walletId.name)
+                        }
+                    }
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
+            }
+        }
+
         binding.bankName.setOnClickListener {
             bankBottomSheet.setSelectedBank(beneBankId)
             bankBottomSheet.itemSelectedListener = this
             bankBottomSheet.show(childFragmentManager, bankBottomSheet.tag)
+        }
+        binding.walletName.setOnClickListener {
+            walletBottomSheet.setSelectedWallet(beneWalletId)
+            walletBottomSheet.itemSelectedListener = this
+            walletBottomSheet.show(childFragmentManager, walletBottomSheet.tag)
         }
 
         binding.branchName.setOnClickListener {
@@ -217,7 +263,7 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
                 if (result!!.saveBankResponseData != null) {
                     saveBankAndWallet(result.saveBankResponseData.toString())
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }
@@ -269,18 +315,21 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
 
     private fun walletAccountForm() {
         binding.walletAccountNameContainer.helperText = validWalletAccountName()
-        binding.walletAccountNameContainer.helperText = validPhoneNumber()
+        binding.walletNameContainer.helperText = validWalletName()
+        binding.walletAccountNameContainer.helperText = validWalletAccountNumber()
 
         val validWalletAccountName = binding.walletAccountNameContainer.helperText == null
-        val validPhoneNumber = binding.walletAccountNameContainer.helperText == null
+        val validWalletName = binding.walletNameContainer.helperText == null
+        val validWalletAccountNumber = binding.walletAccountNameContainer.helperText == null
 
-        if (validWalletAccountName && validPhoneNumber) {
+        if (validWalletAccountName && validWalletName && validWalletAccountNumber) {
             submitWalletAccountForm()
         }
     }
 
     private fun submitWalletAccountForm() {
         beneAccountName = binding.walletAccountName.text.toString()
+        beneWalletName = binding.walletName.text.toString()
         beneAccountNo = binding.walletAccountNumber.text.toString()
 
         val saveBankItem = SaveBankItem(
@@ -381,18 +430,34 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
         return null
     }
 
-    private fun phoneNumberFocusListener() {
-        binding.walletAccountNumber.setOnFocusChangeListener { _, focused ->
+    private fun walletNameFocusListener() {
+        binding.walletName.setOnFocusChangeListener { _, focused ->
             if (!focused) {
-                binding.walletAccountNumberContainer.helperText = validPhoneNumber()
+                binding.walletNameContainer.helperText = validWalletName()
             }
         }
     }
 
-    private fun validPhoneNumber(): String? {
+    private fun validWalletName(): String? {
+        val walletName = binding.walletName.text.toString()
+        if (walletName.isEmpty()) {
+            return "select wallet name"
+        }
+        return null
+    }
+
+    private fun walletAccountNumberFocusListener() {
+        binding.walletAccountNumber.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.walletAccountNumberContainer.helperText = validWalletAccountNumber()
+            }
+        }
+    }
+
+    private fun validWalletAccountNumber(): String? {
         val phoneNumber = binding.walletAccountNumber.text.toString()
         if (phoneNumber.isEmpty()) {
-            return "enter phone number"
+            return "enter wallet account number"
         }
         return null
     }
@@ -401,6 +466,12 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
         beneBankId = selectedItem.id!!
         beneBankName = selectedItem.name!!
         binding.bankName.setText(beneBankName)
+    }
+
+    override fun onWalletItemSelected(selectedItem: WalletData) {
+        beneWalletId = selectedItem.id!!
+        beneWalletName = selectedItem.name!!
+        binding.walletName.setText(beneWalletName)
     }
 
     override fun onBranchItemSelected(selectedItem: BranchData) {

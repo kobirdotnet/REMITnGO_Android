@@ -41,9 +41,9 @@ class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
     private lateinit var deviceId: String
     private lateinit var personId: String
 
-    private var complainId: Int = 0
-    private var queryTypeId: Int = 0
-    private var transactionCode: Int = 0
+    private var complainId: Int? = 0
+    private var queryTypeId: Int? = 0
+    private var transactionCode: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,7 +74,7 @@ class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
 
         binding.btnAddMessage.setOnClickListener {
             queryMessageBottomSheet.itemSelectedListener = this
-            queryMessageBottomSheet.setData(complainId,queryTypeId,transactionCode)
+            queryMessageBottomSheet.setData(complainId!!,queryTypeId!!,transactionCode!!)
             queryMessageBottomSheet.show(childFragmentManager, queryMessageBottomSheet.tag)
         }
 
@@ -117,9 +117,9 @@ class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
                                 binding.messageLayout.visibility = View.GONE
                             }
 
-                            complainId = queryData.complainID.toString().toInt()
-                            queryTypeId = queryData.complainType.toString().toInt()
-                            transactionCode = queryData.transactionCode.toString().toInt()
+                            complainId = queryData.complainID
+                            queryTypeId = queryData.complainType
+                            transactionCode = queryData.transactionCode
                         }
                     }
                 }

@@ -37,14 +37,16 @@ class CountyAdapter(
     fun setList(countyItem: List<CountyData>) {
         countyItemList.clear()
         countyItemList.addAll(countyItem)
-        filter("")
+        countyFilter("")
     }
 
-    fun filter(query: String) {
+    fun countyFilter(query: String) {
         filteredCountyItemList.clear()
         for (countyItem in countyItemList) {
-            if (countyItem.name!!.contains(query, ignoreCase = true)) {
-                filteredCountyItemList.add(countyItem)
+            if (countyItem.name!=null){
+                if (countyItem.name!!.contains(query, ignoreCase = true)) {
+                    filteredCountyItemList.add(countyItem)
+                }
             }
         }
         notifyDataSetChanged()

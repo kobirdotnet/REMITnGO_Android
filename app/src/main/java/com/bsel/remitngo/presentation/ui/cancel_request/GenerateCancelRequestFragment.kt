@@ -166,7 +166,7 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
     private fun validTransactionCode(): String? {
         val transactionCode = binding.transactionCode.text.toString()
         if (transactionCode.isEmpty()) {
-            return "enter transaction code"
+            return "Enter Transaction Code"
         }
         return null
     }
@@ -182,7 +182,7 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
     private fun validTransactionDate(): String? {
         val transactionDate = binding.transactionDate.text.toString()
         if (transactionDate.isEmpty()) {
-            return "enter transaction date"
+            return "Enter Transaction Date"
         }
         return null
     }
@@ -198,7 +198,7 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
     private fun validOrderType(): String? {
         val orderType = binding.orderType.text.toString()
         if (orderType.isEmpty()) {
-            return "enter order type"
+            return "Enter Order Type"
         }
         return null
     }
@@ -214,7 +214,7 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
     private fun validBeneficiaryName(): String? {
         val beneficiaryName = binding.beneficiaryName.text.toString()
         if (beneficiaryName.isEmpty()) {
-            return "enter beneficiary name"
+            return "Enter Beneficiary Name"
         }
         return null
     }
@@ -230,7 +230,7 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
     private fun validSendAmount(): String? {
         val sendAmount = binding.sendAmount.text.toString()
         if (sendAmount.isEmpty()) {
-            return "enter send amount"
+            return "Enter Send Amount"
         }
         return null
     }
@@ -246,7 +246,7 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
     private fun validCancelReason(): String? {
         val cancelReason = binding.cancelReason.text.toString()
         if (cancelReason.isEmpty()) {
-            return "select cancel reason"
+            return "Select Cancel Reason"
         }
         return null
     }
@@ -262,7 +262,7 @@ class GenerateCancelRequestFragment : Fragment(), OnCancelReasonItemSelectedList
     private fun validDescription(): String? {
         val description = binding.description.text.toString()
         if (description.isEmpty()) {
-            return "enter description"
+            return "Enter EDescription"
         }
         return null
     }

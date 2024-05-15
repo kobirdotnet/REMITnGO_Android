@@ -4,42 +4,42 @@ package com.bsel.remitngo.data.model.cancel_request.populate_cancel_request
 import com.google.gson.annotations.SerializedName
 
 data class PopulateCancelData(
-    @SerializedName("BankName")
-    val bankName: String?,
-    @SerializedName("BeneAccountName")
-    val beneAccountName: String?,
     @SerializedName("BeneAccountNo")
     val beneAccountNo: String?,
     @SerializedName("BeneAmount")
     val beneAmount: Double?,
-    @SerializedName("BeneBankId")
-    val beneBankId: Int?,
-    @SerializedName("BeneBranchId")
-    val beneBranchId: Int?,
-    @SerializedName("BeneId")
-    val beneId: Int?,
-    @SerializedName("BeneMobile")
-    val beneMobile: String?,
-    @SerializedName("BeneWalletId")
-    val beneWalletId: Int?,
-    @SerializedName("BeneWalletNo")
-    val beneWalletNo: String?,
-    @SerializedName("BeneficiaryName")
-    val beneficiaryName: String?,
+    @SerializedName("BeneBankName")
+    val beneBankName: String?,
+    @SerializedName("BeneName")
+    val beneName: String?,
     @SerializedName("CustomerId")
     val customerId: Int?,
-    @SerializedName("Id")
-    val id: Int?,
+    @SerializedName("EmpTransactionForm")
+    val empTransactionForm: String?,
     @SerializedName("OrderStatus")
     val orderStatus: Int?,
-    @SerializedName("OrderStatusName")
-    val orderStatusName: String?,
     @SerializedName("OrderTypeName")
     val orderTypeName: String?,
+    @SerializedName("PaymentMode")
+    val paymentMode: Int?,
+    @SerializedName("PaymentStatus")
+    val paymentStatus: String?,
+    @SerializedName("PaymentTypeName")
+    val paymentTypeName: String?,
+    @SerializedName("Rate")
+    val rate: Double?,
+    @SerializedName("SendAmount")
+    val sendAmount: Double?,
+    @SerializedName("TotalAmount")
+    val totalAmount: Double?,
     @SerializedName("TransactionCode")
     val transactionCode: String?,
+    @SerializedName("TransactionDate")
+    val transactionDate: String?,
     @SerializedName("TransactionDateTime12hr")
     val transactionDateTime12hr: String?,
     @SerializedName("TransactionStatus")
-    val transactionStatus: String?
+    val transactionStatus: String?,
+    @SerializedName("TransferFees")
+    val transferFees: Double?
 )

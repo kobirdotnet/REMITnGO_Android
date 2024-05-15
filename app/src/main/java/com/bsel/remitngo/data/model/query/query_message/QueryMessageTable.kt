@@ -21,7 +21,7 @@ data class QueryMessageTable(
     @SerializedName("ComplainUpdateByUserType")
     val complainUpdateByUserType: String?,
     @SerializedName("DateStringForApp")
-    val dateStringForApp: String?,
+    val dateStringForApp: Any?,
     @SerializedName("Message")
     val message: String?,
     @SerializedName("Name")

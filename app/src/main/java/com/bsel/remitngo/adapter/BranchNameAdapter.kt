@@ -37,14 +37,16 @@ class BranchNameAdapter(
     fun setList(branchItem: List<BranchData>) {
         branchItemList.clear()
         branchItemList.addAll(branchItem)
-        filter("")
+        branchFilter("")
     }
 
-    fun filter(query: String) {
+    fun branchFilter(query: String) {
         filteredBranchItemList.clear()
         for (branchItem in branchItemList) {
-            if (branchItem.name!!.contains(query, ignoreCase = true)) {
-                filteredBranchItemList.add(branchItem)
+            if (branchItem.name != null) {
+                if (branchItem.name.contains(query, ignoreCase = true)) {
+                    filteredBranchItemList.add(branchItem)
+                }
             }
         }
         notifyDataSetChanged()
@@ -58,7 +60,7 @@ class BranchNameViewHolder(val binding: ItemBranchBinding) :
         branchItem: BranchData,
         selectedItem: (BranchData) -> Unit
     ) {
-        if (branchItem.name != null){
+        if (branchItem.name != null) {
             binding.bankBranchName.text = branchItem.name
         }
         binding.itemBranchLayout.setOnClickListener {

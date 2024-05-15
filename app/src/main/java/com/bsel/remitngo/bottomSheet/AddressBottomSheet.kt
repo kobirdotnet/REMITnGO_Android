@@ -116,7 +116,7 @@ class AddressBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            addressAdapter.filter(newText.orEmpty())
+                            addressAdapter.addressFilter(newText.orEmpty())
                             return true
                         }
                     })

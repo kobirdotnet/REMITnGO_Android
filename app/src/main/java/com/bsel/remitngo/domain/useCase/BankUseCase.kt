@@ -2,6 +2,8 @@ package com.bsel.remitngo.domain.useCase
 
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.data.model.bank.BankResponseItem
+import com.bsel.remitngo.data.model.bank.WalletItem
+import com.bsel.remitngo.data.model.bank.WalletResponseItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankResponseItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
@@ -24,6 +26,9 @@ class BankUseCase(private val bankRepository: BankRepository) {
     }
     suspend fun execute(bankItem: BankItem): BankResponseItem? {
         return bankRepository.bank(bankItem)
+    }
+    suspend fun execute(walletItem: WalletItem): WalletResponseItem? {
+        return bankRepository.wallet(walletItem)
     }
 
     suspend fun execute(divisionItem: DivisionItem): DivisionResponseItem? {

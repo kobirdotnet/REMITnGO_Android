@@ -134,7 +134,7 @@ class DocumentTypeBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            documentTypeAdapter.filter(newText.orEmpty())
+                            documentTypeAdapter.documentTypeFilter(newText.orEmpty())
                             return true
                         }
                     })

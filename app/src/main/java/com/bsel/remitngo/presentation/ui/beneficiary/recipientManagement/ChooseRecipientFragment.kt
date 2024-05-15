@@ -324,7 +324,7 @@ class ChooseRecipientFragment : Fragment() {
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        contactsAdapter.filter(newText.orEmpty())
+                        contactsAdapter.contactFilter(newText.orEmpty())
                         return true
                     }
                 })

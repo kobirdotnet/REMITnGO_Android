@@ -37,14 +37,16 @@ class BankNameAdapter(
     fun setList(bankItem: List<BankData>) {
         bankItemList.clear()
         bankItemList.addAll(bankItem)
-        filter("")
+        bankFilter("")
     }
 
-    fun filter(query: String) {
+    fun bankFilter(query: String) {
         filteredBankItemList.clear()
         for (bankItem in bankItemList) {
-            if (bankItem.name!!.contains(query, ignoreCase = true)) {
-                filteredBankItemList.add(bankItem)
+            if (bankItem.name !=null){
+                if (bankItem.name!!.contains(query, ignoreCase = true)) {
+                    filteredBankItemList.add(bankItem)
+                }
             }
         }
         notifyDataSetChanged()

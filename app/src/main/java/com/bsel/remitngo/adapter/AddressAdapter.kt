@@ -37,14 +37,16 @@ class AddressAdapter(
     fun setList(addressItem: List<PostCodeData>) {
         addressItemList.clear()
         addressItemList.addAll(addressItem)
-        filter("")
+        addressFilter("")
     }
 
-    fun filter(query: String) {
+    fun addressFilter(query: String) {
         filteredAddressItemList.clear()
         for (addressItem in addressItemList) {
-            if (addressItem.ukAddress!!.contains(query, ignoreCase = true)) {
-                filteredAddressItemList.add(addressItem)
+            if (addressItem.ukAddress!=null){
+                if (addressItem.ukAddress.contains(query, ignoreCase = true)) {
+                    filteredAddressItemList.add(addressItem)
+                }
             }
         }
         notifyDataSetChanged()

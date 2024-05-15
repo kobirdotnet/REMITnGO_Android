@@ -37,14 +37,16 @@ class UkDivisionAdapter(
     fun setList(ukDivisionItem: List<UkDivisionData>) {
         ukDivisionItemList.clear()
         ukDivisionItemList.addAll(ukDivisionItem)
-        filter("")
+        ukDivisionFilter("")
     }
 
-    fun filter(query: String) {
+    fun ukDivisionFilter(query: String) {
         filteredUkDivisionItemList.clear()
         for (ukDivisionItem in ukDivisionItemList) {
-            if (ukDivisionItem.name!!.contains(query, ignoreCase = true)) {
-                filteredUkDivisionItemList.add(ukDivisionItem)
+            if (ukDivisionItem.name!=null){
+                if (ukDivisionItem.name.contains(query, ignoreCase = true)) {
+                    filteredUkDivisionItemList.add(ukDivisionItem)
+                }
             }
         }
         notifyDataSetChanged()

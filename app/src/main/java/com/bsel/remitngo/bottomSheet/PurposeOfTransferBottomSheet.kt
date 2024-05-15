@@ -114,7 +114,7 @@ class PurposeOfTransferBottomSheet : BottomSheetDialogFragment() {
                             }
 
                             override fun onQueryTextChange(newText: String?): Boolean {
-                                reasonNameAdapter.filter(newText.orEmpty())
+                                reasonNameAdapter.reasonFilter(newText.orEmpty())
                                 return true
                             }
                         })

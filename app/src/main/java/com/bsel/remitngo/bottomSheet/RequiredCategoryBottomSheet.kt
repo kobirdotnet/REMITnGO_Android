@@ -167,7 +167,7 @@ class RequiredCategoryBottomSheet : BottomSheetDialogFragment() {
                                 }
 
                                 override fun onQueryTextChange(newText: String?): Boolean {
-                                    documentCategoryAdapter.filter(newText.orEmpty())
+                                    documentCategoryAdapter.categoryFilter(newText.orEmpty())
                                     return true
                                 }
                             })

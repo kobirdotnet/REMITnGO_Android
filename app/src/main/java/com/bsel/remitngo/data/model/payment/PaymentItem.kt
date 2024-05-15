@@ -69,5 +69,11 @@ data class PaymentItem(
     @SerializedName("totalAmountGiven")
     val totalAmount: Double?,
     @SerializedName("userIPAddress")
-    val userIPAddress: String?
+    val userIPAddress: String?,
+    @SerializedName("IsOtpRequireForTxn")
+    val isOtpRequireForTxn: Boolean?,
+    @SerializedName("OtpRequireReason")
+    val otpRequireReason: String?,
+    @SerializedName("IsOtpValidated")
+    val isOtpValidated: Boolean?
 )

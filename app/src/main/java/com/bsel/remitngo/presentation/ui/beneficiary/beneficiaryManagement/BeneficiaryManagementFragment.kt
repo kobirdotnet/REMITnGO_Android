@@ -431,7 +431,7 @@ class BeneficiaryManagementFragment : Fragment(),
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    contactAdapter.filter(newText.orEmpty())
+                    contactAdapter.contactFilter(newText.orEmpty())
                     return true
                 }
             })

@@ -1,6 +1,5 @@
 package com.bsel.remitngo.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,19 +36,20 @@ class TransactionAdapter(
     fun setList(transactionItem: List<TransactionData>) {
         transactionList.clear()
         transactionList.addAll(transactionItem)
-        filter("")
+        transactionFilter("")
     }
 
-    fun filter(query: String) {
+    fun transactionFilter(query: String) {
         filteredTransactionList.clear()
         for (transactions in transactionList) {
-            if (transactions.transactionCode!!.contains(query, ignoreCase = true)) {
-                filteredTransactionList.add(transactions)
+            if (transactions.transactionCode!=null){
+                if (transactions.transactionCode!!.contains(query, ignoreCase = true)) {
+                    filteredTransactionList.add(transactions)
+                }
             }
         }
         notifyDataSetChanged()
     }
-
 }
 
 class TransactionViewHolder(val binding: ItemTransactionBinding) :
@@ -61,7 +61,7 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
         sendAgain: (TransactionData) -> Unit
     ) {
         if (transactionItem.beneName.toString() != null) {
-            binding.benName.text = transactionItem.beneName.toString()
+            binding.beneName.text = transactionItem.beneName.toString()
         }
         if (transactionItem.orderTypeName.toString() != null) {
             binding.orderType.text = transactionItem.orderTypeName.toString()
@@ -79,24 +79,12 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
             binding.accountNo.text = transactionItem.beneAccountNo.toString()
         }
         if (transactionItem.beneAmount.toString() != null) {
-            val benAmount = transactionItem.beneAmount.toString()
-            binding.benAmount.text = "BDT $benAmount"
+            val beneAmount = transactionItem.beneAmount.toString()
+            binding.beneAmount.text = "BDT $beneAmount"
         }
-        if (transactionItem.paymentMode.toString() != null) {
-            val paymentMode = transactionItem.paymentMode.toString()
-            Log.i("info", "paymentMode: $paymentMode")
-        }
-        if (transactionItem.transactionCode.toString() != null) {
-            val transactionCode = transactionItem.transactionCode.toString()
-            Log.i("info", "transactionCode: $transactionCode")
-        }
-        if (transactionItem.paymentStatus.toString() != null) {
-            val paymentStatus = transactionItem.paymentStatus.toString()
-            Log.i("info", "paymentStatus: $paymentStatus")
-        }
+
         if (transactionItem.orderStatus.toString() != null) {
             val orderStatus = transactionItem.orderStatus.toString().toInt()
-            Log.i("info", "orderStatus: $orderStatus")
             if (orderStatus == 7 || orderStatus == 8 || orderStatus == 10 || orderStatus == 11) {
                 binding.cancelStatus.visibility = View.VISIBLE
                 binding.successStatus.visibility = View.GONE
@@ -111,24 +99,52 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
                 binding.btnDownloadReceipt.text = "Download Receipt"
             }
 
+            val greenColor = binding.root.context.resources.getColor(R.color.green)
+            val textColor = binding.root.context.resources.getColor(R.color.text_color)
             when (orderStatus) {
                 1 -> {
-                    binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
-                    binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_white)
-                    binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_white)
-                    binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_white)
+                    binding.imgPaymentReceived.setImageResource(R.drawable.circle_check_green)
+                    binding.imgOnTheWay.setImageResource(R.drawable.circle_check_white)
+                    binding.imgSendToBank.setImageResource(R.drawable.circle_check_white)
+                    binding.imgPaidToBeneficiary.setImageResource(R.drawable.circle_check_white)
+
+                    binding.txtPaymentReceived.setTextColor(greenColor)
+                    binding.txtOnTheWay.setTextColor(textColor)
+                    binding.txtSendToBank.setTextColor(textColor)
+                    binding.txtPaidToBeneficiary.setTextColor(textColor)
                 }
                 2, 3, 4 -> {
-                    binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
-                    binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_green)
-                    binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_white)
-                    binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_white)
+                    binding.imgPaymentReceived.setImageResource(R.drawable.circle_check_green)
+                    binding.imgOnTheWay.setImageResource(R.drawable.circle_check_green)
+                    binding.imgSendToBank.setImageResource(R.drawable.circle_check_white)
+                    binding.imgPaidToBeneficiary.setImageResource(R.drawable.circle_check_white)
+
+                    binding.txtPaymentReceived.setTextColor(greenColor)
+                    binding.txtOnTheWay.setTextColor(greenColor)
+                    binding.txtSendToBank.setTextColor(textColor)
+                    binding.txtPaidToBeneficiary.setTextColor(textColor)
                 }
                 5 -> {
-                    binding.imgPaymentReceived.setBackgroundResource(R.drawable.circle_background_green)
-                    binding.imgOnTheWay.setBackgroundResource(R.drawable.circle_background_green)
-                    binding.imgSendToBank.setBackgroundResource(R.drawable.circle_background_green)
-                    binding.imgPaidToBeneficiary.setBackgroundResource(R.drawable.circle_background_white)
+                    binding.imgPaymentReceived.setImageResource(R.drawable.circle_check_green)
+                    binding.imgOnTheWay.setImageResource(R.drawable.circle_check_green)
+                    binding.imgSendToBank.setImageResource(R.drawable.circle_check_green)
+                    binding.imgPaidToBeneficiary.setImageResource(R.drawable.circle_check_white)
+
+                    binding.txtPaymentReceived.setTextColor(greenColor)
+                    binding.txtOnTheWay.setTextColor(greenColor)
+                    binding.txtSendToBank.setTextColor(greenColor)
+                    binding.txtPaidToBeneficiary.setTextColor(textColor)
+                }
+                9 -> {
+                    binding.imgPaymentReceived.setImageResource(R.drawable.circle_check_green)
+                    binding.imgOnTheWay.setImageResource(R.drawable.circle_check_green)
+                    binding.imgSendToBank.setImageResource(R.drawable.circle_check_green)
+                    binding.imgPaidToBeneficiary.setImageResource(R.drawable.circle_check_green)
+
+                    binding.txtPaymentReceived.setTextColor(greenColor)
+                    binding.txtOnTheWay.setTextColor(greenColor)
+                    binding.txtSendToBank.setTextColor(greenColor)
+                    binding.txtPaidToBeneficiary.setTextColor(greenColor)
                 }
             }
         }

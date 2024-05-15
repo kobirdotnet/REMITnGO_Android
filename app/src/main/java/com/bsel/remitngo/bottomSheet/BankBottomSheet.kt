@@ -6,7 +6,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.annotation.NonNull
@@ -15,10 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.BankNameAdapter
+import com.bsel.remitngo.data.interfaceses.OnBankSelectedListener
 import com.bsel.remitngo.data.model.bank.BankData
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.databinding.BankNameLayoutBinding
-import com.bsel.remitngo.data.interfaceses.OnBankSelectedListener
 import com.bsel.remitngo.presentation.di.Injector
 import com.bsel.remitngo.presentation.ui.bank.BankViewModel
 import com.bsel.remitngo.presentation.ui.bank.BankViewModelFactory
@@ -119,7 +118,7 @@ class BankBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            bankNameAdapter.filter(newText.orEmpty())
+                            bankNameAdapter.bankFilter(newText.orEmpty())
                             return true
                         }
                     })

@@ -121,7 +121,7 @@ class BranchBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            branchNameAdapter.filter(newText.orEmpty())
+                            branchNameAdapter.branchFilter(newText.orEmpty())
                             return true
                         }
                     })

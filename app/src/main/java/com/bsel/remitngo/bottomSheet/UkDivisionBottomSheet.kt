@@ -118,7 +118,7 @@ class UkDivisionBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            ukDivisionAdapter.filter(newText.orEmpty())
+                            ukDivisionAdapter.ukDivisionFilter(newText.orEmpty())
                             return true
                         }
                     })

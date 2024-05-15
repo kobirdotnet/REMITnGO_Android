@@ -281,7 +281,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
                                 }
 
                                 override fun onQueryTextChange(newText: String?): Boolean {
-                                    beneficiaryAdapter.filter(newText.orEmpty())
+                                    beneficiaryAdapter.beneficiaryFilter(newText.orEmpty())
                                     return true
                                 }
                             })
@@ -401,7 +401,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    contactAdapter.filter(newText.orEmpty())
+                    contactAdapter.contactFilter(newText.orEmpty())
                     return true
                 }
             })

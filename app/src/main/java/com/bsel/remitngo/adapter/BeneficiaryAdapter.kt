@@ -38,14 +38,16 @@ class BeneficiaryAdapter(
     fun setList(beneficiaryItem: List<GetBeneficiaryData>) {
         beneficiaryList.clear()
         beneficiaryList.addAll(beneficiaryItem)
-        filter("")
+        beneficiaryFilter("")
     }
 
-    fun filter(query: String) {
+    fun beneficiaryFilter(query: String) {
         filteredBeneficiaryList.clear()
         for (beneficiaries in beneficiaryList) {
-            if (beneficiaries.beneName!!.contains(query, ignoreCase = true)) {
-                filteredBeneficiaryList.add(beneficiaries)
+            if (beneficiaries.beneName !=null){
+                if (beneficiaries.beneName.contains(query, ignoreCase = true)) {
+                    filteredBeneficiaryList.add(beneficiaries)
+                }
             }
         }
         notifyDataSetChanged()

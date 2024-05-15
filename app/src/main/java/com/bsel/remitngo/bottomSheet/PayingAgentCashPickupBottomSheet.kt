@@ -122,7 +122,7 @@ class PayingAgentCashPickupBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            payingAgentCashPickupAdapter.filter(newText.orEmpty())
+                            payingAgentCashPickupAdapter.payingAgentCashPickupFilter(newText.orEmpty())
                             return true
                         }
                     })

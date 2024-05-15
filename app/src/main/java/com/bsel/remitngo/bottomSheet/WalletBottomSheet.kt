@@ -13,47 +13,48 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
-import com.bsel.remitngo.adapter.SourceOfIncomeAdapter
-import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
-import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeData
-import com.bsel.remitngo.data.model.profile.sourceOfIncome.SourceOfIncomeItem
-import com.bsel.remitngo.databinding.SourceOfIncomeLayoutBinding
-import com.bsel.remitngo.data.interfaceses.OnPersonalInfoItemSelectedListener
+import com.bsel.remitngo.adapter.WalletNameAdapter
+import com.bsel.remitngo.data.interfaceses.OnBankSelectedListener
+import com.bsel.remitngo.data.model.bank.WalletData
+import com.bsel.remitngo.data.model.bank.WalletItem
+import com.bsel.remitngo.databinding.WalletNameLayoutBinding
 import com.bsel.remitngo.presentation.di.Injector
-import com.bsel.remitngo.presentation.ui.profile.ProfileViewModel
-import com.bsel.remitngo.presentation.ui.profile.ProfileViewModelFactory
+import com.bsel.remitngo.presentation.ui.bank.BankViewModel
+import com.bsel.remitngo.presentation.ui.bank.BankViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 
-class SourceOfFundBottomSheet : BottomSheetDialogFragment() {
+class WalletBottomSheet : BottomSheetDialogFragment() {
     @Inject
-    lateinit var profileViewModelFactory: ProfileViewModelFactory
-    private lateinit var profileViewModel: ProfileViewModel
+    lateinit var bankViewModelFactory: BankViewModelFactory
+    private lateinit var bankViewModel: BankViewModel
 
-    var itemSelectedListener: OnBeneficiarySelectedListener? = null
+    var itemSelectedListener: OnBankSelectedListener? = null
 
-    private lateinit var sourceOfIncomeBehavior: BottomSheetBehavior<*>
+    private lateinit var walletNameBehavior: BottomSheetBehavior<*>
 
-    private lateinit var binding: SourceOfIncomeLayoutBinding
+    private lateinit var binding: WalletNameLayoutBinding
 
-    private lateinit var sourceOfIncomeAdapter: SourceOfIncomeAdapter
+    private lateinit var walletNameAdapter: WalletNameAdapter
 
     private lateinit var deviceId: String
 
+    private var beneWalletId: Int = 0
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        val view = View.inflate(requireContext(), R.layout.source_of_income_layout, null)
+        val view = View.inflate(requireContext(), R.layout.wallet_name_layout, null)
         binding = DataBindingUtil.bind(view)!!
 
         bottomSheet.setContentView(view)
-        sourceOfIncomeBehavior = BottomSheetBehavior.from(view.parent as View)
-        sourceOfIncomeBehavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
+        walletNameBehavior = BottomSheetBehavior.from(view.parent as View)
+        walletNameBehavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
 
         binding.extraSpace.minimumHeight = (Resources.getSystem().displayMetrics.heightPixels)
 
-        sourceOfIncomeBehavior.addBottomSheetCallback(object :
+        walletNameBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(@NonNull view: View, i: Int) {
                 when (i) {
@@ -70,49 +71,54 @@ class SourceOfFundBottomSheet : BottomSheetDialogFragment() {
             override fun onSlide(@NonNull view: View, v: Float) {}
         })
 
-        (requireActivity().application as Injector).createProfileSubComponent().inject(this)
+        (requireActivity().application as Injector).createBankSubComponent().inject(this)
 
-        profileViewModel =
-            ViewModelProvider(this, profileViewModelFactory)[ProfileViewModel::class.java]
+        bankViewModel =
+            ViewModelProvider(this, bankViewModelFactory)[BankViewModel::class.java]
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
         deviceId = getDeviceId(requireContext())
-        val sourceOfIncomeItem = SourceOfIncomeItem(
+
+        val walletItem = WalletItem(
             deviceId = deviceId,
-            dropdownId = 307,
-            param1 = 0,
+            dropdownId = 311,
+            param1 = beneWalletId,
             param2 = 0
         )
-        profileViewModel.sourceOfIncome(sourceOfIncomeItem)
-        observeSourceOfIncomeResult()
+        bankViewModel.wallet(walletItem)
+        observeWalletResult()
 
         return bottomSheet
     }
 
-    private fun observeSourceOfIncomeResult() {
-        profileViewModel.sourceOfIncomeResult.observe(this) { result ->
+    fun setSelectedWallet(beneWalletId: Int) {
+        this.beneWalletId = beneWalletId
+    }
+
+    private fun observeWalletResult() {
+        bankViewModel.walletResult.observe(this) { result ->
             try {
                 if (result!!.data != null) {
-                    binding.sourceOfIncomeRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                    sourceOfIncomeAdapter = SourceOfIncomeAdapter(
-                        selectedItem = { selectedItem: SourceOfIncomeData ->
-                            sourceOfIncome(selectedItem)
-                            binding.sourceOfIncomeSearch.setQuery("", false)
+                    binding.walletRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                    walletNameAdapter = WalletNameAdapter(
+                        selectedItem = { selectedItem: WalletData ->
+                            walletItem(selectedItem)
+                            binding.walletSearch.setQuery("", false)
                         }
                     )
-                    binding.sourceOfIncomeRecyclerView.adapter = sourceOfIncomeAdapter
-                    sourceOfIncomeAdapter.setList(result.data as List<SourceOfIncomeData>)
-                    sourceOfIncomeAdapter.notifyDataSetChanged()
+                    binding.walletRecyclerView.adapter = walletNameAdapter
+                    walletNameAdapter.setList(result.data as List<WalletData>)
+                    walletNameAdapter.notifyDataSetChanged()
 
-                    binding.sourceOfIncomeSearch.setOnQueryTextListener(object :
+                    binding.walletSearch.setOnQueryTextListener(object :
                         SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String?): Boolean {
                             return false
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            sourceOfIncomeAdapter.sourceOfFundFilter(newText.orEmpty())
+                            walletNameAdapter.walletFilter(newText.orEmpty())
                             return true
                         }
                     })
@@ -123,8 +129,8 @@ class SourceOfFundBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun sourceOfIncome(selectedItem: SourceOfIncomeData) {
-        itemSelectedListener?.onSourceOfFundItemSelected(selectedItem)
+    private fun walletItem(selectedItem: WalletData) {
+        itemSelectedListener?.onWalletItemSelected(selectedItem)
         dismiss()
     }
 
@@ -147,7 +153,7 @@ class SourceOfFundBottomSheet : BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        sourceOfIncomeBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        walletNameBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
 }

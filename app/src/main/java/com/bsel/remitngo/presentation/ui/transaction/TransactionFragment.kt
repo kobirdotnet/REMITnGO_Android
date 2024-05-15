@@ -221,7 +221,7 @@ class TransactionFragment : Fragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            transactionAdapter.filter(newText.orEmpty())
+                            transactionAdapter.transactionFilter(newText.orEmpty())
                             return true
                         }
                     })

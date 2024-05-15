@@ -38,14 +38,16 @@ class ReasonNameAdapter(
     fun setList(reasonItem: List<ReasonData>) {
         reasonItemList.clear()
         reasonItemList.addAll(reasonItem)
-        filter("")
+        reasonFilter("")
     }
 
-    fun filter(query: String) {
+    fun reasonFilter(query: String) {
         filteredReasonItemList.clear()
         for (reasonItem in reasonItemList) {
-            if (reasonItem.name!!.contains(query, ignoreCase = true)) {
-                filteredReasonItemList.add(reasonItem)
+            if (reasonItem.name!=null){
+                if (reasonItem.name.contains(query, ignoreCase = true)) {
+                    filteredReasonItemList.add(reasonItem)
+                }
             }
         }
         notifyDataSetChanged()

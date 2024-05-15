@@ -37,14 +37,16 @@ class CityAdapter(
     fun setList(cityItem: List<CityData>) {
         cityItemList.clear()
         cityItemList.addAll(cityItem)
-        filter("")
+        cityFilter("")
     }
 
-    fun filter(query: String) {
+    fun cityFilter(query: String) {
         filteredCityItemList.clear()
         for (cityItem in cityItemList) {
-            if (cityItem.name!!.contains(query, ignoreCase = true)) {
-                filteredCityItemList.add(cityItem)
+            if (cityItem.name!=null){
+                if (cityItem.name.contains(query, ignoreCase = true)) {
+                    filteredCityItemList.add(cityItem)
+                }
             }
         }
         notifyDataSetChanged()

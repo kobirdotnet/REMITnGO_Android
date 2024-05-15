@@ -37,14 +37,16 @@ class ContactAdapter(
     fun setList(contact: List<Contact>) {
         contactsList.clear()
         contactsList.addAll(contact)
-        filter("")
+        contactFilter("")
     }
 
-    fun filter(query: String) {
+    fun contactFilter(query: String) {
         filteredContactsList.clear()
         for (contacts in contactsList) {
-            if (contacts.name!!.contains(query, ignoreCase = true)) {
-                filteredContactsList.add(contacts)
+            if (contacts.name !=null){
+                if (contacts.name!!.contains(query, ignoreCase = true)) {
+                    filteredContactsList.add(contacts)
+                }
             }
         }
         notifyDataSetChanged()

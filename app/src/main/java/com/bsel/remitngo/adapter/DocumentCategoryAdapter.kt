@@ -37,14 +37,16 @@ class DocumentCategoryAdapter(
     fun setList(category: List<DocumentCategoryData>) {
         documentCategoryList.clear()
         documentCategoryList.addAll(category)
-        filter("")
+        categoryFilter("")
     }
 
-    fun filter(query: String) {
+    fun categoryFilter(query: String) {
         filteredDocumentCategoryList.clear()
         for (category in documentCategoryList) {
-            if (category.name!!.contains(query, ignoreCase = true)) {
-                filteredDocumentCategoryList.add(category)
+            if (category.name!=null){
+                if (category.name!!.contains(query, ignoreCase = true)) {
+                    filteredDocumentCategoryList.add(category)
+                }
             }
         }
         notifyDataSetChanged()

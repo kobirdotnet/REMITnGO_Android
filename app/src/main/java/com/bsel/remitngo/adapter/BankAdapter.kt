@@ -37,15 +37,23 @@ class BankAdapter(
     fun setList(bankItem: List<GetBankData>) {
         bankList.clear()
         bankList.addAll(bankItem)
-        filter("")
+        bankOrWalletFilter("")
     }
 
-    fun filter(query: String) {
+    fun bankOrWalletFilter(query: String) {
         filteredBankList.clear()
         for (bankData in bankList) {
-            if (bankData.bankName!!.contains(query, ignoreCase = true)) {
-                filteredBankList.add(bankData)
+            if (bankData.bankName !=null){
+                if (bankData.bankName.contains(query, ignoreCase = true)) {
+                    filteredBankList.add(bankData)
+                }
             }
+            if (bankData.walletName !=null){
+                if (bankData.walletName.contains(query, ignoreCase = true)) {
+                    filteredBankList.add(bankData)
+                }
+            }
+
         }
         notifyDataSetChanged()
     }
@@ -62,7 +70,10 @@ class BankViewHolder(val binding: ItemGetBankBinding) :
             binding.accountName.text = bankItem.accountName.toString()
         }
         if (bankItem.bankName != null){
-            binding.bankName.text = bankItem.bankName.toString()
+            binding.bankOrWalletName.text = bankItem.bankName.toString()
+        }
+        if (bankItem.walletName != null){
+            binding.bankOrWalletName.text = bankItem.walletName.toString()
         }
         if (bankItem.accountNo != null){
             binding.accountNo.text = bankItem.accountNo.toString()

@@ -21,6 +21,7 @@ import com.bsel.remitngo.data.model.district.DistrictData
 import com.bsel.remitngo.data.model.division.DivisionData
 import com.bsel.remitngo.databinding.FragmentBankBinding
 import com.bsel.remitngo.data.interfaceses.OnBankSelectedListener
+import com.bsel.remitngo.data.model.bank.WalletData
 import com.bsel.remitngo.presentation.di.Injector
 import java.util.*
 import javax.inject.Inject
@@ -395,6 +396,11 @@ class BankFragment : Fragment(), OnBankSelectedListener {
     }
 
     override fun onBankItemSelected(selectedItem: BankData) {
+        binding.bankName.setText(selectedItem.name)
+        bankId = selectedItem.id.toString()
+    }
+
+    override fun onWalletItemSelected(selectedItem: WalletData) {
         binding.bankName.setText(selectedItem.name)
         bankId = selectedItem.id.toString()
     }

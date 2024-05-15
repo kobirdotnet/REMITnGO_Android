@@ -139,16 +139,13 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
 
         when (orderType) {
             3 -> {
-                binding.accountTxt.text = "Bank Account"
-                binding.nameToolbar.text="Choose Bank"
+                binding.nameToolbar.text = "Choose Bank"
             }
             5 -> {
-                binding.accountTxt.text = "Bank Account"
-                binding.nameToolbar.text="Choose Bank"
+                binding.nameToolbar.text = "Choose Bank"
             }
             1 -> {
-                binding.accountTxt.text = "Wallet Account"
-                binding.nameToolbar.text="Choose Wallet"
+                binding.nameToolbar.text = "Choose Wallet"
             }
         }
 
@@ -248,7 +245,7 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            bankAdapter.filter(newText.orEmpty())
+                            bankAdapter.bankOrWalletFilter(newText.orEmpty())
                             return true
                         }
                     })
@@ -288,21 +285,30 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
     }
 
     private fun bankItem(selectedItem: GetBankData) {
-        beneBankId = selectedItem.bankId!!
-        beneBankName = selectedItem.bankName!!
-
-        beneBranchId = selectedItem.branchId!!
-        beneBranchName = selectedItem.branchName!!
-
-        beneWalletId = selectedItem.walletId!!
-        try {
-            beneWalletName = selectedItem.walletName!!
-        } catch (e: NullPointerException) {
-            e.localizedMessage
+        if (selectedItem.accountName != null) {
+            beneAccountName = selectedItem.accountName
         }
-
-        beneAccountName = selectedItem.accountName.toString()
-        beneAccountNo = selectedItem.accountNo.toString()
+        if (selectedItem.accountNo != null) {
+            beneAccountNo = selectedItem.accountNo
+        }
+        if (selectedItem.bankId != null) {
+            beneBankId = selectedItem.bankId
+        }
+        if (selectedItem.bankName != null) {
+            beneBankName = selectedItem.bankName
+        }
+        if (selectedItem.branchId != null) {
+            beneBranchId = selectedItem.branchId
+        }
+        if (selectedItem.branchName != null) {
+            beneBranchName = selectedItem.branchName
+        }
+        if (selectedItem.walletId != null) {
+            beneWalletId = selectedItem.walletId
+        }
+        if (selectedItem.walletName != null) {
+            beneWalletName = selectedItem.walletName
+        }
 
         itemSelectedListener?.onBankAndWalletItemSelected(selectedItem)
         dismiss()

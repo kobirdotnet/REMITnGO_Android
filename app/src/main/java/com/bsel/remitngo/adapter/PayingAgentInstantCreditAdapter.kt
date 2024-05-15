@@ -37,14 +37,16 @@ class PayingAgentInstantCreditAdapter(
     fun setList(payingAgentItem: List<PayingAgentData>) {
         payingAgentItemList.clear()
         payingAgentItemList.addAll(payingAgentItem)
-        filter("")
+        payingAgentInstantCreditFilter("")
     }
 
-    fun filter(query: String) {
+    fun payingAgentInstantCreditFilter(query: String) {
         filteredPayingAgentItemList.clear()
         for (payingAgentItem in payingAgentItemList) {
-            if (payingAgentItem.name!!.contains(query, ignoreCase = true)) {
-                filteredPayingAgentItemList.add(payingAgentItem)
+            if (payingAgentItem.name !=null){
+                if (payingAgentItem.name.contains(query, ignoreCase = true)) {
+                    filteredPayingAgentItemList.add(payingAgentItem)
+                }
             }
         }
         notifyDataSetChanged()

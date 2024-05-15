@@ -117,7 +117,7 @@ class CityBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            cityAdapter.filter(newText.orEmpty())
+                            cityAdapter.cityFilter(newText.orEmpty())
                             return true
                         }
                     })

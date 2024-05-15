@@ -3,6 +3,8 @@ package com.bsel.remitngo.data.repository.bank
 import android.util.Log
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.data.model.bank.BankResponseItem
+import com.bsel.remitngo.data.model.bank.WalletItem
+import com.bsel.remitngo.data.model.bank.WalletResponseItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankResponseItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
@@ -65,6 +67,23 @@ class BankRepositoryImpl(private val bankRemoteDataSource: BankRemoteDataSource)
         } catch (exception: Exception) {
             // Handle network or unexpected errors
             Log.e("MyTag", "Error bank: ${exception.message}", exception)
+            null
+        }
+    }
+
+    override suspend fun wallet(walletItem: WalletItem): WalletResponseItem? {
+        return try {
+            val response = bankRemoteDataSource.wallet(walletItem)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                // Handle server error or invalid response
+                Log.e("MyTag", "Failed to wallet: ${response.code()}")
+                null
+            }
+        } catch (exception: Exception) {
+            // Handle network or unexpected errors
+            Log.e("MyTag", "Error wallet: ${exception.message}", exception)
             null
         }
     }

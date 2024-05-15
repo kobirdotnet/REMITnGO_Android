@@ -4,10 +4,10 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -60,7 +60,8 @@ class CancelRequestFragment : Fragment() {
 
         val populateCancelItem = PopulateCancelItem(
             deviceId = deviceId,
-            personId = personId.toInt()
+            personId = personId.toInt(),
+            loadType=1
         )
         cancelRequestViewModel.populateCancel(populateCancelItem)
         observePopulateCancelRequestResult()
@@ -81,6 +82,19 @@ class CancelRequestFragment : Fragment() {
                     binding.cancelRequestRecyclerView.adapter = cancelRequestAdapter
                     cancelRequestAdapter.setList(result.data as List<PopulateCancelData>)
                     cancelRequestAdapter.notifyDataSetChanged()
+
+                    binding.transactionCancelSearch.setOnQueryTextListener(object :
+                        SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
+
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            cancelRequestAdapter.cancelRequestFilter(newText.orEmpty())
+                            return true
+                        }
+                    })
+
                 }
             }catch (e:NullPointerException){
                 e.localizedMessage
@@ -93,7 +107,7 @@ class CancelRequestFragment : Fragment() {
             putString("transactionCode", selectedItem.transactionCode.toString())
             putString("transactionDate", selectedItem.transactionDateTime12hr.toString())
             putString("orderType", selectedItem.orderTypeName.toString())
-            putString("beneficiaryName", selectedItem.beneficiaryName.toString())
+            putString("beneficiaryName", selectedItem.beneName.toString())
             putString("sendAmount", selectedItem.beneAmount.toString())
         }
         findNavController().navigate(

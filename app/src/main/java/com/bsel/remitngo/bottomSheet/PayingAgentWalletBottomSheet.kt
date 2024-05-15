@@ -122,7 +122,7 @@ class PayingAgentWalletBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            payingAgentWalletNameAdapter.filter(newText.orEmpty())
+                            payingAgentWalletNameAdapter.payingAgentWalletFilter(newText.orEmpty())
                             return true
                         }
                     })

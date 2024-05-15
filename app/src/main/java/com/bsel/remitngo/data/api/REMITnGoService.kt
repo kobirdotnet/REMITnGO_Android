@@ -2,6 +2,8 @@ package com.bsel.remitngo.data.api
 
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.data.model.bank.BankResponseItem
+import com.bsel.remitngo.data.model.bank.WalletItem
+import com.bsel.remitngo.data.model.bank.WalletResponseItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankResponseItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
@@ -171,6 +173,8 @@ interface REMITnGoService {
 
     @POST("api/General/Dropdown")
     suspend fun bank(@Body bankItem: BankItem): Response<BankResponseItem>
+    @POST("api/General/Dropdown")
+    suspend fun wallet(@Body walletItem: WalletItem): Response<WalletResponseItem>
 
     @POST("api/General/Dropdown")
     suspend fun division(@Body divisionItem: DivisionItem): Response<DivisionResponseItem>
@@ -250,7 +254,7 @@ interface REMITnGoService {
     @POST("api/General/GetCancelTransactionList")
     suspend fun getCancelRequest(@Body getCancelRequestItem: GetCancelRequestItem): Response<GetCancelResponseItem>
 
-    @POST("api/Transaction/PopulateTransactionListForCancellation")
+    @POST("api/Transaction/PopulateTransactionList")
     suspend fun populateCancel(@Body populateCancelItem: PopulateCancelItem): Response<PopulateCancelResponseItem>
 
     @POST("api/General/SaveCancelRequest")

@@ -48,7 +48,7 @@ class QueryMessageAdapter(
     fun filter(query: String) {
         filteredQueryMessageList.clear()
         for (queryMessage in queryMessageList) {
-            if (queryMessage.transactionCode!!.contains(query, ignoreCase = true)) {
+            if (queryMessage.transactionCode.toString().contains(query, ignoreCase = true)) {
                 filteredQueryMessageList.add(queryMessage)
             }
         }

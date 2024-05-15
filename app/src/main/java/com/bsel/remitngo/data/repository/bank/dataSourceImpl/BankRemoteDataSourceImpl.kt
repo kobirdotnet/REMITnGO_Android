@@ -3,6 +3,8 @@ package com.bsel.remitngo.data.repository.bank.dataSourceImpl
 import com.bsel.remitngo.data.api.REMITnGoService
 import com.bsel.remitngo.data.model.bank.BankItem
 import com.bsel.remitngo.data.model.bank.BankResponseItem
+import com.bsel.remitngo.data.model.bank.WalletItem
+import com.bsel.remitngo.data.model.bank.WalletResponseItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankResponseItem
 import com.bsel.remitngo.data.model.bank.save_bank_account.SaveBankItem
@@ -28,6 +30,10 @@ class BankRemoteDataSourceImpl(private val remitNgoService: REMITnGoService) :
 
     override suspend fun bank(bankItem: BankItem): Response<BankResponseItem> {
         return remitNgoService.bank(bankItem)
+    }
+
+    override suspend fun wallet(walletItem: WalletItem): Response<WalletResponseItem> {
+        return remitNgoService.wallet(walletItem)
     }
 
     override suspend fun division(divisionItem: DivisionItem): Response<DivisionResponseItem> {

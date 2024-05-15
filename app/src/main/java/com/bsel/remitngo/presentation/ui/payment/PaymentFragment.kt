@@ -592,17 +592,17 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                         customerMobile = data.mobile.toString()
                         isMobileOTPValidate = data.isMobileOTPValidate!!
 
-                        if (customerAddress == "" || customerAddress == "null") {
-                            if (!addressVerifyBottomSheet.isAdded) {
-                                addressVerifyBottomSheet.show(
-                                    childFragmentManager, addressVerifyBottomSheet.tag
-                                )
-                            }
-                        } else if (!isMobileOTPValidate) {
+                        if (!isMobileOTPValidate) {
                             if (!transactionOtpVerifyBottomSheet.isAdded) {
                                 transactionOtpVerifyBottomSheet.setPhoneNumber(customerMobile!!)
                                 transactionOtpVerifyBottomSheet.show(
                                     childFragmentManager, transactionOtpVerifyBottomSheet.tag
+                                )
+                            }
+                        } else if (customerAddress == "" || customerAddress == "null") {
+                            if (!addressVerifyBottomSheet.isAdded) {
+                                addressVerifyBottomSheet.show(
+                                    childFragmentManager, addressVerifyBottomSheet.tag
                                 )
                             }
                         } else {
@@ -658,7 +658,10 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                                 toCountryId = toCountryId,
                                 toCurrencyId = toCurrencyId,
                                 totalAmount = totalAmount,
-                                userIPAddress = ipAddress
+                                userIPAddress = ipAddress,
+                                isOtpRequireForTxn = false,
+                                otpRequireReason = "",
+                                isOtpValidated = false
                             )
                             paymentViewModel.payment(paymentItem)
                         }
@@ -1005,17 +1008,31 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     }
 
     override fun onBankAndWalletItemSelected(selectedItem: GetBankData) {
-        beneBankId = selectedItem.bankId!!
-        beneBranchId = selectedItem.branchId!!
-
-        beneAccountName = selectedItem.accountName.toString()
-        binding.receiverName.text = beneAccountName
-
-        beneBankName = selectedItem.bankName!!
-        binding.receiverBankName.text = beneBankName
-
-        beneAccountNo = selectedItem.accountNo.toString()
-        binding.receiverAccount.text = beneAccountNo
+        if (selectedItem.bankId != null) {
+            beneBankId = selectedItem.bankId
+        }
+        if (selectedItem.branchId != null) {
+            beneBranchId = selectedItem.branchId
+        }
+        if (selectedItem.walletId != null) {
+            beneBranchId = selectedItem.walletId
+        }
+        if (selectedItem.accountName != null) {
+            beneAccountName = selectedItem.accountName
+            binding.receiverName.text = beneAccountName
+        }
+        if (selectedItem.bankName != null) {
+            beneBankName = selectedItem.bankName
+            binding.receiverBankName.text = beneBankName
+        }
+        if (selectedItem.walletName != null) {
+            beneWalletName = selectedItem.walletName
+            binding.receiverBankName.text = beneWalletName
+        }
+        if (selectedItem.accountNo != null) {
+            beneAccountNo = selectedItem.accountNo
+            binding.receiverAccount.text = beneAccountNo
+        }
     }
 
     override fun onPurposeOfTransferItemSelected(selectedItem: ReasonData) {

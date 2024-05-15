@@ -50,9 +50,9 @@ class QueryMessageBottomSheet : BottomSheetDialogFragment() {
     private lateinit var deviceId: String
     private lateinit var personId: String
 
-    private var complainId: Int = 0
-    private var queryTypeId: Int = 0
-    private var transactionCode: Int = 0
+    private var complainId: Int? = 0
+    private var queryTypeId: Int? = 0
+    private var transactionCode: String? = null
 
     private var complainStatus: String? = null
 
@@ -113,7 +113,7 @@ class QueryMessageBottomSheet : BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    fun setData(complainId: Int, queryTypeId: Int, transactionCode: Int) {
+    fun setData(complainId: Int, queryTypeId: Int, transactionCode: String) {
         this.complainId=complainId
         this.queryTypeId=queryTypeId
         this.transactionCode=transactionCode
@@ -123,7 +123,7 @@ class QueryMessageBottomSheet : BottomSheetDialogFragment() {
         queryViewModel.addMessageResult.observe(this) { result ->
             try {
                 if (result!!.data != null) {
-                    itemSelectedListener?.onQueryMessageSelected(complainId)
+                    itemSelectedListener?.onQueryMessageSelected(complainId!!)
                     dismiss()
                 }
             }catch (e:java.lang.NullPointerException){

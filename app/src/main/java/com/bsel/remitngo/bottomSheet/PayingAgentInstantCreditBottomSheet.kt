@@ -122,7 +122,7 @@ class PayingAgentInstantCreditBottomSheet : BottomSheetDialogFragment() {
                         }
 
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            payingAgentInstantCreditAdapter.filter(newText.orEmpty())
+                            payingAgentInstantCreditAdapter.payingAgentInstantCreditFilter(newText.orEmpty())
                             return true
                         }
                     })

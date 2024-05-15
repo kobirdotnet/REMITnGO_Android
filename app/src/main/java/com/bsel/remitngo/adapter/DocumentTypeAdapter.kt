@@ -37,14 +37,16 @@ class DocumentTypeAdapter(
     fun setList(document: List<DocumentTypeData>) {
         documentTypeList.clear()
         documentTypeList.addAll(document)
-        filter("")
+        documentTypeFilter("")
     }
 
-    fun filter(query: String) {
+    fun documentTypeFilter(query: String) {
         filteredDocumentTypeList.clear()
         for (document in documentTypeList) {
-            if (document.name!!.contains(query, ignoreCase = true)) {
-                filteredDocumentTypeList.add(document)
+            if (document.name!=null){
+                if (document.name!!.contains(query, ignoreCase = true)) {
+                    filteredDocumentTypeList.add(document)
+                }
             }
         }
         notifyDataSetChanged()

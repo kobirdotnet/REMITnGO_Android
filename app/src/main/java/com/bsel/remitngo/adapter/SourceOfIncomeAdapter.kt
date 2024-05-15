@@ -37,14 +37,16 @@ class SourceOfIncomeAdapter(
     fun setList(sourceOfIncome: List<SourceOfIncomeData>) {
         sourceOfIncomeList.clear()
         sourceOfIncomeList.addAll(sourceOfIncome)
-        filter("")
+        sourceOfFundFilter("")
     }
 
-    fun filter(query: String) {
+    fun sourceOfFundFilter(query: String) {
         filteredSourceOfIncomeList.clear()
         for (sourceOfIncome in sourceOfIncomeList) {
-            if (sourceOfIncome.name!!.contains(query, ignoreCase = true)) {
-                filteredSourceOfIncomeList.add(sourceOfIncome)
+            if (sourceOfIncome.name!=null){
+                if (sourceOfIncome.name.contains(query, ignoreCase = true)) {
+                    filteredSourceOfIncomeList.add(sourceOfIncome)
+                }
             }
         }
         notifyDataSetChanged()

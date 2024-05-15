@@ -274,41 +274,80 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         when (orderType) {
             5 -> {
-//                binding.bankAccount.isChecked = false
-//                binding.instantCredit.isChecked = true
-//                binding.cashPickup.isChecked = false
-//                binding.mobileWallet.isChecked = false
+                binding.iconBankTransfer.setImageResource(R.drawable.bank_account_blue)
+                binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_white)
+                binding.iconCashPickup.setImageResource(R.drawable.cash_picup_blue)
+                binding.iconMobileWallet.setImageResource(R.drawable.wallet_blue)
+
+                binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconInstantCredit.setBackgroundResource(R.drawable.image_border_blue)
+                binding.iconCashPickup.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconMobileWallet.setBackgroundResource(R.drawable.image_border_grey)
+
+                binding.bankAccount.setBackgroundResource(R.drawable.border_gray)
+                binding.instantCredit.setBackgroundResource(R.drawable.border_blue)
+                binding.cashPickup.setBackgroundResource(R.drawable.border_gray)
+                binding.mobileWallet.setBackgroundResource(R.drawable.border_gray)
 
                 binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
                 binding.collectionPointWalletLayout.visibility = View.GONE
             }
             2 -> {
-//                binding.bankAccount.isChecked = false
-//                binding.instantCredit.isChecked = false
-//                binding.cashPickup.isChecked = true
-//                binding.mobileWallet.isChecked = false
+                binding.iconBankTransfer.setImageResource(R.drawable.bank_account_blue)
+                binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_blue)
+                binding.iconCashPickup.setImageResource(R.drawable.cash_picup_white)
+                binding.iconMobileWallet.setImageResource(R.drawable.wallet_blue)
+
+                binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconInstantCredit.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconCashPickup.setBackgroundResource(R.drawable.image_border_blue)
+                binding.iconMobileWallet.setBackgroundResource(R.drawable.image_border_grey)
+
+                binding.bankAccount.setBackgroundResource(R.drawable.border_gray)
+                binding.instantCredit.setBackgroundResource(R.drawable.border_gray)
+                binding.cashPickup.setBackgroundResource(R.drawable.border_blue)
+                binding.mobileWallet.setBackgroundResource(R.drawable.border_gray)
 
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
                 binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
                 binding.collectionPointWalletLayout.visibility = View.GONE
-                binding.collectionPointWallet.text = null
             }
             1 -> {
-//                binding.bankAccount.isChecked = false
-//                binding.instantCredit.isChecked = false
-//                binding.cashPickup.isChecked = false
-//                binding.mobileWallet.isChecked = true
+                binding.iconBankTransfer.setImageResource(R.drawable.bank_account_blue)
+                binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_blue)
+                binding.iconCashPickup.setImageResource(R.drawable.cash_picup_blue)
+                binding.iconMobileWallet.setImageResource(R.drawable.wallet_white)
+
+                binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconInstantCredit.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconCashPickup.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconMobileWallet.setBackgroundResource(R.drawable.image_border_blue)
+
+                binding.bankAccount.setBackgroundResource(R.drawable.border_gray)
+                binding.instantCredit.setBackgroundResource(R.drawable.border_gray)
+                binding.cashPickup.setBackgroundResource(R.drawable.border_gray)
+                binding.mobileWallet.setBackgroundResource(R.drawable.border_blue)
 
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
                 binding.collectionPointWalletLayout.visibility = View.VISIBLE
             }
             3 -> {
-//                binding.bankAccount.isChecked = true
-//                binding.instantCredit.isChecked = false
-//                binding.cashPickup.isChecked = false
-//                binding.mobileWallet.isChecked = false
+                binding.iconBankTransfer.setImageResource(R.drawable.bank_account_white)
+                binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_blue)
+                binding.iconCashPickup.setImageResource(R.drawable.cash_picup_blue)
+                binding.iconMobileWallet.setImageResource(R.drawable.wallet_blue)
+
+                binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_blue)
+                binding.iconInstantCredit.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconCashPickup.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconMobileWallet.setBackgroundResource(R.drawable.image_border_grey)
+
+                binding.bankAccount.setBackgroundResource(R.drawable.border_blue)
+                binding.instantCredit.setBackgroundResource(R.drawable.border_gray)
+                binding.cashPickup.setBackgroundResource(R.drawable.border_gray)
+                binding.mobileWallet.setBackgroundResource(R.drawable.border_gray)
 
                 binding.collectionPointInstantCreditLayout.visibility = View.GONE
                 binding.collectionPointCashPickUpLayout.visibility = View.GONE
@@ -318,12 +357,24 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         when (paymentMode) {
             4 -> {
-//                binding.cardPayment.isChecked = true
-//                binding.bankPayment.isChecked = false
+                binding.iconCreditOrDebit.setImageResource(R.drawable.credit_debit_white)
+                binding.iconBankTransferWithCommission.setImageResource(R.drawable.bank_account_blue)
+
+                binding.iconCreditOrDebit.setBackgroundResource(R.drawable.image_border_blue)
+                binding.iconBankTransferWithCommission.setBackgroundResource(R.drawable.image_border_grey)
+
+                binding.cardPayment.setBackgroundResource(R.drawable.border_blue)
+                binding.bankPayment.setBackgroundResource(R.drawable.border_gray)
             }
             5 -> {
-//                binding.cardPayment.isChecked = false
-//                binding.bankPayment.isChecked = true
+                binding.iconCreditOrDebit.setImageResource(R.drawable.credit_debit_blue)
+                binding.iconBankTransferWithCommission.setImageResource(R.drawable.bank_account_white)
+
+                binding.iconCreditOrDebit.setBackgroundResource(R.drawable.image_border_grey)
+                binding.iconBankTransferWithCommission.setBackgroundResource(R.drawable.image_border_blue)
+
+                binding.cardPayment.setBackgroundResource(R.drawable.border_gray)
+                binding.bankPayment.setBackgroundResource(R.drawable.border_blue)
             }
         }
 
@@ -401,11 +452,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         binding.instantCredit.setOnClickListener {
             binding.iconBankTransfer.setImageResource(R.drawable.bank_account_blue)
-
             binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_white)
-
             binding.iconCashPickup.setImageResource(R.drawable.cash_picup_blue)
-
             binding.iconMobileWallet.setImageResource(R.drawable.wallet_blue)
 
             binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_grey)
@@ -427,11 +475,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         binding.cashPickup.setOnClickListener {
             binding.iconBankTransfer.setImageResource(R.drawable.bank_account_blue)
-
             binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_blue)
-
             binding.iconCashPickup.setImageResource(R.drawable.cash_picup_white)
-
             binding.iconMobileWallet.setImageResource(R.drawable.wallet_blue)
 
             binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_grey)
@@ -452,11 +497,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         binding.mobileWallet.setOnClickListener {
             binding.iconBankTransfer.setImageResource(R.drawable.bank_account_blue)
-
             binding.iconInstantCredit.setImageResource(R.drawable.instant_credit_blue)
-
             binding.iconCashPickup.setImageResource(R.drawable.cash_picup_blue)
-
             binding.iconMobileWallet.setImageResource(R.drawable.wallet_white)
 
             binding.iconBankTransfer.setBackgroundResource(R.drawable.image_border_grey)
@@ -475,121 +517,11 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             binding.collectionPointWalletLayout.visibility = View.VISIBLE
         }
 
-//        binding.orderModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-//            when (checkedId) {
-//                R.id.bankAccount -> {
-//                    orderType = 3
-//                    calculationType = 1
-//                    calculateRate(
-//                        binding.sendAmount.text.toString(),
-//                        beneBankId,
-//                        calculationType,
-//                        deviceId,
-//                        4,
-//                        0,
-//                        orderType,
-//                        payingAgentId,
-//                        paymentMode,
-//                        1
-//                    )
-//                    binding.bankAccount.isChecked = true
-//                    binding.instantCredit.isChecked = false
-//                    binding.cashPickup.isChecked = false
-//                    binding.mobileWallet.isChecked = false
-//
-//                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
-//                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
-//                    binding.collectionPointWalletLayout.visibility = View.GONE
-//                }
-//                R.id.instantCredit -> {
-//                    orderType = 5
-//
-//                    binding.bankAccount.isChecked = false
-//                    binding.instantCredit.isChecked = true
-//                    binding.cashPickup.isChecked = false
-//                    binding.mobileWallet.isChecked = false
-//
-//                    binding.collectionPointInstantCreditLayout.visibility = View.VISIBLE
-//                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
-//                    binding.collectionPointWalletLayout.visibility = View.GONE
-//                }
-//                R.id.cashPickup -> {
-//                    orderType = 2
-//
-//                    binding.bankAccount.isChecked = false
-//                    binding.instantCredit.isChecked = false
-//                    binding.cashPickup.isChecked = true
-//                    binding.mobileWallet.isChecked = false
-//
-//                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
-//                    binding.collectionPointCashPickUpLayout.visibility = View.VISIBLE
-//                    binding.collectionPointWalletLayout.visibility = View.GONE
-//                }
-//                R.id.mobileWallet -> {
-//                    orderType = 1
-//
-//                    binding.bankAccount.isChecked = false
-//                    binding.instantCredit.isChecked = false
-//                    binding.cashPickup.isChecked = false
-//                    binding.mobileWallet.isChecked = true
-//
-//                    binding.collectionPointInstantCreditLayout.visibility = View.GONE
-//                    binding.collectionPointCashPickUpLayout.visibility = View.GONE
-//                    binding.collectionPointWalletLayout.visibility = View.VISIBLE
-//                }
-//            }
-//        }
-
-//        binding.paymentModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-//            when (checkedId) {
-//                R.id.cardPayment -> {
-//                    paymentMode = 4
-//
-//                    binding.cardPayment.isChecked = true
-//                    binding.bankPayment.isChecked = false
-//
-//                    calculationType = 1
-//                    calculateRate(
-//                        binding.sendAmount.text.toString(),
-//                        beneBankId,
-//                        calculationType,
-//                        deviceId,
-//                        4,
-//                        0,
-//                        orderType,
-//                        payingAgentId,
-//                        paymentMode,
-//                        1
-//                    )
-//                }
-//                R.id.bankPayment -> {
-//                    paymentMode = 5
-//
-//                    binding.cardPayment.isChecked = false
-//                    binding.bankPayment.isChecked = true
-//
-//                    calculationType = 1
-//                    calculateRate(
-//                        binding.sendAmount.text.toString(),
-//                        beneBankId,
-//                        calculationType,
-//                        deviceId,
-//                        4,
-//                        0,
-//                        orderType,
-//                        payingAgentId,
-//                        paymentMode,
-//                        1
-//                    )
-//                }
-//            }
-//        }
-
         binding.cardPayment.setOnClickListener {
             binding.iconCreditOrDebit.setImageResource(R.drawable.credit_debit_white)
-            binding.iconCreditOrDebit.setBackgroundResource(R.drawable.image_border_blue)
-
             binding.iconBankTransferWithCommission.setImageResource(R.drawable.bank_account_blue)
+
+            binding.iconCreditOrDebit.setBackgroundResource(R.drawable.image_border_blue)
             binding.iconBankTransferWithCommission.setBackgroundResource(R.drawable.image_border_grey)
 
             binding.cardPayment.setBackgroundResource(R.drawable.border_blue)
@@ -613,9 +545,9 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         binding.bankPayment.setOnClickListener {
             binding.iconCreditOrDebit.setImageResource(R.drawable.credit_debit_blue)
-            binding.iconCreditOrDebit.setBackgroundResource(R.drawable.image_border_grey)
-
             binding.iconBankTransferWithCommission.setImageResource(R.drawable.bank_account_white)
+
+            binding.iconCreditOrDebit.setBackgroundResource(R.drawable.image_border_grey)
             binding.iconBankTransferWithCommission.setBackgroundResource(R.drawable.image_border_blue)
 
             binding.cardPayment.setBackgroundResource(R.drawable.border_gray)

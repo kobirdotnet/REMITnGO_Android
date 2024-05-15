@@ -7,9 +7,7 @@ data class QueryMessageResponseItem(
     @SerializedName("Code")
     val code: String?,
     @SerializedName("Data")
-    val queryMessageData: QueryMessageData?,
+    val `queryMessageData`: QueryMessageData?,
     @SerializedName("Message")
-    val message: String?,
-    @SerializedName("Token")
-    val token: String?
+    val message: String?
 )

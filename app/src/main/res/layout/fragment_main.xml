@@ -259,67 +259,6 @@
 
             </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/white"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="vertical"-->
-<!--                android:paddingLeft="@dimen/padding_left"-->
-<!--                android:paddingTop="@dimen/padding_left"-->
-<!--                android:paddingRight="@dimen/padding_right"-->
-<!--                android:paddingBottom="@dimen/padding_left">-->
-
-<!--                <RadioGroup-->
-<!--                    android:id="@+id/orderModeRadioGroup"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:gravity="center"-->
-<!--                    android:orientation="horizontal"-->
-<!--                    android:weightSum="4">-->
-
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/bankAccount"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:fontFamily="@font/roboto_regular"-->
-<!--                        android:gravity="center_vertical"-->
-<!--                        android:text="BEFTN / NPSB"-->
-<!--                        android:textColor="@color/black" />-->
-
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/instantCredit"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:fontFamily="@font/roboto_regular"-->
-<!--                        android:gravity="center_vertical"-->
-<!--                        android:text="Instant credit"-->
-<!--                        android:textColor="@color/black" />-->
-
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/cashPickup"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:fontFamily="@font/roboto_regular"-->
-<!--                        android:gravity="center_vertical"-->
-<!--                        android:text="Cash pickup"-->
-<!--                        android:textColor="@color/black" />-->
-
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/mobileWallet"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:fontFamily="@font/roboto_regular"-->
-<!--                        android:gravity="center_vertical"-->
-<!--                        android:text="Mobile wallet"-->
-<!--                        android:textColor="@color/black" />-->
-<!--                </RadioGroup>-->
-
-<!--            </LinearLayout>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -333,7 +272,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="4">
@@ -573,39 +512,9 @@
                 android:paddingRight="@dimen/padding_right"
                 android:paddingTop="@dimen/padding_top">
 
-<!--                <RadioGroup-->
-<!--                    android:id="@+id/paymentModeRadioGroup"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:gravity="center"-->
-<!--                    android:orientation="horizontal"-->
-<!--                    android:weightSum="2">-->
-
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/cardPayment"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:fontFamily="@font/roboto_regular"-->
-<!--                        android:gravity="center_vertical"-->
-<!--                        android:text="Card Payment"-->
-<!--                        android:textColor="@color/black" />-->
-
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/bankPayment"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:fontFamily="@font/roboto_regular"-->
-<!--                        android:gravity="center_vertical"-->
-<!--                        android:text="Bank Transfer"-->
-<!--                        android:textColor="@color/black" />-->
-
-<!--                </RadioGroup>-->
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="2">

@@ -9,7 +9,5 @@ data class BankResponseItem(
     @SerializedName("Data")
     val `data`: List<BankData?>?,
     @SerializedName("Message")
-    val message: String?,
-    @SerializedName("Token")
-    val token: Any?
+    val message: String?
 )
