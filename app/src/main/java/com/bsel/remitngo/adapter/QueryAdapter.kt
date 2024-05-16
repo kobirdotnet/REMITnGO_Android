@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.data.model.query.QueryTable
+import com.bsel.remitngo.data.model.query.QueryData
 import com.bsel.remitngo.databinding.ItemQueryBinding
 
 class QueryAdapter(
-    private val selectedItem: (QueryTable) -> Unit
+    private val selectedItem: (QueryData) -> Unit
 ) : RecyclerView.Adapter<QueryViewHolder>() {
 
-    private val queryItemList = ArrayList<QueryTable>()
-    private var filteredQueryItemList = ArrayList<QueryTable>()
+    private val queryItemList = ArrayList<QueryData>()
+    private var filteredQueryItemList = ArrayList<QueryData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,17 +34,19 @@ class QueryAdapter(
         holder.bind(filteredQueryItemList[position], selectedItem)
     }
 
-    fun setList(queryItem: List<QueryTable>) {
+    fun setList(queryItem: List<QueryData>) {
         queryItemList.clear()
         queryItemList.addAll(queryItem)
-        filter("")
+        queryFilter("")
     }
 
-    fun filter(query: String) {
+    fun queryFilter(query: String) {
         filteredQueryItemList.clear()
         for (queryItem in queryItemList) {
-            if (queryItem.transactionCode!!.contains(query, ignoreCase = true)) {
-                filteredQueryItemList.add(queryItem)
+            if (queryItem.transactionCode!=null){
+                if (queryItem.transactionCode!!.contains(query, ignoreCase = true)) {
+                    filteredQueryItemList.add(queryItem)
+                }
             }
         }
         notifyDataSetChanged()
@@ -55,17 +57,17 @@ class QueryAdapter(
 class QueryViewHolder(val binding: ItemQueryBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        queryItem: QueryTable,
-        selectedItem: (QueryTable) -> Unit
+        queryItem: QueryData,
+        selectedItem: (QueryData) -> Unit
     ) {
-        if (queryItem.complainTypeString != null) {
-            binding.query.text = queryItem.complainTypeString
+        if (queryItem.complainTypeName != null) {
+            binding.query.text = queryItem.complainTypeName
         }
-        if (queryItem.complainTypeString != null) {
-            binding.type.text = queryItem.complainTypeString
+        if (queryItem.complainTypeName != null) {
+            binding.type.text = queryItem.complainTypeName
         }
-        if (queryItem.complainStatusString != null) {
-            binding.status.text = queryItem.complainStatusString
+        if (queryItem.complainStatusName != null) {
+            binding.status.text = queryItem.complainStatusName
         }
         if (queryItem.transactionCode != null) {
             binding.transactionCode.text = queryItem.transactionCode

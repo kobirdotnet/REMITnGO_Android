@@ -76,16 +76,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/previousSendAmount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_regular"
-                        android:gravity="right"
-                        android:hint="GBP 0.0"
-                        android:paddingRight="5dp"
-                        android:textColor="@color/black" />
-
-                    <TextView
                         android:id="@+id/sendAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -172,16 +162,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/previousTotalAmount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_regular"
-                        android:gravity="right"
-                        android:hint="GBP 0.0"
-                        android:paddingRight="5dp"
-                        android:textColor="@color/black" />
-
-                    <TextView
                         android:id="@+id/totalAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -238,7 +218,7 @@
                         android:textColor="@color/black" />
 
                     <TextView
-                        android:id="@+id/exchangeRate"
+                        android:id="@+id/rate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
@@ -276,17 +256,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/previousReceiveAmount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_regular"
-                        android:gravity="right"
-                        android:hint="BDT 0.0"
-                        android:paddingRight="5dp"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/receiveAmount"
+                        android:id="@+id/beneAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
@@ -342,7 +312,7 @@
                 android:paddingBottom="@dimen/padding_bottom">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/receiverNameContainer"
+                    android:id="@+id/beneNameContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -353,7 +323,7 @@
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
                     <TextView
-                        android:id="@+id/receiverName"
+                        android:id="@+id/beneName"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
@@ -366,18 +336,18 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/receiverAccountContainer"
+                    android:id="@+id/beneBankOrWalletAccountContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:background="@color/white"
                     android:backgroundTint="@color/white"
                     android:gravity="center_vertical"
-                    android:hint="Receiver Account"
+                    android:hint="Beneficiary Account"
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
                     <TextView
-                        android:id="@+id/receiverBankName"
+                        android:id="@+id/beneBankOrWalletName"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
@@ -389,7 +359,7 @@
                         android:textColor="@color/black" />
 
                     <TextView
-                        android:id="@+id/receiverAccount"
+                        android:id="@+id/beneBankOrWalletAccount"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"

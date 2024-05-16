@@ -10,17 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.QueryMessageAdapter
 import com.bsel.remitngo.bottomSheet.QueryMessageBottomSheet
-import com.bsel.remitngo.bottomSheet.QueryTypeBottomSheet
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnQueryMessageSelectedListener
-import com.bsel.remitngo.data.interfaceses.OnQueryTypeItemSelectedListener
+import com.bsel.remitngo.data.model.query.query_message.QueryMessageData
 import com.bsel.remitngo.data.model.query.query_message.QueryMessageItem
-import com.bsel.remitngo.data.model.query.query_message.QueryMessageTable
 import com.bsel.remitngo.databinding.FragmentUpdateQueryBinding
 import com.bsel.remitngo.presentation.di.Injector
 import javax.inject.Inject
@@ -94,7 +91,7 @@ class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
                 result?.let { queryResponse ->
                     if (queryResponse.queryMessageData != null) {
                         val queryDataList =
-                            queryResponse.queryMessageData.queryMessageTable ?: emptyList()
+                            queryResponse.queryMessageData
 
                         binding.messageRecyclerView.layoutManager =
                             LinearLayoutManager(requireActivity())
@@ -102,13 +99,13 @@ class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
                             queryMessage(selectedItem)
                         }
                         binding.messageRecyclerView.adapter = queryMessageAdapter
-                        queryMessageAdapter.setList(queryDataList as List<QueryMessageTable>)
+                        queryMessageAdapter.setList(queryDataList as List<QueryMessageData>)
                         queryMessageAdapter.notifyDataSetChanged()
 
                         if (queryDataList.isNotEmpty()) {
                             val queryData = queryDataList[0]
-                            binding.queryType.setText(queryData.complainTypeString.toString())
-                            binding.status.setText(queryData.complainStatusString.toString())
+                            binding.queryType.setText(queryData.complainTypeName.toString())
+                            binding.status.setText(queryData.complainStatusName.toString())
                             binding.transactionCode.setText(queryData.transactionCode.toString())
                             val complainStatus = queryData.complainStatus!!
                             if (complainStatus) {
@@ -117,7 +114,7 @@ class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
                                 binding.messageLayout.visibility = View.GONE
                             }
 
-                            complainId = queryData.complainID
+                            complainId = queryData.complainId
                             queryTypeId = queryData.complainType
                             transactionCode = queryData.transactionCode
                         }
@@ -129,8 +126,17 @@ class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
         }
     }
 
-    private fun queryMessage(selectedItem: QueryMessageTable) {
+    private fun queryMessage(selectedItem: QueryMessageData) {
         Log.i("info", "selectedItem: $selectedItem")
+    }
+
+    override fun onQueryMessageSelected(complainId: Int) {
+        val queryMessageItem = QueryMessageItem(
+            deviceId = deviceId,
+            personId = personId.toInt(),
+            complainId = complainId
+        )
+        queryViewModel.queryMessage(queryMessageItem)
     }
 
     private fun getDeviceId(context: Context): String {
@@ -148,14 +154,5 @@ class UpdateQueryFragment : Fragment(), OnQueryMessageSelectedListener {
         }
 
         return deviceId
-    }
-
-    override fun onQueryMessageSelected(complainId: Int) {
-        val queryMessageItem = QueryMessageItem(
-            deviceId = deviceId,
-            personId = personId.toInt(),
-            complainId = complainId
-        )
-        queryViewModel.queryMessage(queryMessageItem)
     }
 }

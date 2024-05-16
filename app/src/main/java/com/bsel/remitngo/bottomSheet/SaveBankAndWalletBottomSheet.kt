@@ -76,6 +76,7 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
 
     private var beneAccountName: String? = null
     private var beneAccountNo: String? = null
+    private var beneWalletNo: String? = null
 
     private var beneMobile: String? = null
 
@@ -241,6 +242,7 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
         benePersonId: Int,
         beneAccountName: String?,
         beneAccountNo: String?,
+        beneWalletNo: String?,
         beneMobile: String?,
     ) {
         this.orderType = orderType
@@ -254,6 +256,7 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
         this.benePersonId = benePersonId
         this.beneAccountName = beneAccountName
         this.beneAccountNo = beneAccountNo
+        this.beneWalletNo = beneWalletNo
         this.beneMobile = beneMobile
     }
 
@@ -330,11 +333,11 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
     private fun submitWalletAccountForm() {
         beneAccountName = binding.walletAccountName.text.toString()
         beneWalletName = binding.walletName.text.toString()
-        beneAccountNo = binding.walletAccountNumber.text.toString()
+        beneWalletNo = binding.walletAccountNumber.text.toString()
 
         val saveBankItem = SaveBankItem(
             accountName = beneAccountName,
-            accountNo = beneAccountNo,
+            accountNo = beneWalletNo,
             accountType = 0,
             active = true,
             bankID = beneBankId,
@@ -347,6 +350,24 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
             walletId = beneWalletId
         )
         bankViewModel.saveBank(saveBankItem)
+    }
+
+    override fun onBankItemSelected(selectedItem: BankData) {
+        beneBankId = selectedItem.id!!
+        beneBankName = selectedItem.name!!
+        binding.bankName.setText(beneBankName)
+    }
+
+    override fun onWalletItemSelected(selectedItem: WalletData) {
+        beneWalletId = selectedItem.id!!
+        beneWalletName = selectedItem.name!!
+        binding.walletName.setText(beneWalletName)
+    }
+
+    override fun onBranchItemSelected(selectedItem: BranchData) {
+        beneBranchId = selectedItem.id!!
+        beneBranchName = selectedItem.name
+        binding.branchName.setText(beneBranchName)
     }
 
     //Form validation
@@ -460,24 +481,6 @@ class SaveBankAndWalletBottomSheet : BottomSheetDialogFragment(), OnBankSelected
             return "enter wallet account number"
         }
         return null
-    }
-
-    override fun onBankItemSelected(selectedItem: BankData) {
-        beneBankId = selectedItem.id!!
-        beneBankName = selectedItem.name!!
-        binding.bankName.setText(beneBankName)
-    }
-
-    override fun onWalletItemSelected(selectedItem: WalletData) {
-        beneWalletId = selectedItem.id!!
-        beneWalletName = selectedItem.name!!
-        binding.walletName.setText(beneWalletName)
-    }
-
-    override fun onBranchItemSelected(selectedItem: BranchData) {
-        beneBranchId = selectedItem.id!!
-        beneBranchName = selectedItem.name
-        binding.branchName.setText(beneBranchName)
     }
 
     private fun getDeviceId(context: Context): String {

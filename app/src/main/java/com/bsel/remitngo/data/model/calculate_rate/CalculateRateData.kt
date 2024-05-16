@@ -27,5 +27,7 @@ data class CalculateRateData(
     @SerializedName("ToCurrencyCode")
     val toCurrencyCode: String?,
     @SerializedName("ToCurrencyId")
-    val toCurrencyId: Int?
+    val toCurrencyId: Int?,
+    @SerializedName("TotalAmount")
+    val totalAmount: Double?
 )

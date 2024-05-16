@@ -89,6 +89,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
 
     private var beneAccountName: String? = null
     private var beneAccountNo: String? = null
+    private var beneWalletNo: String? = null
 
     private var beneMobile: String? = null
 
@@ -201,6 +202,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
                 benePersonId,
                 beneAccountName,
                 beneAccountNo,
+                beneWalletNo,
                 beneMobile
             )
             saveRecipientBottomSheet.show(childFragmentManager, saveRecipientBottomSheet.tag)
@@ -230,6 +232,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
         benePersonId: Int,
         beneAccountName: String?,
         beneAccountNo: String?,
+        beneWalletNo: String?,
         beneMobile: String?
     ) {
         this.orderType = orderType
@@ -243,6 +246,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
         this.benePersonId = benePersonId
         this.beneAccountName = beneAccountName
         this.beneAccountNo = beneAccountNo
+        this.beneWalletNo = beneWalletNo
         this.beneMobile = beneMobile
     }
 
@@ -347,6 +351,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
                 benePersonId,
                 beneAccountName,
                 beneAccountNo,
+                beneWalletNo,
                 beneMobile
             )
             chooseBankBottomSheet.show(childFragmentManager, chooseBankBottomSheet.tag)
@@ -455,6 +460,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
             benePersonId,
             beneAccountName,
             beneAccountNo,
+            beneWalletNo,
             beneMobile
         )
         saveRecipientBottomSheet.show(childFragmentManager, saveRecipientBottomSheet.tag)

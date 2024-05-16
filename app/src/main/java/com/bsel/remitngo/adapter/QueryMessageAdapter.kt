@@ -8,17 +8,15 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
-import com.bsel.remitngo.data.model.query.query_message.QueryMessageTable
+import com.bsel.remitngo.data.model.query.query_message.QueryMessageData
 import com.bsel.remitngo.databinding.ItemQueryMessageBinding
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class QueryMessageAdapter(
-    private val selectedItem: (QueryMessageTable) -> Unit
+    private val selectedItem: (QueryMessageData) -> Unit
 ) : RecyclerView.Adapter<QueryMessageViewHolder>() {
 
-    private val queryMessageList = ArrayList<QueryMessageTable>()
-    private var filteredQueryMessageList = ArrayList<QueryMessageTable>()
+    private val queryMessageList = ArrayList<QueryMessageData>()
+    private var filteredQueryMessageList = ArrayList<QueryMessageData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueryMessageViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -39,17 +37,19 @@ class QueryMessageAdapter(
         holder.bind(filteredQueryMessageList[position], selectedItem)
     }
 
-    fun setList(queryMessage: List<QueryMessageTable>) {
+    fun setList(queryMessage: List<QueryMessageData>) {
         queryMessageList.clear()
         queryMessageList.addAll(queryMessage)
-        filter("")
+        queryMessageFilter("")
     }
 
-    fun filter(query: String) {
+    fun queryMessageFilter(query: String) {
         filteredQueryMessageList.clear()
         for (queryMessage in queryMessageList) {
-            if (queryMessage.transactionCode.toString().contains(query, ignoreCase = true)) {
-                filteredQueryMessageList.add(queryMessage)
+            if (queryMessage.transactionCode!=null){
+                if (queryMessage.transactionCode.toString().contains(query, ignoreCase = true)) {
+                    filteredQueryMessageList.add(queryMessage)
+                }
             }
         }
         notifyDataSetChanged()
@@ -59,10 +59,9 @@ class QueryMessageAdapter(
 
 class QueryMessageViewHolder(val binding: ItemQueryMessageBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    @RequiresApi(Build.VERSION_CODES.O)
     fun bind(
-        queryMessage: QueryMessageTable,
-        selectedItem: (QueryMessageTable) -> Unit
+        queryMessage: QueryMessageData,
+        selectedItem: (QueryMessageData) -> Unit
     ) {
         if (queryMessage.message != null) {
             binding.message.text = queryMessage.message
@@ -71,11 +70,7 @@ class QueryMessageViewHolder(val binding: ItemQueryMessageBinding) :
             binding.postedBy.text = queryMessage.name
         }
         if (queryMessage.updateDate != null) {
-            val dateTime =
-                LocalDateTime.parse(queryMessage.updateDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-            val date = dateTime.toLocalDate()
-            val updateDate = date.format(DateTimeFormatter.ISO_DATE)
-            binding.postedDate.text = "$updateDate"
+            binding.postedDate.text = queryMessage.updateDate
         }
 
         binding.itemQueryMessageLayout.setOnClickListener {

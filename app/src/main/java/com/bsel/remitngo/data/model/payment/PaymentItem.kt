@@ -36,14 +36,10 @@ data class PaymentItem(
     val latitude: String?,
     @SerializedName("longitude")
     val longitude: String?,
-    @SerializedName("modifiedBeneAmount")
-    val modifiedBeneAmount: Double?,
     @SerializedName("modifiedCommission")
     val modifiedCommission: Double?,
     @SerializedName("modifiedRate")
     val modifiedRate: Double?,
-    @SerializedName("modifiedSendAmount")
-    val modifiedSendAmount: Double?,
     @SerializedName("orderType")
     val orderType: Int?,
     @SerializedName("payingAgentId")
@@ -66,7 +62,7 @@ data class PaymentItem(
     val toCountryId: Int?,
     @SerializedName("toCurrencyId")
     val toCurrencyId: Int?,
-    @SerializedName("totalAmountGiven")
+    @SerializedName("totalAmount")
     val totalAmount: Double?,
     @SerializedName("userIPAddress")
     val userIPAddress: String?,

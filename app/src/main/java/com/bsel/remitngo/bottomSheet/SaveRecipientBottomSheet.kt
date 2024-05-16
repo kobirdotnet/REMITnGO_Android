@@ -62,6 +62,7 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
 
     private var beneAccountName: String? = null
     private var beneAccountNo: String? = null
+    private var beneWalletNo: String? = null
 
     private var beneMobile: String? = null
 
@@ -163,6 +164,7 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
         benePersonId: Int,
         beneAccountName: String?,
         beneAccountNo: String?,
+        beneWalletNo: String?,
         beneMobile: String?
     ) {
         this.orderType = orderType
@@ -176,6 +178,7 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
         this.benePersonId = benePersonId
         this.beneAccountName = beneAccountName
         this.beneAccountNo = beneAccountNo
+        this.beneWalletNo = beneWalletNo
         this.beneMobile = beneMobile
     }
 
@@ -194,13 +197,12 @@ class SaveRecipientBottomSheet : BottomSheetDialogFragment() {
     private fun submitRecipientForm() {
         beneAccountName = binding.recipientName.text.toString()
         beneMobile = binding.phoneNumber.text.toString()
-        val countryId = 1
 
         val beneficiaryItem = BeneficiaryItem(
             address="",
             beneficiaryId=0,
             beneficiaryName=beneAccountName,
-            countryID=countryId,
+            countryID=1,
             deviceId=deviceId,
             districtID=0,
             divisionID=0,

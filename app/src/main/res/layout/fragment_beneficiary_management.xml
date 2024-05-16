@@ -29,7 +29,7 @@
                 android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:iconifiedByDefault="true"
-                android:queryHint="Search beneficiary"
+                android:queryHint="Search Beneficiary"
                 android:textColor="@color/black" />
 
             <SearchView
@@ -41,7 +41,7 @@
                 android:fontFamily="@font/roboto_regular"
                 android:gravity="center_vertical"
                 android:iconifiedByDefault="true"
-                android:queryHint="Search contact"
+                android:queryHint="Search Contact"
                 android:textColor="@color/black"
                 android:visibility="gone" />
 
@@ -118,8 +118,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/padding_top"
-                        android:backgroundTint="@color/blue"
-                        android:drawableLeft="@drawable/add_person"
                         android:focusableInTouchMode="false"
                         android:fontFamily="@font/roboto_regular"
                         android:padding="@dimen/padding_top"

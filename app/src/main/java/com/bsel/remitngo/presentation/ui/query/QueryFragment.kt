@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bsel.remitngo.R
 import com.bsel.remitngo.adapter.QueryAdapter
 import com.bsel.remitngo.data.api.PreferenceManager
+import com.bsel.remitngo.data.model.query.QueryData
 import com.bsel.remitngo.data.model.query.QueryItem
-import com.bsel.remitngo.data.model.query.QueryTable
 import com.bsel.remitngo.databinding.FragmentQueryBinding
 import com.bsel.remitngo.presentation.di.Injector
 import javax.inject.Inject
-
 
 class QueryFragment : Fragment() {
     @Inject
@@ -31,8 +29,6 @@ class QueryFragment : Fragment() {
     private lateinit var binding: FragmentQueryBinding
 
     private lateinit var queryAdapter: QueryAdapter
-
-    private val addQueryFragment: AddQueryFragment by lazy { AddQueryFragment() }
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -79,13 +75,13 @@ class QueryFragment : Fragment() {
             try {
                 result?.let { queryResponse ->
                     if (queryResponse.queryData != null) {
-                        val queryDataList = queryResponse.queryData.queryTable ?: emptyList()
+                        val queryDataList = queryResponse.queryData
                         binding.queryRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
                         queryAdapter = QueryAdapter { selectedItem ->
                             queryItem(selectedItem)
                         }
                         binding.queryRecyclerView.adapter = queryAdapter
-                        queryAdapter.setList(queryDataList as List<QueryTable>)
+                        queryAdapter.setList(queryDataList as List<QueryData>)
                         queryAdapter.notifyDataSetChanged()
                     }
                 }
@@ -95,9 +91,9 @@ class QueryFragment : Fragment() {
         }
     }
 
-    private fun queryItem(selectedItem: QueryTable) {
+    private fun queryItem(selectedItem: QueryData) {
         val bundle = Bundle().apply {
-            putString("complainId", selectedItem.complainID.toString())
+            putString("complainId", selectedItem.complainId.toString())
         }
         findNavController().navigate(
             R.id.action_nav_generate_query_to_nav_update_query,

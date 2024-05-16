@@ -82,7 +82,8 @@ class PaymentBankFragment : Fragment() {
             val clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clipData = ClipData.newPlainText("Transaction Code", binding.transactionCode.text)
             clipboardManager.setPrimaryClip(clipData)
-            Toast.makeText(requireContext(), "Transaction code copied to clipboard", Toast.LENGTH_SHORT).show()
+            Log.i("info", "clipData: $clipData")
+            binding.imgCopy.setImageResource(R.drawable.copy)
         }
 
         binding.btnContinue.setOnClickListener {

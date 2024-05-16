@@ -88,7 +88,9 @@ class BeneficiaryManagementFragment : Fragment(),
     private var beneWalletName: String? = null
 
     private var beneAccountName: String? = null
+
     private var beneAccountNo: String? = null
+    private var beneWalletNo: String? = null
 
     private var beneMobile: String? = null
 
@@ -182,6 +184,7 @@ class BeneficiaryManagementFragment : Fragment(),
                 benePersonId,
                 beneAccountName,
                 beneAccountNo,
+                beneWalletNo,
                 beneMobile
             )
             saveRecipientBottomSheet.show(childFragmentManager, saveRecipientBottomSheet.tag)
@@ -209,6 +212,7 @@ class BeneficiaryManagementFragment : Fragment(),
         benePersonId: Int,
         beneAccountName: String?,
         beneAccountNo: String?,
+        beneWalletNo: String?,
         beneMobile: String?
     ) {
         this.orderType = orderType
@@ -222,6 +226,7 @@ class BeneficiaryManagementFragment : Fragment(),
         this.benePersonId = benePersonId
         this.beneAccountName = beneAccountName
         this.beneAccountNo = beneAccountNo
+        this.beneWalletNo = beneWalletNo
         this.beneMobile = beneMobile
     }
 
@@ -364,6 +369,7 @@ class BeneficiaryManagementFragment : Fragment(),
                 benePersonId,
                 beneAccountName,
                 beneAccountNo,
+                beneWalletNo,
                 beneMobile
             )
             chooseBankBottomSheet.show(childFragmentManager, chooseBankBottomSheet.tag)
@@ -484,6 +490,7 @@ class BeneficiaryManagementFragment : Fragment(),
             benePersonId,
             beneAccountName,
             beneAccountNo,
+            beneWalletNo,
             beneMobile
         )
         saveRecipientBottomSheet.show(childFragmentManager, saveRecipientBottomSheet.tag)

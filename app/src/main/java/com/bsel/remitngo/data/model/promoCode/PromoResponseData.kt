@@ -14,18 +14,16 @@ data class PromoResponseData(
     val commision: Double?,
     @SerializedName("Message")
     val message: String?,
-    @SerializedName("ModifiedBeneAmount")
-    val modifiedBeneAmount: Double?,
     @SerializedName("ModifiedCommision")
     val modifiedCommision: Double?,
     @SerializedName("ModifiedRate")
     val modifiedRate: Double?,
-    @SerializedName("ModifiedSentAmount")
-    val modifiedSentAmount: Double?,
     @SerializedName("PromoMsg")
     val promoMsg: String?,
     @SerializedName("Rate")
     val rate: Double?,
     @SerializedName("SentAmount")
-    val sentAmount: Double?
+    val sentAmount: Double?,
+    @SerializedName("TotalAmount")
+    val totalAmount: Double?
 )

@@ -66,6 +66,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     private var rate: Double = 0.0
     private var commission: Double = 0.0
 
+    private var totalAmount: Double = 0.0
+
     private var beneWalletId: Int = 0
     private var beneWalletName: String? = null
 
@@ -76,6 +78,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     private var beneBranchName: String? = null
 
     private var beneAccountNo: String? = null
+    private var beneWalletNo: String? = null
+
     private var payingAgentId: Int = 0
 
     private var benePersonId: Int = 0
@@ -176,6 +180,12 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         }
 
         try {
+            totalAmount = arguments?.getString("totalAmount").toString().toDouble()
+        } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+
+        try {
             beneBankId = arguments?.getString("beneBankId").toString().toInt()
         } catch (e: NumberFormatException) {
             e.localizedMessage
@@ -213,6 +223,12 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
         try {
             beneAccountNo = arguments?.getString("beneAccountNo").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
+
+        try {
+            beneWalletNo = arguments?.getString("beneWalletNo").toString()
         } catch (e: NullPointerException) {
             e.localizedMessage
         }
@@ -598,7 +614,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 )
             }
         })
-        binding.receiveAmount.addTextChangedListener(object : TextWatcher {
+        binding.beneAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
                 start: Int,
@@ -610,10 +626,10 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                if (!binding.receiveAmount.isFocused) return
+                if (!binding.beneAmount.isFocused) return
                 calculationType = 2
                 calculateRate(
-                    binding.receiveAmount.text.toString(),
+                    binding.beneAmount.text.toString(),
                     beneBankId,
                     calculationType,
                     deviceId,
@@ -649,14 +665,14 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             }
 
             try {
-                val receiveAmountValue = binding.receiveAmount.text.toString()
+                val receiveAmountValue = binding.beneAmount.text.toString()
                 beneAmount = receiveAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
             } catch (e: NumberFormatException) {
                 e.localizedMessage
             }
 
             try {
-                val rateValue = binding.exchangeRate.text.toString()
+                val rateValue = binding.rate.text.toString()
                 rate = rateValue.replace(Regex("[^\\d.]"), "").toDouble()
             } catch (e: NumberFormatException) {
                 e.localizedMessage
@@ -681,6 +697,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 putString("rate", rate.toString())
                 putString("commission", commission.toString())
 
+                putString("totalAmount", totalAmount.toString())
+
                 putString("beneBankId", beneBankId.toString())
                 putString("beneBankName", beneBankName)
 
@@ -691,6 +709,8 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 putString("beneWalletName", beneWalletName.toString())
 
                 putString("beneAccountNo", beneAccountNo)
+                putString("beneWalletNo", beneWalletNo)
+
                 putString("payingAgentId", payingAgentId.toString())
 
                 putString("benePersonId", benePersonId.toString())
@@ -747,7 +767,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
                         if (calculationType == 1) {
                             beneAmount = data!!.beneficiaryAmount!!
-                            binding.receiveAmount.setText("$beneAmount")
+                            binding.beneAmount.setText("$beneAmount")
                         } else if (calculationType == 2) {
                             sendAmount = data!!.senderAmount!!
                             binding.sendAmount.setText("$sendAmount")
@@ -757,12 +777,14 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                         binding.commission.text = "Fee $commission GBP"
 
                         rate = data.rate!!.toDouble()
-                        binding.exchangeRate.text = "BDT $rate"
+                        binding.rate.text = "BDT $rate"
+
+                        totalAmount = data.totalAmount!!.toDouble()
                     }
                 } else {
                     if (calculationType == 1) {
                         beneAmount = 0.0
-                        binding.receiveAmount.setText("$beneAmount")
+                        binding.beneAmount.setText("$beneAmount")
                     } else if (calculationType == 2) {
                         sendAmount = 0.0
                         binding.sendAmount.setText("$sendAmount")
@@ -772,7 +794,9 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                     binding.commission.text = "Fee $commission GBP"
 
                     rate = 0.0
-                    binding.exchangeRate.text = "BDT $rate"
+                    binding.rate.text = "BDT $rate"
+
+                    totalAmount = 0.0
                 }
             } catch (e: NullPointerException) {
                 e.localizedMessage

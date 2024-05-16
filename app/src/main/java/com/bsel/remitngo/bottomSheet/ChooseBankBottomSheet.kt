@@ -73,6 +73,7 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
 
     private var beneAccountName: String? = null
     private var beneAccountNo: String? = null
+    private var beneWalletNo: String? = null
 
     private var beneMobile: String? = null
 
@@ -183,6 +184,7 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
                 benePersonId,
                 beneAccountName,
                 beneAccountNo,
+                beneWalletNo,
                 beneMobile
             )
             saveBankAndWalletBottomSheet.show(
@@ -206,6 +208,7 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
         benePersonId: Int,
         beneAccountName: String?,
         beneAccountNo: String?,
+        beneWalletNo: String?,
         beneMobile: String?,
     ) {
         this.orderType = orderType
@@ -219,6 +222,7 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
         this.benePersonId = benePersonId
         this.beneAccountName = beneAccountName
         this.beneAccountNo = beneAccountNo
+        this.beneWalletNo = beneWalletNo
         this.beneMobile = beneMobile
     }
 
@@ -288,14 +292,14 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
         if (selectedItem.accountName != null) {
             beneAccountName = selectedItem.accountName
         }
-        if (selectedItem.accountNo != null) {
-            beneAccountNo = selectedItem.accountNo
-        }
         if (selectedItem.bankId != null) {
             beneBankId = selectedItem.bankId
         }
         if (selectedItem.bankName != null) {
             beneBankName = selectedItem.bankName
+            if (selectedItem.accountNo != null) {
+                beneAccountNo = selectedItem.accountNo
+            }
         }
         if (selectedItem.branchId != null) {
             beneBranchId = selectedItem.branchId
@@ -308,6 +312,9 @@ class ChooseBankBottomSheet : BottomSheetDialogFragment(), OnSaveBankAndWalletSe
         }
         if (selectedItem.walletName != null) {
             beneWalletName = selectedItem.walletName
+            if (selectedItem.accountNo != null) {
+                beneWalletNo = selectedItem.accountNo
+            }
         }
 
         itemSelectedListener?.onBankAndWalletItemSelected(selectedItem)

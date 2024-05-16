@@ -12,6 +12,8 @@ data class TransactionDetailsData(
     val beneBankId: String?,
     @SerializedName("BeneBankName")
     val beneBankName: String?,
+    @SerializedName("BeneWalletName")
+    val beneWalletName: String?,
     @SerializedName("BeneBranchId")
     val beneBranchId: Int?,
     @SerializedName("BeneId")
