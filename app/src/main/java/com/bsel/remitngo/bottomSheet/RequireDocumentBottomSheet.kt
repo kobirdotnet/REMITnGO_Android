@@ -117,11 +117,6 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment(),OnDocumentStatus 
         return bottomSheet
     }
 
-    private fun paymentLater(totalAmount: Double, transactionCode: String) {
-        itemSelectedListener?.onRequireDocumentSelected(totalAmount, transactionCode)
-        dismiss()
-    }
-
     fun requireDocument(
         totalAmount: Double,
         transactionCode: String,
@@ -159,25 +154,6 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment(),OnDocumentStatus 
         }
     }
 
-    private fun observeRequireDocumentResult() {
-        paymentViewModel.requireDocumentResult.observe(this) { result ->
-            try {
-                if (result!!.code == "000") {
-                    if (result.data != null) {
-                        binding.requireDocumentRecyclerView.layoutManager =
-                            LinearLayoutManager(requireActivity())
-                        requireDocumentAdapter = RequireDocumentAdapter()
-                        binding.requireDocumentRecyclerView.adapter = requireDocumentAdapter
-                        requireDocumentAdapter.setList(result.data as List<RequireDocumentData>)
-                        requireDocumentAdapter.notifyDataSetChanged()
-                    }
-                }
-            } catch (e: NullPointerException) {
-                e.localizedMessage
-            }
-        }
-    }
-
     override fun onDocumentStatusSelected(selectedItem: String?) {
         if (selectedItem=="dismiss"){
             val requireDocumentItem = RequireDocumentItem(
@@ -192,6 +168,32 @@ class RequireDocumentBottomSheet : BottomSheetDialogFragment(),OnDocumentStatus 
             paymentViewModel.requireDocument(requireDocumentItem)
             observeRequireDocumentResult()
         }
+    }
+
+    private fun observeRequireDocumentResult() {
+        paymentViewModel.requireDocumentResult.observe(this) { result ->
+            try {
+                if (result!!.code == "000") {
+                    if (result.data != null) {
+                        binding.requireDocumentRecyclerView.layoutManager =
+                            LinearLayoutManager(requireActivity())
+                        requireDocumentAdapter = RequireDocumentAdapter()
+                        binding.requireDocumentRecyclerView.adapter = requireDocumentAdapter
+                        requireDocumentAdapter.setList(result.data as List<RequireDocumentData>)
+                        requireDocumentAdapter.notifyDataSetChanged()
+                    }else{
+                        dismiss()
+                    }
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
+            }
+        }
+    }
+
+    private fun paymentLater(totalAmount: Double, transactionCode: String) {
+        itemSelectedListener?.onRequireDocumentSelected(totalAmount, transactionCode)
+        dismiss()
     }
 
     override fun onStart() {

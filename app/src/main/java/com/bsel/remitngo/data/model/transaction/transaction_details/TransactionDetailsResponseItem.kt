@@ -9,7 +9,5 @@ data class TransactionDetailsResponseItem(
     @SerializedName("Data")
     val `data`: List<TransactionDetailsData?>?,
     @SerializedName("Message")
-    val message: String?,
-    @SerializedName("Token")
-    val token: String?
+    val message: String?
 )

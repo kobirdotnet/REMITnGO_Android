@@ -30,7 +30,7 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        holder.bind(filteredTransactionList[position], selectedItem,downloadReceipt,sendAgain)
+        holder.bind(filteredTransactionList[position], selectedItem, downloadReceipt, sendAgain)
     }
 
     fun setList(transactionItem: List<TransactionData>) {
@@ -42,8 +42,8 @@ class TransactionAdapter(
     fun transactionFilter(query: String) {
         filteredTransactionList.clear()
         for (transactions in transactionList) {
-            if (transactions.transactionCode!=null){
-                if (transactions.transactionCode!!.contains(query, ignoreCase = true)) {
+            if (transactions.transactionCode != null) {
+                if (transactions.transactionCode.contains(query, ignoreCase = true)) {
                     filteredTransactionList.add(transactions)
                 }
             }
@@ -72,12 +72,23 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
         if (transactionItem.transactionDateTime12hr.toString() != null) {
             binding.transactionDate.text = transactionItem.transactionDateTime12hr.toString()
         }
-        if (transactionItem.beneBankName.toString() != null) {
-            binding.bankName.text = transactionItem.beneBankName.toString()
+
+        if (transactionItem.beneWalletId == 0) {
+            if (transactionItem.beneBankName.toString() != null) {
+                binding.bankName.text = transactionItem.beneBankName.toString()
+            }
+            if (transactionItem.beneAccountNo.toString() != null) {
+                binding.accountNo.text = transactionItem.beneAccountNo.toString()
+            }
+        } else {
+            if (transactionItem.walletName.toString() != null) {
+                binding.bankName.text = transactionItem.walletName.toString()
+            }
+            if (transactionItem.beneWalletNo.toString() != null) {
+                binding.accountNo.text = transactionItem.beneWalletNo.toString()
+            }
         }
-        if (transactionItem.beneAccountNo.toString() != null) {
-            binding.accountNo.text = transactionItem.beneAccountNo.toString()
-        }
+
         if (transactionItem.beneAmount.toString() != null) {
             val beneAmount = transactionItem.beneAmount.toString()
             binding.beneAmount.text = "BDT $beneAmount"
@@ -93,9 +104,9 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
                 binding.successStatus.visibility = View.VISIBLE
             }
 
-            if(orderStatus == 21){
+            if (orderStatus == 21) {
                 binding.btnDownloadReceipt.text = "Pay Now"
-            }else{
+            } else {
                 binding.btnDownloadReceipt.text = "Download Receipt"
             }
 

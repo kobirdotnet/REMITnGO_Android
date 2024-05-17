@@ -58,16 +58,23 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="@dimen/padding_top">
+                        <TextView
+                            android:id="@+id/txtCopy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Copied"
+                            android:textColor="@color/black"
+                            android:visibility="gone"/>
                         <ImageView
                             android:id="@+id/imgCopy"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_content_copy"
-                            android:contentDescription="Copy"
-                            android:layout_margin="@dimen/activity_vertical_margin"
                             android:clickable="true"
-                            android:focusable="true"/>
+                            android:focusable="true" />
                     </LinearLayout>
                 </LinearLayout>
 

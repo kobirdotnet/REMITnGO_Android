@@ -78,12 +78,14 @@ class PaymentBankFragment : Fragment() {
                 "Transfer $sendAmount GBP to the following Bank Account"
         }
 
+        binding.txtCopy.visibility=View.GONE
+        binding.imgCopy.visibility=View.VISIBLE
         binding.imgCopy.setOnClickListener {
             val clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clipData = ClipData.newPlainText("Transaction Code", binding.transactionCode.text)
             clipboardManager.setPrimaryClip(clipData)
-            Log.i("info", "clipData: $clipData")
-            binding.imgCopy.setImageResource(R.drawable.copy)
+            binding.imgCopy.visibility=View.GONE
+            binding.txtCopy.visibility=View.VISIBLE
         }
 
         binding.btnContinue.setOnClickListener {

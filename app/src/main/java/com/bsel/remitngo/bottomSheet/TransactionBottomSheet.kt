@@ -98,11 +98,11 @@ class TransactionBottomSheet : BottomSheetDialogFragment() {
                     for (transactionDetailsData in result!!.data!!) {
 
                         if (transactionDetailsData!!.transactionCode != "null") {
-                            binding.transactionCode.text = transactionDetailsData!!.transactionCode
+                            binding.transactionCode.text = transactionDetailsData.transactionCode
                         }
                         if (transactionDetailsData.transactionDateTime12hr != "null") {
                             binding.transactionDate.text =
-                                transactionDetailsData!!.transactionDateTime12hr
+                                transactionDetailsData.transactionDateTime12hr
                         }
                         if (transactionDetailsData.paymentTypeName != "null") {
                             binding.paymentMode.text = transactionDetailsData.paymentTypeName
@@ -113,12 +113,25 @@ class TransactionBottomSheet : BottomSheetDialogFragment() {
                         if (transactionDetailsData.beneName != "null") {
                             binding.beneName.text = transactionDetailsData.beneName
                         }
-                        if (transactionDetailsData.beneBankName != "null") {
-                            binding.bankName.text = transactionDetailsData.beneBankName
+
+                        if (transactionDetailsData.beneWalletId == 0) {
+                            if (transactionDetailsData.beneBankName != "null") {
+                                binding.txtBankName.text = "Bank Name"
+                                binding.bankName.text = transactionDetailsData.beneBankName
+                            }
+                            if (transactionDetailsData.beneAccountNo != "null") {
+                                binding.accountNo.text = transactionDetailsData.beneAccountNo
+                            }
+                        } else {
+                            if (transactionDetailsData.walletName != "null") {
+                                binding.txtBankName.text = "Wallet Name"
+                                binding.bankName.text = transactionDetailsData.walletName
+                            }
+                            if (transactionDetailsData.beneWalletNo != "null") {
+                                binding.accountNo.text = transactionDetailsData.beneWalletNo
+                            }
                         }
-                        if (transactionDetailsData.beneAccountNo != "null") {
-                            binding.accountNo.text = transactionDetailsData.beneAccountNo
-                        }
+
                         if (transactionDetailsData.sendAmount.toString() != "null") {
                             val sendAmount = transactionDetailsData.sendAmount.toString()
                             binding.sendAmount.text = "GBP $sendAmount"

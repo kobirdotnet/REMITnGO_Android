@@ -12,8 +12,6 @@ data class TransactionDetailsData(
     val beneBankId: String?,
     @SerializedName("BeneBankName")
     val beneBankName: String?,
-    @SerializedName("BeneWalletName")
-    val beneWalletName: String?,
     @SerializedName("BeneBranchId")
     val beneBranchId: Int?,
     @SerializedName("BeneId")
@@ -29,13 +27,13 @@ data class TransactionDetailsData(
     @SerializedName("OrderStatus")
     val orderStatus: String?,
     @SerializedName("OrderType")
-    val orderType: Int?,
+    val orderType: String?,
     @SerializedName("OrderTypeName")
     val orderTypeName: String?,
     @SerializedName("PayingAgentId")
-    val payingAgentId: Int?,
+    val payingAgentId: String?,
     @SerializedName("PaymentMode")
-    val paymentMode: Int?,
+    val paymentMode: String?,
     @SerializedName("PaymentStatus")
     val paymentStatus: String?,
     @SerializedName("PaymentTypeName")
@@ -59,5 +57,7 @@ data class TransactionDetailsData(
     @SerializedName("TransactionStatus")
     val transactionStatus: String?,
     @SerializedName("TransferFees")
-    val transferFees: Double?
+    val transferFees: Double?,
+    @SerializedName("WalletName")
+    val walletName: String?
 )
