@@ -1,6 +1,7 @@
 package com.bsel.remitngo.presentation.ui.payment
 
 import android.content.Context
+import android.graphics.Paint
 import android.net.wifi.WifiManager
 import android.os.*
 import android.provider.Settings
@@ -8,17 +9,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bsel.remitngo.R
+import com.bsel.remitngo.adapter.BankAdapter
 import com.bsel.remitngo.bottomSheet.*
 import com.bsel.remitngo.data.api.PreferenceManager
 import com.bsel.remitngo.data.interfaceses.OnBeneficiarySelectedListener
 import com.bsel.remitngo.data.interfaceses.OnRequireDocumentListener
 import com.bsel.remitngo.data.model.bank.bank_account.GetBankData
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
 import com.bsel.remitngo.data.model.beneficiary.beneficiary.GetBeneficiaryData
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.consumer.consumer.ConsumerItem
@@ -87,7 +93,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private var customerEmail: String? = null
     private var customerMobile: String? = null
     private var isMobileOTPValidate: Boolean = true
-    private var requireDoc: String? = null
 
     var ipAddress: String? = null
     private lateinit var deviceId: String
@@ -103,12 +108,9 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private lateinit var configuration: Configuration
     private lateinit var transactionTypes: TransactionTypesRequest
     private lateinit var billingAddress: PaymentAddress
-    private lateinit var riskParams: RiskParams
     private lateinit var threeDsV2Params: ThreeDsV2Params
     private lateinit var genesis: Genesis
     private lateinit var consumerId: String
-
-    private val decimalFormat = DecimalFormat("#.##")
 
     private lateinit var transactionCode: String
     private var gbpValue = 0.0
@@ -137,6 +139,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private var modifiedRate: Double = 0.0
     private var orderType: Int = 0
     private var payingAgentId: Int = 0
+    private var payingAgentName: String? = null
     private var paymentMode: Int = 0
     private var promoCode: String? = null
     private var purposeOfTransferId: Int = 0
@@ -302,6 +305,11 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         } catch (e: NumberFormatException) {
             e.localizedMessage
         }
+        try {
+            payingAgentName = arguments?.getString("payingAgentName").toString()
+        } catch (e: NullPointerException) {
+            e.localizedMessage
+        }
 
         try {
             benePersonId = arguments?.getString("benePersonId").toString().toInt()
@@ -324,6 +332,9 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
         try {
             beneMobile = arguments?.getString("beneMobile").toString()
+            if (beneMobile != "null") {
+                binding.beneMobile.text = " " + "(" + beneMobile!! + ")"
+            }
         } catch (e: NullPointerException) {
             e.localizedMessage
         }
@@ -444,6 +455,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 putString("beneWalletNo", beneWalletNo)
 
                 putString("payingAgentId", payingAgentId.toString())
+                putString("payingAgentName", payingAgentName.toString())
 
                 putString("benePersonId", benePersonId.toString())
                 putString("beneId", beneId.toString())
@@ -463,12 +475,24 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             )
         }
 
-        binding.btnSend.setOnClickListener { paymentFrom() }
-
         val reasonItem = ReasonItem(
             deviceId = deviceId, dropdownId = 27, param1 = 0, param2 = 0
         )
         paymentViewModel.reason(reasonItem)
+        paymentViewModel.reasonResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (data in result.data!!) {
+                        if (purposeOfTransferId == data!!.id.toString().toInt()) {
+                            binding.reason.setText(data.name.toString())
+                        }
+                    }
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
+            }
+        }
+
         val sourceOfIncomeItem = SourceOfIncomeItem(
             deviceId = deviceId,
             dropdownId = 307,
@@ -476,98 +500,20 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             param2 = 0
         )
         paymentViewModel.sourceOfIncome(sourceOfIncomeItem)
-
-
-        sendAgain()
-        applyPromo()
-
-        observeProfileResult()
-        observePaymentResult()
-        observeRequireDocumentResult()
-        observeEncryptResult()
-
-        observeSourceOfIncomeResult()
-        observeReasonResult()
-    }
-
-    fun setOrderType(
-        orderType: Int,
-        beneBankId: Int,
-        beneBankName: String?,
-        beneBranchId: Int,
-        beneBranchName: String?,
-        beneWalletId: Int,
-        beneWalletName: String?,
-        beneId: Int,
-        benePersonId: Int,
-        beneAccountName: String?,
-        beneAccountNo: String?,
-        beneWalletNo: String?,
-        beneMobile: String?
-    ) {
-        this.orderType = orderType
-        this.beneBankId = beneBankId
-        this.beneBankName = beneBankName
-        this.beneBranchId = beneBranchId
-        this.beneBranchName = beneBranchName
-        this.beneWalletId = beneWalletId
-        this.beneWalletName = beneWalletName
-        this.beneId = beneId
-        this.benePersonId = benePersonId
-        this.beneAccountName = beneAccountName
-        this.beneAccountNo = beneAccountNo
-        this.beneWalletNo = beneWalletNo
-        this.beneMobile = beneMobile
-    }
-
-    private fun paymentFrom() {
-        if (orderType == 2 || orderType == 4) {
-            binding.beneNameContainer.helperText = validReceiverName()
-            binding.reasonContainer.helperText = validReason()
-            binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
-
-            val validReceiverName = binding.beneNameContainer.helperText == null
-            val validReason = binding.reasonContainer.helperText == null
-            val validSourceOfIncome = binding.sourceOfIncomeContainer.helperText == null
-
-            if (validReceiverName && validReason && validSourceOfIncome) {
-                submitPaymentFrom()
-            }
-        } else {
-            binding.beneNameContainer.helperText = validReceiverName()
-            binding.beneBankOrWalletAccountContainer.helperText = validReceiverAccount()
-            binding.reasonContainer.helperText = validReason()
-            binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
-
-            val validReceiverName = binding.beneNameContainer.helperText == null
-            val validReceiverAccount = binding.beneBankOrWalletAccountContainer.helperText == null
-            val validReason = binding.reasonContainer.helperText == null
-            val validSourceOfIncome = binding.sourceOfIncomeContainer.helperText == null
-
-            if (validReceiverName && validReceiverAccount && validReason && validSourceOfIncome) {
-                submitPaymentFrom()
+        paymentViewModel.sourceOfIncomeResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (data in result.data!!) {
+                        if (sourceOfFundId.toString() == data!!.id.toString()) {
+                            binding.sourceOfIncome.setText(data.name.toString())
+                        }
+                    }
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
             }
         }
-    }
 
-    private fun submitPaymentFrom() {
-        if (latitude.equals(null)) {
-            latitude = ""
-        }
-        if (longitude.equals(null)) {
-            longitude = ""
-        }
-        if (promoCode.equals(null)) {
-            promoCode = ""
-        }
-
-        val profileItem = ProfileItem(
-            deviceId = deviceId, personId = personId
-        )
-        paymentViewModel.profile(profileItem)
-    }
-
-    private fun observeProfileResult() {
         paymentViewModel.profileResult.observe(this) { result ->
             try {
                 if (result!!.data != null) {
@@ -655,9 +601,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 e.localizedMessage
             }
         }
-    }
 
-    private fun observePaymentResult() {
         paymentViewModel.paymentResult.observe(this) { result ->
             try {
                 if (result!!.paymentResponseData != null) {
@@ -679,13 +623,10 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 e.localizedMessage
             }
         }
-    }
 
-    private fun observeRequireDocumentResult() {
         paymentViewModel.requireDocumentResult.observe(this) { result ->
             try {
                 if (result!!.code == "000") {
-                    requireDoc = result.data.toString()
                     val totalAmountValue = binding.totalAmount.text.toString()
                     totalAmount = totalAmountValue.replace(Regex("[^\\d.]"), "").toDouble()
                     if (result.data != null) {
@@ -704,24 +645,22 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                             )
                         }
                     } else {
-                        if (isMobileOTPValidate && !customerAddress.equals(null) && !requireDoc.equals(null)) {
-                            if (paymentMode == 4) {
-                                transactionCodeWithChannel = "$transactionCode*1"
-                                if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
-                                    val encryptItem = EncryptItem(
-                                        key = "bsel2024$#@!", plainText = transactionCodeWithChannel
-                                    )
-                                    paymentViewModel.encrypt(encryptItem)
-                                }
-                            } else if (paymentMode == 5) {
-                                val bundle = Bundle().apply {
-                                    putString("sendAmount", totalAmount.toString())
-                                    putString("transactionCode", transactionCode)
-                                }
-                                findNavController().navigate(
-                                    R.id.action_nav_review_to_nav_complete_bank_transaction, bundle
+                        if (paymentMode == 4) {
+                            transactionCodeWithChannel = "$transactionCode*1"
+                            if (::transactionCodeWithChannel.isInitialized && transactionCodeWithChannel != "null") {
+                                val encryptItem = EncryptItem(
+                                    key = "bsel2024$#@!", plainText = transactionCodeWithChannel
                                 )
+                                paymentViewModel.encrypt(encryptItem)
                             }
+                        } else if (paymentMode == 5) {
+                            val bundle = Bundle().apply {
+                                putString("sendAmount", totalAmount.toString())
+                                putString("transactionCode", transactionCode)
+                            }
+                            findNavController().navigate(
+                                R.id.action_nav_review_to_nav_complete_bank_transaction, bundle
+                            )
                         }
                     }
                 }
@@ -729,9 +668,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 e.localizedMessage
             }
         }
-    }
 
-    private fun observeEncryptResult() {
         paymentViewModel.encryptResult.observe(this) { result ->
             try {
                 if (result!!.data != null) {
@@ -744,6 +681,88 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                 e.localizedMessage
             }
         }
+
+        binding.btnSend.setOnClickListener { paymentFrom() }
+
+        sendAgain()
+        applyPromo()
+    }
+
+    fun setOrderType(
+        orderType: Int,
+        beneBankId: Int,
+        beneBankName: String?,
+        beneBranchId: Int,
+        beneBranchName: String?,
+        beneWalletId: Int,
+        beneWalletName: String?,
+        beneId: Int,
+        benePersonId: Int,
+        beneAccountName: String?,
+        beneAccountNo: String?,
+        beneWalletNo: String?,
+        beneMobile: String?
+    ) {
+        this.orderType = orderType
+        this.beneBankId = beneBankId
+        this.beneBankName = beneBankName
+        this.beneBranchId = beneBranchId
+        this.beneBranchName = beneBranchName
+        this.beneWalletId = beneWalletId
+        this.beneWalletName = beneWalletName
+        this.beneId = beneId
+        this.benePersonId = benePersonId
+        this.beneAccountName = beneAccountName
+        this.beneAccountNo = beneAccountNo
+        this.beneWalletNo = beneWalletNo
+        this.beneMobile = beneMobile
+    }
+
+    private fun paymentFrom() {
+        if (orderType == 2 || orderType == 4) {
+            binding.beneNameContainer.helperText = validReceiverName()
+            binding.reasonContainer.helperText = validReason()
+            binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
+
+            val validReceiverName = binding.beneNameContainer.helperText == null
+            val validReason = binding.reasonContainer.helperText == null
+            val validSourceOfIncome = binding.sourceOfIncomeContainer.helperText == null
+
+            if (validReceiverName && validReason && validSourceOfIncome) {
+                submitPaymentFrom()
+            }
+        } else {
+            binding.beneNameContainer.helperText = validReceiverName()
+            binding.beneBankOrWalletAccountContainer.helperText = validReceiverAccount()
+            binding.reasonContainer.helperText = validReason()
+            binding.sourceOfIncomeContainer.helperText = validSourceOfIncome()
+
+            val validReceiverName = binding.beneNameContainer.helperText == null
+            val validReceiverAccount = binding.beneBankOrWalletAccountContainer.helperText == null
+            val validReason = binding.reasonContainer.helperText == null
+            val validSourceOfIncome = binding.sourceOfIncomeContainer.helperText == null
+
+            if (validReceiverName && validReceiverAccount && validReason && validSourceOfIncome) {
+                submitPaymentFrom()
+            }
+        }
+    }
+
+    private fun submitPaymentFrom() {
+        if (latitude.equals(null)) {
+            latitude = ""
+        }
+        if (longitude.equals(null)) {
+            longitude = ""
+        }
+        if (promoCode.equals(null)) {
+            promoCode = ""
+        }
+
+        val profileItem = ProfileItem(
+            deviceId = deviceId, personId = personId
+        )
+        paymentViewModel.profile(profileItem)
     }
 
     private fun cardPayment() {
@@ -781,9 +800,9 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             transactionTypes
         )
 
-        paymentRequest.setReturnSuccessUrl("https://emptest.remitngo.com/emerchantpay/wpfsuccessurl?tcode=" + encryptCode)
-        paymentRequest.setReturnFailureUrl("https://emptest.remitngo.com/emerchantpay/wpffailureurl?tcode=" + encryptCode)
-        paymentRequest.setReturnCancelUrl("https://emptest.remitngo.com/emerchantpay/wpfcancelurl?tcode=" + encryptCode)
+        paymentRequest.setReturnSuccessUrl("https://emptest.remitngo.com/emerchantpay/wpfsuccessurl?tcode=$encryptCode")
+        paymentRequest.setReturnFailureUrl("https://emptest.remitngo.com/emerchantpay/wpffailureurl?tcode=$encryptCode")
+        paymentRequest.setReturnCancelUrl("https://emptest.remitngo.com/emerchantpay/wpfcancelurl?tcode=$encryptCode")
 
         paymentRequest.setUsage("Test Staging")
         paymentRequest.setDescription("Test payment gateway")
@@ -802,7 +821,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
         genesis = Genesis(requireContext(), configuration, paymentRequest)
 
-        if (!genesis?.isConnected(requireContext())!!) {
+        if (!genesis.isConnected(requireContext())!!) {
             dialogHandler =
                 AlertDialogHandler(requireContext(), "Error", ErrorMessages.CONNECTION_ERROR)
             dialogHandler.show()
@@ -810,24 +829,30 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
         if (genesis.isConnected(requireContext())!! && genesis.isValidData!!) {
             genesis.push()
-            val response = genesis!!.response!!
-            if (!response!!.isSuccess!!) {
-                error = response!!.error!!
+            val response = genesis.response!!
+            if (!response.isSuccess!!) {
+                error = response.error!!
                 dialogHandler = AlertDialogHandler(
                     requireContext(),
                     "Failure",
                     "Code: " + error!!.code + "\nMessage: " + error!!.technicalMessage
                 )
                 dialogHandler.show()
-            } else if (response!!.isSuccess!!) {
-
+            } else if (response.isSuccess!!) {
                 consumerId = response.consumerId.toString()
-
                 val saveConsumerItem = SaveConsumerItem(
                     deviceId = deviceId, personId = personId, consumerId = consumerId
                 )
                 paymentViewModel.saveConsumer(saveConsumerItem)
-                observeSaveConsumerResult()
+                paymentViewModel.saveConsumerResult.observe(this) { result ->
+                    try {
+                        if (result!!.data != null) {
+                            Log.i("info", "Save Consumer: " + result.data.toString())
+                        }
+                    } catch (e: NullPointerException) {
+                        e.localizedMessage
+                    }
+                }
 
                 val encryptItem = EmpItem(
                     status = response.status.toString(),
@@ -841,7 +866,15 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                     channel = "1"
                 )
                 paymentViewModel.emp(encryptItem)
-                observeEmpResult()
+                paymentViewModel.empResult.observe(this) { result ->
+                    try {
+                        if (result!!.data != null) {
+                            Log.i("info", "observeEmpResult: " + result.data.toString())
+                        }
+                    } catch (e: NullPointerException) {
+                        e.localizedMessage
+                    }
+                }
 
                 val bundle = Bundle().apply {
                     putString("transactionCode", transactionCode)
@@ -856,12 +889,12 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
         if (!genesis.isValidData!!) {
             error = genesis.error!!
             var message = error.message!!
-            var technicalMessage: String
-            if (error.technicalMessage != null && !error.technicalMessage!!.isEmpty()) {
-                technicalMessage = error.technicalMessage!!
-            } else {
-                technicalMessage = ""
-            }
+            var technicalMessage: String =
+                if (error.technicalMessage != null && error.technicalMessage!!.isNotEmpty()) {
+                    error.technicalMessage!!
+                } else {
+                    ""
+                }
             dialogHandler =
                 AlertDialogHandler(requireContext(), "Invalid", "$technicalMessage $message")
             dialogHandler.show()
@@ -869,36 +902,24 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
 
     }
 
-    private fun observeSaveConsumerResult() {
-        paymentViewModel.saveConsumerResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    Log.i("info", "Save Consumer: " + result.data.toString())
-                }
-            } catch (e: NullPointerException) {
-                e.localizedMessage
-            }
-        }
-    }
-
-    private fun observeEmpResult() {
-        paymentViewModel.empResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    Log.i("info", "observeEmpResult: " + result.data.toString())
-                }
-            } catch (e: NullPointerException) {
-                e.localizedMessage
-            }
-        }
-    }
-
     override fun onChooseRecipientItemSelected(selectedItem: GetBeneficiaryData) {
-        benePersonId = selectedItem.benePersonId!!.toInt()
-        beneId = selectedItem.beneficiaryId!!.toInt()
-        beneAccountName = selectedItem.beneName.toString()
-        beneMobile = selectedItem.mobile.toString()
-        binding.beneName.text = beneAccountName
+        if (selectedItem.benePersonId != null) {
+            benePersonId = selectedItem.benePersonId.toInt()
+        }
+        if (selectedItem.beneficiaryId != null) {
+            beneId = selectedItem.beneficiaryId.toInt()
+        }
+        if (selectedItem.beneName != null) {
+            beneAccountName = selectedItem.beneName.toString()
+            binding.beneName.text = beneAccountName
+        }
+        if (selectedItem.mobile != null) {
+            beneMobile = selectedItem.mobile.toString()
+            binding.beneMobile.text = " " + "(" + beneMobile!! + ")"
+        }
+        if (payingAgentName != null) {
+            binding.beneBankOrWalletName.text = payingAgentName
+        }
     }
 
     override fun onBankAndWalletItemSelected(selectedItem: GetBankData) {
@@ -1230,6 +1251,8 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                                 commission = result.promoResponseData[0]!!.commision!!
                                 binding.previousTransferFee.visibility = View.VISIBLE
                                 binding.previousTransferFee.hint = "GBP $commission"
+                                binding.previousTransferFee.paintFlags =
+                                    binding.previousTransferFee.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
                                 rate = result.promoResponseData[0]!!.rate!!
                                 binding.previousRate.visibility = View.GONE
@@ -1243,15 +1266,21 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
                                 rate = result.promoResponseData[0]!!.rate!!
                                 binding.previousRate.visibility = View.VISIBLE
                                 binding.previousRate.hint = "BDT $rate"
+                                binding.previousRate.paintFlags =
+                                    binding.previousRate.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                             }
                             3 -> {
                                 commission = result.promoResponseData[0]!!.commision!!
                                 binding.previousTransferFee.visibility = View.VISIBLE
                                 binding.previousTransferFee.hint = "GBP $commission"
+                                binding.previousRate.paintFlags =
+                                    binding.previousRate.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
                                 rate = result.promoResponseData[0]!!.rate!!
                                 binding.previousRate.visibility = View.VISIBLE
                                 binding.previousRate.hint = "BDT $rate"
+                                binding.previousRate.paintFlags =
+                                    binding.previousRate.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                             }
                         }
 
@@ -1286,38 +1315,6 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
             findNavController().navigate(
                 R.id.action_nav_review_to_nav_complete_bank_transaction, bundle
             )
-        }
-    }
-
-    private fun observeReasonResult() {
-        paymentViewModel.reasonResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    for (data in result.data!!) {
-                        if (purposeOfTransferId == data!!.id.toString().toInt()) {
-                            binding.reason.setText(data.name.toString())
-                        }
-                    }
-                }
-            } catch (e: NullPointerException) {
-                e.localizedMessage
-            }
-        }
-    }
-
-    private fun observeSourceOfIncomeResult() {
-        paymentViewModel.sourceOfIncomeResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    for (data in result.data!!) {
-                        if (sourceOfFundId.toString() == data!!.id.toString()) {
-                            binding.sourceOfIncome.setText(data.name.toString())
-                        }
-                    }
-                }
-            } catch (e: NullPointerException) {
-                e.localizedMessage
-            }
         }
     }
 

@@ -93,17 +93,18 @@ class TransactionFragment : Fragment() {
     private lateinit var configuration: Configuration
     private lateinit var transactionTypes: TransactionTypesRequest
     private lateinit var billingAddress: PaymentAddress
-    private lateinit var riskParams: RiskParams
     private lateinit var threeDsV2Params: ThreeDsV2Params
     private lateinit var genesis: Genesis
     private lateinit var consumerId: String
 
-    private lateinit var orderStatus: String
-    private lateinit var paymentMode: String
+    private var orderStatus: Int=0
+    private var paymentMode: Int=0
 
     private lateinit var encryptCode: String
     private lateinit var transactionCode: String
-    private lateinit var sendAmount: String
+    private var sendAmount: Double=0.0
+
+    private lateinit var transactionCodeWithChannel: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -158,7 +159,6 @@ class TransactionFragment : Fragment() {
         observeProfileResult()
         observeConsumerResult()
         observeTransactionResult()
-        observeEncryptForCreateReceiptResult()
     }
     private fun observeProfileResult() {
         transactionViewModel.profileResult.observe(this) { result ->
@@ -231,18 +231,6 @@ class TransactionFragment : Fragment() {
             }
         }
     }
-    private fun observeEncryptForCreateReceiptResult() {
-        transactionViewModel.encryptForCreateReceiptResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    val createReceiptCode = result.data.toString()
-                    createReceipt(createReceiptCode)
-                }
-            }catch (e:NullPointerException){
-                e.localizedMessage
-            }
-        }
-    }
 
     private fun transaction(selectedItem: TransactionData) {
         val transactionCode = selectedItem.transactionCode.toString()
@@ -262,12 +250,11 @@ class TransactionFragment : Fragment() {
 
     private fun downloadReceipt(transactionData: TransactionData) {
         transactionCode = transactionData.transactionCode.toString()
-        sendAmount = transactionData.sendAmount.toString()
-        orderStatus = transactionData.orderStatus.toString()
-        paymentMode = transactionData.paymentMode.toString()
-
-        if(orderStatus == "21"){
-            if (paymentMode=="5"){
+        sendAmount = transactionData.sendAmount!!
+        orderStatus = transactionData.orderStatus!!
+        paymentMode = transactionData.paymentMode!!
+        if(orderStatus == 21){
+            if (paymentMode==5){
                 val bundle = Bundle().apply {
                     putString("transactionCode", transactionData.transactionCode.toString())
                     putString("sendAmount", transactionData.sendAmount.toString())
@@ -276,8 +263,8 @@ class TransactionFragment : Fragment() {
                     R.id.action_nav_transaction_history_to_nav_complete_bank_transaction,
                     bundle
                 )
-            }else if (paymentMode=="4"){
-                val transactionCodeWithChannel = "$transactionCode*1"
+            }else if (paymentMode==4){
+                transactionCodeWithChannel = "$transactionCode*1"
                 val encryptItem = EncryptItem(
                     key = "bsel2024$#@!",
                     plainText = transactionCodeWithChannel
@@ -294,16 +281,14 @@ class TransactionFragment : Fragment() {
         transactionViewModel.encryptResult.observe(this) { result ->
             if (result!!.data != null) {
                 encryptCode = result.data.toString()
-                cardPayment()
+                if (::encryptCode.isInitialized) {
+                    cardPayment()
+                }
             }
         }
     }
 
     private fun cardPayment() {
-        // Generate unique Id
-        val uniqueId = UUID.randomUUID().toString()
-
-        // Create configuration
         configuration = Configuration(
             "8609ffa7b710c6c74645bfb055888b82ce71c08e",
             "637c89215aa96a41ef53468296459072d809c70a",
@@ -312,10 +297,6 @@ class TransactionFragment : Fragment() {
             Locales.EN
         )
 
-        // Enable Debug mode
-        configuration.setDebugMode(true)
-
-        // Create Billing PaymentAddress
         billingAddress = PaymentAddress(
             customerFirstName.toString(),
             customerLastName.toString(),
@@ -327,111 +308,32 @@ class TransactionFragment : Fragment() {
             Country.UnitedKingdom
         )
 
-        // Create Transaction types
         transactionTypes = TransactionTypesRequest()
         transactionTypes.addTransaction(WPFTransactionTypes.SALE3D)
 
-        transactionTypes.setMode(RecurringMode.AUTOMATIC)
-        transactionTypes.setInterval(RecurringInterval.DAYS)
-//            transactionTypes.setFirstDate(FIRST_DATE)
-        transactionTypes.setFrequency(RecurringFrequency.DAYLY)
-        transactionTypes.setAmountType(RecurringAmountType.MAX)
-        transactionTypes.setPaymentType(RecurringPaymentType.INITIAL)
-        transactionTypes.setTimeOfDay(7)
-        transactionTypes.setPeriod(7)
-        transactionTypes.setAmount(500)
-        transactionTypes.setMaxAmount(5000)
-        transactionTypes.setMaxCount(10)
-        transactionTypes.setRegistrationReferenceNumber(7)
-
-        // Init WPF API request
         paymentRequest = PaymentRequest(
             requireContext(),
             transactionCode,
             BigDecimal(sendAmount),
             Currency.GBP,
-            "mizan.se@outlook.com",
-            "0789392016",
+            customerEmail,
+            customerMobile,
             billingAddress,
             "https://emptest.remitngo.com/emerchantpay/emernotificationresponse",
             transactionTypes
         )
 
-        paymentRequest.setReturnSuccessUrl("https://emptest.remitngo.com/emerchantpay/wpfsuccessurl?tcode=" + encryptCode)
-        paymentRequest.setReturnFailureUrl("https://emptest.remitngo.com/emerchantpay/wpffailureurl?tcode=" + encryptCode)
-        paymentRequest.setReturnCancelUrl("https://emptest.remitngo.com/emerchantpay/wpfcancelurl?tcode=" + encryptCode)
+        paymentRequest.setReturnSuccessUrl("https://emptest.remitngo.com/emerchantpay/wpfsuccessurl?tcode=$encryptCode")
+        paymentRequest.setReturnFailureUrl("https://emptest.remitngo.com/emerchantpay/wpffailureurl?tcode=$encryptCode")
+        paymentRequest.setReturnCancelUrl("https://emptest.remitngo.com/emerchantpay/wpfcancelurl?tcode=$encryptCode")
 
         paymentRequest.setUsage("Test Staging")
         paymentRequest.setDescription("Test payment gateway")
         paymentRequest.setLifetime(60)
         paymentRequest.setRememberCard(true)
-        paymentRequest.setPayLater(false)
-        paymentRequest.setCrypto(false)
-        paymentRequest.setGaming(false)
-
-        paymentRequest.setRecurringType(RecurringType.INITIAL)
-        paymentRequest.setRecurringCategory(RecurringCategory.SUBSCRIPTION)
-
-        // Risk params
-        riskParams = RiskParams(
-            "1002547",
-            "1DA53551-5C60-498C-9C18-8456BDBA74A9",
-            "987-65-4320",
-            "12-34-56-78-9A-BC",
-            "123456",
-            "emil@example.com",
-            "+49301234567",
-            "245.253.2.12",
-            "10000000000",
-            "1234",
-            "100000000",
-            "Mohammad",
-            "Kobirul Islam",
-            "US",
-            "test",
-            "245.25 3.2.12",
-            "test",
-            "test123456",
-            "Bin name",
-            "+49301234567"
-        )
-        paymentRequest.setRiskParams(riskParams)
 
         threeDsV2Params = ThreeDsV2Params.build {
             purchaseCategory = ThreeDsV2PurchaseCategory.GOODS
-
-            val merchantRiskPreorderDate = SimpleDateFormat("dd-MM-yyyy").calendar.apply {
-                time = Date()
-                add(Calendar.DATE, 5)
-            }.time
-
-            merchantRisk = ThreeDsV2MerchantRiskParams(
-                ThreeDsV2MerchantRiskShippingIndicator.DIGITAL_GOODS,
-                ThreeDsV2MerchantRiskDeliveryTimeframe.SAME_DAY,
-                ThreeDsV2MerchantRiskReorderItemsIndicator.REORDERED,
-                ThreeDsV2MerchantRiskPreorderPurchaseIndicator.MERCHANDISE_AVAILABLE,
-                merchantRiskPreorderDate,
-                true,
-                3
-            )
-
-            cardHolderAccount = ThreeDsV2CardHolderAccountParams(
-                SimpleDateFormat("dd-MM-yyyy").parse("11-02-2021"),
-                ThreeDsV2CardHolderAccountUpdateIndicator.UPDATE_30_TO_60_DAYS,
-                SimpleDateFormat("dd-MM-yyyy").parse("13-02-2021"),
-                ThreeDsV2CardHolderAccountPasswordChangeIndicator.PASSWORD_CHANGE_NO_CHANGE,
-                SimpleDateFormat("dd-MM-yyyy").parse("10-01-2021"),
-                ThreeDsV2CardHolderAccountShippingAddressUsageIndicator.ADDRESS_USAGE_MORE_THAN_60DAYS,
-                SimpleDateFormat("dd-MM-yyyy").parse("10-01-2021"),
-                2,
-                129,
-                1,
-                31,
-                ThreeDsV2CardHolderAccountSuspiciousActivityIndicator.NO_SUSPICIOUS_OBSERVED,
-                ThreeDsV2CardHolderAccountRegistrationIndicator.REGISTRATION_30_TO_60_DAYS,
-                SimpleDateFormat("dd-MM-yyyy").parse("03-01-2021")
-            )
-
             recurring = ThreeDsV2RecurringParams()
         }
         paymentRequest.setThreeDsV2Params(threeDsV2Params)
@@ -442,29 +344,25 @@ class TransactionFragment : Fragment() {
 
         genesis = Genesis(requireContext(), configuration, paymentRequest)
 
-        if (!genesis?.isConnected(requireContext())!!) {
+        if (!genesis.isConnected(requireContext())!!) {
             dialogHandler =
                 AlertDialogHandler(requireContext(), "Error", ErrorMessages.CONNECTION_ERROR)
             dialogHandler.show()
         }
 
         if (genesis.isConnected(requireContext())!! && genesis.isValidData!!) {
-            //Execute WPF API request
             genesis.push()
-            // Get response
-            val response = genesis!!.response!!
-            if (!response!!.isSuccess!!) {
-                error = response!!.error!!
+            val response = genesis.response!!
+            if (!response.isSuccess!!) {
+                error = response.error!!
                 dialogHandler = AlertDialogHandler(
                     requireContext(),
                     "Failure",
                     "Code: " + error!!.code + "\nMessage: " + error!!.technicalMessage
                 )
                 dialogHandler.show()
-            } else if (response!!.isSuccess!!) {
-
+            } else if (response.isSuccess!!) {
                 consumerId = response.consumerId.toString()
-
                 val saveConsumerItem = SaveConsumerItem(
                     deviceId = deviceId,
                     personId = personId,
@@ -501,11 +399,10 @@ class TransactionFragment : Fragment() {
         if (!genesis.isValidData!!) {
             error = genesis.error!!
             var message = error.message!!
-            var technicalMessage: String
-            if (error.technicalMessage != null && !error.technicalMessage!!.isEmpty()) {
-                technicalMessage = error.technicalMessage!!
+            var technicalMessage: String = if (error.technicalMessage != null && error.technicalMessage!!.isNotEmpty()) {
+                error.technicalMessage!!
             } else {
-                technicalMessage = ""
+                ""
             }
             dialogHandler =
                 AlertDialogHandler(requireContext(), "Invalid", "$technicalMessage $message")
@@ -554,15 +451,30 @@ class TransactionFragment : Fragment() {
                     intent.data = Uri.parse(receiptUrl)
                     context?.startActivity(intent)
                 } else {
+                    transactionCodeWithChannel = "$transactionCode*1"
                     val encryptForCreateReceiptItem = EncryptItemForCreateReceipt(
                         key = "bsel2024$#@!",
-                        plainText = transactionCode
+                        plainText = transactionCodeWithChannel
                     )
                     transactionViewModel.encryptForCreateReceipt(encryptForCreateReceiptItem)
+                    observeEncryptForCreateReceiptResult()
                 }
                 connection.disconnect()
             } catch (e: Exception) {
                 e.message
+            }
+        }
+    }
+
+    private fun observeEncryptForCreateReceiptResult() {
+        transactionViewModel.encryptForCreateReceiptResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    val createReceiptCode = result.data.toString()
+                    createReceipt(createReceiptCode)
+                }
+            }catch (e:NullPointerException){
+                e.localizedMessage
             }
         }
     }

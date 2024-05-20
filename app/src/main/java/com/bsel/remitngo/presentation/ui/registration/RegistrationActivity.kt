@@ -690,7 +690,8 @@ class RegistrationActivity : AppCompatActivity(), OnMarketingItemSelectedListene
             rdoemail = rdoEmail,
             rdophone = rdoPhone,
             rdopost = rdoPost,
-            rdosms = rdoSMS
+            rdosms = rdoSMS,
+            countryId=4
         )
         registrationViewModel.registerUser(registrationItem)
     }

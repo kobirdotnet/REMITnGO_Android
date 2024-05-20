@@ -333,7 +333,7 @@ class ChooseRecipientBottomSheet : BottomSheetDialogFragment(),
         beneId = selectedItem.beneficiaryId!!
         beneAccountName = selectedItem.beneName.toString()
         beneMobile = selectedItem.mobile.toString()
-        if (orderType == 2) {
+        if (orderType == 2 || orderType == 4) {
             itemSelectedListener?.onChooseRecipientItemSelected(selectedItem)
             dismiss()
         } else {

@@ -30,5 +30,7 @@ data class RegistrationItem(
     @SerializedName("rdopost")
     val rdopost: Boolean?,
     @SerializedName("rdosms")
-    val rdosms: Boolean?
+    val rdosms: Boolean?,
+    @SerializedName("CountryId")
+    val countryId: Int?
 )

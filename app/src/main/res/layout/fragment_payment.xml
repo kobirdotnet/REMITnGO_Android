@@ -81,7 +81,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:hint="GBP 0.0"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
@@ -119,7 +118,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:hint="GBP 0.0"
                         android:paddingRight="5dp"
                         android:textColor="@color/black" />
 
@@ -129,7 +127,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:hint="GBP 0.0"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
@@ -167,7 +164,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:hint="GBP 0.0"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
@@ -213,7 +209,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:hint=" BDT 0.0"
                         android:paddingRight="5dp"
                         android:textColor="@color/black" />
 
@@ -223,7 +218,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:hint=" BDT 0.0"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
@@ -261,7 +255,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:hint="BDT 0.0"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
@@ -322,17 +315,33 @@
                     android:hint="Receiver Name"
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
-                    <TextView
-                        android:id="@+id/beneName"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:backgroundTint="@color/white"
-                        android:focusableInTouchMode="false"
-                        android:fontFamily="@font/roboto_regular"
-                        android:gravity="center_vertical"
-                        android:inputType="none"
-                        android:textColor="@color/black" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/beneName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/white"
+                            android:focusableInTouchMode="false"
+                            android:fontFamily="@font/roboto_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="none"
+                            android:textColor="@color/black" />
+                        <TextView
+                            android:id="@+id/beneMobile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/white"
+                            android:focusableInTouchMode="false"
+                            android:fontFamily="@font/roboto_regular"
+                            android:gravity="center_vertical"
+                            android:inputType="none"
+                            android:textColor="@color/text_color" />
+                    </LinearLayout>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -345,11 +354,14 @@
                     android:gravity="center_vertical"
                     android:hint="Beneficiary Account"
                     app:helperTextTextColor="@android:color/holo_red_dark">
-
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
                     <TextView
                         android:id="@+id/beneBankOrWalletName"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/white"
                         android:focusableInTouchMode="false"
@@ -360,8 +372,8 @@
 
                     <TextView
                         android:id="@+id/beneBankOrWalletAccount"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/white"
                         android:focusableInTouchMode="false"
@@ -369,6 +381,7 @@
                         android:gravity="center_vertical"
                         android:inputType="none"
                         android:textColor="@color/black" />
+                    </LinearLayout>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -386,7 +399,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:hint="Purpose of transfer"
+                    android:hint="Select Purpose of transfer"
                     app:endIconTint="@color/blue"
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
@@ -421,7 +434,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:hint="Source of Found"
+                    android:hint="Select Source of Found"
                     app:endIconTint="@color/blue"
                     app:helperTextTextColor="@android:color/holo_red_dark">
 
@@ -446,7 +459,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:gravity="center_vertical"
+                android:gravity="right"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/padding_left"
                 android:paddingRight="@dimen/padding_right"
@@ -471,7 +484,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:hint="Enter your promo code"
+                    android:hint="Enter your promo"
                     android:textColorHint="@color/white"
                     app:helperTextTextColor="@android:color/holo_red_dark">
 

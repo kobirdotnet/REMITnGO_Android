@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +31,6 @@ import com.bsel.remitngo.data.model.paying_agent.PayingAgentItem
 import com.bsel.remitngo.data.model.percentage.PercentageItem
 import com.bsel.remitngo.databinding.FragmentMainBinding
 import com.bsel.remitngo.presentation.di.Injector
-import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -81,6 +79,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
     private var beneWalletNo: String? = null
 
     private var payingAgentId: Int = 0
+    private var payingAgentName: String? = null
 
     private var benePersonId: Int = 0
     private var beneId: Int = 0
@@ -236,6 +235,11 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
         try {
             payingAgentId = arguments?.getString("payingAgentId").toString().toInt()
         } catch (e: NumberFormatException) {
+            e.localizedMessage
+        }
+        try {
+            payingAgentName = arguments?.getString("payingAgentName").toString()
+        } catch (e: NullPointerException) {
             e.localizedMessage
         }
 
@@ -643,17 +647,129 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
             }
         })
 
+        binding.learnMore.text = "Learn more!"
+        binding.learnMore.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://bracsaajanexchange.com"))
+            startActivity(intent)
+        }
+
+        calculationType = 1
+        calculateRate(
+            binding.sendAmount.text.toString(),
+            beneBankId,
+            calculationType,
+            deviceId,
+            4,
+            0,
+            orderType,
+            payingAgentId,
+            paymentMode,
+            1
+        )
+        calculationViewModel.calculateRateResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (data in result.data!!) {
+                        when (calculationType) {
+                            1 -> {
+                                beneAmount = data!!.beneficiaryAmount!!
+                                binding.beneAmount.setText("$beneAmount")
+                            }
+                            2 -> {
+                                sendAmount = data!!.senderAmount!!
+                                binding.sendAmount.setText("$sendAmount")
+                            }
+                        }
+                        commission = data!!.commission!!
+                        binding.commission.text = "Fee $commission GBP"
+
+                        rate = data.rate!!.toDouble()
+                        binding.rate.text = "BDT $rate"
+
+                        totalAmount = data.totalAmount!!.toDouble()
+                    }
+                } else {
+                    when (calculationType) {
+                        1 -> {
+                            beneAmount = 0.0
+                            binding.beneAmount.setText("$beneAmount")
+                        }
+                        2 -> {
+                            sendAmount = 0.0
+                            binding.sendAmount.setText("$sendAmount")
+                        }
+                    }
+
+                    commission = 0.0
+                    binding.commission.text = "Fee $commission GBP"
+
+                    rate = 0.0
+                    binding.rate.text = "BDT $rate"
+
+                    totalAmount = 0.0
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
+            }
+        }
+
+        val payingAgentItem = PayingAgentItem(
+            deviceId = deviceId,
+            fromCountryId = 4,
+            toCountryId = 1,
+            orderTypeId = orderType,
+            amount = sendAmount.toInt()
+        )
+        calculationViewModel.payingAgent(payingAgentItem)
+        calculationViewModel.payingAgentResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (item in result.data!!) {
+                        if (item!!.bankId == beneBankId && item.walletId == beneWalletId && item.payingAgentId == payingAgentId) {
+                            when (orderType) {
+                                1 -> {
+                                    payingAgentName=item.name
+                                    binding.collectionPointWallet.setText(payingAgentName)
+                                }
+                                5 -> {
+                                    payingAgentName=item.name
+                                    binding.collectionPointInstantCredit.setText(payingAgentName)
+                                }
+                                2, 4 -> {
+                                    payingAgentName=item.name
+                                    binding.collectionPointCashPickUp.setText(payingAgentName)
+                                }
+                            }
+
+                        }
+                    }
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
+            }
+        }
+
         val percentageItem = PercentageItem(
             messageType = 1,
             parameter1 = 1,
             parameter2 = customerId
         )
         calculationViewModel.percentage(percentageItem)
-
-        binding.learnMore.text = "Learn more!"
-        binding.learnMore.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://bracsaajanexchange.com"))
-            startActivity(intent)
+        calculationViewModel.percentageResult.observe(this) { result ->
+            try {
+                if (result!!.data != null) {
+                    for (extraPercentage in result.data!!) {
+                        binding.extraPercentage.text = extraPercentage?.campingMessage.toString()
+                        percentageUrl = extraPercentage?.url.toString()
+                    }
+                }
+                binding.extraPercentage.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(percentageUrl))
+                    startActivity(intent)
+                }
+            } catch (e: NullPointerException) {
+                e.localizedMessage
+            }
         }
 
         binding.btnNext.setOnClickListener {
@@ -712,6 +828,7 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 putString("beneWalletNo", beneWalletNo)
 
                 putString("payingAgentId", payingAgentId.toString())
+                putString("payingAgentName", payingAgentName.toString())
 
                 putString("benePersonId", benePersonId.toString())
                 putString("beneId", beneId.toString())
@@ -730,120 +847,14 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
                 bundle
             )
         }
-
-        calculationType = 1
-        calculateRate(
-            binding.sendAmount.text.toString(),
-            beneBankId,
-            calculationType,
-            deviceId,
-            4,
-            0,
-            orderType,
-            payingAgentId,
-            paymentMode,
-            1
-        )
-
-        val payingAgentItem = PayingAgentItem(
-            deviceId = deviceId,
-            fromCountryId = 4,
-            toCountryId = 1,
-            orderTypeId = orderType,
-            amount = sendAmount.toInt()
-        )
-        calculationViewModel.payingAgent(payingAgentItem)
-
-        observeCalculateRateResult()
-        observePayingAgentResult()
-        observeExtraPercentageResult()
-    }
-
-    private fun observeCalculateRateResult() {
-        calculationViewModel.calculateRateResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    for (data in result.data!!) {
-
-                        if (calculationType == 1) {
-                            beneAmount = data!!.beneficiaryAmount!!
-                            binding.beneAmount.setText("$beneAmount")
-                        } else if (calculationType == 2) {
-                            sendAmount = data!!.senderAmount!!
-                            binding.sendAmount.setText("$sendAmount")
-                        }
-
-                        commission = data!!.commission!!
-                        binding.commission.text = "Fee $commission GBP"
-
-                        rate = data.rate!!.toDouble()
-                        binding.rate.text = "BDT $rate"
-
-                        totalAmount = data.totalAmount!!.toDouble()
-                    }
-                } else {
-                    if (calculationType == 1) {
-                        beneAmount = 0.0
-                        binding.beneAmount.setText("$beneAmount")
-                    } else if (calculationType == 2) {
-                        sendAmount = 0.0
-                        binding.sendAmount.setText("$sendAmount")
-                    }
-
-                    commission = 0.0
-                    binding.commission.text = "Fee $commission GBP"
-
-                    rate = 0.0
-                    binding.rate.text = "BDT $rate"
-
-                    totalAmount = 0.0
-                }
-            } catch (e: NullPointerException) {
-                e.localizedMessage
-            }
-        }
-    }
-
-    private fun observePayingAgentResult() {
-        calculationViewModel.payingAgentResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    for (item in result.data!!) {
-                        if (item!!.bankId == beneBankId && item.walletId == beneWalletId && item.payingAgentId == payingAgentId) {
-                            binding.collectionPointInstantCredit.setText(item.name)
-                            binding.collectionPointCashPickUp.setText(item.name)
-                            binding.collectionPointWallet.setText(item.name)
-                        }
-                    }
-                }
-            } catch (e: NullPointerException) {
-                e.localizedMessage
-            }
-        }
-    }
-
-    private fun observeExtraPercentageResult() {
-        calculationViewModel.percentageResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    for (extraPercentage in result.data!!) {
-                        binding.extraPercentage.text = extraPercentage?.campingMessage.toString()
-                        percentageUrl = extraPercentage?.url.toString()
-                    }
-                }
-                binding.extraPercentage.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(percentageUrl))
-                    startActivity(intent)
-                }
-            } catch (e: NullPointerException) {
-                e.localizedMessage
-            }
-        }
     }
 
     override fun onPayingAgentInstantCreditItemSelected(selectedItem: PayingAgentData) {
         binding.collectionPointInstantCredit.setText(selectedItem.name)
+
         payingAgentId = selectedItem.payingAgentId!!.toString().toInt()
+        payingAgentName = selectedItem.name!!
+
         beneBankId = selectedItem.bankId!!.toString().toInt()
         beneWalletId = selectedItem.walletId!!.toString().toInt()
 
@@ -864,7 +875,10 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
     override fun onPayingAgentCashPickupItemSelected(selectedItem: PayingAgentData) {
         binding.collectionPointCashPickUp.setText(selectedItem.name)
+
         payingAgentId = selectedItem.payingAgentId!!.toString().toInt()
+        payingAgentName = selectedItem.name!!
+
         beneBankId = selectedItem.bankId!!.toString().toInt()
         beneWalletId = selectedItem.walletId!!.toString().toInt()
 
@@ -885,7 +899,10 @@ class MainFragment : Fragment(), OnCalculationSelectedListener {
 
     override fun onPayingAgentWalletItemSelected(selectedItem: PayingAgentData) {
         binding.collectionPointWallet.setText(selectedItem.name)
+
         payingAgentId = selectedItem.payingAgentId!!.toString().toInt()
+        payingAgentName = selectedItem.name!!
+
         beneBankId = selectedItem.bankId!!.toString().toInt()
         beneWalletId = selectedItem.walletId!!.toString().toInt()
 

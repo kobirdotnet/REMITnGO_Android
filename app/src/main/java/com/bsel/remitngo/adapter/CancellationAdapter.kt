@@ -1,5 +1,6 @@
 package com.bsel.remitngo.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -64,7 +65,7 @@ class CancellationViewHolder(val binding: ItemCancellationBinding) :
             val beneAmount = cancellationItem.beneficiaryAmount.toString()
             binding.sendAmount.text = "BDT $beneAmount"
         }
-        binding.status.text = "Cancel"
+        binding.status.text = cancellationItem.orderStatusName.toString()
         binding.itemCancellationLayout.setOnClickListener {
             selectedItem(cancellationItem)
         }

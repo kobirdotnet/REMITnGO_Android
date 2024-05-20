@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.biometric.BiometricPrompt
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -44,6 +45,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import java.util.*
+import java.util.concurrent.Executor
 import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
@@ -66,6 +68,10 @@ class LoginActivity : AppCompatActivity() {
 
     private val REQUEST_CONTACTS_AND_CAMERA_PERMISSIONS = 1
 
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
@@ -75,10 +81,59 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel =
             ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
 
+        preferenceManager = PreferenceManager(this@LoginActivity)
+
+        executor = ContextCompat.getMainExecutor(this)
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(
+                    errorCode: Int,
+                    errString: CharSequence,
+                ) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Snackbar.make(
+                        binding.root,
+                        buildString { append("Your biometric is not registered with REMITnGO App") },
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult,
+                ) {
+                    super.onAuthenticationSucceeded(result)
+                    Snackbar.make(
+                        binding.root,
+                        buildString { append("Biometric authentication Successful.") },
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+
+                    preferenceManager.saveData("biometricValue", "true")
+
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(intent)
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Snackbar.make(
+                        binding.root,
+                        buildString { append("Biometric authentication failed. Please try again.") },
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            })
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("REMITnGO Biometric Sign On")
+            .setSubtitle("Authentication Required")
+            .setNegativeButtonText("Cancel")
+            .build()
+        binding.loginWithBiometric.setOnClickListener {
+            biometricPrompt.authenticate(promptInfo)
+        }
+
         requestContactsAndCameraPermissions()
         checkLocationPermissions()
-
-        preferenceManager = PreferenceManager(this@LoginActivity)
 
         mAuth = FirebaseAuth.getInstance()
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

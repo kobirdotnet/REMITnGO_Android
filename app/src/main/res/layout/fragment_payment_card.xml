@@ -26,10 +26,10 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/padding_left"
+                android:visibility="gone"
                 android:paddingTop="@dimen/padding_top"
                 android:paddingRight="@dimen/padding_right"
                 android:paddingBottom="@dimen/padding_bottom"
-                android:visibility="gone"
                 android:weightSum="2">
 
                 <LinearLayout
@@ -75,6 +75,19 @@
                         android:inputType="none"
                         android:padding="@dimen/padding_left"
                         android:text="Download Receipt"
+                        android:textAllCaps="false"
+                        android:textColor="@color/blue" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnShareReceipt"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
+                        android:inputType="none"
+                        android:padding="@dimen/padding_left"
+                        android:text="Share Receipt"
                         android:textAllCaps="false"
                         android:textColor="@color/blue" />
                 </LinearLayout>

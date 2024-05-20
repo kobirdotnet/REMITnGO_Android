@@ -83,7 +83,6 @@
                         android:layout_weight="4"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
-                        android:hint="BDT 150.00"
                         android:textColor="@color/black" />
                 </LinearLayout>
 
@@ -151,7 +150,6 @@
                         android:focusableInTouchMode="true"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="left"
-                        android:hint="0.0"
                         android:inputType="numberDecimal"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
@@ -188,7 +186,6 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center"
-                        android:hint="Fee 3.0 GBP"
                         android:textColor="@color/blue" />
 
                 </LinearLayout>
@@ -230,7 +227,6 @@
                         android:focusableInTouchMode="true"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="right"
-                        android:hint="0.0"
                         android:inputType="numberDecimal"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
@@ -399,7 +395,7 @@
                     android:id="@+id/collectionPointInstantCreditContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Instant Credit Bank">
+                    android:hint="Select Instant Credit Bank">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/collectionPointInstantCredit"
@@ -432,7 +428,7 @@
                     android:id="@+id/collectionPointCashPickUpContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cash Collection Bank">
+                    android:hint="Select Cash Collection Bank">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/collectionPointCashPickUp"
@@ -465,7 +461,7 @@
                     android:id="@+id/collectionPointWalletContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Mobile Wallet">
+                    android:hint="Select Mobile Wallet">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/collectionPointWallet"
@@ -592,7 +588,6 @@
                     android:focusableInTouchMode="false"
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center"
-                    android:hint="@string/extra_percentage"
                     android:inputType="none"
                     android:textAllCaps="false"
                     android:textColor="@color/blue"
@@ -732,7 +727,6 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
-                            android:hint="Learn more"
                             android:inputType="none"
                             android:textAllCaps="false"
                             android:textColor="@color/blue"

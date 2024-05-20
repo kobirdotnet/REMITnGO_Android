@@ -37,10 +37,13 @@ class PaymentCardFragment : Fragment() {
 
     private lateinit var binding: FragmentPaymentCardBinding
 
-    private lateinit var transactionCode: String
-
     var ipAddress: String? = null
     private lateinit var deviceId: String
+
+    private var transactionCode: String? = null
+
+    private var transactionCodeWithChannel: String? = null
+    private var receiptUrl: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,22 +69,29 @@ class PaymentCardFragment : Fragment() {
         deviceId = getDeviceId(requireContext())
         ipAddress = getIPAddress(requireContext())
 
-        transactionCode = arguments?.getString("transactionCode").toString()
-
-        observePaymentStatusResult()
-        observeEncryptForCreateReceiptResult()
-
         binding.btnContinue.setOnClickListener {
             findNavController().navigate(R.id.action_nav_complete_card_transaction_to_nav_main)
         }
 
         binding.btnDownloadReceipt.setOnClickListener {
-            checkApiCall(transactionCode)
+            if (receiptUrl != null) {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(receiptUrl)
+                context?.startActivity(intent)
+            }
+        }
+        binding.btnShareReceipt.setOnClickListener {
+            if (receiptUrl != null) {
+                val sendIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, receiptUrl)
+                    type = "text/plain"
+                }
+                startActivity(Intent.createChooser(sendIntent, "REMITnGO"))
+            }
         }
 
-    }
-
-    private fun observePaymentStatusResult() {
+        transactionCode = arguments?.getString("transactionCode").toString()
         paymentViewModel.paymentStatusResult.observe(this) { result ->
             try {
                 if (result!!.data == null) {
@@ -96,6 +106,8 @@ class PaymentCardFragment : Fragment() {
                             binding.paymentFailed.visibility = View.GONE
                             binding.paymentCancel.visibility = View.GONE
                             binding.backToHomeLayout.visibility = View.VISIBLE
+
+                            checkApiCall(transactionCode!!)
                         }
                         "Failed" -> {
                             binding.paymentSuccessful.visibility = View.GONE
@@ -111,10 +123,11 @@ class PaymentCardFragment : Fragment() {
                         }
                     }
                 }
-            }catch (e:NullPointerException){
+            } catch (e: NullPointerException) {
                 e.localizedMessage
             }
         }
+
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -130,17 +143,17 @@ class PaymentCardFragment : Fragment() {
                 val responseCode = connection.responseCode
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val receiptUrl =
+                    receiptUrl =
                         "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse(receiptUrl)
-                    context?.startActivity(intent)
+
                 } else {
+                    transactionCodeWithChannel = "$transactionCode*1"
                     val encryptForCreateReceiptItem = EncryptItemForCreateReceipt(
                         key = "bsel2024$#@!",
-                        plainText = transactionCode
+                        plainText = transactionCodeWithChannel
                     )
                     paymentViewModel.encryptForCreateReceipt(encryptForCreateReceiptItem)
+                    observeEncryptForCreateReceiptResult()
                 }
                 connection.disconnect()
             } catch (e: Exception) {
@@ -156,7 +169,7 @@ class PaymentCardFragment : Fragment() {
                     val createReceiptCode = result.data.toString()
                     createReceipt(createReceiptCode)
                 }
-            }catch (e:java.lang.NullPointerException){
+            } catch (e: java.lang.NullPointerException) {
                 e.localizedMessage
             }
         }
@@ -170,12 +183,8 @@ class PaymentCardFragment : Fragment() {
                 if (response.isSuccessful) {
                     val createReceiptResponse: CreateReceiptResponse? = response.body()
                     Log.i("info", "createReceiptResponse: $createReceiptResponse")
-                    val receiptUrl =
+                    receiptUrl =
                         "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
-                    Log.i("info", "receiptUrl: $receiptUrl")
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse(receiptUrl)
-                    context?.startActivity(intent)
                 }
             } catch (e: Exception) {
                 e.localizedMessage
@@ -185,7 +194,7 @@ class PaymentCardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        paymentViewModel.paymentStatus(transactionCode)
+        paymentViewModel.paymentStatus(transactionCode!!)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().navigate(R.id.action_nav_complete_card_transaction_to_nav_main)

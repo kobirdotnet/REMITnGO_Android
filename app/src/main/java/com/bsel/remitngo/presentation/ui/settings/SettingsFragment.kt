@@ -54,14 +54,16 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
 
         preferenceManager = PreferenceManager(requireContext())
 
-        biometricValue = preferenceManager.loadData("biometricValue").toString()
-
         binding.switchBiometric.isChecked = false
 
-        if (biometricValue == "true") {
-            binding.switchBiometric.isChecked = true
-        } else if (biometricValue == "false") {
-            binding.switchBiometric.isChecked = false
+        biometricValue = preferenceManager.loadData("biometricValue").toString()
+        when (biometricValue) {
+            "true" -> {
+                binding.switchBiometric.isChecked = true
+            }
+            "false" -> {
+                binding.switchBiometric.isChecked = false
+            }
         }
 
         executor = ContextCompat.getMainExecutor(requireContext())
@@ -116,16 +118,17 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
 
         binding.switchBiometric.setOnCheckedChangeListener { _, isChecked ->
             isBiometricEnabled = isChecked
-            biometricValue = if (isBiometricEnabled) {
-                biometricPrompt.authenticate(promptInfo)
-                preferenceManager.saveData("biometricValue", "true").toString()
-            } else {
-                biometricPrompt.authenticate(promptInfo)
-                preferenceManager.saveData("biometricValue", "false").toString()
+            biometricValue = when {
+                isBiometricEnabled -> {
+                    biometricPrompt.authenticate(promptInfo)
+                    preferenceManager.saveData("biometricValue", "true").toString()
+                }
+                else -> {
+                    biometricPrompt.authenticate(promptInfo)
+                    preferenceManager.saveData("biometricValue", "false").toString()
+                }
             }
         }
-
-        checkDeviceHasBiometric()
 
         binding.changePassword.setOnClickListener {
             findNavController().navigate(
@@ -145,7 +148,7 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
                 marketingBottomSheet.show(childFragmentManager, marketingBottomSheet.tag)
             }
         }
-
+        checkDeviceHasBiometric()
     }
 
     private fun checkDeviceHasBiometric() {

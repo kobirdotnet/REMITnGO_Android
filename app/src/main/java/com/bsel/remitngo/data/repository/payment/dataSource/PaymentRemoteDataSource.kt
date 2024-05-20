@@ -1,5 +1,7 @@
 package com.bsel.remitngo.data.repository.payment.dataSource
 
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankItem
+import com.bsel.remitngo.data.model.bank.bank_account.GetBankResponseItem
 import com.bsel.remitngo.data.model.bankTransactionMessage.BankTransactionMessage
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateItem
 import com.bsel.remitngo.data.model.calculate_rate.CalculateRateResponseItem
@@ -63,6 +65,7 @@ interface PaymentRemoteDataSource {
     suspend fun bankTransactionMessage(message: String): Response<BankTransactionMessage>
 
     suspend fun requireDocMsg(message: String): Response<RequireDocMsg>
+
 }
 
 
