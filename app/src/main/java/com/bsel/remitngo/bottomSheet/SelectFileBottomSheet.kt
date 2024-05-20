@@ -24,19 +24,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
 class SelectFileBottomSheet : BottomSheetDialogFragment() {
 
     var itemSelectedListener: OnDocumentItemSelectedListener? = null
 
     private lateinit var selectFileNameBehavior: BottomSheetBehavior<*>
-
     private lateinit var binding: SelectFileLayoutBinding
 
     private val PICK_FILE_REQUEST_CODE = 123
     private var selectedFileUri: Uri? = null
 
-    private val TAKE_PICTURE_REQUEST_CODE = 789
+    private val TAKE_PICTURE_REQUEST_CODE = 456
     private val CAMERA_PERMISSION_REQUEST_CODE = 789
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -50,34 +50,23 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
 
         selectFileNameBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(@NonNull view: View, i: Int) {
-                when (i) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-
-                    }
+            override fun onStateChanged(@NonNull view: View, newState: Int) {
+                when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> dismiss()
                 }
             }
 
-            override fun onSlide(@NonNull view: View, v: Float) {}
+            override fun onSlide(@NonNull view: View, slideOffset: Float) {}
         })
 
-        binding.selectFile.setOnClickListener {
-            pickFile()
-        }
-        binding.openCamera.setOnClickListener {
-            captureFile()
-        }
+        binding.selectFile.setOnClickListener { pickFile() }
+        binding.openCamera.setOnClickListener { captureFile() }
 
         return bottomSheet
     }
 
     private fun pickFile() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "*/*" }
         startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
     }
 
@@ -110,49 +99,62 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            openCamera()
+        } else {
+            Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                selectedFileUri = data.data
-                documentFile(selectedFileUri)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                PICK_FILE_REQUEST_CODE -> {
+                    selectedFileUri = data?.data
+                    documentFile(selectedFileUri)
+                }
+                TAKE_PICTURE_REQUEST_CODE -> {
+                    val imageBitmap = data?.extras?.get("data") as? Bitmap
+                    selectedFileUri = imageBitmap?.let { convertBitmapToContentUri(it) }
+                    documentFile(selectedFileUri)
+                }
             }
         }
-
-        if (requestCode == TAKE_PICTURE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (data != null && data.extras != null) {
-                val imageBitmap = data.extras!!.get("data") as Bitmap
-                selectedFileUri = convertBitmapToContentUri(imageBitmap)
-                documentFile(selectedFileUri)
-            }
-        }
-
     }
 
     private fun convertBitmapToContentUri(bitmap: Bitmap): Uri? {
-        val imagesFolder = File(requireContext().cacheDir, "images")
-        imagesFolder.mkdirs()
-
-        val imageFile = File(imagesFolder, "image.png")
-        val outputStream = FileOutputStream(imageFile)
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-        outputStream.close()
-
         return try {
+            val imagesFolder = File(requireContext().cacheDir, "images").apply { mkdirs() }
+            val imageFile = File(imagesFolder, "image.png")
+            FileOutputStream(imageFile).use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+
             FileProvider.getUriForFile(
                 requireContext(),
                 "com.bsel.remitngo.fileprovider",
                 imageFile
             )
+        } catch (e: IOException) {
+            Toast.makeText(requireContext(), "Failed to save image", Toast.LENGTH_SHORT).show()
+            null
         } catch (e: IllegalArgumentException) {
+            Toast.makeText(requireContext(), "Invalid file URI", Toast.LENGTH_SHORT).show()
             null
         }
     }
 
     private fun documentFile(selectedFileUri: Uri?) {
-        itemSelectedListener?.onDocumentFileItemSelected(selectedFileUri)
-        dismiss()
+        selectedFileUri?.let {
+            itemSelectedListener?.onDocumentFileItemSelected(it)
+            dismiss()
+        }
     }
 
     override fun onStart() {
