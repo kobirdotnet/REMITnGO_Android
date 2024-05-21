@@ -29,17 +29,17 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
 
     private lateinit var preferenceManager: PreferenceManager
 
-    private lateinit var biometricValue: String
-    private var isBiometricEnabled: Boolean = false
-
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
-    var rdoEmail = false
-    var rdoSMS = false
-    var rdoPhone = false
-    var rdoPost = false
+    private var isBiometricEnabled: Boolean? = false
+    private var biometricValue: String? = null
+
+    private var rdoEmail: Boolean? = false
+    private var rdoSMS: Boolean? = false
+    private var rdoPhone: Boolean? = false
+    private var rdoPost: Boolean? = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,15 +55,23 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
         preferenceManager = PreferenceManager(requireContext())
 
         binding.switchBiometric.isChecked = false
-
         biometricValue = preferenceManager.loadData("biometricValue").toString()
-        when (biometricValue) {
-            "true" -> {
-                binding.switchBiometric.isChecked = true
+        try {
+            when (biometricValue) {
+                "true" -> {
+                    binding.switchBiometric.isChecked = true
+                }
+                "false" -> {
+                    binding.switchBiometric.isChecked = false
+                }
             }
-            "false" -> {
-                binding.switchBiometric.isChecked = false
-            }
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
+
+        binding.switchBiometric.setOnCheckedChangeListener { _, isChecked ->
+            checkDeviceHasBiometric()
+            isBiometricEnabled = isChecked
         }
 
         executor = ContextCompat.getMainExecutor(requireContext())
@@ -85,18 +93,20 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
                     result: BiometricPrompt.AuthenticationResult,
                 ) {
                     super.onAuthenticationSucceeded(result)
-                    if (isBiometricEnabled) {
+                    if (isBiometricEnabled!!) {
                         Snackbar.make(
                             binding.root,
                             buildString { append("Authentication Successful, Biometric enable") },
                             Snackbar.LENGTH_SHORT
                         ).show()
+                        preferenceManager.saveData("biometricValue", "true").toString()
                     } else {
                         Snackbar.make(
                             binding.root,
                             buildString { append("Authentication Successful, Biometric disable") },
                             Snackbar.LENGTH_SHORT
                         ).show()
+                        preferenceManager.saveData("biometricValue", "false").toString()
                     }
 
                 }
@@ -116,19 +126,6 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
             .setNegativeButtonText("Cancel")
             .build()
 
-        binding.switchBiometric.setOnCheckedChangeListener { _, isChecked ->
-            isBiometricEnabled = isChecked
-            biometricValue = when {
-                isBiometricEnabled -> {
-                    biometricPrompt.authenticate(promptInfo)
-                    preferenceManager.saveData("biometricValue", "true").toString()
-                }
-                else -> {
-                    biometricPrompt.authenticate(promptInfo)
-                    preferenceManager.saveData("biometricValue", "false").toString()
-                }
-            }
-        }
 
         binding.changePassword.setOnClickListener {
             findNavController().navigate(
@@ -139,24 +136,22 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
         binding.setPreferences.setOnClickListener {
             if (!marketingBottomSheet.isAdded) {
                 marketingBottomSheet.setSelectedMarketing(
-                    rdoEmail,
-                    rdoSMS,
-                    rdoPhone,
-                    rdoPost
+                    rdoEmail!!,
+                    rdoSMS!!,
+                    rdoPhone!!,
+                    rdoPost!!
                 )
                 marketingBottomSheet.itemSelectedListener = this
                 marketingBottomSheet.show(childFragmentManager, marketingBottomSheet.tag)
             }
         }
-        checkDeviceHasBiometric()
     }
 
     private fun checkDeviceHasBiometric() {
         val biometricManager = BiometricManager.from(requireContext())
         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
-                binding.switchBiometric.isEnabled = true
-
+                biometricPrompt.authenticate(promptInfo)
             }
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
                 Snackbar.make(
@@ -164,8 +159,7 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
                     buildString { append("Authentication error: No biometric features available on this device.") },
                     Snackbar.LENGTH_SHORT
                 ).show()
-                binding.switchBiometric.isEnabled = false
-
+                binding.switchBiometric.isChecked = false
             }
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
                 Snackbar.make(
@@ -173,8 +167,7 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
                     buildString { append("Authentication error: Biometric features are currently unavailable.") },
                     Snackbar.LENGTH_SHORT
                 ).show()
-                binding.switchBiometric.isEnabled = false
-
+                binding.switchBiometric.isChecked = false
             }
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
@@ -183,17 +176,9 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
                         BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
                     )
                 }
-                binding.switchBiometric.isEnabled = false
-
                 startActivityForResult(enrollIntent, 100)
+                binding.switchBiometric.isChecked = false
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().navigate(R.id.nav_main)
         }
     }
 
@@ -202,6 +187,13 @@ class SettingsFragment : Fragment(), OnMarketingItemSelectedListener {
         rdoSMS = selectedItem.rdoSMS == true
         rdoPhone = selectedItem.rdoPhone == true
         rdoPost = selectedItem.rdoPost == true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.nav_main)
+        }
     }
 
 }

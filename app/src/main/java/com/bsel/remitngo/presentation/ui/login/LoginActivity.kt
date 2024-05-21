@@ -72,6 +72,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
+    private var biometricValue: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
@@ -82,6 +84,23 @@ class LoginActivity : AppCompatActivity() {
             ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
 
         preferenceManager = PreferenceManager(this@LoginActivity)
+
+        biometricValue = preferenceManager.loadData("biometricValue").toString()
+        try {
+            when (biometricValue) {
+                "true" -> {
+                    binding.biometricLayout.visibility = View.VISIBLE
+                    binding.loginWithBiometric.setOnClickListener {
+                        biometricPrompt.authenticate(promptInfo)
+                    }
+                }
+                "false" -> {
+                    binding.biometricLayout.visibility = View.GONE
+                }
+            }
+        }catch (e:NullPointerException){
+            e.localizedMessage
+        }
 
         executor = ContextCompat.getMainExecutor(this)
         biometricPrompt = BiometricPrompt(this, executor,
@@ -102,14 +121,12 @@ class LoginActivity : AppCompatActivity() {
                     result: BiometricPrompt.AuthenticationResult,
                 ) {
                     super.onAuthenticationSucceeded(result)
-                    Snackbar.make(
-                        binding.root,
-                        buildString { append("Biometric authentication Successful.") },
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-
-                    preferenceManager.saveData("biometricValue", "true")
-
+//                    Snackbar.make(
+//                        binding.root,
+//                        buildString { append("Biometric authentication Successful.") },
+//                        Snackbar.LENGTH_SHORT
+//                    ).show()
+//                    preferenceManager.saveData("biometricValue", "true")
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                 }
@@ -128,9 +145,6 @@ class LoginActivity : AppCompatActivity() {
             .setSubtitle("Authentication Required")
             .setNegativeButtonText("Cancel")
             .build()
-        binding.loginWithBiometric.setOnClickListener {
-            biometricPrompt.authenticate(promptInfo)
-        }
 
         requestContactsAndCameraPermissions()
         checkLocationPermissions()

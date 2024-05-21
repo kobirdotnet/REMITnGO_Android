@@ -105,7 +105,11 @@ class TransactionViewHolder(val binding: ItemTransactionBinding) :
             }
 
             if (orderStatus == 21) {
-                binding.btnDownloadReceipt.text = "Pay Now"
+                if (transactionItem.paymentMode==4){
+                    binding.btnDownloadReceipt.text = "Pay Now"
+                }else if (transactionItem.paymentMode==5){
+                    binding.btnDownloadReceipt.text = "Payment Details"
+                }
             } else {
                 binding.btnDownloadReceipt.text = "Download Receipt"
             }

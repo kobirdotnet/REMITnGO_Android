@@ -71,8 +71,8 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/grey"
-                        android:focusableInTouchMode="false"
                         android:drawableRight="@drawable/arrow_drop_down"
+                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
@@ -108,8 +108,8 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/grey"
-                        android:focusableInTouchMode="false"
                         android:drawableRight="@drawable/arrow_drop_down"
+                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
                         android:inputType="none"
@@ -122,41 +122,36 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/padding_left"
-                android:paddingTop="@dimen/padding_top"
-                android:paddingRight="@dimen/padding_right"
-                android:paddingBottom="@dimen/padding_bottom">
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingTop="@dimen/padding_top">
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/selectFileContainer"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:background="@drawable/logout_border"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:hint="Select or Capture File"
+                    app:helperTextTextColor="@android:color/holo_red_dark">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/selectFileContainer"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/selectFile"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/roboto_regular"
                         android:gravity="center_vertical"
-                        app:endIconTint="@color/blue"
-                        app:helperTextTextColor="@android:color/holo_red_dark">
+                        android:inputType="none"
+                        android:textColor="@color/black"  />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <TextView
-                            android:id="@+id/selectFile"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="@font/roboto_regular"
-                            android:gravity="center"
-                            android:text="Select files"
-                            android:textColor="@color/black" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
 
             </LinearLayout>
 

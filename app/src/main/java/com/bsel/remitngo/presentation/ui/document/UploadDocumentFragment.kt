@@ -85,6 +85,7 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
 
         categoryFocusListener()
         documentFocusListener()
+        selectFileFocusListener()
 
         binding.documentCategory.setOnClickListener {
             documentCategoryBottomSheet.itemSelectedListener = this
@@ -172,23 +173,18 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
     private fun documentFrom() {
         binding.documentCategoryContainer.helperText = validCategory()
         binding.documentTypeContainer.helperText = validDocument()
+        binding.selectFileContainer.helperText = validSelectFile()
 
         val validCategory = binding.documentCategoryContainer.helperText == null
         val validDocument = binding.documentTypeContainer.helperText == null
+        val validSelectFile = binding.selectFileContainer.helperText == null
 
-        if (validCategory && validDocument) {
+        if (validCategory && validDocument && validSelectFile) {
             submitDocumentFrom()
         }
     }
 
     private fun submitDocumentFrom() {
-        val category = binding.documentCategory.text.toString()
-        val document = binding.documentType.text.toString()
-        val documentNo = binding.documentNo.text.toString()
-        val issueBy = binding.issueBy.text.toString()
-        val issueDate = binding.issueDate.text.toString()
-        val expireDate = binding.expireDate.text.toString()
-
         val fileUri = selectedFile
         if (fileUri != null) {
             val file = getFileFromUri(requireContext(), fileUri)
@@ -243,6 +239,21 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         }
         return null
     }
+    private fun selectFileFocusListener() {
+        binding.selectFile.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.selectFileContainer.helperText = validSelectFile()
+            }
+        }
+    }
+
+    private fun validSelectFile(): String? {
+        val selectFile = binding.selectFile.text.toString()
+        if (selectFile.isEmpty()) {
+            return "Select or Capture File"
+        }
+        return null
+    }
 
     override fun onDocumentCategoryItemSelected(selectedItem: DocumentCategoryData) {
         binding.documentCategory.setText(selectedItem.name)
@@ -258,7 +269,7 @@ class UploadDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         selectedFile = selectedItem
         selectedFile?.let {
             val data = generateFilename()
-            binding.selectFile.text = data
+            binding.selectFile.setText(data)
         }
     }
 

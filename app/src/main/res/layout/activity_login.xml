@@ -16,13 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="vertical"
-            android:weightSum="5">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -49,8 +47,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="4"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -206,7 +203,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/padding_left"
                     android:paddingTop="@dimen/padding_top"
@@ -225,10 +222,12 @@
                         android:visibility="gone"/>
 
                     <LinearLayout
+                        android:id="@+id/biometricLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
+                        android:visibility="gone"
                         android:paddingLeft="@dimen/padding_left"
                         android:paddingTop="@dimen/padding_top"
                         android:paddingRight="@dimen/padding_right"
@@ -236,13 +235,14 @@
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/loginWithBiometric"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:fontFamily="@font/roboto_regular"
                             android:gravity="center"
                             android:src="@drawable/fingerprint"
                             app:civ_border_color="@color/blue"
-                            app:civ_border_width="2dp" />
+                            app:civ_border_width="2dp"
+                            android:paddingBottom="@dimen/padding_bottom"/>
 
                         <TextView
                             android:layout_width="match_parent"

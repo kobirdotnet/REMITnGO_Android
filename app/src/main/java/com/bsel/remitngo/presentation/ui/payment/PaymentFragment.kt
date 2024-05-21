@@ -131,7 +131,7 @@ class PaymentFragment : Fragment(), OnBeneficiarySelectedListener, OnRequireDocu
     private var channelId: Int = 1
     private var commission: Double = 0.0
     private var fromCountryId: Int = 4
-    private var fromCurrencyId: Int = 96
+    private var fromCurrencyId: Int = 95
     private var latitude: String? = null
     private var longitude: String? = null
 

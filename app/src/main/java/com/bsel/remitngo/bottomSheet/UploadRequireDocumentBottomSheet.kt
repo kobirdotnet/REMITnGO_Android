@@ -216,9 +216,6 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
     }
 
     private fun submitDocumentFrom() {
-        val category = binding.documentCategory.text.toString()
-        val document = binding.documentType.text.toString()
-
         val fileUri = selectedFile
         if (fileUri != null) {
             val file = getFileFromUri(requireContext(), fileUri)
@@ -255,7 +252,7 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
         selectedFile = selectedItem
         selectedFile?.let {
             val data = generateFilename()
-            binding.selectFile.text = data
+            binding.selectFile.setText(data)
         }
     }
 
@@ -356,7 +353,7 @@ class UploadRequireDocumentBottomSheet : BottomSheetDialogFragment(),
     private fun validSelectFile(): String? {
         val selectFile = binding.selectFile.text.toString()
         if (selectFile.isEmpty()) {
-            return "select files"
+            return "Select or Capture File"
         }
         return null
     }

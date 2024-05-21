@@ -25,6 +25,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class SelectFileBottomSheet : BottomSheetDialogFragment() {
 
@@ -34,10 +37,10 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
     private lateinit var binding: SelectFileLayoutBinding
 
     private val PICK_FILE_REQUEST_CODE = 123
-    private var selectedFileUri: Uri? = null
-
     private val TAKE_PICTURE_REQUEST_CODE = 456
     private val CAMERA_PERMISSION_REQUEST_CODE = 789
+
+    private lateinit var currentPhotoPath: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -48,11 +51,10 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
         selectFileNameBehavior = BottomSheetBehavior.from(view.parent as View)
         selectFileNameBehavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
 
-        selectFileNameBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
+        selectFileNameBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(@NonNull view: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> dismiss()
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    dismiss()
                 }
             }
 
@@ -66,7 +68,9 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun pickFile() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "*/*" }
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "*/*"
+        }
         startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
     }
 
@@ -93,9 +97,35 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
     private fun openCamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (cameraIntent.resolveActivity(requireContext().packageManager) != null) {
-            startActivityForResult(cameraIntent, TAKE_PICTURE_REQUEST_CODE)
+            val photoFile: File? = try {
+                createImageFile()
+            } catch (ex: IOException) {
+                null
+            }
+            photoFile?.also {
+                val photoURI: Uri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "${requireContext().packageName}.fileprovider",
+                    it
+                )
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(cameraIntent, TAKE_PICTURE_REQUEST_CODE)
+            }
         } else {
             Toast.makeText(requireContext(), "No camera app available", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val storageDir: File = requireContext().getExternalFilesDir(null)!!
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
         }
     }
 
@@ -114,39 +144,17 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 PICK_FILE_REQUEST_CODE -> {
-                    selectedFileUri = data?.data
+                    val selectedFileUri: Uri? = data?.data
                     documentFile(selectedFileUri)
                 }
                 TAKE_PICTURE_REQUEST_CODE -> {
-                    val imageBitmap = data?.extras?.get("data") as? Bitmap
-                    selectedFileUri = imageBitmap?.let { convertBitmapToContentUri(it) }
-                    documentFile(selectedFileUri)
+                    val photoUri = Uri.fromFile(File(currentPhotoPath))
+                    documentFile(photoUri)
                 }
             }
-        }
-    }
-
-    private fun convertBitmapToContentUri(bitmap: Bitmap): Uri? {
-        return try {
-            val imagesFolder = File(requireContext().cacheDir, "images").apply { mkdirs() }
-            val imageFile = File(imagesFolder, "image.png")
-            FileOutputStream(imageFile).use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
-
-            FileProvider.getUriForFile(
-                requireContext(),
-                "com.bsel.remitngo.fileprovider",
-                imageFile
-            )
-        } catch (e: IOException) {
-            Toast.makeText(requireContext(), "Failed to save image", Toast.LENGTH_SHORT).show()
-            null
-        } catch (e: IllegalArgumentException) {
-            Toast.makeText(requireContext(), "Invalid file URI", Toast.LENGTH_SHORT).show()
-            null
         }
     }
 
@@ -161,5 +169,4 @@ class SelectFileBottomSheet : BottomSheetDialogFragment() {
         super.onStart()
         selectFileNameBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
-
 }

@@ -164,7 +164,7 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         }
         try {
             fileName = arguments?.getString("fileName").toString()
-            binding.selectFile.text = "$fileName"
+            binding.selectFile.setText(fileName)
         }catch (e:NullPointerException){
             e.localizedMessage
         }
@@ -176,6 +176,7 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         issueByFocusListener()
         issueDateFocusListener()
         expireDateFocusListener()
+        selectFileFocusListener()
 
         binding.documentCategory.setOnClickListener {
             documentCategoryBottomSheet.itemSelectedListener = this
@@ -317,6 +318,7 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         binding.issueByContainer.helperText = validIssueBy()
         binding.issueDateContainer.helperText = validIssueDate()
         binding.expireDateContainer.helperText = validExpireDate()
+        binding.selectFileContainer.helperText = validSelectFile()
 
         val validCategory = binding.documentCategoryContainer.helperText == null
         val validDocument = binding.documentTypeContainer.helperText == null
@@ -324,17 +326,15 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         val validIssueBy = binding.issueByContainer.helperText == null
         val validIssueDate = binding.issueDateContainer.helperText == null
         val validExpireDate = binding.expireDateContainer.helperText == null
+        val validSelectFile = binding.selectFileContainer.helperText == null
 
         if (validCategory && validDocument && validDocumentNo && validIssueBy
-            && validIssueDate && validExpireDate
-        ) {
+            && validIssueDate && validExpireDate && validSelectFile) {
             submitDocumentFrom()
         }
     }
 
     private fun submitDocumentFrom() {
-        val category = binding.documentCategory.text.toString()
-        val document = binding.documentType.text.toString()
         val documentNo = binding.documentNo.text.toString()
         val issueBy = binding.issueBy.text.toString()
         val issueDate = binding.issueDate.text.toString()
@@ -459,6 +459,22 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         return null
     }
 
+    private fun selectFileFocusListener() {
+        binding.selectFile.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.selectFileContainer.helperText = validSelectFile()
+            }
+        }
+    }
+
+    private fun validSelectFile(): String? {
+        val selectFile = binding.selectFile.text.toString()
+        if (selectFile.isEmpty()) {
+            return "Select or Capture File"
+        }
+        return null
+    }
+
     override fun onDocumentCategoryItemSelected(selectedItem: DocumentCategoryData) {
         binding.documentCategory.setText(selectedItem.name)
         documentCategoryId = selectedItem.id.toString().toInt()
@@ -473,7 +489,7 @@ class UpdateDocumentFragment : Fragment(), OnDocumentItemSelectedListener {
         selectedFile = selectedItem
         selectedFile?.let {
             val data = generateFilename()
-            binding.selectFile.text = data
+            binding.selectFile.setText(data)
         }
     }
 

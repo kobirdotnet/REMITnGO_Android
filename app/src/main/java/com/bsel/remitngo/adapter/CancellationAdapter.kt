@@ -65,7 +65,7 @@ class CancellationViewHolder(val binding: ItemCancellationBinding) :
             val beneAmount = cancellationItem.beneficiaryAmount.toString()
             binding.sendAmount.text = "BDT $beneAmount"
         }
-        binding.status.text = cancellationItem.orderStatusName.toString()
+        binding.status.text = "Pending"
         binding.itemCancellationLayout.setOnClickListener {
             selectedItem(cancellationItem)
         }

@@ -75,6 +75,7 @@ class PaymentCardFragment : Fragment() {
 
         binding.btnDownloadReceipt.setOnClickListener {
             if (receiptUrl != null) {
+                Log.i("info", "receiptUrl btnDownloadReceipt: $receiptUrl")
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(receiptUrl)
                 context?.startActivity(intent)
@@ -82,6 +83,7 @@ class PaymentCardFragment : Fragment() {
         }
         binding.btnShareReceipt.setOnClickListener {
             if (receiptUrl != null) {
+                Log.i("info", "receiptUrl btnShareReceipt: $receiptUrl")
                 val sendIntent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, receiptUrl)
@@ -106,20 +108,22 @@ class PaymentCardFragment : Fragment() {
                             binding.paymentFailed.visibility = View.GONE
                             binding.paymentCancel.visibility = View.GONE
                             binding.backToHomeLayout.visibility = View.VISIBLE
-
                             checkApiCall(transactionCode!!)
+                            Log.i("info", "receiptUrl Success: $transactionCode")
                         }
                         "Failed" -> {
                             binding.paymentSuccessful.visibility = View.GONE
                             binding.paymentFailed.visibility = View.VISIBLE
                             binding.paymentCancel.visibility = View.GONE
                             binding.backToHomeLayout.visibility = View.VISIBLE
+                            Log.i("info", "receiptUrl Failed: $transactionCode")
                         }
                         "Cancel" -> {
                             binding.paymentSuccessful.visibility = View.GONE
                             binding.paymentFailed.visibility = View.GONE
                             binding.paymentCancel.visibility = View.VISIBLE
                             binding.backToHomeLayout.visibility = View.VISIBLE
+                            Log.i("info", "receiptUrl Cancel: $transactionCode")
                         }
                     }
                 }
@@ -128,6 +132,17 @@ class PaymentCardFragment : Fragment() {
             }
         }
 
+        paymentViewModel.encryptForCreateReceiptResult.observe(viewLifecycleOwner) { result ->
+            try {
+                if (result!!.data != null) {
+                    val createReceiptCode = result.data!!
+                    Log.i("info", "receiptUrl createReceiptCode: $createReceiptCode")
+                    createReceipt(createReceiptCode)
+                }
+            } catch (e:NullPointerException) {
+                e.localizedMessage
+            }
+        }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -145,31 +160,18 @@ class PaymentCardFragment : Fragment() {
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     receiptUrl =
                         "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
-
+                    Log.i("info", "receiptUrl checkApiCall HTTP_OK: $receiptUrl")
                 } else {
+                    Log.i("info", "receiptUrl checkApiCall HTTP_Not_OK: $receiptUrl")
                     transactionCodeWithChannel = "$transactionCode*1"
                     val encryptForCreateReceiptItem = EncryptItemForCreateReceipt(
                         key = "bsel2024$#@!",
                         plainText = transactionCodeWithChannel
                     )
                     paymentViewModel.encryptForCreateReceipt(encryptForCreateReceiptItem)
-                    observeEncryptForCreateReceiptResult()
                 }
                 connection.disconnect()
             } catch (e: Exception) {
-                e.localizedMessage
-            }
-        }
-    }
-
-    private fun observeEncryptForCreateReceiptResult() {
-        paymentViewModel.encryptForCreateReceiptResult.observe(this) { result ->
-            try {
-                if (result!!.data != null) {
-                    val createReceiptCode = result.data.toString()
-                    createReceipt(createReceiptCode)
-                }
-            } catch (e: java.lang.NullPointerException) {
                 e.localizedMessage
             }
         }
@@ -182,7 +184,7 @@ class PaymentCardFragment : Fragment() {
                     RetrofitClient.apiService.createReceipt(createReceiptCode)
                 if (response.isSuccessful) {
                     val createReceiptResponse: CreateReceiptResponse? = response.body()
-                    Log.i("info", "createReceiptResponse: $createReceiptResponse")
+                    Log.i("info", "receiptUrl createReceiptResponse: $createReceiptResponse")
                     receiptUrl =
                         "https://uat.bracsaajanexchange.com/REmitERPBDUAT/UploadedFiles/PersonFiles/RemitnGoMoneyReceipt/$transactionCode.pdf"
                 }
@@ -232,45 +234,5 @@ class PaymentCardFragment : Fragment() {
             ipAddress shr 24 and 0xff
         )
     }
-
-    //        Handler(Looper.getMainLooper()).postDelayed({
-//
-//            val timerDuration = 60 * 1000
-//
-//            val dialog = Dialog(requireContext())
-//            dialog.setContentView(R.layout.fragment_payment_status)
-//            dialog.setCancelable(false)
-//            dialog.window?.setLayout(
-//                WindowManager.LayoutParams.MATCH_PARENT,
-//                WindowManager.LayoutParams.MATCH_PARENT
-//            )
-//
-//            val receiveName = dialog.findViewById<TextView>(R.id.recipient_name)
-//            val receiveAmount = dialog.findViewById<TextView>(R.id.receive_amount)
-//            val transactionId = dialog.findViewById<TextView>(R.id.transactionCode)
-//            val timer = dialog.findViewById<TextView>(R.id.timerTxt)
-//
-//            receiveName.text = "Your transfer to $receiveName is processing !"
-//            receiveAmount.text = "BDT $receiveAmount"
-//            transactionId.text = "Your Transfer ID $transactionCode"
-//            dialog.show()
-//
-//            object : CountDownTimer(timerDuration.toLong(), 1000) {
-//                override fun onTick(millisUntilFinished: Long) {
-//                    val secondsRemaining = millisUntilFinished / 1000
-//                    val minutes = secondsRemaining / 60
-//                    val seconds = secondsRemaining % 60
-//                    timer.text = String.format("%02d:%02d", minutes, seconds)
-//                }
-//
-//                override fun onFinish() {
-//                    dialog.dismiss()
-//                }
-//            }.start()
-//
-//            Handler(Looper.getMainLooper()).postDelayed({
-//                dialog.dismiss()
-//            }, 30000)
-//        }, 30000)
 
 }
